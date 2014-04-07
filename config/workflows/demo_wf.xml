@@ -1,0 +1,6 @@
+<workflow id="demoWF">
+  <process name="start" status="completed" attempts="1"/>
+  <process name="a1-first" status="waiting"/>
+  <process name="b2-second" status="waiting"/>
+  <process name="c3-third" status="waiting"/>
+</workflow>
