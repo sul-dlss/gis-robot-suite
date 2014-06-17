@@ -47,3 +47,8 @@ sul-robots1-dev:
   - dor_demoWF_a1-first
   - dor_demoWF_b2-second
   - dor_demoWF_c3-third
+
+sul-robots2-dev:
+  - dor_demoWF_a1-first
+  - dor_demoWF_b2-second
+  - dor_demoWF_c3-third
