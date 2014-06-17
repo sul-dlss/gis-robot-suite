@@ -13,7 +13,6 @@
 		<label>Second Step</label>
 	</process>
 	<process name="c3-third" sequence="4">
-		<prereq>a1-first</prereq>
 		<prereq>b2-second</prereq>
 		<label>Depends on a1 and b2</label>
 	</process>

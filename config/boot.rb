@@ -23,10 +23,13 @@ require 'dor-services'
 require 'lyber_core'
 
 # TODO Maybe move auto-require to just run_robot and spec_helper?
-Dir["#{ROBOT_ROOT}/lib/**/*.rb"].each { |f| require f }
-require 'demo/a1_first'
-require 'demo/b2_second'
-require 'demo/c3_third'
+Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
+require 'build_was_crawl_druid_tree'
+require 'metadata_extractor'
+require 'content_metadata_generator'
+require 'desc_metadata_generator'
+require 'technical_metadata_generator'
+require 'end_was_crawl_preassembly'
 
 
 env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environment}")
@@ -34,18 +37,8 @@ puts "Loading config from #{env_file}"
 require env_file
 
 require 'resque'
-REDIS_URL ||= "localhost:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
+REDIS_URL ||= "sul-lyberservices-dev.stanford.edu:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
 Resque.redis = REDIS_URL
 
 require 'active_support/core_ext' # camelcase
 require 'robot-controller'
-
-
-
-
-
-
-
-
-
-
