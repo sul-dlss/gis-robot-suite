@@ -1,0 +1,54 @@
+#
+#  Robot allocation strategy
+#
+#  Format:
+#
+#    host:
+#      - robot[:lane[:instances]]
+#
+#  where
+#    1. robot is a single robot identifier (fully-qualified with
+#       REPO_SUITE_ROBOT, e.g., "dor_accessionWF_technical-metadata").
+#    2. lane is 
+#          - a single identifier ('A'), or 
+#          - a list of identiers ('A,B,C'), or 
+#          - an asterix (*).
+#    3. instances is a single integer.
+#
+#  Both lane and instances are optional. Lane defaults to 'default', and 
+#  instances defaults to 1.
+#
+#  When a robot is allocated to multiple lanes, it reads them in
+#  PRIORITY ORDER. That is, if a robot is listening to lanes A, B, and C,
+#  it works on lane A until empty, then lane B until empty, and then
+#  lane C until empty. In the meantime, if a job comes in on a 'faster'
+#  lane, it works on that after finishing it's current job (i.e., after
+#  working on a job in lane C, if a job comes in on lane A in the intermin,
+#  the robot will work on the lane A job next before returning to lane C).
+#  When using an asterix for the lane designator, the lanes are processed
+#  in alphabetical order.
+#
+#  Note that the syntax is YAML, so the lists must not contain spaces or
+#  needs to be quoted.
+#  
+#    RIGHT
+#      - dor_accessionWF_technical-metadata:A:5
+#      - 'dor_accessionWF_technical-metadata : A : 5'
+#
+#    WRONG
+#      - dor_accessionWF_technical-metadata : A : 5
+#      - dor_accessionWF_technical-metadata: A: 5
+#
+
+#
+# Robot 1 (8 CPU) hosts shelving and publish only
+#
+sul-robots1-dev:
+  - dor_demoWF_a1-first
+  - dor_demoWF_b2-second
+  - dor_demoWF_c3-third
+
+sul-robots2-dev:
+  - dor_demoWF_a1-first
+  - dor_demoWF_b2-second
+  - dor_demoWF_c3-third
