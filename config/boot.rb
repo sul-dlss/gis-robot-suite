@@ -33,8 +33,7 @@ puts "Loading config from #{env_file}"
 require env_file
 
 require 'resque'
-REDIS_URL ||= "sul-lyberservices-dev.stanford.edu:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
-Resque.redis = REDIS_URL
+Resque.redis = REDIS_URL || "localhost:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
 
 require 'active_support/core_ext' # camelcase
 require 'robot-controller'
