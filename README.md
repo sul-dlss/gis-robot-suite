@@ -34,10 +34,7 @@ Here are the files you will find in the `config` directory
 `config/boot`
 Loads supporting framework classes and configuration
 
-`config/environments/bluepill_development.rb`
-Configuration options for the `bluepill` process manager
-
-`config/environments/workfows_development.rb`
+`config/environments/robots_development.yml`
 You list workflow steps that will spawn workers, and optionally, how many workers per step
 
 `config/workflows/demo_definition.xml`
