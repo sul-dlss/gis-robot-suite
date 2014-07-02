@@ -26,7 +26,7 @@ require 'lyber_core'
 Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
 require 'demo/a1_first'
 require 'demo/b2_second'
-require 'demo/c3-third'
+require 'demo/c3_third'
 
 env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environment}")
 puts "Loading config from #{env_file}"
