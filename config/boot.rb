@@ -24,9 +24,7 @@ require 'lyber_core'
 
 # TODO Maybe move auto-require to just run_robot and spec_helper?
 Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
-require 'demo/a1_first'
-require 'demo/b2_second'
-require 'demo/c3_third'
+require 'robots'
 
 env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environment}")
 puts "Loading config from #{env_file}"
