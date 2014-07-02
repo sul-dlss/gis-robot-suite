@@ -15,3 +15,5 @@ Dor::Config.configure do
   end
    
 end
+
+REDIS_URL ||= "localhost:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
