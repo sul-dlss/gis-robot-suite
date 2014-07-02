@@ -1,7 +1,9 @@
-Demo-Bots
+Robot-Suite-Base
 ---------
 
-This is an example robot project using the new `robot-master`/`robot-controller`/`lyber-core` framework, which builds upon `resque` for job-management.
+This is a baseline robot project using the new `robot-master`/`robot-controller`/`lyber-core` framework, which builds upon `resque` for job-management.
+
+The idea is that if you're creating a new robot suite, you would fork this repo as a starting point.
 
 An example robot as found in `robots/demo/a1_first.rb` looks like this
 ```ruby
