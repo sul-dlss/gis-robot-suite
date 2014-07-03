@@ -40,9 +40,6 @@
 #      - dor_accessionWF_technical-metadata: A: 5
 #
 
-#
-# Robot 1 (8 CPU) hosts shelving and publish only
-#
 sul-robots1-dev:
   - dor_myDemoWF_a1-first:default:3 # 3 robots in default lane
   - dor_myDemoWF_b2-second          # 1 robot in default lane
