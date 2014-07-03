@@ -1,12 +1,12 @@
 module Robots
   module DorRepo
-    module Demo
+    module MyDemo
 
       class A1First
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'demoWf', 'a1-first')
+          super('dor', 'myDemoWf', 'a1-first')
         end
 
         def perform(druid)

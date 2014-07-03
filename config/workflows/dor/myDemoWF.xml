@@ -1,6 +1,6 @@
 <!-- Used by the robot master -->
 <?xml version="1.0"?>
-<workflow-def id="demoWF" repository="dor">
+<workflow-def id="myDemoWF" repository="dor">
 	<process name="start" sequence="1" status="completed">
 		<label>Initiate assembly of the object</label>
 	</process>

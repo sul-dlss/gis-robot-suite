@@ -1,16 +1,16 @@
 module Robots
   module DorRepo
-    module Demo
+    module MyDemo
 
-      class C3Third
+      class B2Second
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'demoWf', 'c3-third')
+          super('dor', 'myDemoWf', 'b2-second')
         end
 
         def perform(druid)
-          LyberCore::Log.info "c3-third worked on #{druid}"
+          LyberCore::Log.info "b2-second worked on #{druid}"
         end
       end
 

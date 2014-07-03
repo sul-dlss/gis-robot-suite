@@ -1,3 +1,3 @@
-require 'demo/a1_first'
-require 'demo/b2_second'
-require 'demo/c3_third'
+require 'myDemo/a1_first'
+require 'myDemo/b2_second'
+require 'myDemo/c3_third'
