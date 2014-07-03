@@ -16,4 +16,4 @@ Dor::Config.configure do
    
 end
 
-REDIS_URL ||= "localhost:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
+REDIS_URL ||= "lyberservices-dev.stanford.edu:6379/resque:#{ENV['ROBOT_ENVIRONMENT']}"
