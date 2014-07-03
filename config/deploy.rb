@@ -4,9 +4,9 @@ lock '3.2.1'
 set :rvm_type, :system
 set :rvm_ruby_string, 'ruby-1.9.3-p484'
 
-set :application, 'demo-bots'
-set :repo_url, 'https://github.com/sul-dlss/demo-bots.git'
-set :branch, 'demoWF'
+set :application, 'myDemoWF'
+set :repo_url, 'https://github.com/sul-dlss/robot-suite-base.git'
+set :branch, 'master'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call

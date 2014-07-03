@@ -6,7 +6,7 @@ module Robots
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'myDemoWf', 'b2-second')
+          super('dor', 'myDemoWF', 'b2-second')
         end
 
         def perform(druid)
