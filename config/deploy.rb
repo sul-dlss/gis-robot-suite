@@ -5,14 +5,14 @@ set :rvm_type, :system
 set :rvm_ruby_string, 'ruby-1.9.3-p484'
 
 set :application, 'myDemoWF'
-set :repo_url, 'https://github.com/sul-dlss/robot-suite-base.git'
+set :repo_url, 'https://github.com/sul-dlss/my-robot-suite.git'
 set :branch, 'master'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/home/lyberadmin/robot-suite-base'
+set :deploy_to, '/home/lyberadmin/my-robot-suite'
 
 # Default value for :scm is :git
 # set :scm, :git
