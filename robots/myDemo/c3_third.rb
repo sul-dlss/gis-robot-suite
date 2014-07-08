@@ -9,7 +9,7 @@ module Robots       # Robot package
         include LyberCore::Robot 
 
         def initialize
-          super('dor', 'myDemoWF', 'c3-third') # init LyberCore::Robot
+          super('dor', 'myDemoWF', 'c3-third', check_queued_status: true) # init LyberCore::Robot
         end
 
         # `perform` is the main entry point for the robot. This is where
