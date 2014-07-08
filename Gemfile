@@ -5,6 +5,7 @@ gem 'dor-services', '~> 4.8'
 gem 'lyber-core', '~> 3.2', '>=3.2.1'
 gem 'net-ssh-krb'             # for Stanford SSH environment
 gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
+gem 'pry' # for console
 
 group :development do
   source 'http://sul-gems.stanford.edu'
@@ -12,7 +13,6 @@ group :development do
     instance_eval(File.read(mygems))
   end
   gem 'rspec'
-  gem 'pry'
   gem 'awesome_print'
 	gem 'debugger', :platform => :ruby_19
 	gem 'yard'
