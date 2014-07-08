@@ -18,6 +18,11 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           # ... your robot work goes here ...
+          #
+          # for example:
+          #     obj = Dor::Item.find(druid)
+          #     obj.publish_metadata
+          #
           LyberCore::Log.info "b2-second worked on #{druid}"
         end
       end
