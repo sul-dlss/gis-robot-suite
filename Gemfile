@@ -7,6 +7,7 @@ gem 'net-ssh-krb', '~> 0.3.0'   # for Stanford SSH environment
 gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
 gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'slop', '~> 3.5.0'          # for bin/run_robot
+gem 'rake', '~> 10.3.2'
 
 group :development do
   source 'http://sul-gems.stanford.edu'
