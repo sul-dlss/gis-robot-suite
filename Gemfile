@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'addressable', "2.3.5"    # pin to avoid RDF bug
+gem 'addressable', '2.3.5'      # pin to avoid RDF bug
 gem 'dor-services', '~> 4.8'
 gem 'lyber-core', '~> 3.2', '>=3.2.1'
-gem 'net-ssh-krb'             # for Stanford SSH environment
+gem 'net-ssh-krb', '~> 0.3.0'   # for Stanford SSH environment
 gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
-gem 'pry' # for console
+gem 'pry', '~> 0.10.0'          # for bin/console
+gem 'slop', '~> 3.5.0'          # for bin/run_robot
 
 group :development do
   source 'http://sul-gems.stanford.edu'
