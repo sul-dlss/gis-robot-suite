@@ -1,8 +1,8 @@
 # config valid only for Capistrano 3.1
-lock '3.2.1'
+# lock '3.2.1'
 
 set :rvm_type, :system
-set :rvm_ruby_string, 'ruby-1.9.3-p484'
+set :rvm_ruby_string, 'ruby-1.9.3-p484' # dor-services requires 1.9.3
 
 set :application, 'myDemoWF'
 set :repo_url, 'https://github.com/sul-dlss/my-robot-suite.git'
@@ -63,8 +63,8 @@ namespace :deploy do
         # execute :bundle, :install
          
         # Comment with the first deploy
-        execute :bundle, :exec, :controller, :stop
-        execute :bundle, :exec, :controller, :quit
+        test :bundle, :exec, :controller, :stop
+        test :bundle, :exec, :controller, :quit
         
         # Always call the boot
         execute :bundle, :exec, :controller, :boot
