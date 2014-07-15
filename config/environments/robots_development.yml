@@ -40,12 +40,30 @@
 #      - dor_accessionWF_technical-metadata: A: 5
 #
 
-sul-robots1-dev:
-  - dor_myDemoWF_a1-first:default:3 # 3 robots in default lane
-  - dor_myDemoWF_b2-second          # 1 robot in default lane
-  - dor_myDemoWF_c3-third:myLane    # 1 robot in myLane lane
-
-sul-robots2-dev:
-  - dor_myDemoWF_a1-first:*         # 1 robot in all lanes
-  - dor_myDemoWF_b2-second:default,myLane # 1 robot in default and myLane lanes
-  - dor_myDemoWF_c3-third:*:3       # 3 robots in all lanes
+geomdtk-dev:
+  - dor_gisAssemblyWF_assign-placenames
+  - dor_gisAssemblyWF_extract-iso19139
+  - dor_gisAssemblyWF_extract-thumbnail
+  - dor_gisAssemblyWF_finish-data
+  - dor_gisAssemblyWF_finish-gis-assembly-pipeline
+  - dor_gisAssemblyWF_finish-metadata
+  - dor_gisAssemblyWF_generate-content-metadata
+  - dor_gisAssemblyWF_generate-geo-metadata
+  - dor_gisAssemblyWF_generate-mods
+  - dor_gisAssemblyWF_normalize-data
+  - dor_gisAssemblyWF_package-data
+  - dor_gisAssemblyWF_register-druid
+  - dor_gisAssemblyWF_start-assembly-workflow
+  - dor_gisAssemblyWF_start-delivery-workflow
+  - dor_gisDeliveryWF_finish-gis-delivery-pipeline
+  - dor_gisDeliveryWF_load-geoserver
+  - dor_gisDeliveryWF_load-geowebcache
+  - dor_gisDeliveryWF_load-raster
+  - dor_gisDeliveryWF_load-vector
+  - dor_gisDeliveryWF_seed-geowebcache
+  - dor_gisDeliveryWF_start-gis-discovery-workflow
+  - dor_gisDiscoveryWF_finish-gis-discovery-pipeline
+  - dor_gisDiscoveryWF_generate-geosearch
+  - dor_gisDiscoveryWF_generate-ogp
+  - dor_gisDiscoveryWF_load-geosearch
+  - dor_gisDiscoveryWF_load-ogp
