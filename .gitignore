@@ -14,3 +14,5 @@ config/certs
 .ruby-version
 .ruby-gemset
 Gemfile.lock
+run
+log
