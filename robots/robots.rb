@@ -1,6 +1,9 @@
 # Put each of your robots here and they will be included via config/boot'
 
+require 'gisAssembly/approve-data'
+require 'gisAssembly/approve-metadatadata'
 require 'gisAssembly/assign-placenames'
+require 'gisAssembly/author-metadata'
 require 'gisAssembly/extract-iso19139'
 require 'gisAssembly/extract-thumbnail'
 require 'gisAssembly/finish-data'
@@ -13,6 +16,7 @@ require 'gisAssembly/normalize-data'
 require 'gisAssembly/package-data'
 require 'gisAssembly/start-assembly-workflow'
 require 'gisAssembly/start-delivery-workflow'
+require 'gisAssembly/wrangle-data'
 
 require 'gisDelivery/finish-gis-delivery-workflow'
 require 'gisDelivery/load-geoserver'
