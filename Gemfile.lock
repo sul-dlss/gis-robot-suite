@@ -50,6 +50,9 @@ GEM
       capistrano (~> 3.0)
     capistrano-releaseboard (0.0.1)
       faraday
+    capistrano-rvm (0.1.1)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
     coderay (1.1.0)
     columnize (0.8.9)
     confstruct (0.2.7)
@@ -272,6 +275,7 @@ DEPENDENCIES
   capistrano (~> 3.2.1)
   capistrano-bundler (~> 1.1)
   capistrano-one_time_key
+  capistrano-rvm
   debugger
   dor-services (~> 4.8)
   holepicker (~> 0.3, >= 0.3.3)
