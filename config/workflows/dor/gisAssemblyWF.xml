@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <workflow-def id="gisAssemblyWF" repository="dor">
-  <process name="start-gis-assembly-pipeline" sequence="1" status="completed">
-    <label>Initiate assembly pipeline for the object</label>
+  <process name="start-gis-assembly-workflow" sequence="1" status="completed">
+    <label>Initiate assembly workflow for the object</label>
   </process>
   <process name="register-druid" sequence="2" status="completed">
-    <prereq>start-gis-assembly-pipeline</prereq>
+    <prereq>start-gis-assembly-workflow</prereq>
     <label>Ensure proper registration of druid, source ID, and label</label>
   </process>
   <process name="author-metadata" sequence="3">
@@ -13,7 +13,7 @@
   </process>
   <process name="approve-metadata" sequence="4">
     <prereq>author-metadata</prereq>
-    <label>Approve metadata quality and release for workflow pipeline</label>
+    <label>Approve metadata quality and release for workflow workflow</label>
   </process>
   <process name="wrangle-data" sequence="5">
     <prereq>register-druid</prereq>
@@ -22,7 +22,7 @@
   </process>
   <process name="approve-data" sequence="6">
     <prereq>wrangle-data</prereq>
-    <label>Approve data quality for digital work and release for workflow pipeline</label>
+    <label>Approve data quality for digital work and release for workflow workflow</label>
   </process>
   <process name="normalize-data" sequence="7">
     <prereq>approve-data</prereq>
@@ -69,16 +69,16 @@
     <prereq>finish-data</prereq>
     <label>Generate contentMetadata manifest</label>
   </process>  
-  <process name="finish-gis-assembly-pipeline" sequence="17">
+  <process name="finish-gis-assembly-workflow" sequence="17">
     <prereq>generate-content-metadata</prereq>
-    <label>Finalize assembly pipeline to prepare for assembly/delivery/discovery</label>
+    <label>Finalize assembly workflow to prepare for assembly/delivery/discovery</label>
   </process>
   <process name="start-assembly-workflow" sequence="18">
-    <prereq>finish-gis-assembly-pipeline</prereq>
+    <prereq>finish-gis-assembly-workflow</prereq>
     <label>Kickstart the core assembly workflow at assemblyWF</label>
   </process>
   <process name="start-delivery-workflow" sequence="19">
-    <prereq>finish-gis-assembly-pipeline</prereq>
+    <prereq>finish-gis-assembly-workflow</prereq>
     <prereq>start-assembly-workflow</prereq><!-- XXX: force linear -->
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
