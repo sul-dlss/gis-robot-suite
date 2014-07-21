@@ -13,11 +13,11 @@
   </process>  
   <process name="generate-geoblacklight" sequence="4">
     <prereq>start-gis-discovery-workflow</prereq>
-    <label>Generate Solr document for GeoSearch</label>
+    <label>Generate Solr document for GeoBlacklight</label>
   </process>
   <process name="load-geoblacklight" sequence="5">
     <prereq>generate-geoblacklight</prereq>
-    <label>Load Solr document into GeoSearch</label>
+    <label>Load Solr document into GeoBlacklight</label>
   </process>
   <process name="finish-gis-discovery-workflow" sequence="6">
     <prereq>load-ogp</prereq>
