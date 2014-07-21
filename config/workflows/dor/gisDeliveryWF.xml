@@ -8,8 +8,7 @@
     <label>Load vector data into PostGIS database</label>
   </process>  
   <process name="load-raster" sequence="3">
-    <prereq>start-delivery-pipeline</prereq>
-    <prereq>load-vector</prereq><!-- XXX: force linear -->
+    <prereq>start-gis-delivery-pipeline</prereq>
     <label>Load raster into GeoTIFF data store</label>
   </process>  
   <process name="load-geoserver" sequence="4">

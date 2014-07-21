@@ -13,7 +13,6 @@
   </process>  
   <process name="generate-geosearch" sequence="4">
     <prereq>start-gis-discovery-pipeline</prereq>
-    <prereq>load-ogp</prereq><!-- XXX: force linear -->
     <label>Generate Solr document for GeoSearch</label>
   </process>
   <process name="load-geosearch" sequence="5">
