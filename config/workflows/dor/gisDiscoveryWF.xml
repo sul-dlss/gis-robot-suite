@@ -11,11 +11,11 @@
     <prereq>generate-ogp</prereq>
     <label>Load Solr document into OpenGeoPortal</label>
   </process>  
-  <process name="generate-geosearch" sequence="4">
+  <process name="generate-geoblacklight" sequence="4">
     <prereq>start-gis-discovery-workflow</prereq>
     <label>Generate Solr document for GeoSearch</label>
   </process>
-  <process name="load-geosearch" sequence="5">
+  <process name="load-geoblacklight" sequence="5">
     <prereq>generate-geosearch</prereq>
     <label>Load Solr document into GeoSearch</label>
   </process>

@@ -68,7 +68,7 @@ geomdtk-dev:
   - dor_gisDeliveryWF_seed-geowebcache
   - dor_gisDeliveryWF_start-gis-discovery-workflow
   - dor_gisDiscoveryWF_finish-gis-discovery-workflow
-  - dor_gisDiscoveryWF_generate-geosearch
+  - dor_gisDiscoveryWF_generate-geoblacklight
   - dor_gisDiscoveryWF_generate-ogp
-  - dor_gisDiscoveryWF_load-geosearch
+  - dor_gisDiscoveryWF_load-geoblacklight
   - dor_gisDiscoveryWF_load-ogp
