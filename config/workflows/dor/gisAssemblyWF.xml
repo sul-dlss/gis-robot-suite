@@ -3,7 +3,7 @@
   <process name="start-gis-assembly-pipeline" sequence="1" status="completed">
     <label>Initiate assembly pipeline for the object</label>
   </process>
-  <process name="register-druid" sequence="2">
+  <process name="register-druid" sequence="2" status="completed">
     <prereq>start-gis-assembly-pipeline</prereq>
     <label>Ensure proper registration of druid, source ID, and label</label>
   </process>
@@ -52,7 +52,7 @@
     <label>Convert ISO 19139 metadata into geoMetadata</label>
   </process>
   <process name="generate-mods" sequence="13">
-    <prereq>generate-geoMetadata</prereq>
+    <prereq>generate-geo-metadata</prereq>
     <label>Convert geoMetadata into MODS</label>
   </process>
   <process name="assign-placenames" sequence="14">
