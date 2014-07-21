@@ -41,7 +41,12 @@
 #
 
 geomdtk-dev:
+  - dor_gisAssemblyWF_approve-data
+  - dor_gisAssemblyWF_approve-metadata
   - dor_gisAssemblyWF_assign-placenames
+  - dor_gisAssemblyWF_author-data
+  - dor_gisAssemblyWF_author-data
+  - dor_gisAssemblyWF_author-metadata
   - dor_gisAssemblyWF_extract-iso19139
   - dor_gisAssemblyWF_extract-thumbnail
   - dor_gisAssemblyWF_finish-data
@@ -55,6 +60,7 @@ geomdtk-dev:
   - dor_gisAssemblyWF_register-druid
   - dor_gisAssemblyWF_start-assembly-workflow
   - dor_gisAssemblyWF_start-delivery-workflow
+  - dor_gisAssemblyWF_wrangle-data
   - dor_gisDeliveryWF_finish-gis-delivery-pipeline
   - dor_gisDeliveryWF_load-geoserver
   - dor_gisDeliveryWF_load-geowebcache
