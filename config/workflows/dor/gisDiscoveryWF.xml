@@ -16,12 +16,12 @@
     <label>Generate Solr document for GeoSearch</label>
   </process>
   <process name="load-geoblacklight" sequence="5">
-    <prereq>generate-geosearch</prereq>
+    <prereq>generate-geoblacklight</prereq>
     <label>Load Solr document into GeoSearch</label>
   </process>
   <process name="finish-gis-discovery-workflow" sequence="6">
     <prereq>load-ogp</prereq>
-    <prereq>load-geosearch</prereq>
+    <prereq>load-geoblacklight</prereq>
     <label>Finalize GIS discovery workflow for the object</label>
   </process> 
 </workflow-def>
