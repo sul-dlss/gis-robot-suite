@@ -1,7 +1,7 @@
 # Put each of your robots here and they will be included via config/boot'
 
 require 'gisAssembly/approve-data'
-require 'gisAssembly/approve-metadatadata'
+require 'gisAssembly/approve-metadata'
 require 'gisAssembly/assign-placenames'
 require 'gisAssembly/author-metadata'
 require 'gisAssembly/extract-iso19139'
