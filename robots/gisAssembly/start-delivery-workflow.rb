@@ -1,3 +1,5 @@
+require 'dor-workflow-service'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -18,13 +20,9 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "start-delivery-workflow working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+
+          i = Dor::Item.find(druid)
+          i.initialize_workflow 'gisDeliveryWF', 'dor'
         end
       end
 
