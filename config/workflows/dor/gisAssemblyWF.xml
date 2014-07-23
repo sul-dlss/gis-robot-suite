@@ -75,6 +75,7 @@
   </process>
   <process name="start-delivery-workflow" sequence="19">
     <prereq>finish-gis-assembly-workflow</prereq>
+    <prereq>start-assembly-workflow</prereq> <!-- must serialize due to Fedora concurrency issue -->
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
 </workflow-def>
