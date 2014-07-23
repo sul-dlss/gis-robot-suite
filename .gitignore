@@ -16,3 +16,4 @@ config/certs
 Gemfile.lock
 run
 log
+config/environments
