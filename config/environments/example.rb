@@ -5,7 +5,6 @@ Dor::Config.configure do
   solrizer.url 'http://example.com/solr'
   workflow.url 'http://example.com/workflow'
   dor_services.url 'http://example.com/dor'
-  purl.url 'http://example.com/purl'
 
   robots do 
     workspace '/tmp'
@@ -26,7 +25,10 @@ Dor::Config.configure do
     stage "/var/example/stage"
     tmpdir "/var/example/tmp"
   end
-
+  
+  purl do
+    url 'http://example.com/purl'
+  end
 end
 
 REDIS_URL ||= "example.com:6379/resque:development"
