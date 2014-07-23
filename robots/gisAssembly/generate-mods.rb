@@ -30,7 +30,7 @@ module Robots       # Robot package
           geoMetadataDS.zipName = 'data.zip'
           geoMetadataDS.purl = Dor::Config.purl.url + "/#{druid}"
 
-          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp")
+          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp").first
           unless fn.nil?
             geoMetadataDS.geometryType = geometry_type(fn)
           else
@@ -48,15 +48,11 @@ module Robots       # Robot package
       #
       # @return [String] Point, Polygon, LineString as appropriate
       def geometry_type(shp_filename)
-        begin
-          RGeo::Shapefile::Reader.open(shp_filename) do |shp|
-            shp.each do |record|
-              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
-            end
+        RGeo::Shapefile::Reader.open(shp_filename) do |shp|
+          shp.each do |record|
+            return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
           end
-        rescue RGeo::Error::RGeoError => e
-          puts e.message
-        end 
+        end
         nil     
       end
       
