@@ -26,6 +26,7 @@ module Robots       # Robot package
           unless File.readable?(zipfn) and File.size(zipfn) > 0
             raise RuntimeError, "Missing packaged data: #{zipfn}"
           end
+          LyberCore::Log.debug "finish-metadata found #{zipfn}"
         end
       end
 

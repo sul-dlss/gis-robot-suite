@@ -26,6 +26,7 @@ module Robots       # Robot package
             unless File.readable?(fn) and File.size(fn) > 0
               raise RuntimeError, "Missing metadata: #{fn}"
             end
+            LyberCore::Log.debug "finish-metadata found #{fn}"
           end
         end
       end
