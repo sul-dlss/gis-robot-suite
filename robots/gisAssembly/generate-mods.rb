@@ -15,6 +15,18 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'generate-mods', check_queued_status: true) # init LyberCore::Robot
         end
 
+        # Reads the shapefile to determine geometry type
+        #
+        # @return [String] Point, Polygon, LineString as appropriate
+        def geometry_type(shp_filename)
+          RGeo::Shapefile::Reader.open(shp_filename) do |shp|
+            shp.each do |record|
+              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
+            end
+          end
+          nil     
+        end
+
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
         #
@@ -44,17 +56,6 @@ module Robots       # Robot package
         end
       end
 
-      # Reads the shapefile to determine geometry type
-      #
-      # @return [String] Point, Polygon, LineString as appropriate
-      def geometry_type(shp_filename)
-        RGeo::Shapefile::Reader.open(shp_filename) do |shp|
-          shp.each do |record|
-            return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
-          end
-        end
-        nil     
-      end
       
     end
   end
