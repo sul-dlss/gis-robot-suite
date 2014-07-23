@@ -49,7 +49,7 @@ module Robots       # Robot package
             geoMetadataDS.geometryType = 'Raster'
           end
 
-          File.open(ile.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
+          File.open(File.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
             f << geoMetadataDS.to_mods.to_xml(:index => 2) 
           end
           
