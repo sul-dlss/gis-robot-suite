@@ -9,3 +9,4 @@ module GisRobotSuite
     return File.join(rootdir, pid)
     
   end
+end
