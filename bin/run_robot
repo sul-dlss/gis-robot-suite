@@ -14,7 +14,7 @@ slop = Slop.new do
   on :f, :file=, 'One file containing a druid per line'
 end
 
-unless ARGV.first =~ /^\w+:\w+:\w+$/
+unless ARGV.first =~ /^\w+:\w+:[-_\w]+$/
   puts slop.help
   exit 1
 end
