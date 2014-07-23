@@ -1,3 +1,6 @@
+require 'rgeo'
+require 'rgeo/shapefile'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -18,16 +21,45 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "generate-mods working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+
+          rootdir = Dor::Config.geohydra.stage
+          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+
+          fn = "#{rootdir}/#{druid}/metadata/geoMetadata.xml"
+          geoMetadataDS = Dor::GeoMetadataDS.from_xml File.read(fn)
+          geoMetadataDS.zipName = 'data.zip'
+          geoMetadataDS.purl = Dor::Config.purl.url + "/#{druid}"
+
+          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp")
+          unless fn.nil?
+            geoMetadataDS.geometryType = geometry_type(fn)
+          else
+            geoMetadataDS.geometryType = 'Raster'
+          end
+
+          File.open("#{rootdir}/#{druid}/metadata/descMetadata.xml", 'wb') do |f| 
+            f << geoMetadataDS.to_mods.to_xml(:index => 2) 
+          end
+          
         end
       end
 
+      # Reads the shapefile to determine geometry type
+      #
+      # @return [String] Point, Polygon, LineString as appropriate
+      def geometry_type(shp_filename)
+        begin
+          RGeo::Shapefile::Reader.open(shp_filename) do |shp|
+            shp.each do |record|
+              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
+            end
+          end
+        rescue RGeo::Error::RGeoError => e
+          puts e.message
+        end 
+        nil     
+      end
+      
     end
   end
 end
