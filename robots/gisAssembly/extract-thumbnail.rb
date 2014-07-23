@@ -26,13 +26,13 @@ module Robots       # Robot package
         # Extracts an inline thumbnail from the ESRI ArcCatalog metadata format
         # @raise [ArgumentError] if cannot find a thumbnail
         def extract_thumbnail druid
-          rootdir = Dor::Config.geohydra.stage
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # @param [String] fn the metadata
           # @param [String] thumbnail_fn the file into which to write JPEG image
           # @param [String] property_type is the EsriPropertyType to select          
-          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp.xml").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
           thumbnail_fn = File.join(rootdir, druid, 'content', 'preview.jpg')
           property_type = 'PictureX'
           

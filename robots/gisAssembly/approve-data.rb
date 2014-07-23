@@ -19,15 +19,15 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "approve-data working on #{druid}"
 
-          rootdir = Dor::Config.geohydra.stage
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # XXX: Use magic(5) to determine validity
-          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp").first
           if fn.nil? or File.size(fn) == 0
-            fn = Dir.glob("#{rootdir}/#{druid}/temp/*.tif").first
+            fn = Dir.glob("#{rootdir}/temp/*.tif").first
             if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing data files in #{rootdir}/#{druid}/temp"
+              raise RuntimeError, "Missing data files in #{rootdir}/temp"
             end
           end
           LyberCore::Log.debug "approve-data found #{fn}"

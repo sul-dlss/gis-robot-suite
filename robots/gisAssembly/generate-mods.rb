@@ -22,22 +22,22 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "generate-mods working on #{druid}"
 
-          rootdir = Dor::Config.geohydra.stage
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
-          fn = "#{rootdir}/#{druid}/metadata/geoMetadata.xml"
+          fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           geoMetadataDS = Dor::GeoMetadataDS.from_xml File.read(fn)
           geoMetadataDS.zipName = 'data.zip'
-          geoMetadataDS.purl = Dor::Config.purl.url + "/#{druid}"
+          geoMetadataDS.purl = Dor::Config.purl.url + "/#{druid.gsub(/^druid:/, '')}"
 
-          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp").first
           unless fn.nil?
             geoMetadataDS.geometryType = geometry_type(fn)
           else
             geoMetadataDS.geometryType = 'Raster'
           end
 
-          File.open("#{rootdir}/#{druid}/metadata/descMetadata.xml", 'wb') do |f| 
+          File.open(ile.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
             f << geoMetadataDS.to_mods.to_xml(:index => 2) 
           end
           

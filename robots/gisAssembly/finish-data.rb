@@ -19,10 +19,10 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
 
-          rootdir = Dor::Config.geohydra.stage
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
-          zipfn = File.join(rootdir, druid, 'content', 'data.zip')
+          zipfn = File.join(rootdir, 'content', 'data.zip')
           unless File.readable?(zipfn) and File.size(zipfn) > 0
             raise RuntimeError, "Missing packaged data: #{zipfn}"
           end

@@ -19,15 +19,15 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "extract-iso19139 working on #{druid}"
 
-          rootdir = Dor::Config.geohydra.stage
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # @param [String] fn the metadata
           # @param [String] thumbnail_fn the file into which to write JPEG image
           # @param [String] property_type is the EsriPropertyType to select          
-          fn = Dir.glob("#{rootdir}/#{druid}/temp/*.shp.xml").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
           if fn.nil?
-            fn = Dir.glob("#{rootdir}/#{druid}/temp/*.tif.xml").first
+            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
           end
 
           if fn =~ %r{^(.*).(shp|tif).xml$}
