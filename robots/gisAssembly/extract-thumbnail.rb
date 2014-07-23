@@ -33,7 +33,7 @@ module Robots       # Robot package
           # @param [String] thumbnail_fn the file into which to write JPEG image
           # @param [String] property_type is the EsriPropertyType to select          
           fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
-          thumbnail_fn = File.join(rootdir, druid, 'content', 'preview.jpg')
+          thumbnail_fn = File.join(rootdir, 'content', 'preview.jpg')
           property_type = 'PictureX'
           
           doc = Nokogiri::XML(File.read(fn))
