@@ -27,7 +27,7 @@ module Robots       # Robot package
           if fn.nil? or File.size(fn) == 0
             fn = Dir.glob("#{rootdir}/#{druid}/temp/*.tif").first
             if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing data files"
+              raise RuntimeError, "Missing data files in #{rootdir}/#{druid}/temp"
             end
           end
           LyberCore::Log.debug "approve-data found #{fn}"

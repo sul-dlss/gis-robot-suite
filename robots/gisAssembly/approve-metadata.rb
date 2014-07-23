@@ -27,7 +27,7 @@ module Robots       # Robot package
           if fn.nil? or File.size(fn) == 0
             fn = Dir.glob("#{rootdir}/#{druid}/temp/*.tif.xml").first
             if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing metadata files"
+              raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/#{druid}/temp"
             end
           end
           LyberCore::Log.debug "approve-metadata found #{fn}"
