@@ -52,7 +52,7 @@ module Robots       # Robot package
         # @param [String] purl The unique purl url
         # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
         def to_geoMetadataDS isoXml, fcXml, purl
-          raise ArgumentError, "PURL is required" if flags['purl'].nil?
+          raise ArgumentError, "PURL is required" if purl.nil?
           raise ArgumentError, "ISO 19139 is required" if isoXml.nil? or isoXml.root.nil?
           Nokogiri::XML("
             <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
