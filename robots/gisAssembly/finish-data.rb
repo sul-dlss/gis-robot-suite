@@ -18,13 +18,14 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+
+          rootdir = Dor::Config.geohydra.stage
+          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
+          zipfn = File.join(rootdir, druid, 'content', 'data.zip')
+          unless File.readable?(zipfn) and File.size(zipfn) > 0
+            raise RuntimeError, "Missing packaged data: #{zipfn}"
+          end
         end
       end
 
