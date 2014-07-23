@@ -41,7 +41,6 @@
   </process>
   <process name="extract-iso19139" sequence="11">
     <prereq>approve-metadata</prereq>
-    <prereq>finish-data</prereq> <!-- requires shapefile -->
     <label>Extract ISO 19139 metadata from ArcCatalog</label>
   </process>
   <process name="generate-geo-metadata" sequence="12">
