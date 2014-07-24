@@ -200,7 +200,7 @@ GEM
     rgeo-shapefile (0.2.3)
       dbf (>= 1.7.0)
       rgeo (>= 0.3.3)
-    robot-controller (0.3.6)
+    robot-controller (0.3.7)
       bluepill (~> 0.0.67)
       resque (~> 1.25.2)
     rsolr (1.0.10)
