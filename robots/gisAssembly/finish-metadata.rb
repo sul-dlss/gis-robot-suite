@@ -28,6 +28,14 @@ module Robots       # Robot package
             end
             LyberCore::Log.debug "finish-metadata found #{fn}"
           end
+
+          %w{preview.jpg}.each do |f|
+          fn = File.join(rootdir, 'content', f)
+            unless File.readable?(fn) and File.size(fn) > 0
+              raise RuntimeError, "Missing metadata: #{fn}"
+            end
+            LyberCore::Log.debug "finish-metadata found #{fn}"
+          end
         end
       end
 
