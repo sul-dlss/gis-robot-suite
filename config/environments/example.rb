@@ -25,6 +25,10 @@ Dor::Config.configure do
     stage "/var/example/stage"
     tmpdir "/var/example/tmp"
   end
+
+  geoserver do
+    url "http://kurma-podd1.stanford.edu/geoserver"	
+  end
   
   purl do
     url 'http://example.com/purl'
