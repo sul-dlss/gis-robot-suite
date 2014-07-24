@@ -1,0 +1,3 @@
+[submodule "schema"]
+	path = schema
+	url = git@github.com:sul-dlss/geoblacklight-schema.git
