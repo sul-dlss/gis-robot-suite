@@ -18,13 +18,13 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+          
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
+          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
+          # XXX: delete all files in temp/
+          # XXX: rsync rootdir into /dor/workspace
+          # raise NotImplementedError
         end
       end
 

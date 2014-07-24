@@ -18,13 +18,9 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "assign-placenames working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+          
+          # XXX: rewrite MODS with gazetteer mappings for placenames
+          # raise NotImplementedError
         end
       end
 
