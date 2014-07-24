@@ -20,7 +20,7 @@ module Robots       # Robot package
             :purl => Dor::Config.purl.url + "/" + druid.gsub(/^druid:/, '')
           }
 
-          # OGP Solr document from descMetadataDS
+          # GeoBlacklight Solr document from descMetadataDS
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
           FileUtils.rm_f(ofn) if File.exist?(ofn)
