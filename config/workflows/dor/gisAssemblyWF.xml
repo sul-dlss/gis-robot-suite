@@ -29,6 +29,7 @@
   </process>  
   <process name="package-data" sequence="8">
     <prereq>normalize-data</prereq>
+    <prereq>extract-iso19139</prereq> <!-- data.zip should contain the ISO 19139/19110 metadata -->
     <label>Package the digital work and derivative data files</label>
   </process>
   <process name="finish-data" sequence="9">
