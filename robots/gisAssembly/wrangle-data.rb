@@ -18,13 +18,15 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "wrangle-data working on #{druid}"
-          #
-          # ... your robot work goes here ...
-          #
-          # for example:
-          #     obj = Dor::Item.find(druid)
-          #     obj.publish_metadata
-          #
+          
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
+          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
+          # ensure that we have either a .shp or a .tif
+          if Dir.glob(File.join(rootdir, 'temp', '**', '*.shp')).first.nil? and
+             Dir.glob(File.join(rootdir, 'temp', '**', '*.tif')).first.nil?
+            raise RuntimeError, "Missing Shapefile or TIFF data files in #{rootdir}"
+          end
         end
       end
 
