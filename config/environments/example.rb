@@ -27,7 +27,7 @@ Dor::Config.configure do
   end
 
   geoserver do
-    url "http://kurma-podd1.stanford.edu/geoserver"	
+    url "http://example.com/geoserver"	
   end
   
   purl do
