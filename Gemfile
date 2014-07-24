@@ -20,6 +20,7 @@ group :development do
 	gem 'yard'
 	gem 'capistrano', '~> 3.2.1'
   gem 'capistrano-bundler', '~> 1.1'
+  gem 'capistrano-rvm', '~> 0.1.1'
   gem 'lyberteam-capistrano-devel', "~> 3.0"
   gem 'holepicker', '~> 0.3', '>= 0.3.3'
 end
