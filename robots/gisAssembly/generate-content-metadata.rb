@@ -28,7 +28,7 @@ module Robots       # Robot package
         # @return [Nokogiri::XML::Document]
         # @see [Assembly::ContentMetadata]
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-        def create_content_metadata(druid, objects, geoData, flags)
+        def create_content_metadata(druid, objects, geoData, flags = {})
           Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
             xml.contentMetadata(:objectId => "#{druid}", :type => flags[:content_type] || 'geo') do
               seq = 1
