@@ -1,3 +1,5 @@
+require 'fileutils'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -22,9 +24,13 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
-          # XXX: delete all files in temp/
-          # XXX: rsync rootdir into /dor/workspace
-          # raise NotImplementedError
+          # delete all files in temp/
+          FileUtils.rm_r("#{rootdir}/temp")
+          
+          # load workspace with identical copy of stage
+          druid = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace)
+          FileUtils.mkdir_p(druid.path)
+          system("rsync -av --delete #{rootdir}/ #{druid.path}/")
         end
       end
 
