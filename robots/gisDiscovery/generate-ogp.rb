@@ -26,7 +26,7 @@ module Robots       # Robot package
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
                   "--stringparam purl '#{flags[:purl]}'",
                   "--output '#{ofn}'",
-                  "'#{File.expand_path(File.dirname(__FILE__) + '../../schema/lib/xslt/mods2ogp.xsl')}'",
+                  "'#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2ogp.xsl')}'",
                   "'#{ifn}'"
                   ].join(' ')
           system cmd

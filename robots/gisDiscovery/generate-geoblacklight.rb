@@ -29,7 +29,7 @@ module Robots       # Robot package
                   "--stringparam purl '#{flags[:purl]}'",
                   "--stringparam now '#{Time.now.utc.to_datetime.rfc3339}'",
                   "--output '#{ofn}'",
-                  "'#{File.expand_path(File.dirname(__FILE__) + '../../schema/lib/xslt/mods2geoblacklight.xsl')}'",
+                  "'#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}'",
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
