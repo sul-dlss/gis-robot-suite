@@ -1,3 +1,5 @@
+require 'fastimage'
+require 'mime/types'
 require 'assembly-objectfile'
 
 # Robot class to run under multiplexing infrastructure
