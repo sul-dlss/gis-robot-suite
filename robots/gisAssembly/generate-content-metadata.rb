@@ -1,3 +1,5 @@
+require 'assembly-objectfile'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -11,7 +13,106 @@ module Robots       # Robot package
         def initialize
           super('dor', 'gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
         end
+        
+        FILE_ATTRIBUTES = Assembly::FILE_ATTRIBUTES.merge(
+          'image/png' => Assembly::FILE_ATTRIBUTES['image/jp2'], # preview image
+          'application/zip' => Assembly::FILE_ATTRIBUTES['default'] # data file
+        )
+        
+        # @param [Druid] druid
+        # @param [Array<Assembly::ObjectFile>] objects
+        # @param [Nokogiri::XML::DocumentFragment] geoData
+        # @param [Hash] flags
+        # @return [Nokogiri::XML::Document]
+        # @see [Assembly::ContentMetadata]
+        # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
+        def create_content_metadata(druid, objects, geoData, flags)
+          Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+            xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
+              seq = 1
+              objects.each do |k, v|
+                next if v.nil? or v.empty?
+                resource_type = case k 
+                  when :Data 
+                    :object
+                  when :Preview
+                    :preview
+                  else 
+                    :attachment
+                  end
+                xml.resource(
+                  :id => "#{druid.druid}_#{seq}",
+                  :sequence => seq,
+                  :type => resource_type
+                ) do
+                  xml.label k.to_s
+                  v.each do |o|
+                    raise ArgumentError unless o.is_a? Assembly::ObjectFile
+              
+                    mimetype = o.image?? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
+                    o.file_attributes ||= FILE_ATTRIBUTES[mimetype] || FILE_ATTRIBUTES['default']
+                    [:publish, :shelve].each {|t| o.file_attributes[t] = 'yes'}
+              
+                    roletype = if mimetype == 'application/zip'
+                                 if o.path =~ %r{_(EPSG_\d+)}i # derivative
+                                   'derivative'
+                                 else
+                                   'master'
+                                 end
+                               elsif o.image?
+                                   if o.path =~ %r{_small.png$}
+                                     'derivative'
+                                   else
+                                     'master'
+                                   end
+                               end || nil
+              
+                    case roletype
+                    when 'master'
+                      o.file_attributes[:preserve] = 'yes'
+                    else
+                      o.file_attributes[:preserve] = 'no'
+                    end
+                            
+                    xml.file o.file_attributes.merge(
+                               :id => o.filename,
+                               :mimetype => mimetype, 
+                               :size => o.filesize,
+                               :role => roletype || 'master') do
 
+                      if resource_type == :object
+                        if roletype == 'master' and not geoData.nil?
+                          xml.geoData do
+                            xml.parent.add_child geoData
+                          end
+                          geoData = nil # only once                  
+                        else
+                          if o.filename =~ %r{_EPSG_(\d+)\.zip}i
+                            xml.geoData :srsName => "EPSG:#{$1}"
+                          end
+                        end
+                      end
+                      xml.checksum(o.sha1, :type => 'sha1')
+                      xml.checksum(o.md5, :type => 'md5')
+                      if o.image?
+                        wh = FastImage.size(o.path)
+                        xml.imageData :width => wh[0], :height => wh[1]
+                      end
+                    end
+                  end
+                  seq += 1
+                end
+              end
+            end
+          end.doc.canonicalize
+        end
+
+        PATTERNS = {
+          :Data => '*.{zip,TAB,dat,bin,xls,xlsx,tar,tgz,csv,tif}',
+          :Preview => '*.{png,jpg,gif,jp2}',
+          :Metadata => '*.{xml,txt}'
+        }
+        
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
         #
@@ -19,8 +120,44 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "generate-content-metadata working on #{druid}"
           
-          # XXX: generate a specialized contentMetadata
-          # raise NotImplementedError
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
+          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
+          druid = DruidTools::Druid.new(druid, rootdir)
+          
+          objects = {
+            :Data => [],
+            :Preview => [],
+            :Metadata => []
+          }
+
+          # Process files
+          objects.keys.each do |k|
+            Dir.glob(rootdir + '/content/' + PATTERNS[k]).each do |fn|
+              objects[k] << Assembly::ObjectFile.new(fn, :label => k.to_s)
+            end
+          end
+          
+          item = Dor::Item.find(druid.druid)
+          
+          # extract the MODS extension cleanly
+          doc = item.datastreams['descMetadata'].ng_xml
+          ns = {}
+          doc.collect_namespaces.each do |k, v|
+            if k =~ %r{^xmlns:(.+)}i
+              ns[$1] = v 
+            else
+              ns['mods'] = v
+            end
+          end
+          ns['rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+          
+          geoData = item.datastreams['descMetadata'].ng_xml.dup.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
+          
+          xml = create_content_metadata druid.druid, objects, geoData
+          item.datastreams['contentMetadata'].content = xml
+          
+          item.save
         end
       end
 

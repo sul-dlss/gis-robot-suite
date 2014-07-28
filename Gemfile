@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'addressable', '2.3.5'      # pin to avoid RDF bug
+gem 'assembly-objectfile', '~> 1.6.4'
 gem 'dor-services', '~> 4.8'
 gem 'lyber-core', '~> 3.2', '>=3.2.1'
 gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
