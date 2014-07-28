@@ -19,7 +19,7 @@ module Robots       # Robot package
           'application/zip' => Assembly::FILE_ATTRIBUTES['default'] # data file
         )
         
-        # @param [Druid] druid
+        # @param [String] druid
         # @param [Array<Assembly::ObjectFile>] objects
         # @param [Nokogiri::XML::DocumentFragment] geoData
         # @param [Hash] flags
@@ -28,7 +28,7 @@ module Robots       # Robot package
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
         def create_content_metadata(druid, objects, geoData, flags)
           Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-            xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
+            xml.contentMetadata(:objectId => "#{druid}", :type => flags[:content_type] || 'geo') do
               seq = 1
               objects.each do |k, v|
                 next if v.nil? or v.empty?
@@ -41,7 +41,7 @@ module Robots       # Robot package
                     :attachment
                   end
                 xml.resource(
-                  :id => "#{druid.druid}_#{seq}",
+                  :id => "#{druid}_#{seq}",
                   :sequence => seq,
                   :type => resource_type
                 ) do
@@ -122,9 +122,7 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
-          
-          druid = DruidTools::Druid.new(druid, rootdir)
-          
+                    
           objects = {
             :Data => [],
             :Preview => [],
@@ -137,27 +135,19 @@ module Robots       # Robot package
               objects[k] << Assembly::ObjectFile.new(fn, :label => k.to_s)
             end
           end
-          
-          item = Dor::Item.find(druid.druid)
-          
+    
           # extract the MODS extension cleanly
-          doc = item.datastreams['descMetadata'].ng_xml
-          ns = {}
-          doc.collect_namespaces.each do |k, v|
-            if k =~ %r{^xmlns:(.+)}i
-              ns[$1] = v 
-            else
-              ns['mods'] = v
-            end
+          doc = Nokogiri::XML(File.read("#{rootdir}/metadata/descMetadata.xml"))
+          ns = {
+            'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'mods' => 'http://www.loc.gov/mods/v3'
+          }
+          geoData = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
+          
+          xml = create_content_metadata druid, objects, geoData
+          File.open("#{rootdir}/metadata/contentMetadata.xml") do |f| 
+            f.write(xml)
           end
-          ns['rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-          
-          geoData = item.datastreams['descMetadata'].ng_xml.dup.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
-          
-          xml = create_content_metadata druid.druid, objects, geoData
-          item.datastreams['contentMetadata'].content = xml
-          
-          item.save
         end
       end
 
