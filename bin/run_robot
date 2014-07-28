@@ -33,7 +33,7 @@ class_name = [
   'Robots',
   r.camelcase + repo_suffix, # 'Dor' conflicts with dor-services
   w.sub('WF', '').camelcase,
-  s.sub('-', '_').camelcase
+  s.gsub('-', '_').camelcase
 ]
 
 # instantiate a Robot object using the name
