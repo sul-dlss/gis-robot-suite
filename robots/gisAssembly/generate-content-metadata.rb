@@ -147,7 +147,7 @@ module Robots       # Robot package
           geoData = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
           
           xml = create_content_metadata druid, objects, geoData
-          File.open("#{rootdir}/metadata/contentMetadata.xml") do |f| 
+          File.open("#{rootdir}/metadata/contentMetadata.xml", 'wb') do |f| 
             f.write(xml)
           end
         end
