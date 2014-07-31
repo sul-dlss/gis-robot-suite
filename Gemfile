@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'addressable', '2.3.5'      # pin to avoid RDF bug
 gem 'dor-services', '~> 4.8'
-gem 'lyber-core', '~> 3.2', '>=3.2.3'
+gem 'lyber-core', '~> 3.2', '>=3.2.4'
 gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
 gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'slop', '~> 3.5.0'          # for bin/run_robot
