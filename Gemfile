@@ -9,7 +9,7 @@ gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'rake', '~> 10.3.2'
 gem 'rgeo', '~> 0.3.20'
 gem 'rgeo-shapefile', '~> 0.2.3'
-gem 'robot-controller', '~> 0.3', '>= 0.3.6' # requires Resque
+gem 'robot-controller', '~> 1.0' # requires Resque
 gem 'slop', '~> 3.5.0'          # for bin/run_robot
 
 group :development do
