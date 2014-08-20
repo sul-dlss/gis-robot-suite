@@ -13,7 +13,7 @@ Dor::Config.configure do
   fedora do
     url 'http://example.com/fedora'
   end
-
+    
   ssl do
     cert_file File.join(cert_dir,"example.crt")
     key_file File.join(cert_dir,"example.key")
@@ -25,11 +25,11 @@ Dor::Config.configure do
     stage "/var/example/stage"
     tmpdir "/var/example/tmp"
   end
-
+   
   geoserver do
     url "http://example.com/geoserver"	
-  end
-  
+end
+
   purl do
     url 'http://example.com/purl'
   end
