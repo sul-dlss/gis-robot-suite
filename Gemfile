@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'addressable', '2.3.5'      # pin to avoid RDF bug
 gem 'assembly-objectfile', '~> 1.6.4'
 gem 'dor-services', '~> 4.8'
+gem 'fastimage', '~> 1.6.3'
 gem 'lyber-core', '~> 3.2', '>=3.2.4'
 gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'rake', '~> 10.3.2'
