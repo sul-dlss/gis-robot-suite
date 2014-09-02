@@ -4,7 +4,6 @@ gem 'addressable', '2.3.5'      # pin to avoid RDF bug
 gem 'assembly-objectfile', '~> 1.6.4'
 gem 'dor-services', '~> 4.8'
 gem 'lyber-core', '~> 3.2', '>=3.2.4'
-gem 'robot-controller', '~> 1.0' # requires Resque
 gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'rake', '~> 10.3.2'
 gem 'rgeo', '~> 0.3.20'
