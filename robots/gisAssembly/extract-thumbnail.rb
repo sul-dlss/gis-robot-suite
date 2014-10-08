@@ -34,7 +34,9 @@ module Robots       # Robot package
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
           raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
           
-          thumbnail_fn = File.join(rootdir, 'content', 'preview.jpg')
+          content_dir = File.join(rootdir, 'content')
+          FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
+          thumbnail_fn = File.join(content_dir, 'preview.jpg')
           property_type = 'PictureX'
           
           doc = Nokogiri::XML(File.read(fn))
