@@ -41,7 +41,8 @@ module Robots       # Robot package
           LyberCore::Log.debug "package-data working on #{druid}"
           
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
           generate_data_zip rootdir
         end        
       end

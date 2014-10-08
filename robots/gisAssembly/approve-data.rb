@@ -20,7 +20,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "approve-data working on #{druid}"
 
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # XXX: Use magic(5) to determine validity
           fn = Dir.glob("#{rootdir}/temp/*.shp").first # Shapefile

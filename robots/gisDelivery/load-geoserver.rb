@@ -19,6 +19,9 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "load-geoserver working on #{druid}"
           
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+
           raise NotImplementedError # XXX: load to geoserver registry
         end
       end

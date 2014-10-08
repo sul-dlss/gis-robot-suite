@@ -20,20 +20,12 @@ module Robots       # Robot package
           LyberCore::Log.debug "extract-iso19139 working on #{druid}"
 
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
-          # @param [String] fn the metadata
-          # @param [String] thumbnail_fn the file into which to write JPEG image
-          # @param [String] property_type is the EsriPropertyType to select          
-          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
-          if fn.nil?
-            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
-            if fn.nil?
-              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-            end
-          end
+          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
+          raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
 
-          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(metadata).xml$}
+          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{(metadata).xml$}
             ofn = $1 + '-iso19139.xml'
             ofn_fc = $1 + '-iso19110.xml'
             ofn_fgdc = $1 + '-fgdc.xml'

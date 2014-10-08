@@ -19,6 +19,9 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "assign-placenames working on #{druid}"
           
+          rootdir = GisRobotSuite.druid_path druid, type: :stage
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          
           # XXX: rewrite MODS with gazetteer mappings for placenames
           raise NotImplementedError
         end

@@ -20,7 +20,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
 
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
           zipfn = File.join(rootdir, 'content', 'data.zip')
           unless File.readable?(zipfn) and File.size(zipfn) > 0

@@ -43,7 +43,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
           
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
           convert_mods2geoblacklight rootdir, druid
 

@@ -22,7 +22,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
           
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
           # delete all files in temp/
           FileUtils.rm_r("#{rootdir}/temp")

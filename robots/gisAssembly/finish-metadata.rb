@@ -18,8 +18,9 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "finish-metadata working on #{druid}"
+
           rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
           %w{descMetadata.xml geoMetadata.xml}.each do |f|
           fn = File.join(rootdir, 'metadata', f)
