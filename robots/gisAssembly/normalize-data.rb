@@ -20,7 +20,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "normalize-data working on #{druid}"
           
           # XXX: need to reproject and/or do format conversion
-          # raise NotImplementedError
+          raise NotImplementedError
         end
       end
 
