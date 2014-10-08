@@ -20,7 +20,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "assign-placenames working on #{druid}"
           
           # XXX: rewrite MODS with gazetteer mappings for placenames
-          # raise NotImplementedError
+          raise NotImplementedError
         end
       end
 

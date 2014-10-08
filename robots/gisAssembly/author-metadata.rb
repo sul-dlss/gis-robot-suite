@@ -18,19 +18,7 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "author-metadata working on #{druid}"
-
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
-
-          # XXX: Use magic(5) to determine validity
-          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
-          if fn.nil? or File.size(fn) == 0
-            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
-            if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp"
-            end
-          end
-          LyberCore::Log.debug "author-metadata found #{fn}"
+          raise NotImplementedError
         end
       end
 
