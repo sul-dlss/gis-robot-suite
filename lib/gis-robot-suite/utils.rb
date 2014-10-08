@@ -21,7 +21,7 @@ module GisRobotSuite
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
         if fn.nil? || File.size(fn) == 0
-          fn = nil
+          raise RuntimeError, "Missing ESRI metadata files in #{dir}"
         end
       end
     end

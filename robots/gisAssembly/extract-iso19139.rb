@@ -22,8 +22,6 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
-
           if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{(metadata).xml$}
             ofn = $1 + '-iso19139.xml'
             ofn_fc = $1 + '-iso19110.xml'
