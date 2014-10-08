@@ -17,14 +17,14 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          LyberCore::Log.debug "extract-thumbnail working on #{druid}"
+          LyberCore::Log.debug "finish-data working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           zipfn = File.join(rootdir, 'content', 'data.zip')
           unless File.readable?(zipfn) and File.size(zipfn) > 0
             raise RuntimeError, "Missing packaged data: #{zipfn}"
           end
-          LyberCore::Log.debug "finish-metadata found #{zipfn}"
+          LyberCore::Log.debug "finish-data found #{zipfn}"
         end
       end
 
