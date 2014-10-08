@@ -23,11 +23,14 @@ module Robots       # Robot package
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # XXX: Use magic(5) to determine validity
-          fn = Dir.glob("#{rootdir}/temp/*.shp").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp").first # Shapefile
           if fn.nil? or File.size(fn) == 0
-            fn = Dir.glob("#{rootdir}/temp/*.tif").first
+            fn = Dir.glob("#{rootdir}/temp/*.tif").first # GeoTIFF
             if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing data files in #{rootdir}/temp"
+              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first # ArcGRID
+              if fn.nil? or File.size(fn) == 0
+                raise RuntimeError, "Missing data files in #{rootdir}/temp"
+              end
             end
           end
           LyberCore::Log.debug "approve-data found #{fn}"
