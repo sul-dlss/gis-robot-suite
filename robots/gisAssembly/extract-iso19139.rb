@@ -35,13 +35,9 @@ module Robots       # Robot package
         # XXX hardcoded paths
         def self.search_for_xsl(filename)
           path = %w{
-            lib
-            lib/geohydra
-            lib/geomdtk
-            /usr/share/tomcat6/webapps/geonetwork/xsl/conversion/import
-            /var/geonetwork/2.8.0/lib
-            /opt/staging/s_gis_services
-            }
+            schema/lib/xslt
+            /home/geostaff/ArcGIS/Transforms
+          }
           path.unshift(File.dirname(__FILE__))
           path.each do |d|
             fn = File.join(d, filename)
@@ -49,7 +45,7 @@ module Robots       # Robot package
               return fn
             end
           end
-          nil
+          raise RuntimeError, "Cannot find #{filename} in search path"
         end
         
         # XSLT file locations
