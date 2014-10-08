@@ -30,7 +30,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 class_name = LyberCore::Robot.step_to_classname robot
 
 # instantiate a Robot object using the name
-klazz = class_name.inject(Object) {|o,c| o.const_get c}
+klazz = class_name.split('::').inject(Object) {|o,c| o.const_get c}
 bot = klazz.new
 bot.check_queued_status = false  # skipping the queued workflow status check
 
