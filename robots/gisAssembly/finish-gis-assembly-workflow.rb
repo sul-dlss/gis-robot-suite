@@ -24,11 +24,13 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           # delete all files in temp/
+          LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{rootdir}/temp"
           FileUtils.rm_r("#{rootdir}/temp")
           
           # load workspace with identical copy of stage
           druid = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace)
           FileUtils.mkdir_p(druid.path)
+          LyberCore::Log.info "finish-gis-assembly-workflow migrating object to #{druid.path}"
           system("rsync -av --delete #{rootdir}/ #{druid.path}/")
         end
       end
