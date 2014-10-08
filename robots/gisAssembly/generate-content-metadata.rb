@@ -106,7 +106,7 @@ module Robots       # Robot package
                 end
               end
             end
-          end.doc.canonicalize
+          end.doc.to_xml(:indent => 2)
         end
 
         PATTERNS = {
