@@ -47,6 +47,8 @@ module Robots       # Robot package
             geoMetadataDS.geometryType = 'Raster'
           end
 
+          # XXX: use geoblacklight-schema to make the ISO 19139 to MODS conversion
+          #      and then clean up dor-services geoMetadataDS to not generate transforms
           File.open(File.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
             f << geoMetadataDS.to_mods.to_xml(:index => 2) 
           end
