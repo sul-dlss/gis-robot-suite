@@ -33,6 +33,15 @@ module Robots       # Robot package
           # @param [String] thumbnail_fn the file into which to write JPEG image
           # @param [String] property_type is the EsriPropertyType to select          
           fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
+          if fn.nil?
+            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
+            if fn.nil?
+              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+              if fn.nil?
+                raise ArgumentError, "Missing ESRI metadata: #{druid}"
+              end
+            end
+          end
           thumbnail_fn = File.join(rootdir, 'content', 'preview.jpg')
           property_type = 'PictureX'
           
