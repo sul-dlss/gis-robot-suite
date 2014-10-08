@@ -28,9 +28,12 @@ module Robots       # Robot package
           fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
           if fn.nil?
             fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
+            if fn.nil?
+              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+            end
           end
 
-          if fn =~ %r{^(.*).(shp|tif).xml$}
+          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(metadata).xml$}
             ofn = $1 + '-iso19139.xml'
             ofn_fc = $1 + '-iso19110.xml'
             ofn_fgdc = $1 + '-fgdc.xml'
