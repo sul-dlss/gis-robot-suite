@@ -39,7 +39,9 @@ module Robots       # Robot package
           end
 
           # GeoMetadataDS
-          ofn = "#{rootdir}/metadata/geoMetadata.xml"
+          metadatadir = "#{rootdir}/metadata"
+          FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
+          ofn = "#{metadatadir}/geoMetadata.xml"
           xml = to_geoMetadataDS(isoXml, fcXml, Dor::Config.purl.url + "/#{druid}") 
           File.open(ofn, 'wb') {|f| f << xml.to_xml(:indent => 2) }  
         end
