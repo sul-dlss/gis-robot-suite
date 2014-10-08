@@ -22,11 +22,17 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           # ensure that we have either a .shp or a .tif or grid
-          if Dir.glob(File.join(rootdir, 'temp', '*.shp')).first.nil? and
-             Dir.glob(File.join(rootdir, 'temp', '*.tif')).first.nil? and
-             Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first.nil?
-            raise RuntimeError, "Missing Shapefile or GeoTIFF or ArcGRID data files in #{rootdir}"
+          fn = Dir.glob(File.join(rootdir, 'temp', '*.shp')).first
+          if fn.nil?
+            fn = Dir.glob(File.join(rootdir, 'temp', '*.tif')).first
+            if fn.nil?
+              fn = Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first
+              if fn.nil?
+                raise RuntimeError, "Missing Shapefile or GeoTIFF or ArcGRID data files in #{rootdir}"
+              end
+            end
           end
+          LyberCore::Log.debug "wrangle-data found #{fn}"
         end
       end
 
