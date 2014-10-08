@@ -23,11 +23,14 @@ module Robots       # Robot package
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
 
           # XXX: Use magic(5) to determine validity
-          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first
+          fn = Dir.glob("#{rootdir}/temp/*.shp.xml").first # Shapefile
           if fn.nil? or File.size(fn) == 0
-            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first
+            fn = Dir.glob("#{rootdir}/temp/*.tif.xml").first # GeoTIFF
             if fn.nil? or File.size(fn) == 0
-              raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp"
+              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first # ArcGRID
+              if fn.nil? or File.size(fn) == 0
+                raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp"
+              end
             end
           end
           LyberCore::Log.debug "approve-metadata found #{fn}"
