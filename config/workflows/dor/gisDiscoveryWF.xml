@@ -12,7 +12,7 @@
     <label>Load Solr document into OpenGeoPortal</label>
   </process>  
   <process name="generate-geoblacklight" sequence="4">
-    <prereq>start-gis-discovery-workflow</prereq>
+    <prereq>load-ogp</prereq>
     <label>Generate Solr document for GeoBlacklight</label>
   </process>
   <process name="load-geoblacklight" sequence="5">
@@ -20,7 +20,6 @@
     <label>Load Solr document into GeoBlacklight</label>
   </process>
   <process name="finish-gis-discovery-workflow" sequence="6">
-    <prereq>load-ogp</prereq>
     <prereq>load-geoblacklight</prereq>
     <label>Finalize GIS discovery workflow for the object</label>
   </process> 

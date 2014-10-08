@@ -8,11 +8,10 @@
     <label>Load vector data into PostGIS database</label>
   </process>  
   <process name="load-raster" sequence="3">
-    <prereq>start-gis-delivery-workflow</prereq>
+    <prereq>load-vector</prereq>
     <label>Load raster into GeoTIFF data store</label>
   </process>  
   <process name="load-geoserver" sequence="4">
-    <prereq>load-vector</prereq>
     <prereq>load-raster</prereq>
     <label>Load layers into GeoServer</label>
   </process>
