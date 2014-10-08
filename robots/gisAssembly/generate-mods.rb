@@ -34,9 +34,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "generate-mods working on #{druid}"
 
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
-
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           geoMetadataDS = Dor::GeoMetadataDS.from_xml File.read(fn)
           geoMetadataDS.zipName = 'data.zip'

@@ -19,8 +19,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "extract-iso19139 working on #{druid}"
 
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
           raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?

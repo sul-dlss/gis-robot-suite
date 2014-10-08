@@ -19,9 +19,8 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "load-geoblacklight working on #{druid}"
 
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
-
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          
           raise NotImplementedError # XXX: upload to solr
         end
       end

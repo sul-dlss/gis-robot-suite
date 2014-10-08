@@ -1,13 +1,17 @@
 module GisRobotSuite
-  def self.druid_path druid, opts = {}
+  def self.locate_druid_path druid, opts = {}
+    rootdir = '.'
     pid = druid.gsub(/^druid:/, '')
 
     if opts[:type] == :stage
       rootdir = Dor::Config.geohydra.stage
+      rootdir = File.join(rootdir, pid)
+    else
+      raise NotImplementedError, 'Only :stage is supported'
     end
     
-    return File.join(rootdir, pid)
-    
+    raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)    
+    rootdir
   end
   
   def self.locate_esri_metadata dir, opts = {}

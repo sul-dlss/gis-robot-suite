@@ -19,8 +19,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "wrangle-data working on #{druid}"
           
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           # ensure that we have either a .shp or a .tif or grid
           if Dir.glob(File.join(rootdir, 'temp', '*.shp')).first.nil? and

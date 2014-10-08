@@ -26,8 +26,7 @@ module Robots       # Robot package
         # Extracts an inline thumbnail from the ESRI ArcCatalog metadata format
         # @raise [ArgumentError] if cannot find a thumbnail
         def extract_thumbnail druid
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           # @param [String] fn the metadata
           # @param [String] thumbnail_fn the file into which to write JPEG image

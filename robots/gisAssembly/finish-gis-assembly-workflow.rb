@@ -21,8 +21,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
           
-          rootdir = GisRobotSuite.druid_path druid, type: :stage
-          raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           # delete all files in temp/
           FileUtils.rm_r("#{rootdir}/temp")
