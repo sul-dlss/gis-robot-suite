@@ -22,10 +22,11 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.druid_path druid, type: :stage
           raise ArgumentError, "Missing #{rootdir}" unless File.directory?(rootdir)
           
-          # ensure that we have either a .shp or a .tif
-          if Dir.glob(File.join(rootdir, 'temp', '**', '*.shp')).first.nil? and
-             Dir.glob(File.join(rootdir, 'temp', '**', '*.tif')).first.nil?
-            raise RuntimeError, "Missing Shapefile or TIFF data files in #{rootdir}"
+          # ensure that we have either a .shp or a .tif or grid
+          if Dir.glob(File.join(rootdir, 'temp', '*.shp')).first.nil? and
+             Dir.glob(File.join(rootdir, 'temp', '*.tif')).first.nil? and
+             Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first.nil?
+            raise RuntimeError, "Missing Shapefile or GeoTIFF or ArcGRID data files in #{rootdir}"
           end
         end
       end
