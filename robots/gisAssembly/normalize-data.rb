@@ -22,7 +22,7 @@ module Robots       # Robot package
           tmpdir
         end
         
-        def reproject_geotiff druid, zipfn, flags
+        def reproject_geotiff druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
           tiffname = nil
@@ -32,16 +32,27 @@ module Robots       # Robot package
           if tiffname.nil?
             LyberCore::Log.debug  "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
-            raise RuntimeError, "Cannot locate GeoTIFF in #{tmpdir}" 
+            raise ArgumentError, "Cannot locate GeoTIFF in #{tmpdir}" 
           end
           
           ifn = "#{tmpdir}/#{tiffname}.tif"
-          ofn = "#{tmpdir}/normalize/#{tiffname}.tif"
+          ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
+          FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
           
-          system "gdalwarp -t_srs EPSG:4326 #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+          system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+          raise RuntimeError, "gdalwarp failed to create #{ofn}" unless File.exists?(ofn)
+          
+          # package up reprojection
+          ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
+          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          LyberCore::Log.debug  "Repacking #{ozip}"
+          system("zip -q -Dj '#{ozip}' #{ofn}")
+          
+          LyberCore::Log.debug  "Removing #{tmpdir}"
+          FileUtils.rm_rf tmpdir
         end
 
-        def reproject_arcgrid druid, zipfn, flags
+        def reproject_arcgrid druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
           gridname = nil
@@ -51,17 +62,26 @@ module Robots       # Robot package
           if gridname.nil?
             LyberCore::Log.debug  "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
-            raise RuntimeError, "Cannot locate ArcGRID in #{tmpdir}" 
+            raise ArgumentError, "Cannot locate ArcGRID in #{tmpdir}" 
           end
           
           gridfn = "#{tmpdir}/#{gridname}"
           tifffn = "#{tmpdir}/#{gridname}.tif"
           
-          system "gdalwarp -t_srs EPSG:4326 #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+          system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+          
+          # package up reprojection
+          ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
+          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          LyberCore::Log.debug  "Repacking #{ozip}"
+          system("zip -q -Dj '#{ozip}' #{tifffn}")
+          
+          LyberCore::Log.debug  "Removing #{tmpdir}"
+          FileUtils.rm_rf tmpdir
         end
         
         # @param zipfn [String] ZIP file
-        def reproject_shapefile druid, zipfn, flags
+        def reproject_shapefile druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
       
           shpname = nil
@@ -73,39 +93,37 @@ module Robots       # Robot package
             FileUtils.rm_rf tmpdir
             raise RuntimeError, "Cannot locate Shapefile in #{tmpdir}" 
           end
+    
+          wkt = flags[:wkt][srid.to_s]
+          
+          ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
+          raise RuntimeError, "#{ifn} is missing" unless File.exist? ifn
       
-          [4326].each do |srid|
-            wkt = flags[:wkt][srid.to_s]
-            
-            ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
-            raise RuntimeError, "#{ifn} is missing" unless File.exist? ifn
-        
-            odr = File.join(tmpdir, "EPSG_#{srid}") # output directory
-            ofn = File.join(odr, "#{shpname}.shp")  # output shapefile
-            LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
+          odr = File.join(tmpdir, "EPSG_#{srid}") # output directory
+          ofn = File.join(odr, "#{shpname}.shp")  # output shapefile
+          LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
 
-            # reproject, @see http://www.gdal.org/ogr2ogr.html
-            FileUtils.mkdir_p odr unless File.directory? odr
-            system("ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
-            raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
-            
-            # normalize prj file
-            if flags[:overwrite_prj] && wkt
-              prj_fn = ofn.gsub('.shp', '.prj')
-              LyberCore::Log.debug "Overwriting #{prj_fn}"
-              File.open(prj_fn, 'w') {|f| f.write(wkt)}
-            end
-
-            # package up reprojection
-            ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
-            FileUtils.rm_f(ozip) if File.exists?(ozip)
-            LyberCore::Log.debug  "Repacking #{ozip}"
-            system("zip -q -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
-
-            # cleanup
-            LyberCore::Log.debug  "Removing #{odr}"
-            # FileUtils.rm_rf odr
+          # reproject, @see http://www.gdal.org/ogr2ogr.html
+          FileUtils.mkdir_p odr unless File.directory? odr
+          system("ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
+          raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
+          
+          # normalize prj file
+          if flags[:overwrite_prj] && wkt
+            prj_fn = ofn.gsub('.shp', '.prj')
+            LyberCore::Log.debug "Overwriting #{prj_fn}"
+            File.open(prj_fn, 'w') {|f| f.write(wkt)}
           end
+
+          # package up reprojection
+          ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
+          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          LyberCore::Log.debug  "Repacking #{ozip}"
+          system("zip -q -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
+
+          # cleanup
+          LyberCore::Log.debug  "Removing #{odr}"
+          # FileUtils.rm_rf odr
 
           # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
@@ -161,8 +179,11 @@ module Robots       # Robot package
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
           when 'image/tiff'
-            reproject_arcgrid druid, fn, flags
-            # XXX: determine whether ArcGRID or GeoTIFF
+            begin
+              reproject_geotiff druid, fn, flags
+            rescue ArgumentError => e
+              reproject_arcgrid druid, fn, flags              
+            end
           else
             raise NotImplementedError, "Unsupported file format: #{format}"
           end
