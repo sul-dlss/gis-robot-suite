@@ -21,7 +21,7 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
-          fn = Dir.glob("#{rootdir}/temp/*-iso19139.xml").first
+          fn = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
           if fn.nil?
             raise RuntimeError, "Missing ISO19139 file in #{rootdir}"
           end

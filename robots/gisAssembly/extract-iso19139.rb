@@ -22,7 +22,7 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{(metadata).xml$}
+          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(.*/metadata).xml$}
             ofn = $1 + '-iso19139.xml'
             ofn_fc = $1 + '-iso19110.xml'
             ofn_fgdc = $1 + '-fgdc.xml'
@@ -65,11 +65,14 @@ module Robots       # Robot package
         # @param [String] ofn Output file
         # @param [String] ofn_fc Output file for the Feature Catalog (optional)
         def arcgis_to_iso19139 fn, ofn, ofn_fc = nil, ofn_fgdc = nil
+          LyberCore::Log.debug "generating #{ofn}"
           system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -")
           unless ofn_fc.nil?
+            LyberCore::Log.debug "generating #{ofn_fc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -")
           end
           unless ofn_fgdc.nil?
+            LyberCore::Log.debug "generating #{ofn_fgdc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -")
           end
       
