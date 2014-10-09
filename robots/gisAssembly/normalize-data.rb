@@ -12,14 +12,57 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'normalize-data', check_queued_status: true) # init LyberCore::Robot
         end
         
-        # @param zipfn [String] ZIP file
-        def reproject_shapefile druid, zipfn, flags
+        def extract_data_from_zip druid, zipfn, tmpdir
           LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
           
-          tmpdir = "#{flags[:tmpdir]}/normalize_#{druid}"
+          tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
           FileUtils.mkdir_p tmpdir
-          system("unzip -j '#{zipfn}' -d '#{tmpdir}'")
+          system("unzip '#{zipfn}' -d '#{tmpdir}'")
+          tmpdir
+        end
+        
+        def reproject_geotiff druid, zipfn, flags
+          tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
+          
+          tiffname = nil
+          Dir.glob("#{tmpdir}/*.tif.xml") do |fn|
+            tiffname = File.basename(fn, '.tif.xml')
+          end
+          if tiffname.nil?
+            LyberCore::Log.debug  "Removing #{tmpdir}"
+            FileUtils.rm_rf tmpdir
+            raise RuntimeError, "Cannot locate GeoTIFF in #{tmpdir}" 
+          end
+          
+          ifn = "#{tmpdir}/#{tiffname}.tif"
+          ofn = "#{tmpdir}/normalize/#{tiffname}.tif"
+          
+          system "gdalwarp -t_srs EPSG:4326 #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+        end
+
+        def reproject_arcgrid druid, zipfn, flags
+          tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
+          
+          gridname = nil
+          Dir.glob("#{tmpdir}/*/metadata.xml") do |fn|
+            gridname = File.basename(File.dirname(fn))
+          end
+          if gridname.nil?
+            LyberCore::Log.debug  "Removing #{tmpdir}"
+            FileUtils.rm_rf tmpdir
+            raise RuntimeError, "Cannot locate ArcGRID in #{tmpdir}" 
+          end
+          
+          gridfn = "#{tmpdir}/#{gridname}"
+          tifffn = "#{tmpdir}/#{gridname}.tif"
+          
+          system "gdalwarp -t_srs EPSG:4326 #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+        end
+        
+        # @param zipfn [String] ZIP file
+        def reproject_shapefile druid, zipfn, flags
+          tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
       
           shpname = nil
           Dir.glob("#{tmpdir}/*.shp") do |fn|
@@ -117,6 +160,9 @@ module Robots       # Robot package
           case format
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
+          when 'image/tiff'
+            reproject_arcgrid druid, fn, flags
+            # XXX: determine whether ArcGRID or GeoTIFF
           else
             raise NotImplementedError, "Unsupported file format: #{format}"
           end
