@@ -17,20 +17,21 @@ module Robots       # Robot package
           File.umask(002)
 
           # XXX: only works for shapefiles 
-          Dir.glob(File.join(rootdir, 'temp', '**', '*.shp')) do |shp|
-            basename = File.basename(shp, '.shp')
-            zipfn = File.join(rootdir, 'content', 'data.zip')
-            LyberCore::Log.debug "Compressing #{basename} into #{zipfn}"
-            fns = Dir.glob(File.join(File.dirname(shp), "#{basename}.*")).select do |fn|
-              fn !~ /\.zip$/
-            end
-            Dir.glob(File.join(File.dirname(shp), "#{basename}-*.xml")).each do |fn|
-              fns << fn
-            end
-            system "mkdir -p #{File.dirname(zipfn)}" unless File.directory?(File.dirname(zipfn))
-            system "zip -vj '#{zipfn}' #{fns.join(' ')}"
+          shp = Dir.glob(File.join(rootdir, 'temp', '*.shp')).first
+          basename = File.basename(shp, '.shp')
+          zipfn = File.join(rootdir, 'content', 'data.zip')
+          FileUtils.rm_f(zipfn) if File.exists?(zipfn)
+          
+          fns = Dir.glob(File.join(File.dirname(shp), "#{basename}.*")).select do |fn|
+            fn !~ /\.zip$/
           end
-        
+          Dir.glob(File.join(File.dirname(shp), "#{basename}-*.xml")).each do |fn|
+            fns << fn
+          end
+
+          LyberCore::Log.debug "Compressing #{basename} into #{zipfn}"
+          system "mkdir -p #{File.dirname(zipfn)}" unless File.directory?(File.dirname(zipfn))
+          system "zip -vj '#{zipfn}' #{fns.join(' ')}"        
         end
 
         # `perform` is the main entry point for the robot. This is where
