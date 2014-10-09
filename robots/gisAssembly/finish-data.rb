@@ -19,12 +19,15 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-data working on #{druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
-          zipfn = File.join(rootdir, 'content', 'data.zip')
-          unless File.readable?(zipfn) and File.size(zipfn) > 0
-            raise RuntimeError, "Missing packaged data: #{zipfn}"
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          %w{data.zip data_EPSG_4326.zip}.each do |zipname|
+            zipfn = File.join(rootdir, 'content', zipname)
+            if File.readable?(zipfn) && File.size(zipfn) > 0
+              LyberCore::Log.info "finish-data found #{zipfn}"
+            else
+              raise RuntimeError, "Missing packaged data: #{zipfn}"
+            end
           end
-          LyberCore::Log.debug "finish-data found #{zipfn}"
         end
       end
 
