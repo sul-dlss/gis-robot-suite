@@ -25,6 +25,7 @@ module Robots       # Robot package
         def reproject_geotiff druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
+          # sniff out GeoTIFF file
           tiffname = nil
           Dir.glob("#{tmpdir}/*.tif.xml") do |fn|
             tiffname = File.basename(fn, '.tif.xml')
@@ -34,11 +35,11 @@ module Robots       # Robot package
             FileUtils.rm_rf tmpdir
             raise ArgumentError, "Cannot locate GeoTIFF in #{tmpdir}" 
           end
-          
+
+          # reproject with gdalwarp
           ifn = "#{tmpdir}/#{tiffname}.tif"
           ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
           FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
-          
           system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
           raise RuntimeError, "gdalwarp failed to create #{ofn}" unless File.exists?(ofn)
           
@@ -48,6 +49,7 @@ module Robots       # Robot package
           LyberCore::Log.debug  "Repacking #{ozip}"
           system("zip -q -Dj '#{ozip}' #{ofn}")
           
+          # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
           FileUtils.rm_rf tmpdir
         end
@@ -55,6 +57,7 @@ module Robots       # Robot package
         def reproject_arcgrid druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
+          # Sniff out ArcGRID location
           gridname = nil
           Dir.glob("#{tmpdir}/*/metadata.xml") do |fn|
             gridname = File.basename(File.dirname(fn))
@@ -65,9 +68,9 @@ module Robots       # Robot package
             raise ArgumentError, "Cannot locate ArcGRID in #{tmpdir}" 
           end
           
+          # reproject with gdalwarp
           gridfn = "#{tmpdir}/#{gridname}"
           tifffn = "#{tmpdir}/#{gridname}.tif"
-          
           system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
           
           # package up reprojection
@@ -76,6 +79,7 @@ module Robots       # Robot package
           LyberCore::Log.debug  "Repacking #{ozip}"
           system("zip -q -Dj '#{ozip}' #{tifffn}")
           
+          # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
           FileUtils.rm_rf tmpdir
         end
@@ -84,6 +88,7 @@ module Robots       # Robot package
         def reproject_shapefile druid, zipfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
       
+          # Sniff out Shapefile location
           shpname = nil
           Dir.glob("#{tmpdir}/*.shp") do |fn|
             shpname = File.basename(fn, '.shp')
@@ -94,8 +99,8 @@ module Robots       # Robot package
             raise RuntimeError, "Cannot locate Shapefile in #{tmpdir}" 
           end
     
+          # setup
           wkt = flags[:wkt][srid.to_s]
-          
           ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise RuntimeError, "#{ifn} is missing" unless File.exist? ifn
       
@@ -120,10 +125,6 @@ module Robots       # Robot package
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
           system("zip -q -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
-
-          # cleanup
-          LyberCore::Log.debug  "Removing #{odr}"
-          # FileUtils.rm_rf odr
 
           # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
@@ -178,10 +179,13 @@ module Robots       # Robot package
           case format
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
-          when 'image/tiff'
+          when 'image/tiff' 
             begin
               reproject_geotiff druid, fn, flags
             rescue ArgumentError => e
+              # XXX: need format MIME type for ArcGRID in the MODS metadata
+              # for now, just try GeoTIFF first and then failover to ArcGRID
+              # this causes the zip file to be unpacked twice though
               reproject_arcgrid druid, fn, flags              
             end
           else
