@@ -104,12 +104,22 @@ module Robots       # Robot package
                   AUTHORITY["EPSG","4326"]]
               }.split.join.freeze
             }
-
-          }  
-
+          }
+          
           fn = "#{rootdir}/content/data.zip" # original content
           LyberCore::Log.debug "Processing #{druid} #{fn}"
-          reproject_shapefile druid, fn, flags 
+          
+          # Determine file format
+          modsfn = "#{rootdir}/metadata/descMetadata.xml"
+          raise RuntimeError, "Missing MODS metadata in #{rootdir}" unless File.exists?(modsfn)
+          format = GisRobotSuite::determine_file_format_from_mods modsfn
+
+          case format
+          when 'application/x-esri-shapefile'
+            reproject_shapefile druid, fn, flags 
+          else
+            raise NotImplementedError, "Unsupported file format: #{format}"
+          end
         end
       end
 
