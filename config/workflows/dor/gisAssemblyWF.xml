@@ -48,16 +48,16 @@
     <prereq>wrangle-data</prereq>
     <label>Approve data quality for digital work and release for workflow workflow</label>
   </process>
-  <process name="normalize-data" sequence="13">
-    <prereq>approve-data</prereq>
+  <process name="package-data" sequence="13">
+    <prereq>approve-data</prereq> <!-- data.zip should contain the ISO 19139/19110 metadata -->
+    <label>Package the digital work</label>
+  </process>
+  <process name="normalize-data" sequence="14">
+    <prereq>package-data</prereq>
     <label>Reproject the data into common SRS projection and/or file format</label>
   </process>  
-  <process name="package-data" sequence="14">
-    <prereq>normalize-data</prereq> <!-- data.zip should contain the ISO 19139/19110 metadata -->
-    <label>Package the digital work and derivative data files</label>
-  </process>
   <process name="finish-data" sequence="15">
-    <prereq>package-data</prereq>
+    <prereq>normalize-data</prereq>
     <label>Finalize the data preparation</label>
   </process>  
   <process name="generate-content-metadata" sequence="16">
