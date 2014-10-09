@@ -22,6 +22,7 @@ end
 # Load core robot services
 require 'dor-services'
 require 'lyber_core'
+LyberCore::Log.set_level(ROBOT_LOG.level)
 
 # TODO Maybe move auto-require to just run_robot and spec_helper?
 
