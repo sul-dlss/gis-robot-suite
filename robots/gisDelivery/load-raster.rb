@@ -21,7 +21,7 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
-          # determine whether we have a Shapefile to load
+          # determine whether we have a Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           raise RuntimeError, "Cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
