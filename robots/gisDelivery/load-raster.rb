@@ -43,6 +43,7 @@ module Robots       # Robot package
           begin
             Dir.chdir(tmpdir)
             tiffn = Dir.glob("*.tif").first
+            raise RuntimeError, "Cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
             cmd = "scp #{tiffn} #{Dor::Config.geotiff.hostdir}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
