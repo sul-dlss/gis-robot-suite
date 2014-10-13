@@ -1,3 +1,5 @@
+require 'rsolr'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -20,8 +22,16 @@ module Robots       # Robot package
           LyberCore::Log.debug "load-geoblacklight working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
+          raise RuntimeError, "Cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
           
-          raise NotImplementedError # XXX: upload to solr
+          LyberCore::Log.debug "Parsing #{xmlfn}"
+          doc = Nokogiri::XML(File.read(xmlfn))
+          
+          url = File.join(Dor::Config.solr.url, Dor::Config.solr.collection)
+          LyberCore::Log.debug "Connecting to #{url}"
+          solr = RSolr.connect :url => url
+          solr.update :data => doc.to_xml
         end
       end
 

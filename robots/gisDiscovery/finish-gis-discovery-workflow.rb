@@ -19,7 +19,8 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-gis-discovery-workflow working on #{druid}"
           
-          raise NotImplementedError # XXX: validate we uploaded to solr
+          xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
+          raise RuntimeError, "Cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
         end
       end
 
