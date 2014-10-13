@@ -3,7 +3,7 @@
 export ROBOT_LOG_LEVEL=DEBUG
 export PATH=./bin:$PATH
 
-druid = shift
+druid="$1"
 
 for s in \
   author-metadata \
