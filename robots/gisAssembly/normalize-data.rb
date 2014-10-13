@@ -175,18 +175,21 @@ module Robots       # Robot package
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
           raise RuntimeError, "Missing MODS metadata in #{rootdir}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          format = format.split(/;/).first # nix mimetype flags
-          case format
+          raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
+          
+          # reproject based on file format information
+          mimetype = format.split(/;/).first # nix mimetype flags
+          case mimetype
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
-          when 'image/tiff' 
-            begin
+          when 'image/tiff'
+            filetype = format.split(/format=/)[1]
+            if filetype == 'GeoTIFF'
               reproject_geotiff druid, fn, flags
-            rescue ArgumentError => e
-              # XXX: need format MIME type for ArcGRID in the MODS metadata
-              # for now, just try GeoTIFF first and then failover to ArcGRID
-              # this causes the zip file to be unpacked twice though
+            elsif filetype == 'ArcGRID'
               reproject_arcgrid druid, fn, flags              
+            else
+              raise NotImplementedError, "Unsupported Raster file format: #{format}"
             end
           else
             raise NotImplementedError, "Unsupported file format: #{format}"
