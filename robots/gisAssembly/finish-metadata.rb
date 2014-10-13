@@ -22,7 +22,7 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           %w{descMetadata.xml geoMetadata.xml}.each do |f|
-          fn = File.join(rootdir, 'metadata', f)
+            fn = File.join(rootdir, 'metadata', f)
             unless File.readable?(fn) and File.size(fn) > 0
               raise RuntimeError, "Missing metadata: #{fn}"
             end
@@ -30,15 +30,14 @@ module Robots       # Robot package
           end
 
           %w{preview.jpg}.each do |f|
-          fn = File.join(rootdir, 'content', f)
+            fn = File.join(rootdir, 'content', f)
             unless File.readable?(fn) and File.size(fn) > 0
-              raise RuntimeError, "Missing metadata: #{fn}"
+              raise RuntimeError, "Missing metadata content: #{fn}"
             end
             LyberCore::Log.debug "finish-metadata found #{fn}"
           end
         end
       end
-
     end
   end
 end
