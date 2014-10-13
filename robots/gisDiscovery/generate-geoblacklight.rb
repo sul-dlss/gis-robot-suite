@@ -17,19 +17,27 @@ module Robots       # Robot package
         def convert_mods2geoblacklight(rootdir, druid)
           flags = {
             :geoserver => Dor::Config.geoserver.url,
+            :stacks => Dor::Config.stacks.url,
             :purl => Dor::Config.purl.url + "/" + druid.gsub(/^druid:/, '')
           }
 
           # GeoBlacklight Solr document from descMetadataDS
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise RuntimeError, "Cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
+          
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
           FileUtils.rm_f(ofn) if File.exist?(ofn)
+          
+          # run XSLT
+          xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
           cmd = ['xsltproc',
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
+                  "--stringparam stacks_root '#{flags[:stacks]}'",
                   "--stringparam purl '#{flags[:purl]}'",
                   "--stringparam now '#{Time.now.utc.to_datetime.rfc3339}'",
+                  "--stringparam rights 'Restricted'", # XXX: determine rights from APO
                   "--output '#{ofn}'",
-                  "'#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}'",
+                  "'#{xslfn}'",
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
