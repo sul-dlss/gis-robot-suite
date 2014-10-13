@@ -12,6 +12,7 @@ gem 'rgeo-shapefile', '~> 0.2.3'
 gem 'robot-controller', '~> 1.0' # requires Resque
 gem 'slop', '~> 3.5.0'          # for bin/run_robot
 gem 'rsolr', '~> 1.0.10'
+gem 'rgeoserver', '~> 0.7.1'
 
 group :development do
   if File.exists?(mygems = File.join(ENV['HOME'],'.gemfile'))
