@@ -28,6 +28,4 @@ require 'gisDelivery/start-gis-discovery-workflow'
 
 require 'gisDiscovery/finish-gis-discovery-workflow'
 require 'gisDiscovery/generate-geoblacklight'
-require 'gisDiscovery/generate-ogp'
 require 'gisDiscovery/load-geoblacklight'
-require 'gisDiscovery/load-ogp'
