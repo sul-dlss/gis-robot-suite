@@ -175,7 +175,7 @@ module Robots       # Robot package
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
           raise RuntimeError, "Missing MODS metadata in #{rootdir}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-
+          format = format.split(/;/).first # nix mimetype flags
           case format
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
