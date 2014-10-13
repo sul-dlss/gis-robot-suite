@@ -107,6 +107,10 @@ module Robots       # Robot package
           odr = File.join(tmpdir, "EPSG_#{srid}") # output directory
           ofn = File.join(odr, "#{shpname}.shp")  # output shapefile
           LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
+          
+          # Verify source projection
+          prjfn = File.join(tmpdir, "#{shpname}.prj")
+          raise RuntimeError, "Missing projection #{prjfn}" unless File.exists?(prjfn)
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
