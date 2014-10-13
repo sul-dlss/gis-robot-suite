@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+require 'scanf'
 require 'rgeo'
 require 'rgeo/shapefile'
 
@@ -26,7 +29,90 @@ module Robots       # Robot package
           end
           nil     
         end
+        
+        # Convert DD.DD to DD MM SS.SS
+        # e.g., 
+        # * -109.758319 => 109°45ʹ29.9484ʺ
+        # * 48.999336 => 48°59ʹ57.609ʺ
+        E = 1
+        QSEC = 'ʺ'
+        QMIN = 'ʹ'
+        QDEG = "\u00B0"
+        def dd2ddmmss_abs f
+          dd = f.to_f.abs
+          d = dd.floor
+          mm = ((dd - d) * 60)
+          m = mm.floor
+          s = ((mm - mm.floor) * 60).round
+          m, s = m+1, 0 if s >= 60
+          d, m = d+1, 0 if m >= 60
+          "#{d}#{QDEG}" + (m>0 ? "#{m}#{QMIN}" : '') + (s>0 ? "#{s}#{QSEC}" : '')
+        end
+        
+        
+        # Convert to MARC 255 DD into DDMMSS
+        # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
+        # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
+        def to_coordinates_ddmmss s
+          w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
+          raise ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
+          raise ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
+          w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
+          e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
+          n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
+          s = "#{s < 0 ? 'S' : 'N'} #{dd2ddmmss_abs s}"
+          "#{w}--#{e}/#{n}--#{s}"
+        end
+        
+        MODS_NS = 'http://www.loc.gov/mods/v3'
+        
+        # [Nokogiri::XSLT::Stylesheet] for ISO 19139 to MODS
+        XSLT_GEOMODS = Nokogiri::XSLT(File.read(File.join(File.dirname(__FILE__), '..', '..', 'schema', 'lib', 'xslt', 'iso2mods.xsl')))
+        
+        # Generates MODS from ISO 19139
+        #
+        # @return [Nokogiri::XML::Document] Derived MODS metadata record
+        # @raise [CrosswalkError] Raises if the generated MODS is empty or has no children
+        #
+        # Uses GML SimpleFeatures for the geometry type (e.g., Polygon, LineString, etc.)
+        # @see http://portal.opengeospatial.org/files/?artifact_id=25355
+        #
+        def to_mods metadata, params      
+          params[:geometryType] ||= 'Polygon'
+          params[:zipName] ||= 'data.zip'
+          params[:fileFormat] ||= 'Shapefile'
+          raise ArgumentError, "Missing PURL parameter" if params[:purl].nil?
+          
+          args = Nokogiri::XSLT.quote_params(Hash[params.map{|(k,v)| [k.to_s,v]}].to_a.flatten)
+          doc = XSLT_GEOMODS.transform(metadata.document, args)
+          unless doc.root and doc.root.children.size > 0
+            raise CrosswalkError, 'to_mods produced incorrect xml'
+          end
 
+          # cleanup projection and coords for human-readable
+          doc.xpath('/mods:mods' + 
+            '/mods:subject' + 
+            '/mods:cartographics' + 
+            '/mods:projection', 
+            'xmlns:mods' => MODS_NS).each do |e|
+            # XXX: Retrieve this mapping from config file
+            case e.content.downcase
+            when 'epsg:4326', 'epsg::4326', 'urn:ogc:def:crs:epsg::4326'
+              e.content = 'World Geodetic System (WGS84)'
+            when 'epsg:4269', 'epsg::4269', 'urn:ogc:def:crs:epsg::4269'
+              e.content = 'North American Datum (NAD83)'
+            end
+          end
+          doc.xpath('/mods:mods' +
+            '/mods:subject' +
+            '/mods:cartographics' +
+            '/mods:coordinates', 
+            'xmlns:mods' => MODS_NS).each do |e|
+            e.content = '(' + to_coordinates_ddmmss(e.content.to_s) + ')'
+          end
+          doc
+        end
+        
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
         #
@@ -36,21 +122,41 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          geoMetadataDS = Dor::GeoMetadataDS.from_xml File.read(fn)
-          geoMetadataDS.zipName = 'data.zip'
-          geoMetadataDS.purl = Dor::Config.purl.url + "/#{druid.gsub(/^druid:/, '')}"
+          raise RuntimeError, "Cannot locate #{fn}" unless File.exists?(fn)
+          
+          # parse geometadata as input to MODS transform
+          geoMetadataDS = Nokogiri::XML(File.read(fn))
 
+          # detect fileFormat and geometryType
           fn = Dir.glob("#{rootdir}/temp/*.shp").first
           unless fn.nil?
-            geoMetadataDS.geometryType = geometry_type(fn)
+            geometryType = geometry_type(fn)
+            fileFormat = 'Shapefile'
           else
-            geoMetadataDS.geometryType = 'Raster'
+            geometryType = 'Raster'
+            fn = Dir.glob("#{rootdir}/temp/*.tif").first
+            unless fn.nil?
+              fileFormat = 'GeoTIFF'
+            else
+              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+              unless fn.nil?
+                fileFormat = 'ArcGRID'
+              else
+                raise RuntimeError, "Cannot detect fileFormat: #{rootdir}"
+              end
+            end
           end
+          
+          # load PURL
+          purl = Dor::Config.purl.url + "/#{druid.gsub(/^druid:/, '')}"
 
-          # XXX: use geoblacklight-schema to make the ISO 19139 to MODS conversion
-          #      and then clean up dor-services geoMetadataDS to not generate transforms
+          # XXX: clean up dor-services geoMetadataDS to not generate transforms
           File.open(File.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
-            f << geoMetadataDS.to_mods.to_xml(:index => 2) 
+            f << to_mods(geoMetadataDS,  {
+                  :geometryType => geometryType,
+                  :fileFormat => fileFormat,
+                  :purl => purl
+              }).to_xml(:index => 2) 
           end
           
         end
