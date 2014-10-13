@@ -1,0 +1,25 @@
+#!/bin/bash
+
+export ROBOT_LOG_LEVEL=DEBUG
+export PATH=./bin:$PATH
+
+druid = shift
+
+for s in \
+  author-metadata \
+  approve-metadata \
+  extract-thumbnail \
+  extract-iso19139 \
+  generate-geo-metadata \
+  generate-mods \
+  assign-placenames \
+  finish-metadata \
+  wrangle-data \
+  approve-data \
+  package-data \
+  normalize-data \
+  finish-data \
+  generate-content-metadata \
+  ; do
+  run_robot dor:gisAssemblyWF:$s -d $druid
+done
