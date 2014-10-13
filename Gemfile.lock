@@ -305,7 +305,7 @@ DEPENDENCIES
   rake (~> 10.3.2)
   rgeo (~> 0.3.20)
   rgeo-shapefile (~> 0.2.3)
-  rgeoserver
+  rgeoserver (~> 0.7.1)
   robot-controller (~> 1.0)
   rsolr (~> 1.0.10)
   rspec
