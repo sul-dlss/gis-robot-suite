@@ -49,13 +49,13 @@ module Robots       # Robot package
             
             # compress tempfn with gdal_translate
             LyberCore::Log.info "Compressing #{tempfn} -> #{ofn}"
-            system "gdal_translate #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
+            system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
             raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           else
             # compress with gdal_translate
             LyberCore::Log.info "Compressing #{ifn} -> #{ofn}"
-            system "gdal_translate #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+            system "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
             raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           end
           
@@ -96,13 +96,13 @@ module Robots       # Robot package
           
             # compress GeoTIFF
             LyberCore::Log.info "Compressing #{tempfn} -> #{tifffn}"
-            system "gdal_translate #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
+            system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
             raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           else
             # translate and compress GeoTIFF
             LyberCore::Log.info "Translating and Compressing #{gridfn}"
-            system "gdal_translate #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+            system "gdal_translate -a_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
             raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           end
           
