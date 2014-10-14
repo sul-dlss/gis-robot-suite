@@ -29,25 +29,25 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           # @param [String] fn the metadata
-          # @param [String] thumbnail_fn the file into which to write JPEG image
-          # @param [String] property_type is the EsriPropertyType to select 
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
           raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
-          
+
+          # ensure content folder is present
           content_dir = File.join(rootdir, 'content')
           FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
-          thumbnail_fn = File.join(content_dir, 'preview.jpg')
-          property_type = 'PictureX'
           
+          # parse ESRI XML and extract base64 encoded thumbnail image
           doc = Nokogiri::XML(File.read(fn))
           doc.xpath('//Binary/Thumbnail/Data').each do |node|
-            if property_type.nil? or node['EsriPropertyType'] == property_type
+            if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
-              File.open(thumbnail_fn, 'wb') {|f| f << image }
+              File.open(File.join(content_dir, 'preview.jpg'), 'wb') {|f| f << image }
               return
+            else
+              LyberCore::Log.warn "Unknown EsriPropertyType: #{node['EsriPropertyType']}"
             end
           end
-          raise ArgumentError, "No thumbnail embedded within #{fn}"
+          raise RuntimeError, "Missing thumbnail in ESRI metadata file: #{fn}"
         end
       end
 
