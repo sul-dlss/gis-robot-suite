@@ -22,7 +22,7 @@ module Robots       # Robot package
           tmpdir
         end
         
-        def reproject_geotiff druid, zipfn, flags, srid = 4326
+        def reproject_geotiff druid, zipfn, proj, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
           # sniff out GeoTIFF file
@@ -36,20 +36,28 @@ module Robots       # Robot package
             raise ArgumentError, "Cannot locate GeoTIFF in #{tmpdir}" 
           end
 
-          # reproject with gdalwarp (must uncompress here to prevent bloat)
           ifn = "#{tmpdir}/#{tiffname}.tif"
           ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
-          tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
           FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
-          LyberCore::Log.debug "Reprojecting #{ifn}"
-          system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
-          raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
-          
-          # compress with gdal_translate
-          LyberCore::Log.debug "Compressing #{ofn}"
-          system "gdal_translate #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
-          FileUtils.rm_f(tempfn)
-          raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+          unless proj == "EPSG:#{srid}"
+            tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
+            
+            # reproject with gdalwarp (must uncompress here to prevent bloat)
+            LyberCore::Log.info "Reprojecting #{ifn} -> #{tempfn}"
+            system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
+            raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+            
+            # compress tempfn with gdal_translate
+            LyberCore::Log.info "Compressing #{tempfn} -> #{ofn}"
+            system "gdal_translate #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
+            FileUtils.rm_f(tempfn)
+            raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+          else
+            # compress with gdal_translate
+            LyberCore::Log.info "Compressing #{ifn} -> #{ofn}"
+            system "gdal_translate #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+            raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+          end
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
@@ -62,7 +70,7 @@ module Robots       # Robot package
           FileUtils.rm_rf tmpdir
         end
 
-        def reproject_arcgrid druid, zipfn, flags, srid = 4326
+        def reproject_arcgrid druid, zipfn, proj, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
           
           # Sniff out ArcGRID location
@@ -76,19 +84,27 @@ module Robots       # Robot package
             raise ArgumentError, "Cannot locate ArcGRID in #{tmpdir}" 
           end
           
-          # reproject with gdalwarp (must uncompress here to prevent bloat)
           gridfn = "#{tmpdir}/#{gridname}"
-          tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
-          LyberCore::Log.debug "Reprojecting #{gridfn}"
-          system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tempfn} -co 'COMPRESS=NONE'"
-          raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
-          
-          # compress GeoTIFF
           tifffn = "#{tmpdir}/#{gridname}.tif"
-          LyberCore::Log.debug "Compressing #{tifffn}"
-          system "gdal_translate #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
-          FileUtils.rm_f(tempfn)
-          raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
+          
+          unless proj == "EPSG:#{srid}"
+            # reproject with gdalwarp (must uncompress here to prevent bloat)
+            tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
+            LyberCore::Log.info "Reprojecting #{gridfn}"
+            system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tempfn} -co 'COMPRESS=NONE'"
+            raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+          
+            # compress GeoTIFF
+            LyberCore::Log.info "Compressing #{tempfn} -> #{tifffn}"
+            system "gdal_translate #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
+            FileUtils.rm_f(tempfn)
+            raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
+          else
+            # translate and compress GeoTIFF
+            LyberCore::Log.info "Translating and Compressing #{gridfn}"
+            system "gdal_translate #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+            raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
+          end
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
@@ -130,7 +146,7 @@ module Robots       # Robot package
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
-          LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
+          LyberCore::Log.info "Projecting #{ifn} -> #{ofn}"
           system("ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
           raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
           
@@ -204,11 +220,13 @@ module Robots       # Robot package
           when 'application/x-esri-shapefile'
             reproject_shapefile druid, fn, flags 
           when 'image/tiff'
+            proj = GisRobotSuite.determine_projection_from_mods modsfn
+            LyberCore::Log.debug "Projection = #{proj}"
             filetype = format.split(/format=/)[1]
             if filetype == 'GeoTIFF'
-              reproject_geotiff druid, fn, flags
+              reproject_geotiff druid, fn, proj, flags
             elsif filetype == 'ArcGRID'
-              reproject_arcgrid druid, fn, flags              
+              reproject_arcgrid druid, fn, proj, flags              
             else
               raise NotImplementedError, "Unsupported Raster file format: #{format}"
             end
