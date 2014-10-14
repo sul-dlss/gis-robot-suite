@@ -63,7 +63,7 @@ module Robots       # Robot package
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -q -Dj '#{ozip}' #{ofn}")
+          system("zip -Dj '#{ozip}' #{ofn}")
           
           # cleanup
           LyberCore::Log.debug "Removing #{tmpdir}"
@@ -110,7 +110,7 @@ module Robots       # Robot package
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -q -Dj '#{ozip}' #{tifffn}")
+          system("zip -Dj '#{ozip}' #{tifffn}")
           
           # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
@@ -161,7 +161,7 @@ module Robots       # Robot package
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug "Repacking #{ozip}"
-          system("zip -q -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
+          system("zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
 
           # cleanup
           LyberCore::Log.debug "Removing #{tmpdir}"
