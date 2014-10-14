@@ -31,17 +31,25 @@ module Robots       # Robot package
             tiffname = File.basename(fn, '.tif.xml')
           end
           if tiffname.nil?
-            LyberCore::Log.debug  "Removing #{tmpdir}"
+            LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
             raise ArgumentError, "Cannot locate GeoTIFF in #{tmpdir}" 
           end
 
-          # reproject with gdalwarp
+          # reproject with gdalwarp (must uncompress here to prevent bloat)
           ifn = "#{tmpdir}/#{tiffname}.tif"
           ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
+          tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
           FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
-          system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
-          raise RuntimeError, "gdalwarp failed to create #{ofn}" unless File.exists?(ofn)
+          LyberCore::Log.debug "Reprojecting #{ifn}"
+          system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
+          raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+          
+          # compress with gdal_translate
+          LyberCore::Log.debug "Compressing #{ofn}"
+          system "gdal_translate #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
+          FileUtils.rm_f(tempfn)
+          raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
@@ -50,7 +58,7 @@ module Robots       # Robot package
           system("zip -q -Dj '#{ozip}' #{ofn}")
           
           # cleanup
-          LyberCore::Log.debug  "Removing #{tmpdir}"
+          LyberCore::Log.debug "Removing #{tmpdir}"
           FileUtils.rm_rf tmpdir
         end
 
@@ -63,15 +71,24 @@ module Robots       # Robot package
             gridname = File.basename(File.dirname(fn))
           end
           if gridname.nil?
-            LyberCore::Log.debug  "Removing #{tmpdir}"
+            LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
             raise ArgumentError, "Cannot locate ArcGRID in #{tmpdir}" 
           end
           
-          # reproject with gdalwarp
+          # reproject with gdalwarp (must uncompress here to prevent bloat)
           gridfn = "#{tmpdir}/#{gridname}"
+          tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
+          LyberCore::Log.debug "Reprojecting #{gridfn}"
+          system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tempfn} -co 'COMPRESS=NONE'"
+          raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+          
+          # compress GeoTIFF
           tifffn = "#{tmpdir}/#{gridname}.tif"
-          system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
+          LyberCore::Log.debug "Compressing #{tifffn}"
+          system "gdal_translate #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
+          FileUtils.rm_f(tempfn)
+          raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
@@ -94,7 +111,7 @@ module Robots       # Robot package
             shpname = File.basename(fn, '.shp')
           end
           if shpname.nil?
-            LyberCore::Log.debug  "Removing #{tmpdir}"
+            LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
             raise RuntimeError, "Cannot locate Shapefile in #{tmpdir}" 
           end
@@ -106,7 +123,6 @@ module Robots       # Robot package
       
           odr = File.join(tmpdir, "EPSG_#{srid}") # output directory
           ofn = File.join(odr, "#{shpname}.shp")  # output shapefile
-          LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
           
           # Verify source projection
           prjfn = File.join(tmpdir, "#{shpname}.prj")
@@ -114,6 +130,7 @@ module Robots       # Robot package
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
+          LyberCore::Log.debug "Projecting #{ifn} -> #{ofn}"
           system("ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
           raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
           
@@ -127,11 +144,11 @@ module Robots       # Robot package
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
-          LyberCore::Log.debug  "Repacking #{ozip}"
+          LyberCore::Log.debug "Repacking #{ozip}"
           system("zip -q -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
 
           # cleanup
-          LyberCore::Log.debug  "Removing #{tmpdir}"
+          LyberCore::Log.debug "Removing #{tmpdir}"
           FileUtils.rm_rf tmpdir
         end
 
