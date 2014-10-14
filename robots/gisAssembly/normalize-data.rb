@@ -88,10 +88,16 @@ module Robots       # Robot package
           tifffn = "#{tmpdir}/#{gridname}.tif"
           
           unless proj == "EPSG:#{srid}"
+            warpflags = ''
+            unless flags[:wkt][proj.to_s.gsub(/^EPSG:/, '')].nil?
+              warpflags = "-s_srs '#{proj}'" # we know the source WKT for this so use it
+            end
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
             LyberCore::Log.info "Reprojecting #{gridfn}"
-            system "gdalwarp -t_srs EPSG:#{srid} #{gridfn} #{tempfn} -co 'COMPRESS=NONE'"
+            cmd = "gdalwarp #{warpflags} -t_srs EPSG:#{srid} #{gridfn} #{tempfn}"
+            LyberCore::Log.debug "Running: #{cmd}"
+            system cmd
             raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
           
             # compress GeoTIFF
@@ -201,6 +207,20 @@ module Robots       # Robot package
                   UNIT["degree",0.01745329251994328,
                       AUTHORITY["EPSG","9122"]],
                   AUTHORITY["EPSG","4326"]]
+              }.split.join.freeze,
+              '54009' => %Q{
+                PROJCS["World_Mollweide",
+                    GEOGCS["GCS_WGS_1984",
+                        DATUM["WGS_1984",
+                            SPHEROID["WGS_1984",6378137,298.257223563]],
+                        PRIMEM["Greenwich",0],
+                        UNIT["Degree",0.017453292519943295]],
+                    PROJECTION["Mollweide"],
+                    PARAMETER["False_Easting",0],
+                    PARAMETER["False_Northing",0],
+                    PARAMETER["Central_Meridian",0],
+                    UNIT["Meter",1],
+                    AUTHORITY["EPSG","54009"]]
               }.split.join.freeze
             }
           }
@@ -221,6 +241,7 @@ module Robots       # Robot package
             reproject_shapefile druid, fn, flags 
           when 'image/tiff'
             proj = GisRobotSuite.determine_projection_from_mods modsfn
+            proj.gsub!('ESRI', 'EPSG')
             LyberCore::Log.debug "Projection = #{proj}"
             filetype = format.split(/format=/)[1]
             if filetype == 'GeoTIFF'
