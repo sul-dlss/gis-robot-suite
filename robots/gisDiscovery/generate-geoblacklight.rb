@@ -33,7 +33,6 @@ module Robots       # Robot package
           cmd = ['xsltproc',
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
                   "--stringparam stacks_root '#{flags[:stacks]}'",
-                  "--stringparam purl '#{flags[:purl]}'",
                   "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
                   "--stringparam rights '#{rights}'",
                   "--output '#{ofn}'",
