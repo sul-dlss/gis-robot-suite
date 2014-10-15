@@ -89,26 +89,27 @@ module Robots       # Robot package
           h
         end
         
-        def create_vector(catalog, ws, layer, dsname = 'geoserver')
+        def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
           %w{title abstract keywords metadata_links}.each do |i|
             raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
           
+          LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
           ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => dsname
-          LyberCore::Log.debug "DataStore: #{ws.name}/#{ds.name}"
-          LyberCore::Log.debug ({:profile => ds.profile}).to_s
-          raise RuntimeError, "Datastore #{ds.name} not found" if ds.new?
+          raise RuntimeError, "Datastore #{dsname} not found" if ds.nil? || ds.new?
           
           ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layer['druid']
-          ft.enabled = true
-          ft.title = layer['title']
-          ft.abstract = layer['abstract']  
-          ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
-          ft.metadata_links = layer['metadata_links']
-
-          # XXX: need "the_geom" field
-          LyberCore::Log.debug "Creating FeatureType #{layer['druid']}: #{ft}" if ft.new?
-          ft.save
+          if ft.new?
+            LyberCore::Log.debug "Creating FeatureType #{layer['druid']}"
+            ft.enabled = true
+            ft.title = layer['title']
+            ft.abstract = layer['abstract']  
+            ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+            ft.metadata_links = layer['metadata_links']
+            ft.save
+          else
+            raise RuntimeError, "FeatureType #{layer['druid']} already exists in #{ds.name}" 
+          end
         end
         
       end
