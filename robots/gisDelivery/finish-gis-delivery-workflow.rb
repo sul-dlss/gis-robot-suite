@@ -19,7 +19,16 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-gis-delivery-workflow working on #{druid}"
 
-          raise NotImplementedError # XXX: verify WMS/WFS/WCS works correctly
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+
+          # Connect to GeoServer
+          catalog = RGeoServer::catalog
+          LyberCore::Log.debug "Connected to #{catalog}"
+          
+          # Verify layer
+          layer = RGeoServer::Layer.new catalog, name: druid.to_s
+          raise RuntimeError, "Missing GeoServer layer for #{druid}" if layer.new?
+          LyberCore::Log.debug "Found GeoServer layer #{druid}"
         end
       end
 
