@@ -15,11 +15,11 @@
     <prereq>load-raster</prereq>
     <label>Load layers into GeoServer</label>
   </process>
-  <process name="load-geowebcache" sequence="5">
+  <process name="load-geowebcache" sequence="5" status="skipped">
     <prereq>load-geoserver</prereq>
     <label>Load layers into GeoWebCache</label>
   </process>
-  <process name="seed-geowebcache" sequence="6">
+  <process name="seed-geowebcache" sequence="6" status="skipped">
     <prereq>load-geowebcache</prereq>
     <label>Generate tiles for GeoWebCache</label>
   </process>
