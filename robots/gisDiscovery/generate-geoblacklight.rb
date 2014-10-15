@@ -14,7 +14,7 @@ module Robots       # Robot package
           super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
         end
 
-        def convert_mods2geoblacklight(rootdir, druid)
+        def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted')
           flags = {
             :geoserver => Dor::Config.geoserver.url,
             :stacks => Dor::Config.stacks.url,
@@ -35,12 +35,13 @@ module Robots       # Robot package
                   "--stringparam stacks_root '#{flags[:stacks]}'",
                   "--stringparam purl '#{flags[:purl]}'",
                   "--stringparam now '#{Time.now.utc.to_datetime.rfc3339}'",
-                  "--stringparam rights 'Restricted'", # XXX: determine rights from APO
+                  "--stringparam rights '#{rights}'",
                   "--output '#{ofn}'",
                   "'#{xslfn}'",
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
+          raise RuntimeError, "Cannot transform MODS into GeoBlacklight schema" unless File.exists?(ofn)
         end
         
         # `perform` is the main entry point for the robot. This is where
@@ -50,12 +51,21 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
-          convert_mods2geoblacklight rootdir, druid
-
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          
+          rights = 'Restricted'
+          begin
+            item = Dor::Item.find("druid:#{druid}")
+            if item.rightsMetadata.ng_xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length == 1
+              rights = 'Public'
+            end
+          rescue ActiveFedora::ObjectNotFoundError => e
+            LyberCore::Log.warn "#{druid} not found in DOR"
+          end
+          
+          convert_mods2geoblacklight rootdir, druid, rights
         end
       end
-
     end
   end
 end
