@@ -34,7 +34,7 @@ module Robots       # Robot package
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
                   "--stringparam stacks_root '#{flags[:stacks]}'",
                   "--stringparam purl '#{flags[:purl]}'",
-                  "--stringparam now '#{Time.now.utc.to_datetime.rfc3339}'",
+                  "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
                   "--stringparam rights '#{rights}'",
                   "--output '#{ofn}'",
                   "'#{xslfn}'",
