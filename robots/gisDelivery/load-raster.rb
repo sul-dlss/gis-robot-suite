@@ -43,7 +43,7 @@ module Robots       # Robot package
             Dir.chdir(tmpdir)
             tiffn = Dir.glob("*.tif").first
             raise RuntimeError, "Cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
-            cmd = "rsync -v #{tiffn} #{Dor::Config.geotiff.hostdir}/#{druid}.tif"
+            cmd = "rsync -v #{tiffn} #{Dor::Config.geotiff.dir}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
           ensure
