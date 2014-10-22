@@ -18,9 +18,7 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "finish-gis-delivery-workflow working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
+          
           # Connect to GeoServer
           catalog = RGeoServer::catalog
           LyberCore::Log.debug "Connected to #{catalog}"
