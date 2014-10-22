@@ -12,7 +12,7 @@ module GisRobotSuite
       raise NotImplementedError, 'Only :stage, :workspace are supported'
     end
     
-    raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)    
+    raise RuntimeError, "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
     rootdir
   end
   
