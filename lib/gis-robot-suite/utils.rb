@@ -6,8 +6,10 @@ module GisRobotSuite
     if opts[:type] == :stage
       rootdir = Dor::Config.geohydra.stage
       rootdir = File.join(rootdir, pid)
+    elsif opts[:type] == :workspace
+      rootdir = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace).path
     else
-      raise NotImplementedError, 'Only :stage is supported'
+      raise NotImplementedError, 'Only :stage, :workspace are supported'
     end
     
     raise RuntimeError, "Missing #{rootdir}" unless File.directory?(rootdir)    
