@@ -148,12 +148,17 @@ module Robots       # Robot package
           
           # Verify source projection
           prjfn = File.join(tmpdir, "#{shpname}.prj")
-          raise RuntimeError, "Missing projection #{prjfn}" unless File.exists?(prjfn)
+          unless File.exists?(prjfn)
+            LyberCore::Log.warn "Missing projection #{prjfn}, assuming EPSG:#{srid}" 
+            ogr_flags = "-s_srs '#{wkt}'"
+          else
+            ogr_flags = ''
+          end
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "Projecting #{ifn} -> #{ofn}"
-          system("ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
+          system("ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
           raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
           
           # normalize prj file
