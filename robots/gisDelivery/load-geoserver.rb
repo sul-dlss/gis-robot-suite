@@ -119,13 +119,13 @@ module Robots       # Robot package
             raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
           
-          csname = layer['druid']
-          LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{csname}"
-          cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => csname
+          druid = layer['druid']
+          LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
+          cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => druid
           if cs.new?
             LyberCore::Log.debug "Creating CoverageStore: #{ws.name}/#{cs.name}"
             cs.enabled = true
-            cs.description = druid
+            cs.description = layer['title']
             cs.data_type = 'GeoTIFF'
             cs.url = "file:#{Dor::Config.geotiff.dir}/#{druid}.tif" 
             cs.save
@@ -133,9 +133,9 @@ module Robots       # Robot package
             LyberCore::Log.debug "Found existing CoverageStore: #{ws.name}/#{cs.name}"
           end
           
-          cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layer['druid']
+          cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => druid
           if cv.new?
-            LyberCore::Log.debug "Creating Coverage #{layer['druid']}"
+            LyberCore::Log.debug "Creating Coverage #{druid}"
             cv.enabled = true
             cv.title = layer['title']
             cv.abstract = layer['abstract']  
@@ -143,7 +143,7 @@ module Robots       # Robot package
             cv.metadata_links = layer['metadata_links']
             cv.save
           else
-            raise RuntimeError, "Coverage #{layer['druid']} already exists in #{cs.name}" 
+            raise RuntimeError, "Coverage #{druid} already exists in #{cs.name}" 
           end
         end
         
