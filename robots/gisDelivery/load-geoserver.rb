@@ -24,7 +24,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "load-geoserver working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
