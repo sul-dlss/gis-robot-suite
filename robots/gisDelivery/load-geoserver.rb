@@ -46,7 +46,6 @@ module Robots       # Robot package
           # Obtain layer details
           layer = layer_from_druid druid, modsfn, (layertype == 'GeoTIFF')
           layer[(layertype == 'GeoTIFF'? 'raster' : 'vector')]['format'] = layertype
-          puts layer
 
           # Connect to GeoServer
           LyberCore::Log.debug "Connecting to catalog..."
@@ -133,6 +132,7 @@ module Robots       # Robot package
             LyberCore::Log.debug "Found existing CoverageStore: #{ws.name}/#{cs.name}"
           end
           
+          LyberCore::Log.debug "Retrieving Coverage: #{ws.name}/#{cs.name}/#{druid}"
           cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => druid
           if cv.new?
             LyberCore::Log.debug "Creating Coverage #{druid}"
