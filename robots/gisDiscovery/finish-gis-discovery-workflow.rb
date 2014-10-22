@@ -19,6 +19,8 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-gis-discovery-workflow working on #{druid}"
           
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
+          
           xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
           raise RuntimeError, "Cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
         end
