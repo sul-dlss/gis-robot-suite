@@ -50,7 +50,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           
           rights = 'Restricted'
           begin
