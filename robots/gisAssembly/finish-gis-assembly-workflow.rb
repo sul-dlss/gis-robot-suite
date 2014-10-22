@@ -21,11 +21,13 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          
-          # delete all files in temp/
-          LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{rootdir}/temp"
-          FileUtils.rm_r("#{rootdir}/temp")
+          # delete all staged files in temp/
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
+          tmpdir = "#{rootdir}/temp"
+          if File.directory?(tmpdir)
+            LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
+            FileUtils.rm_r(tmpdir) 
+          end
           
           # load workspace with identical copy of stage
           destdir = GisRobotSuite.locate_druid_path druid, type: :workspace
