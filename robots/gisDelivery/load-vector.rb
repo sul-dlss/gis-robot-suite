@@ -29,7 +29,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "load-vector working on #{druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           
           # determine whether we have a Shapefile to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
@@ -37,7 +37,7 @@ module Robots       # Robot package
           format = GisRobotSuite::determine_file_format_from_mods modsfn
           raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
           
-          # reproject based on file format information
+          # perform based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
           unless mimetype == 'application/x-esri-shapefile'
             LyberCore::Log.info "#{druid} is not Shapefile: #{mimetype}"
@@ -45,10 +45,9 @@ module Robots       # Robot package
           end
           
           # extract derivative 4326 nomalized content
-          tmpdir = File.join(rootdir, 'temp')
           zipfn = File.join(rootdir, 'content', 'data_EPSG_4326.zip')
           raise RuntimeError, "Cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
-          tmpdir = extract_data_from_zip druid, zipfn, tmpdir
+          tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
           
           begin
             schema = Dor::Config.postgis.schema || 'druid'
