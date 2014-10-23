@@ -68,12 +68,12 @@
     <prereq>generate-content-metadata</prereq>
     <label>Finalize assembly workflow to prepare for assembly/delivery/discovery</label>
   </process>
-  <process name="start-assembly-workflow" sequence="18">
+  <process name="start-accessioning-workflow" sequence="18">
     <prereq>finish-gis-assembly-workflow</prereq>
-    <label>Kickstart the core assembly workflow at assemblyWF</label>
+    <label>Kickstart the core accessioning workflow at accessionWF</label>
   </process>
   <process name="start-delivery-workflow" sequence="19">
-    <prereq>start-assembly-workflow</prereq>
+    <prereq>start-accessioning-workflow</prereq>
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
 </workflow-def>

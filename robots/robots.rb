@@ -14,7 +14,7 @@ require 'gisAssembly/generate-geo-metadata'
 require 'gisAssembly/generate-mods'
 require 'gisAssembly/normalize-data'
 require 'gisAssembly/package-data'
-require 'gisAssembly/start-assembly-workflow'
+require 'gisAssembly/start-accessioning-workflow'
 require 'gisAssembly/start-delivery-workflow'
 require 'gisAssembly/wrangle-data'
 
