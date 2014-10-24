@@ -36,7 +36,7 @@ module Robots       # Robot package
         def self.search_for_xsl(filename)
           path = %w{
             schema/lib/xslt
-            /home/geostaff/ArcGIS/Transforms
+            /home/lyberadmin/ArcGIS/Transforms
           }
           path.unshift(File.dirname(__FILE__))
           path.each do |d|
