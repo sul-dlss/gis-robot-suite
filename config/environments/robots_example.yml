@@ -41,8 +41,6 @@
 #
 
 geomdtk-dev:
-  - dor_gisAssemblyWF_approve-data
-  - dor_gisAssemblyWF_approve-metadata
   - dor_gisAssemblyWF_assign-placenames
   - dor_gisAssemblyWF_author-data
   - dor_gisAssemblyWF_author-metadata
