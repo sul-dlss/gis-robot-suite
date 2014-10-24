@@ -21,6 +21,13 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
+          # see if we've already created a data.zip
+          datafn = "#{rootdir}/content/data.zip"
+          if File.exists?(datafn)
+            LyberCore::Log.info "Found wrangled data: #{datafn}"
+            return
+          end
+          
           # ensure that we have either a .shp or a .tif or grid
           fn = Dir.glob(File.join(rootdir, 'temp', '*.shp')).first
           if fn.nil?
