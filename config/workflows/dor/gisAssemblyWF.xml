@@ -12,7 +12,7 @@
     <prereq>register-druid</prereq>
     <label>Author metadata using ArcCatalog</label>
   </process>
-  <process name="approve-metadata" sequence="4">
+  <process name="approve-metadata" sequence="4" status="skipped">
     <prereq>author-metadata</prereq>
     <label>Approve metadata quality and release for workflow workflow</label>
   </process>
@@ -44,7 +44,7 @@
     <prereq>finish-metadata</prereq>
     <label>Wrangle the data into the digital work</label>
   </process>
-  <process name="approve-data" sequence="12">
+  <process name="approve-data" sequence="12" status="skipped">
     <prereq>wrangle-data</prereq>
     <label>Approve data quality for digital work and release for workflow workflow</label>
   </process>

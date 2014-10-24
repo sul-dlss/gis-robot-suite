@@ -17,18 +17,9 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          LyberCore::Log.debug "approve-metadata working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          # XXX: Use magic(5) to determine validity
-          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
-
-          LyberCore::Log.debug "approve-metadata found #{fn}"
+          raise NotImplementedError
         end
       end
-
     end
   end
 end

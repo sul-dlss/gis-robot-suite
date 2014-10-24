@@ -17,29 +17,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          LyberCore::Log.debug "approve-data working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          
-          # see if we've already created a data.zip
-          datafn = "#{rootdir}/content/data.zip"
-          if File.exists?(datafn)
-            LyberCore::Log.info "Found packaged data: #{datafn}"
-            return
-          end
-
-          # XXX: Use magic(5) to determine validity
-          fn = Dir.glob("#{rootdir}/temp/*.shp").first # Shapefile
-          if fn.nil? or File.size(fn) == 0
-            fn = Dir.glob("#{rootdir}/temp/*.tif").first # GeoTIFF
-            if fn.nil? or File.size(fn) == 0
-              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first # ArcGRID
-              if fn.nil? or File.size(fn) == 0
-                raise RuntimeError, "Missing data files in #{rootdir}/temp"
-              end
-            end
-          end
-          LyberCore::Log.debug "approve-data found #{fn}"
+          raise NotImplementedError
         end
       end
 
