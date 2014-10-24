@@ -20,6 +20,13 @@ module Robots       # Robot package
           LyberCore::Log.debug "approve-data working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          
+          # see if we've already created a data.zip
+          datafn = "#{rootdir}/content/data.zip"
+          if File.exists?(datafn)
+            LyberCore::Log.info "Found packaged data: #{datafn}"
+            return
+          end
 
           # XXX: Use magic(5) to determine validity
           fn = Dir.glob("#{rootdir}/temp/*.shp").first # Shapefile
