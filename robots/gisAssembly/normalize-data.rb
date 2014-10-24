@@ -14,6 +14,7 @@ module Robots       # Robot package
         
         def extract_data_from_zip druid, zipfn, tmpdir
           LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
+          raise RuntimeError, "Cannot locate packaged data: #{zipfn}" unless File.exists?(zipfn)
           
           tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
@@ -198,7 +199,7 @@ module Robots       # Robot package
           File.umask(002)
           flags = {
             :overwrite_prj => true,
-            :tmpdir => "#{rootdir}/temp",
+            :tmpdir => Dor::Config.geohydra.tmpdir,
             #
             # ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3.1.
             # As implemented by EPSG database on HSQL:
