@@ -36,12 +36,18 @@ module Robots       # Robot package
           content_dir = File.join(rootdir, 'content')
           FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
           
+          # see if we have work to do
+          pfn = File.join(content_dir, 'preview.jpg')
+          if File.exists?(pfn)
+            LyberCore::Log.info "Found existing thumbnail: #{pfn}"
+            return
+          end
+          
           # parse ESRI XML and extract base64 encoded thumbnail image
           doc = Nokogiri::XML(File.read(fn))
           doc.xpath('//Binary/Thumbnail/Data').each do |node|
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
-              pfn = File.join(content_dir, 'preview.jpg')
               File.open(pfn, 'wb') {|f| f << image }
               raise RuntimeError, "Cannot create #{pfn}" unless File.exists?(pfn)
               return
