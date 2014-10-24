@@ -20,9 +20,21 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
+          
+          # first ensure all files are ready
+          %w{
+            content/data.zip
+            content/data_EPSG_4326.zip
+            content/preview.jpg
+            metadata/contentMetadata.xml
+            metadata/descMetadata.xml
+            metadata/geoMetadata.xml
+          }.each do |fn|
+            raise RuntimeError, "Missing required file: #{fn}" unless File.exists?("#{rootdir}/#{fn}")
+          end
           
           # delete all staged files in temp/
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           tmpdir = "#{rootdir}/temp"
           if File.directory?(tmpdir)
             LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
