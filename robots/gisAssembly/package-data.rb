@@ -68,6 +68,12 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
+          datafn = "#{rootdir}/content/data.zip"
+          if File.exists?(datafn)
+            LyberCore::Log.info "Found packaged data: #{datafn}"
+            return
+          end
+          
           generate_data_zip druid, rootdir
         end        
       end
