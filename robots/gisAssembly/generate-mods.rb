@@ -24,7 +24,7 @@ module Robots       # Robot package
         def geometry_type(shp_filename)
           RGeo::Shapefile::Reader.open(shp_filename) do |shp|
             shp.each do |record|
-              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
+              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'') unless record.geometry.nil?
             end
           end
           nil     
@@ -142,7 +142,7 @@ module Robots       # Robot package
               unless fn.nil?
                 fileFormat = 'ArcGRID'
               else
-                raise RuntimeError, "Cannot detect fileFormat: #{rootdir}"
+                raise RuntimeError, "Cannot detect fileFormat: #{rootdir}/temp"
               end
             end
           end
