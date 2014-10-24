@@ -41,7 +41,9 @@ module Robots       # Robot package
           doc.xpath('//Binary/Thumbnail/Data').each do |node|
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
-              File.open(File.join(content_dir, 'preview.jpg'), 'wb') {|f| f << image }
+              pfn = File.join(content_dir, 'preview.jpg')
+              File.open(pfn, 'wb') {|f| f << image }
+              raise RuntimeError, "Cannot create #{pfn}" unless File.exists?(pfn)
               return
             else
               LyberCore::Log.warn "Unknown EsriPropertyType: #{node['EsriPropertyType']}"
