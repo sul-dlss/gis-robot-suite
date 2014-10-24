@@ -189,6 +189,12 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           LyberCore::Log.debug "Using rootdir=#{rootdir}"
           
+          datafn = "#{rootdir}/content/data_EPSG_4326.zip"
+          if File.exists?(datafn)
+            LyberCore::Log.info "Found normalized data: #{datafn}"
+            return
+          end
+          
           File.umask(002)
           flags = {
             :overwrite_prj => true,
