@@ -138,7 +138,9 @@ module Robots       # Robot package
           end
     
           # extract the MODS extension cleanly
-          doc = Nokogiri::XML(File.read("#{rootdir}/metadata/descMetadata.xml"))
+          modsfn = "#{rootdir}/metadata/descMetadata.xml"
+          raise RuntimeError, "Missing MODS metadata: #{modsfn}" unless File.exists?(modsfn)
+          doc = Nokogiri::XML(File.read(modsfn))
           ns = {
             'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             'mods' => 'http://www.loc.gov/mods/v3'
@@ -146,9 +148,11 @@ module Robots       # Robot package
           geoData = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
           
           xml = create_content_metadata druid, objects, geoData
-          File.open("#{rootdir}/metadata/contentMetadata.xml", 'wb') do |f| 
+          fn = "#{rootdir}/metadata/contentMetadata.xml"
+          File.open(fn, 'wb') do |f| 
             f.write(xml)
           end
+          raise RuntimeError, "Cannot create contentMetadata: #{fn}" unless File.exists?(fn)
         end
       end
 
