@@ -1,0 +1,14 @@
+#!/bin/bash
+
+export ROBOT_LOG_LEVEL=DEBUG
+export PATH=./bin:$PATH
+
+druid="$1"
+
+for s in \
+  generate-geoblacklight \
+  load-geoblacklight \
+  finish-gis-discovery-workflow \
+  ; do
+  run_robot dor:gisDiscoveryWF:$s -d $druid
+done
