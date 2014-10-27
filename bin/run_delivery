@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export ROBOT_LOG_LEVEL=DEBUG
+export PATH=./bin:$PATH
+
+druid="$1"
+
+for s in \
+  load-raster \
+  load-vector \
+  load-geoserver \
+  finish-gis-delivery-workflow \
+  ; do
+  run_robot dor:gisDeliveryWF:$s -d $druid
+done
