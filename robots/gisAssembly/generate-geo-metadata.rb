@@ -21,15 +21,23 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
+          # short-circuit if work is already done
+          metadatadir = "#{rootdir}/metadata"
+          ofn = "#{metadatadir}/geoMetadata.xml"
+          if File.exists?(ofn)
+            LyberCore::Log.info "generate-geo-metadata: #{druid} already has geoMetadata: #{ofn}"
+            return
+          end
+          
           fn = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
           if fn.nil?
-            raise RuntimeError, "Missing ISO19139 file in #{rootdir}"
+            raise RuntimeError, "generate-geo-metadata: #{druid} is missing ISO 19139 file"
           end
           
           LyberCore::Log.debug "generate-geo-metadata processing #{fn}"
           isoXml = Nokogiri::XML(File.read(fn))
           if isoXml.nil? or isoXml.root.nil?
-            raise ArgumentError, "Empty ISO 19139" 
+            raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{fn}" 
           end
 
           fn = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
@@ -39,9 +47,7 @@ module Robots       # Robot package
           end
 
           # GeoMetadataDS
-          metadatadir = "#{rootdir}/metadata"
           FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
-          ofn = "#{metadatadir}/geoMetadata.xml"
           xml = to_geoMetadataDS(isoXml, fcXml, Dor::Config.purl.url + "/#{druid}") 
           File.open(ofn, 'wb') {|f| f << xml.to_xml(:indent => 2) }  
         end
