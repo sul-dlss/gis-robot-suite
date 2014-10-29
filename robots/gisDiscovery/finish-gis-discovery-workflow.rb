@@ -22,7 +22,9 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           
           xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          raise RuntimeError, "Cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
+          raise RuntimeError, "finish-gis-discovery-workflow: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
+          
+          # XXX: check Solr index too
         end
       end
 
