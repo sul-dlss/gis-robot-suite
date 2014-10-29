@@ -69,8 +69,6 @@ module Robots       # Robot package
         
         # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
         def layer_from_druid druid, modsfn, is_raster = false
-          LyberCore::Log.debug "Processing #{druid}"
-
           mods = Mods::Record.new
           mods.from_str(File.read(modsfn))
   
