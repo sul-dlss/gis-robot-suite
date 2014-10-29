@@ -23,10 +23,18 @@ module Robots       # Robot package
 
           # GeoBlacklight Solr document from descMetadataDS
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "Cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
           
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          FileUtils.rm_f(ofn) if File.exist?(ofn)
+          if File.exists?(ofn)
+            if FileUtils.uptodate?(ofn, [ifn])
+              LyberCore::Log.info "generate-geoblacklight: #{druid} found existing GeoBlacklight metadata"
+              return
+            else
+              LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
+              FileUtils.rm_f(ofn)
+            end
+          end
           
           # run XSLT
           xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
@@ -40,7 +48,7 @@ module Robots       # Robot package
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
-          raise RuntimeError, "Cannot transform MODS into GeoBlacklight schema" unless File.exists?(ofn)
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.exists?(ofn)
         end
         
         # `perform` is the main entry point for the robot. This is where
@@ -59,7 +67,7 @@ module Robots       # Robot package
               rights = 'Public'
             end
           rescue ActiveFedora::ObjectNotFoundError => e
-            LyberCore::Log.warn "#{druid} not found in DOR"
+            LyberCore::Log.warn "generate-geoblacklight: #{druid} not found in DOR"
           end
           
           convert_mods2geoblacklight rootdir, druid, rights
