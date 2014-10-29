@@ -14,7 +14,7 @@ module Robots       # Robot package
         
         def extract_data_from_zip druid, zipfn, tmpdir
           LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
-          raise RuntimeError, "Cannot locate packaged data: #{zipfn}" unless File.exists?(zipfn)
+          raise RuntimeError, "normalize-data: #{druid} cannot locate packaged data: #{zipfn}" unless File.exists?(zipfn)
           
           tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
@@ -34,7 +34,7 @@ module Robots       # Robot package
           if tiffname.nil?
             LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
-            raise ArgumentError, "Cannot locate GeoTIFF in #{tmpdir}" 
+            raise ArgumentError, "normalize-data: #{druid} cannot locate GeoTIFF in #{tmpdir}" 
           end
 
           ifn = "#{tmpdir}/#{tiffname}.tif"
@@ -46,18 +46,18 @@ module Robots       # Robot package
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             LyberCore::Log.info "Reprojecting #{ifn} -> #{tempfn}"
             system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
-            raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
             
             # compress tempfn with gdal_translate
             LyberCore::Log.info "Compressing #{tempfn} -> #{ofn}"
             system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
-            raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           else
             # compress with gdal_translate
             LyberCore::Log.info "Compressing #{ifn} -> #{ofn}"
             system "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
-            raise RuntimeError, "gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           end
           
           # package up reprojection
@@ -82,7 +82,7 @@ module Robots       # Robot package
           if gridname.nil?
             LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
-            raise ArgumentError, "Cannot locate ArcGRID in #{tmpdir}" 
+            raise ArgumentError, "normalize-data: #{druid} cannot locate ArcGRID in #{tmpdir}"
           end
           
           gridfn = "#{tmpdir}/#{gridname}"
@@ -99,18 +99,18 @@ module Robots       # Robot package
             cmd = "gdalwarp #{warpflags} -t_srs EPSG:#{srid} #{gridfn} #{tempfn}"
             LyberCore::Log.debug "Running: #{cmd}"
             system cmd
-            raise RuntimeError, "gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
           
             # compress GeoTIFF
             LyberCore::Log.info "Compressing #{tempfn} -> #{tifffn}"
             system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
-            raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           else
             # translate and compress GeoTIFF
             LyberCore::Log.info "Translating and Compressing #{gridfn}"
             system "gdal_translate -a_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
-            raise RuntimeError, "gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           end
           
           # package up reprojection
@@ -136,7 +136,7 @@ module Robots       # Robot package
           if shpname.nil?
             LyberCore::Log.debug "Removing #{tmpdir}"
             FileUtils.rm_rf tmpdir
-            raise RuntimeError, "Cannot locate Shapefile in #{tmpdir}" 
+            raise RuntimeError, "normalize-data: #{druid} cannot locate Shapefile in #{tmpdir}" 
           end
     
           # setup
@@ -150,7 +150,7 @@ module Robots       # Robot package
           # Verify source projection
           prjfn = File.join(tmpdir, "#{shpname}.prj")
           unless File.exists?(prjfn)
-            LyberCore::Log.warn "Missing projection #{prjfn}, assuming EPSG:#{srid}" 
+            LyberCore::Log.warn "normalize-data: #{druid} is missing projection #{prjfn}, assuming EPSG:#{srid}" 
             ogr_flags = "-s_srs '#{wkt}'"
           else
             ogr_flags = ''
@@ -160,7 +160,7 @@ module Robots       # Robot package
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "Projecting #{ifn} -> #{ofn}"
           system("ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
-          raise RuntimeError, "Failed to reproject #{ifn}" unless File.exists?(ofn)
+          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn)
           
           # normalize prj file
           if flags[:overwrite_prj] && wkt
@@ -242,9 +242,9 @@ module Robots       # Robot package
           
           # Determine file format
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          raise RuntimeError, "Missing MODS metadata in #{rootdir}" unless File.exists?(modsfn)
+          raise RuntimeError, "normalize-data: #{druid} is missing MODS metadata" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
+          raise RuntimeError, "normalize-data: #{druid} cannot determine file format from MODS" if format.nil?
           
           # reproject based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
@@ -261,14 +261,13 @@ module Robots       # Robot package
             elsif filetype == 'ArcGRID'
               reproject_arcgrid druid, fn, proj, flags              
             else
-              raise NotImplementedError, "Unsupported Raster file format: #{format}"
+              raise NotImplementedError, "normalize-data: #{druid} has unsupported Raster file format: #{format}"
             end
           else
-            raise NotImplementedError, "Unsupported file format: #{format}"
+            raise NotImplementedError, "normalize-data: #{druid} has unsupported file format: #{format}"
           end
         end
       end
-
     end
   end
 end
