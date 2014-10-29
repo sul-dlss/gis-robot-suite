@@ -16,6 +16,7 @@ module Robots       # Robot package
         def generate_data_zip(druid, rootdir)
           tmpdir = File.join(rootdir, 'temp')
           LyberCore::Log.debug "Changing to #{tmpdir}"
+          raise RuntimeError, "package-data: #{druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
           Dir.chdir(tmpdir)
           File.umask(002)
 
@@ -27,7 +28,7 @@ module Robots       # Robot package
             if fn.nil?
               fn = Dir.glob('*.tif.xml').first
               if fn.nil?
-                raise RuntimeError, 'Cannot locate data in #{tmpdir}'
+                raise RuntimeError, "package-data: #{druid} cannot locate metadata in temp"
               else # GeoTIFF
                 basename = File.basename(fn, '.tif.xml')
                 Dir.glob("#{basename}.*").each do |x|
