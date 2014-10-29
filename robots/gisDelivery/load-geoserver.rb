@@ -28,19 +28,19 @@ module Robots       # Robot package
           
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "Cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
+          raise RuntimeError, "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
           
           # reproject based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
           case mimetype
-          when 'image/tiff'
+          when GisRobotSuite.determine_mimetype(:raster)
             layertype = 'GeoTIFF'
-          when 'application/x-esri-shapefile'
+          when GisRobotSuite.determine_mimetype(:vector)
             layertype = 'PostGIS'
           else
-            raise RuntimeError, "Unknown format: #{format}"
+            raise RuntimeError, "load-geoserver: #{druid} has unknown format: #{format}"
           end
 
           # Obtain layer details
@@ -54,7 +54,7 @@ module Robots       # Robot package
 
           # Obtain a handle to the workspace and clean it up. 
           ws = RGeoServer::Workspace.new catalog, :name => 'druid'
-          raise RuntimeError, "No such workspace: 'druid'" if ws.new?
+          raise RuntimeError, "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
           LyberCore::Log.debug "Workspace: #{ws.name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
@@ -62,7 +62,7 @@ module Robots       # Robot package
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
             create_raster(catalog, ws, layer['raster'])
           else
-            raise NotImplementedError, "Unknown layer format: #{layer}"
+            raise NotImplementedError, "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
         end
         
@@ -91,15 +91,16 @@ module Robots       # Robot package
         end
         
         def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
+          druid = layer['druid']
           %w{title abstract keywords metadata_links}.each do |i|
-            raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+            raise ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
           
           LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
           ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => dsname
-          raise RuntimeError, "Datastore #{dsname} not found" if ds.nil? || ds.new?
+          raise RuntimeError, "load-geoserver: #{druid}: Datastore #{dsname} not found" if ds.nil? || ds.new?
           
-          ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layer['druid']
+          ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => druid
           if ft.new?
             LyberCore::Log.debug "Creating FeatureType #{layer['druid']}"
             ft.enabled = true
@@ -109,16 +110,16 @@ module Robots       # Robot package
             ft.metadata_links = layer['metadata_links']
             ft.save
           else
-            raise RuntimeError, "FeatureType #{layer['druid']} already exists in #{ds.name}" 
+            raise RuntimeError, "load-geoserver: FeatureType #{druid} already exists in #{ds.name}" 
           end
         end
 
         def create_raster(catalog, ws, layer)
+          druid = layer['druid']
           %w{title abstract keywords metadata_links}.each do |i|
-            raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+            raise ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
           
-          druid = layer['druid']
           LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
           cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => druid
           if cs.new?
@@ -143,7 +144,7 @@ module Robots       # Robot package
             cv.metadata_links = layer['metadata_links']
             cv.save
           else
-            raise RuntimeError, "Coverage #{druid} already exists in #{cs.name}" 
+            raise RuntimeError, "load-geoserver: Coverage #{druid} already exists in #{cs.name}" 
           end
         end
         
