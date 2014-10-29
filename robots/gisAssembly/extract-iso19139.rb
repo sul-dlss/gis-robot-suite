@@ -21,15 +21,19 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
-          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(.*/metadata).xml$}
-            ofn = $1 + '-iso19139.xml'
-            ofn_fc = $1 + '-iso19110.xml'
-            ofn_fgdc = $1 + '-fgdc.xml'
+          begin
+            fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
+            if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(.*/metadata).xml$}
+              ofn = $1 + '-iso19139.xml'
+              ofn_fc = $1 + '-iso19110.xml'
+              ofn_fgdc = $1 + '-fgdc.xml'
+            end
+            LyberCore::Log.debug "extract-iso19139 working on #{fn}"
+            arcgis_to_iso19139 fn, ofn, ofn_fc, ofn_fgdc
+          rescue RuntimeError => e
+            LyberCore::Log.error "extract-iso19139: #{druid} is missing ESRI metadata files"
+            raise e
           end
-          LyberCore::Log.debug "extract-iso19139 working on #{fn}"
-          
-          arcgis_to_iso19139 fn, ofn, ofn_fc, ofn_fgdc
         end
         
         # XXX hardcoded paths
@@ -45,7 +49,7 @@ module Robots       # Robot package
               return fn
             end
           end
-          raise RuntimeError, "Cannot find #{filename} in search path"
+          raise RuntimeError, "extract-iso19139: #{druid} cannot find #{filename} in search path"
         end
         
         # XSLT file locations
