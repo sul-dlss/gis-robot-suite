@@ -24,7 +24,9 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          resolve_placenames(modsFn)
+          raise RuntimeError, "#{druid} is missing MODS metadata" unless File.exists?(modsFn)
+          
+          resolve_placenames(druid, modsFn)
         end
         
         #
@@ -34,7 +36,7 @@ module Robots       # Robot package
         #   * Adds correct rdf:resource to geo extension
         #   * Adds a LCSH or LCNAF keyword if needed
         #
-        def resolve_placenames(modsFn)
+        def resolve_placenames(druid, modsFn)
           LyberCore::Log.debug "Processing #{modsFn}"
           g = GeoBlacklightSchema::Gazetteer.new
           mods = Nokogiri::XML(File.open(modsFn, 'rb'))
@@ -45,7 +47,7 @@ module Robots       # Robot package
             # Verify Gazetteer keyword
             uri = g.find_placename_uri(k)
             if uri.nil?
-              LyberCore::Log.warn "WARNING: Missing gazetteer entry for '#{k}'"
+              LyberCore::Log.warn "assign-placenames: #{druid} is missing gazetteer entry for '#{k}'"
               next
             end
 
@@ -58,7 +60,7 @@ module Robots       # Robot package
             coverages = mods.xpath('//mods:extension//dc:coverage', { 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/' })
             coverages.each do |j|
               if j['dc:title'] == k
-                LyberCore::Log.debug "Correcting dc:coverage@rdf:resource for #{k}"
+                LyberCore::Log.debug "assign-placenames: #{druid} correcting dc:coverage@rdf:resource for #{k}"
                 j['rdf:resource'] = uri + 'about.rdf'
               end
             end
@@ -66,7 +68,7 @@ module Robots       # Robot package
             # Add a LC heading if needed
             lc = g.find_loc_keyword(k)
             unless lc.nil? or k == lc
-              LyberCore::Log.debug "Adding Library of Congress entry to end of MODS record"
+              LyberCore::Log.debug "assign-placenames: #{druid} adding Library of Congress entry to end of MODS record"
               lcauth = g.find_loc_authority(k)
               unless lcauth.nil?
                 lcuri = g.find_loc_authority(k)
