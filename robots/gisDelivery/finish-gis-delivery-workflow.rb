@@ -25,8 +25,7 @@ module Robots       # Robot package
           
           # Verify layer
           layer = RGeoServer::Layer.new catalog, name: druid.to_s
-          raise RuntimeError, "Missing GeoServer layer for #{druid}" if layer.new?
-          LyberCore::Log.debug "Found GeoServer layer #{druid}"
+          raise RuntimeError, "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
         end
       end
 
