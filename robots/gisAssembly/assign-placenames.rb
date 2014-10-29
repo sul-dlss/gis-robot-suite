@@ -37,7 +37,7 @@ module Robots       # Robot package
         #   * Adds a LCSH or LCNAF keyword if needed
         #
         def resolve_placenames(druid, modsFn)
-          LyberCore::Log.debug "Processing #{modsFn}"
+          LyberCore::Log.debug "assign-placenames: #{druid} is processing #{modsFn}"
           g = GeoBlacklightSchema::Gazetteer.new
           mods = Nokogiri::XML(File.open(modsFn, 'rb'))
           r = mods.xpath('//mods:geographic', { 'mods' => 'http://www.loc.gov/mods/v3' })
