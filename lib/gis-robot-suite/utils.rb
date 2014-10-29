@@ -1,4 +1,14 @@
 module GisRobotSuite
+  def self.determine_mimetype type
+    if type == :vector
+      'application/x-esri-shapefile'
+    elsif type == :raster
+      'image/tiff'
+    else
+      raise ArgumentError, "Unknown type: #{type}"
+    end
+  end
+  
   def self.locate_druid_path druid, opts = {}
     rootdir = '.'
     pid = druid.gsub(/^druid:/, '')
