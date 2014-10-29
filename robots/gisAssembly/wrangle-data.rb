@@ -35,7 +35,7 @@ module Robots       # Robot package
             if fn.nil?
               fn = Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first
               if fn.nil?
-                raise RuntimeError, "Missing Shapefile or GeoTIFF or ArcGRID data files in #{rootdir}"
+                raise RuntimeError, "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files"
               end
             end
           end
