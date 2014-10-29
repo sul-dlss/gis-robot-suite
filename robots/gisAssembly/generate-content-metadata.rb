@@ -139,7 +139,7 @@ module Robots       # Robot package
     
           # extract the MODS extension cleanly
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          raise RuntimeError, "Missing MODS metadata: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "generate-content-metadata: #{druid} is missing MODS metadata" unless File.exists?(modsfn)
           doc = Nokogiri::XML(File.read(modsfn))
           ns = {
             'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -152,10 +152,9 @@ module Robots       # Robot package
           File.open(fn, 'wb') do |f| 
             f.write(xml)
           end
-          raise RuntimeError, "Cannot create contentMetadata: #{fn}" unless File.exists?(fn)
+          raise RuntimeError, "generate-content-metadata: #{druid} cannot create contentMetadata: #{fn}" unless File.exists?(fn)
         end
       end
-
     end
   end
 end
