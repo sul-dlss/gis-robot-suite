@@ -25,7 +25,7 @@ module Robots       # Robot package
             if File.readable?(zipfn) && File.size(zipfn) > 0
               LyberCore::Log.info "finish-data found #{zipfn}"
             else
-              raise RuntimeError, "Missing packaged data: #{zipfn}"
+              raise RuntimeError, "finish-data: #{druid} is missing packaged data for #{zipname}"
             end
           end
         end
