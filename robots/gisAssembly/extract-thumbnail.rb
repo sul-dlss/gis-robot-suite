@@ -30,7 +30,7 @@ module Robots       # Robot package
 
           # @param [String] fn the metadata
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
+          raise RuntimeError, "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
 
           # ensure content folder is present
           content_dir = File.join(rootdir, 'content')
@@ -39,7 +39,7 @@ module Robots       # Robot package
           # see if we have work to do
           pfn = File.join(content_dir, 'preview.jpg')
           if File.exists?(pfn)
-            LyberCore::Log.info "Found existing thumbnail: #{pfn}"
+            LyberCore::Log.info "extract-thumbnail: #{druid} found existing thumbnail: #{pfn}"
             return
           end
           
@@ -52,10 +52,10 @@ module Robots       # Robot package
               raise RuntimeError, "Cannot create #{pfn}" unless File.exists?(pfn)
               return
             else
-              LyberCore::Log.warn "Unknown EsriPropertyType: #{node['EsriPropertyType']}"
+              LyberCore::Log.warn "extract-thumbnail: #{druid} has unknown EsriPropertyType: #{node['EsriPropertyType']}"
             end
           end
-          raise RuntimeError, "Missing thumbnail in ESRI metadata file: #{fn}"
+          raise RuntimeError, "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
         end
       end
 
