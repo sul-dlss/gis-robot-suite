@@ -23,15 +23,18 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          raise RuntimeError, "Cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
+          raise RuntimeError, "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
           
           LyberCore::Log.debug "Parsing #{xmlfn}"
           doc = Nokogiri::XML(File.read(xmlfn))
+          raise RuntimeError, "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata" if doc.nil?
           
           url = File.join(Dor::Config.solr.url, Dor::Config.solr.collection)
           LyberCore::Log.debug "Connecting to #{url}"
           solr = RSolr.connect :url => url
           solr.update :data => doc.to_xml
+          solr.commit
+          LyberCore::Log.info "load-geoblacklight: #{druid} updated in #{url}"
         end
       end
 
