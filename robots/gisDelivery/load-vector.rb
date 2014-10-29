@@ -13,7 +13,7 @@ module Robots       # Robot package
         end
 
         def extract_data_from_zip druid, zipfn, tmpdir
-          LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
+          LyberCore::Log.info "load-vector: #{druid} is extracting data: #{zipfn}"
           
           tmpdir = File.join(tmpdir, "loadvector_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
@@ -33,32 +33,37 @@ module Robots       # Robot package
           
           # determine whether we have a Shapefile to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "Cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "load-vector: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
+          raise RuntimeError, "load-vector: #{druid} cannot determine file format from MODS" if format.nil?
           
           # perform based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
-          unless mimetype == 'application/x-esri-shapefile'
-            LyberCore::Log.info "#{druid} is not Shapefile: #{mimetype}"
+          unless mimetype == GisRobotSuite.determine_mimetype(:vector)
+            if mimetype == GisRobotSuite.determine_mimetype(:raster)
+              LyberCore::Log.info "load-vector: #{druid} is raster, skipping"
+            else
+              LyberCore::Log.warn "load-vector: #{druid} is not Shapefile: #{mimetype}"
+            end
             return
           end
           
           # extract derivative 4326 nomalized content
-          zipfn = File.join(rootdir, 'content', 'data_EPSG_4326.zip')
-          raise RuntimeError, "Cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
+          projection = '4326' # always use EPSG:4326 derivative
+          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
+          raise RuntimeError, "load-vector: #{druid} cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
           tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          raise RuntimeError, "load-vector: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
           
           begin
             schema = Dor::Config.postgis.schema || 'druid'
             encoding = 'UTF-8'
-            projection = '4326' # always use EPSG:4326 derivative
             
             # sniff out shapefile from extraction
             Dir.chdir(tmpdir)
             shpfn = Dir.glob("*.shp").first
             sqlfn = shpfn.gsub(/\.shp$/, '.sql')
-            LyberCore::Log.debug "Working on Shapefile #{shpfn}"
+            LyberCore::Log.debug "load-vector: #{druid} is working on Shapefile: #{shpfn}"
 
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
             # XXX: -G for the geography column causes some issues with GeoServer

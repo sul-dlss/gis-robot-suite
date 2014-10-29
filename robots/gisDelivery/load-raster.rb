@@ -23,27 +23,33 @@ module Robots       # Robot package
           
           # determine whether we have a Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "Cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "load-raster: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          raise RuntimeError, "Cannot determine file format from MODS: #{modsfn}" if format.nil?
+          raise RuntimeError, "load-raster: #{druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
           
           # perform based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
-          unless mimetype == 'image/tiff'
-            LyberCore::Log.info "#{druid} is not GeoTIFF: #{mimetype}"
+          unless mimetype == GisRobotSuite.determine_mimetype(:raster)
+            if mimetype == GisRobotSuite.determine_mimetype(:vector)
+              LyberCore::Log.info "load-raster: #{druid} is vector, skipping"
+            else            
+              LyberCore::Log.warn "load-raster: #{druid} is not GeoTIFF: #{mimetype}"
+            end
             return
           end
           
           # extract derivative 4326 nomalized content
-          zipfn = File.join(rootdir, 'content', 'data_EPSG_4326.zip')
-          raise RuntimeError, "Cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
+          projection = '4326' # always use EPSG:4326 derivative
+          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
+          raise RuntimeError, "load-raster: #{druid} cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
           tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          raise RuntimeError, "load-raster: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
           
           begin
             Dir.chdir(tmpdir)
             tiffn = Dir.glob("*.tif").first
-            raise RuntimeError, "Cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
-            cmd = "rsync -v #{tiffn} #{Dor::Config.geotiff.dir}/#{druid}.tif"
+            raise RuntimeError, "load-raster: #{druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
+            cmd = "rsync -v '#{tiffn}' #{Dor::Config.geotiff.dir}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
           ensure
@@ -53,7 +59,7 @@ module Robots       # Robot package
         end
         
         def extract_data_from_zip druid, zipfn, tmpdir
-          LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
+          LyberCore::Log.debug "load-raster: #{druid} extracting data: #{zipfn}"
           
           tmpdir = File.join(tmpdir, "loadraster_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
