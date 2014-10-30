@@ -55,8 +55,8 @@ module Robots       # Robot package
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
         def to_coordinates_ddmmss s
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
-          raise ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
-          raise ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
+          raise ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
+          raise ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
@@ -81,12 +81,12 @@ module Robots       # Robot package
           params[:geometryType] ||= 'Polygon'
           params[:zipName] ||= 'data.zip'
           params[:fileFormat] ||= 'Shapefile'
-          raise ArgumentError, "Missing PURL parameter" if params[:purl].nil?
+          raise ArgumentError, "generate-mods: Missing PURL parameter" if params[:purl].nil?
           
           args = Nokogiri::XSLT.quote_params(Hash[params.map{|(k,v)| [k.to_s,v]}].to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
           unless doc.root and doc.root.children.size > 0
-            raise CrosswalkError, 'to_mods produced incorrect xml'
+            raise CrosswalkError, 'generate-mods: to_mods produced incorrect xml'
           end
 
           # cleanup projection and coords for human-readable
@@ -122,7 +122,7 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise RuntimeError, "Cannot locate #{fn}" unless File.exists?(fn)
+          raise RuntimeError, "generate-mods: #{druid} cannot locate #{fn}" unless File.exists?(fn)
           
           # parse geometadata as input to MODS transform
           geoMetadataDS = Nokogiri::XML(File.read(fn))
@@ -142,7 +142,7 @@ module Robots       # Robot package
               unless fn.nil?
                 fileFormat = 'ArcGRID'
               else
-                raise RuntimeError, "Cannot detect fileFormat: #{rootdir}/temp"
+                raise RuntimeError, "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp"
               end
             end
           end
