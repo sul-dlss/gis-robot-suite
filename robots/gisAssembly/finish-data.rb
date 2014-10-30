@@ -23,7 +23,7 @@ module Robots       # Robot package
           %w{data.zip data_EPSG_4326.zip}.each do |zipname|
             zipfn = File.join(rootdir, 'content', zipname)
             if File.readable?(zipfn) && File.size(zipfn) > 0
-              LyberCore::Log.info "finish-data found #{zipfn}"
+              LyberCore::Log.info "finish-data: #{druid} found #{zipname}"
             else
               raise RuntimeError, "finish-data: #{druid} is missing packaged data for #{zipname}"
             end

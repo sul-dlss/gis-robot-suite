@@ -71,7 +71,7 @@ module Robots       # Robot package
           
           datafn = "#{rootdir}/content/data.zip"
           if File.exists?(datafn)
-            LyberCore::Log.info "Found packaged data: #{datafn}"
+            LyberCore::Log.info "package-data: #{druid} found existing packaged data: #{File.basename(datafn)}"
             return
           end
           

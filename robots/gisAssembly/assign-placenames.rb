@@ -24,7 +24,7 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "#{druid} is missing MODS metadata" unless File.exists?(modsFn)
+          raise RuntimeError, "assign-placenames: #{druid} is missing MODS metadata" unless File.exists?(modsFn)
           
           resolve_placenames(druid, modsFn)
         end

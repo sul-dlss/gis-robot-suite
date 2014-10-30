@@ -22,7 +22,7 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "Missing ESRI metadata files in #{rootdir}/temp" if fn.nil?
+          raise RuntimeError, "author-metadata: #{druid} is missing ESRI metadata files" if fn.nil?
 
           LyberCore::Log.debug "author-metadata found #{fn}"
         end

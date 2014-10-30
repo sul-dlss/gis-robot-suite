@@ -31,7 +31,7 @@ module Robots       # Robot package
             metadata/descMetadata.xml
             metadata/geoMetadata.xml
           }.each do |fn|
-            raise RuntimeError, "Missing required file: #{fn}" unless File.exists?("#{rootdir}/#{fn}")
+            raise RuntimeError, "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.exists?("#{rootdir}/#{fn}")
           end
           
           # delete all staged files in temp/
@@ -44,7 +44,7 @@ module Robots       # Robot package
           # load workspace with identical copy of stage
           destdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           FileUtils.mkdir_p(destdir) unless File.directory?(destdir)
-          LyberCore::Log.info "finish-gis-assembly-workflow migrating object to #{destdir}"
+          LyberCore::Log.info "finish-gis-assembly-workflow: #{druid} migrating object to #{destdir}"
           system("rsync -av --delete #{rootdir}/ #{destdir}/")
         end
       end
