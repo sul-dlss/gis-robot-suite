@@ -45,7 +45,7 @@ module Robots       # Robot package
             
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} to #{proj}"
-            system "gdalwarp -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
+            system "gdalwarp -r bilinear -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
             raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
             
             # compress tempfn with gdal_translate
@@ -96,7 +96,7 @@ module Robots       # Robot package
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
             LyberCore::Log.info "normalize-data: #{druid} reprojecting #{File.basename(gridfn)} to #{proj}"
-            cmd = "gdalwarp #{warpflags} -t_srs EPSG:#{srid} #{gridfn} #{tempfn}"
+            cmd = "gdalwarp #{warpflags} -r bilinear -t_srs EPSG:#{srid} #{gridfn} #{tempfn}"
             LyberCore::Log.debug "Running: #{cmd}"
             system cmd
             raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
