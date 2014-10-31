@@ -49,6 +49,8 @@ module Robots       # Robot package
             Dir.chdir(tmpdir)
             tiffn = Dir.glob("*.tif").first
             raise RuntimeError, "load-raster: #{druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
+            
+            # copy to geoserver storage
             unless Dor::Config.geotiff.host == 'localhost'
               path = [Dor::Config.geotiff.host, Dor::Config.geotiff.dir].join(':')
             else
@@ -57,6 +59,15 @@ module Robots       # Robot package
             cmd = "rsync -v '#{tiffn}' #{path}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
+            
+            # copy statistics files
+            cmd = "rsync -v '#{tiffn}'.aux.xml #{path}/#{druid}.tif.aux.xml"
+            LyberCore::Log.debug "Running: #{cmd}"
+            system(cmd)
+            cmd = "rsync -v '#{tiffn}'.txt #{path}/#{druid}.tif.txt"
+            LyberCore::Log.debug "Running: #{cmd}"
+            system(cmd)
+            
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir
