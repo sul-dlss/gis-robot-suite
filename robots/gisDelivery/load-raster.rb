@@ -64,9 +64,6 @@ module Robots       # Robot package
             cmd = "rsync -v '#{tiffn}'.aux.xml #{path}/#{druid}.tif.aux.xml"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
-            cmd = "rsync -v '#{tiffn}'.txt #{path}/#{druid}.tif.txt"
-            LyberCore::Log.debug "Running: #{cmd}"
-            system(cmd)
             
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"

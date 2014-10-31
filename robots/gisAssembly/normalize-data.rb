@@ -62,7 +62,7 @@ module Robots       # Robot package
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
-          cmd = "gdalinfo -mm -stats -norat -noct #{ofn} > #{ofn}.txt"
+          cmd = "gdalinfo -mm -stats -norat -noct #{ofn}"
           system cmd
           
           # package up reprojection
@@ -120,7 +120,7 @@ module Robots       # Robot package
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
-          cmd = "gdalinfo -mm -stats -norat -noct #{tifffn} > #{tifffn}.txt"
+          cmd = "gdalinfo -mm -stats -norat -noct #{tifffn}"
           system cmd
           
           # package up reprojection
