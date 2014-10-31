@@ -60,11 +60,16 @@ module Robots       # Robot package
             raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
           end
           
+          # compute statistics
+          LyberCore::Log.info "normalize-data: #{druid} computing statistics"
+          cmd = "gdalinfo -mm -stats -norat -noct #{ofn} > #{ofn}.txt"
+          system cmd
+          
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -Dj '#{ozip}' #{ofn}")
+          system("zip -Dj '#{ozip}' '#{ofn}'*")
           
           # cleanup
           LyberCore::Log.debug "Removing #{tmpdir}"
@@ -113,11 +118,16 @@ module Robots       # Robot package
             raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
           end
           
+          # compute statistics
+          LyberCore::Log.info "normalize-data: #{druid} computing statistics"
+          cmd = "gdalinfo -mm -stats -norat -noct #{tifffn} > #{tifffn}.txt"
+          system cmd
+          
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -Dj '#{ozip}' #{tifffn}")
+          system("zip -Dj '#{ozip}' '#{tifffn}'*")
           
           # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
