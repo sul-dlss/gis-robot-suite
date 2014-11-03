@@ -1,4 +1,62 @@
 module GisRobotSuite
+      
+  # @return grayscale8, grayscale12, grayscale16, grayscale_N_M, rgb8, rgb16
+  def self.determine_raster_style(tifffn)
+    # execute gdalinfo command
+    cmd = "gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
+    infotxt = IO.popen(cmd) do |f|
+      f.readlines
+    end
+    
+    # parse gdalinfo
+    info = {
+      :nbands => 0,
+      :type => 'Byte',
+      :min => Float::MAX,
+      :max => Float::MIN
+    }
+    infotxt.each do |line|
+      if line =~ /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
+        info[:nbands] = [$1.to_i, info[:nbands]].max
+        info[:type] = $3.to_s
+      elsif line =~ /^\s+Min=(.+)\s+Max=(.+)\s*$/
+        info[:min] = [$1.to_f, info[:min]].min
+        info[:max] = [$2.to_f, info[:max]].max
+      end
+    end
+    puts info
+    
+    # determine raster style
+    nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil
+    if info[:nbands] == 1
+      case info[:type]
+      when 'Byte'
+        "grayscale#{nbits > 4 ? 8 : 4 }"
+      when 'Int16'
+        "grayscale#{nbits > 12 ? 16 : 12 }"
+      when 'Int32'
+        "grayscale#{nbits > 24 ? 32 : 24 }"
+      when 'Float32'
+        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
+      else
+        raise RuntimeError, "Unknown 1-band raster data type: #{info[:type]}"
+      end
+    elsif info[:nbands] == 3
+      case info[:type]
+      when 'Byte'
+        'rgb8'
+      when 'Int16'
+        'rgb16'
+      when 'Int32'
+        'rgb32'
+      else
+        raise RuntimeError, "Unknown 3-band raster data type: #{info[:type]}"
+      end
+    else
+      raise NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
+    end
+  end
+  
   def self.determine_mimetype type
     if type == :vector
       'application/x-esri-shapefile'
