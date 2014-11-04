@@ -118,6 +118,7 @@ module Robots       # Robot package
             raise ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
           
+          # create coverage store
           LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
           cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => druid
           if cs.new?
@@ -125,25 +126,73 @@ module Robots       # Robot package
             cs.enabled = true
             cs.description = layer['title']
             cs.data_type = 'GeoTIFF'
-            cs.url = "file:#{Dor::Config.geotiff.dir}/#{druid}.tif" 
+            cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif" 
             cs.save
           else
             LyberCore::Log.debug "Found existing CoverageStore: #{ws.name}/#{cs.name}"
           end
           
+          # create or update coverage
           LyberCore::Log.debug "Retrieving Coverage: #{ws.name}/#{cs.name}/#{druid}"
           cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => druid
           if cv.new?
             LyberCore::Log.debug "Creating Coverage #{druid}"
-            cv.enabled = true
-            cv.title = layer['title']
-            cv.abstract = layer['abstract']  
-            cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
-            cv.metadata_links = layer['metadata_links']
-            cv.save
           else
-            raise RuntimeError, "load-geoserver: Coverage #{druid} already exists in #{cs.name}" 
+            LyberCore::Log.debug "Found existing Coverage #{druid}"
           end
+          cv.enabled = true
+          cv.title = layer['title']
+          cv.abstract = layer['abstract']  
+          cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
+          cv.metadata_links = layer['metadata_links']
+          cv.save
+
+          # determine raster style
+          raster_style = GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+          
+          # need to create a style if it's a min/max style
+          if raster_style =~ /^grayscale_(.+)_(.+)$/
+            # generate SLD definition
+            sldtxt = "
+<StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
+                       xmlns:ogc='http://www.opengis.net/ogc' 
+                       xmlns:xlink='http://www.w3.org/1999/xlink' 
+                       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+                       xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd' 
+                       version='1.0.0'>
+  <UserLayer>
+    <Name>raster_layer</Name>
+      <UserStyle>
+        <FeatureTypeStyle>
+          <Rule>
+            <RasterSymbolizer>
+              <ColorMap>
+                <ColorMapEntry color='#000000' quantity='#{$1.to_f.floor}' opacity='1'/>
+                <ColorMapEntry color='#FFFFFF' quantity='#{$2.to_f.ceil}' opacity='1'/>
+              </ColorMap>
+            </RasterSymbolizer>
+          </Rule>
+        </FeatureTypeStyle>
+    </UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>"
+            File.open("#{Dor::Config.geohydra.geoserver.styledir}/#{raster_style}.sld", 'w') {|f| f << sldtxt }
+            
+            # create a style with the SLD definition
+            style = RGeoServer::Style.new catalog, :name => style
+            if style.new?
+              style.filename = "#{raster_style}.sld"
+              style.save
+            end
+          end
+
+          # fetch layer to load raster style - it's created when the coverage is created via REST API
+          lyr = RGeoServer::Layer.new catalog, :workspace => ws, :name => druid
+          if lyr.new?
+            raise RuntimeError, "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
+          end
+          lyr.default_style = style
+          lyr.save
         end
         
       end
