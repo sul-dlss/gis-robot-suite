@@ -29,7 +29,7 @@ module Robots       # Robot package
           doc = Nokogiri::XML(File.read(xmlfn))
           raise RuntimeError, "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata" if doc.nil?
           
-          url = File.join(Dor::Config.solr.url, Dor::Config.solr.collection)
+          url = File.join(Dor::Config.geohydra.solr.url, Dor::Config.geohydra.solr.collection)
           LyberCore::Log.debug "Connecting to #{url}"
           solr = RSolr.connect :url => url
           solr.update :data => doc.to_xml

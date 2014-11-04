@@ -16,7 +16,7 @@ module Robots       # Robot package
 
         def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted')
           flags = {
-            :geoserver => Dor::Config.geoserver.url,
+            :geoserver => Dor::Config.geohydra.geoserver.url,
             :stacks => Dor::Config.stacks.url,
             :purl => Dor::Config.purl.url + "/" + druid.gsub(/^druid:/, '')
           }
