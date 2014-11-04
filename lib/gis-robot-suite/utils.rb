@@ -24,7 +24,6 @@ module GisRobotSuite
         info[:max] = [$2.to_f, info[:max]].max
       end
     end
-    puts info
     
     # determine raster style
     nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil

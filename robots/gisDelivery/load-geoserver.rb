@@ -148,10 +148,11 @@ module Robots       # Robot package
           cv.save
 
           # determine raster style
-          raster_style = GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+          raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+          LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
           
           # need to create a style if it's a min/max style
-          if raster_style =~ /^grayscale_(.+)_(.+)$/
+          if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
             # generate SLD definition
             sldtxt = "
 <StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
@@ -176,14 +177,20 @@ module Robots       # Robot package
     </UserStyle>
   </UserLayer>
 </StyledLayerDescriptor>"
+            puts sldtxt
             File.open("#{Dor::Config.geohydra.geoserver.styledir}/#{raster_style}.sld", 'w') {|f| f << sldtxt }
             
             # create a style with the SLD definition
-            style = RGeoServer::Style.new catalog, :name => style
+            style = RGeoServer::Style.new catalog, :name => raster_style
+            LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
             if style.new?
               style.filename = "#{raster_style}.sld"
+              LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{style.name}"
               style.save
             end
+          else
+            style = RGeoServer::Style.new catalog, :name => raster_style
+            raise RuntimeError, "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
           end
 
           # fetch layer to load raster style - it's created when the coverage is created via REST API
@@ -191,7 +198,8 @@ module Robots       # Robot package
           if lyr.new?
             raise RuntimeError, "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
           end
-          lyr.default_style = style
+          lyr.default_style = style.name
+          LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
           lyr.save
         end
         
