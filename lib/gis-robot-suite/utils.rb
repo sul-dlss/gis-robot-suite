@@ -32,11 +32,11 @@ module GisRobotSuite
       when 'Byte'
         "grayscale#{nbits > 4 ? 8 : 4 }"
       when 'Int16'
-        "grayscale#{nbits > 12 ? 16 : 12 }"
+        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       when 'Int32'
-        "grayscale#{nbits > 24 ? 32 : 24 }"
+        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       when 'Float32'
-        "grayscale_#{info[:min]<0 ? 'neg' : ''}#{info[:min].floor.abs}_#{info[:max].ceil}"
+        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
         raise RuntimeError, "Unknown 1-band raster data type: #{info[:type]}"
       end

@@ -153,10 +153,11 @@ module Robots       # Robot package
           
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
-            if ENV['LOAD_GEOSERVER_CUSTOM_STYLES']
+            _min = $1.to_f.floor
+            _max = $2.to_f.ceil
+            if _max < 2**13 # custom SLD only works with relatively narrow bands            
               # generate SLD definition
-              _min = $1.to_s.gsub(/^neg/, '-').to_f.floor
-              _max = $2.to_f.ceil
+              raster_style = "raster_#{druid}"
               sldtxt = "
   <StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
                          xmlns:ogc='http://www.opengis.net/ogc' 
@@ -174,6 +175,9 @@ module Robots       # Robot package
                   <ColorMapEntry color='#000000' quantity='#{_min}' opacity='1'/>
                   <ColorMapEntry color='#FFFFFF' quantity='#{_max}' opacity='1'/>
                 </ColorMap>
+                <ContrastEnhancement>
+                  <Histogram/>
+                </ContrastEnhancement>
               </RasterSymbolizer>
             </Rule>
           </FeatureTypeStyle>
@@ -193,7 +197,7 @@ module Robots       # Robot package
                 style.save
               end
             else
-              raster_style = 'raster_grayband'
+              raster_style = 'raster_grayband' # a simple band-oriented histogram adjusted style
               style = RGeoServer::Style.new catalog, :name => raster_style
               raise RuntimeError, "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
             end
