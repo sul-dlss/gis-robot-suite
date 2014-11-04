@@ -175,9 +175,6 @@ module Robots       # Robot package
                   <ColorMapEntry color='#000000' quantity='#{_min}' opacity='1'/>
                   <ColorMapEntry color='#FFFFFF' quantity='#{_max}' opacity='1'/>
                 </ColorMap>
-                <ContrastEnhancement>
-                  <Histogram/>
-                </ContrastEnhancement>
               </RasterSymbolizer>
             </Rule>
           </FeatureTypeStyle>
