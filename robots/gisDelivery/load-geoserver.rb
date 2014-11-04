@@ -153,40 +153,49 @@ module Robots       # Robot package
           
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
-            # generate SLD definition
-            sldtxt = "
-<StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
-                       xmlns:ogc='http://www.opengis.net/ogc' 
-                       xmlns:xlink='http://www.w3.org/1999/xlink' 
-                       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
-                       xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd' 
-                       version='1.0.0'>
-  <UserLayer>
-    <Name>raster_layer</Name>
-      <UserStyle>
-        <FeatureTypeStyle>
-          <Rule>
-            <RasterSymbolizer>
-              <ColorMap>
-                <ColorMapEntry color='#000000' quantity='#{$1.to_f.floor}' opacity='1'/>
-                <ColorMapEntry color='#FFFFFF' quantity='#{$2.to_f.ceil}' opacity='1'/>
-              </ColorMap>
-            </RasterSymbolizer>
-          </Rule>
-        </FeatureTypeStyle>
-    </UserStyle>
-  </UserLayer>
-</StyledLayerDescriptor>"
-            puts sldtxt
-            File.open("#{Dor::Config.geohydra.geoserver.styledir}/#{raster_style}.sld", 'w') {|f| f << sldtxt }
+            if ENV['LOAD_GEOSERVER_CUSTOM_STYLES']
+              # generate SLD definition
+              _min = $1.to_s.gsub(/^neg/, '-').to_f.floor
+              _max = $2.to_f.ceil
+              sldtxt = "
+  <StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
+                         xmlns:ogc='http://www.opengis.net/ogc' 
+                         xmlns:xlink='http://www.w3.org/1999/xlink' 
+                         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+                         xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd' 
+                         version='1.0.0'>
+    <UserLayer>
+      <Name>raster_layer</Name>
+        <UserStyle>
+          <FeatureTypeStyle>
+            <Rule>
+              <RasterSymbolizer>
+                <ColorMap>
+                  <ColorMapEntry color='#000000' quantity='#{_min}' opacity='1'/>
+                  <ColorMapEntry color='#FFFFFF' quantity='#{_max}' opacity='1'/>
+                </ColorMap>
+              </RasterSymbolizer>
+            </Rule>
+          </FeatureTypeStyle>
+      </UserStyle>
+    </UserLayer>
+  </StyledLayerDescriptor>"
+              puts sldtxt
+              File.open("#{Dor::Config.geohydra.geoserver.styledir}/#{raster_style}.sld", 'w') {|f| f << sldtxt }
             
-            # create a style with the SLD definition
-            style = RGeoServer::Style.new catalog, :name => raster_style
-            LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
-            if style.new?
-              style.filename = "#{raster_style}.sld"
-              LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{style.name}"
-              style.save
+              # create a style with the SLD definition
+              style = RGeoServer::Style.new catalog, :name => raster_style
+              LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
+              if style.new?
+                # style.filename = "#{raster_style}.sld"
+                style.sld_doc = sldtxt
+                LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{style.name}"
+                style.save
+              end
+            else
+              raster_style = 'raster_grayband'
+              style = RGeoServer::Style.new catalog, :name => raster_style
+              raise RuntimeError, "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
             end
           else
             style = RGeoServer::Style.new catalog, :name => raster_style
@@ -198,9 +207,11 @@ module Robots       # Robot package
           if lyr.new?
             raise RuntimeError, "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
           end
-          lyr.default_style = style.name
-          LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
-          lyr.save
+          if lyr.default_style != style.name
+            lyr.default_style = style.name
+            LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
+            lyr.save
+          end
         end
         
       end
