@@ -13,7 +13,7 @@ module GisRobotSuite
       :nbands => 0,
       :type => 'Byte',
       :min => Float::MAX,
-      :max => Float::MIN
+      :max => 0
     }
     infotxt.each do |line|
       if line =~ /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
@@ -36,7 +36,7 @@ module GisRobotSuite
       when 'Int32'
         "grayscale#{nbits > 24 ? 32 : 24 }"
       when 'Float32'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
+        "grayscale_#{info[:min]<0 ? 'neg' : ''}#{info[:min].floor.abs}_#{info[:max].ceil}"
       else
         raise RuntimeError, "Unknown 1-band raster data type: #{info[:type]}"
       end
