@@ -56,7 +56,7 @@ module Robots       # Robot package
           raise RuntimeError, "load-vector: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
           
           begin
-            schema = Dor::Config.postgis.schema || 'druid'
+            schema = Dor::Config.geohydra.postgis.schema || 'druid'
             encoding = 'UTF-8'
             
             # sniff out shapefile from extraction
