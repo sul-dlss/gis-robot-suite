@@ -1,6 +1,6 @@
 module GisRobotSuite
       
-  # @return grayscale8, grayscale12, grayscale16, grayscale24, grayscale32, grayscale_N_M, rgb8, rgb16
+  # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
     cmd = "gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
