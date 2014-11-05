@@ -168,9 +168,11 @@ module Robots       # Robot package
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
+          _cmd = "ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
-          system("ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'") 
-          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn)
+          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
+          _success = system(_cmd)
+          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn) && success
           
           # normalize prj file
           if flags[:overwrite_prj] && wkt
@@ -182,8 +184,9 @@ module Robots       # Robot package
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
-          LyberCore::Log.debug "Repacking #{ozip}"
-          system("zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*")
+          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
+          _cmd = "zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*"
+          _success = system(_cmd)
 
           # cleanup
           LyberCore::Log.debug "Removing #{tmpdir}"
