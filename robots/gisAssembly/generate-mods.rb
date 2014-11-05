@@ -23,11 +23,14 @@ module Robots       # Robot package
         # @return [String] Point, Polygon, LineString as appropriate
         def geometry_type(shp_filename)
           RGeo::Shapefile::Reader.open(shp_filename) do |shp|
-            shp.each do |record|
-              return record.geometry.geometry_type.to_s.gsub(/^Multi/,'') unless record.geometry.nil?
-            end
+            LyberCore::Log.debug("generate-mods: opened #{shp_filename}")
+            record = shp.next
+            LyberCore::Log.debug("generate-mods: #{record.index} geometry #{record.geometry.as_text}")
+            s = record.geometry.geometry_type.as_text
+            geometryType = s.downcase.gsub(/^multi/,'')
+            geometryType = geometryType[0].upcase + geometryType[1..-1] # Point, Line, Polygon
+            return geometryType
           end
-          nil     
         end
         
         # Convert DD.DD to DD MM SS.SS
@@ -130,7 +133,12 @@ module Robots       # Robot package
           # detect fileFormat and geometryType
           fn = Dir.glob("#{rootdir}/temp/*.shp").first
           unless fn.nil?
-            geometryType = geometry_type(fn)
+            geometryType = case druid # XXX: hardcode mapping for shapefile geometries
+            when 'cm290sm0643' # XXX: RGeo-Shapefile chokes on this data
+              'Polygon'
+            else
+              geometry_type(fn)
+            end
             fileFormat = 'Shapefile'
           else
             geometryType = 'Raster'
