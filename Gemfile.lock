@@ -307,8 +307,6 @@ DEPENDENCIES
   lyberteam-capistrano-devel (~> 3.0)
   pry (~> 0.10.0)
   rake (~> 10.3.2)
-  rgeo (~> 0.3.20)
-  rgeo-shapefile (~> 0.2.3)
   rgeoserver (~> 0.7.1)
   robot-controller (~> 1.0)
   rsolr (~> 1.0.10)
