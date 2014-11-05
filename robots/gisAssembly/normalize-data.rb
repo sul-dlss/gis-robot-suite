@@ -172,7 +172,7 @@ module Robots       # Robot package
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
           LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
           _success = system(_cmd)
-          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn) && success
+          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn) && _success
           
           # normalize prj file
           if flags[:overwrite_prj] && wkt
@@ -184,8 +184,8 @@ module Robots       # Robot package
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
-          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
           _cmd = "zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*"
+          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
           _success = system(_cmd)
 
           # cleanup
