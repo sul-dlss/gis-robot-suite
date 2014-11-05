@@ -1,8 +1,6 @@
 # encoding: UTF-8
 
 require 'scanf'
-require 'rgeo'
-require 'rgeo/shapefile'
 
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
@@ -21,18 +19,15 @@ module Robots       # Robot package
         # Reads the shapefile to determine geometry type
         #
         # @return [String] Point, Polygon, LineString as appropriate
-        def geometry_type(shp_filename)
-          RGeo::Shapefile::Reader.open(shp_filename) do |shp|
-            LyberCore::Log.debug("generate-mods: opened #{shp_filename}")
-            while (record = shp.next).geometry.nil?
-              # find the first record that has a valid geometry
-              LyberCore::Log.debug("generate-mods: #{record.index} geometry #{record.geometry}")
+        def geometry_type_ogrinfo(shp_filename)
+          IO.popen("ogrinfo -ro -so -al '#{shp_filename}'") do |f|
+            f.readlines.each do |line|
+              if line =~ /^Geometry:\s+(.*)\s*$/
+                LyberCore::Log.debug "generate-mods: parsing ogrinfo geometry output: #{line}"
+                s = $1.gsub('3D', '').gsub('Multi', '')
+                return s 
+              end
             end
-            s = record.geometry.geometry_type.to_s
-            geometryType = s.downcase.gsub(/^multi/,'')
-            geometryType = geometryType[0].upcase + geometryType[1..-1] # Point, Linestring, Polygon
-            geometryType = 'LineString' if geometryType =~ /^Line/
-            return geometryType
           end
         end
         
@@ -144,12 +139,7 @@ module Robots       # Robot package
           # detect fileFormat and geometryType
           fn = Dir.glob("#{rootdir}/temp/*.shp").first
           unless fn.nil?
-            geometryType = case druid # XXX: hardcode mapping for shapefile geometries
-            when 'cm290sm0643' # XXX: RGeo-Shapefile chokes on this data
-              'Polygon'
-            else
-              geometry_type(fn)
-            end
+            geometryType = geometry_type_ogrinfo(fn)
             fileFormat = 'Shapefile'
           else
             geometryType = 'Raster'
