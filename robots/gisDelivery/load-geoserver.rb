@@ -109,7 +109,12 @@ module Robots       # Robot package
           ft.abstract = layer['abstract']  
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
           ft.metadata_links = layer['metadata_links']
-          ft.save
+          begin
+            ft.save
+          rescue GeoServerInvalidRequest => e
+            raise RuntimeError, "load-geoserver: #{druid} cannot save FeatureType"
+          end
+          
         end
 
         def create_raster(catalog, ws, layer)
@@ -127,7 +132,11 @@ module Robots       # Robot package
             cs.description = layer['title']
             cs.data_type = 'GeoTIFF'
             cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif" 
-            cs.save
+            begin
+              cs.save
+            rescue GeoServerInvalidRequest => e
+              raise RuntimeError, "load-geoserver: #{druid} cannot save CoverageStore"
+            end
           else
             LyberCore::Log.debug "Found existing CoverageStore: #{ws.name}/#{cs.name}"
           end
@@ -145,7 +154,11 @@ module Robots       # Robot package
           cv.abstract = layer['abstract']  
           cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
           cv.metadata_links = layer['metadata_links']
-          cv.save
+          begin
+            cv.save
+          rescue GeoServerInvalidRequest => e
+            raise RuntimeError, "load-geoserver: #{druid} cannot save Coverage"
+          end
 
           # determine raster style
           raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
@@ -211,7 +224,11 @@ module Robots       # Robot package
           if lyr.default_style != style.name
             lyr.default_style = style.name
             LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
-            lyr.save
+            begin
+              lyr.save
+            rescue GeoServerInvalidRequest => e
+              raise RuntimeError, "load-geoserver: #{druid} cannot save Layer"
+            end
           end
         end
         
