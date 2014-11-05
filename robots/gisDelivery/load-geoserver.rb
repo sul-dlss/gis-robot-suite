@@ -96,20 +96,20 @@ module Robots       # Robot package
           
           LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
           ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => dsname
-          raise RuntimeError, "load-geoserver: #{druid}: Datastore #{dsname} not found" if ds.nil? || ds.new?
+          raise RuntimeError, "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
           
           ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => druid
           if ft.new?
-            LyberCore::Log.debug "Creating FeatureType #{layer['druid']}"
-            ft.enabled = true
-            ft.title = layer['title']
-            ft.abstract = layer['abstract']  
-            ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
-            ft.metadata_links = layer['metadata_links']
-            ft.save
+            LyberCore::Log.debug "Creating FeatureType #{druid}"
           else
-            raise RuntimeError, "load-geoserver: FeatureType #{druid} already exists in #{ds.name}" 
+            LyberCore::Log.debug "Found existing FeatureType #{druid}"
           end
+          ft.enabled = true unless ft.enabled
+          ft.title = layer['title']
+          ft.abstract = layer['abstract']  
+          ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+          ft.metadata_links = layer['metadata_links']
+          ft.save
         end
 
         def create_raster(catalog, ws, layer)
