@@ -140,6 +140,7 @@ module Robots       # Robot package
           fn = Dir.glob("#{rootdir}/temp/*.shp").first
           unless fn.nil?
             geometryType = geometry_type_ogrinfo(fn)
+            geometryType = 'LineString' if geometryType =~ /^Line/
             fileFormat = 'Shapefile'
           else
             geometryType = 'Raster'
