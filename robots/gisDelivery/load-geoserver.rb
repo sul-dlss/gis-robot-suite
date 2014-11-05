@@ -111,7 +111,7 @@ module Robots       # Robot package
           ft.metadata_links = layer['metadata_links']
           begin
             ft.save
-          rescue GeoServerInvalidRequest => e
+          rescue RGeoServer::GeoServerInvalidRequest => e
             raise RuntimeError, "load-geoserver: #{druid} cannot save FeatureType"
           end
           
@@ -156,7 +156,7 @@ module Robots       # Robot package
           cv.metadata_links = layer['metadata_links']
           begin
             cv.save
-          rescue GeoServerInvalidRequest => e
+          rescue RGeoServer::GeoServerInvalidRequest => e
             raise RuntimeError, "load-geoserver: #{druid} cannot save Coverage"
           end
 
@@ -195,13 +195,11 @@ module Robots       # Robot package
     </UserLayer>
   </StyledLayerDescriptor>"
               puts sldtxt
-              File.open("#{Dor::Config.geohydra.geoserver.styledir}/#{raster_style}.sld", 'w') {|f| f << sldtxt }
             
               # create a style with the SLD definition
               style = RGeoServer::Style.new catalog, :name => raster_style
               LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
               if style.new?
-                # style.filename = "#{raster_style}.sld"
                 style.sld_doc = sldtxt
                 LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{style.name}"
                 style.save
@@ -226,7 +224,7 @@ module Robots       # Robot package
             LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
             begin
               lyr.save
-            rescue GeoServerInvalidRequest => e
+            rescue RGeoServer::GeoServerInvalidRequest => e
               raise RuntimeError, "load-geoserver: #{druid} cannot save Layer"
             end
           end
