@@ -24,7 +24,7 @@ module Robots       # Robot package
             f.readlines.each do |line|
               if line =~ /^Geometry:\s+(.*)\s*$/
                 LyberCore::Log.debug "generate-mods: parsing ogrinfo geometry output: #{line}"
-                s = $1.gsub('3D', '').gsub('Multi', '')
+                s = $1.gsub('3D', '').gsub('Multi', '').strip
                 return s 
               end
             end
