@@ -24,8 +24,10 @@ module Robots       # Robot package
         def geometry_type(shp_filename)
           RGeo::Shapefile::Reader.open(shp_filename) do |shp|
             LyberCore::Log.debug("generate-mods: opened #{shp_filename}")
-            record = shp.next
-            LyberCore::Log.debug("generate-mods: #{record.index} geometry #{record.geometry.as_text}")
+            while (record = shp.next).geometry.nil?
+              # find the first record that has a valid geometry
+              LyberCore::Log.debug("generate-mods: #{record.index} geometry #{record.geometry}")
+            end
             s = record.geometry.geometry_type.to_s
             geometryType = s.downcase.gsub(/^multi/,'')
             geometryType = geometryType[0].upcase + geometryType[1..-1] # Point, Linestring, Polygon
@@ -125,6 +127,14 @@ module Robots       # Robot package
           LyberCore::Log.debug "generate-mods working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          
+          # short-circuit if already have MODS file
+          fn = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          if File.size?(fn)
+            LyberCore::Log.info "generate-mods: #{druid} found existing #{fn}"
+            return 
+          end
+          
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           raise RuntimeError, "generate-mods: #{druid} cannot locate #{fn}" unless File.exists?(fn)
           

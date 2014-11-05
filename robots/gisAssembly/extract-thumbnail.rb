@@ -28,20 +28,20 @@ module Robots       # Robot package
         def extract_thumbnail druid
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
-          # @param [String] fn the metadata
-          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
-
           # ensure content folder is present
           content_dir = File.join(rootdir, 'content')
           FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
           
           # see if we have work to do
           pfn = File.join(content_dir, 'preview.jpg')
-          if File.exists?(pfn)
+          if File.size?(pfn)
             LyberCore::Log.info "extract-thumbnail: #{druid} found existing thumbnail: #{pfn}"
             return
           end
+
+          # @param [String] fn the metadata
+          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
+          raise RuntimeError, "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
           
           # parse ESRI XML and extract base64 encoded thumbnail image
           doc = Nokogiri::XML(File.read(fn))
