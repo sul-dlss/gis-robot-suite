@@ -19,7 +19,7 @@ module GisRobotSuite
       if line =~ /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
         info[:nbands] = [$1.to_i, info[:nbands]].max
         info[:type] = $3.to_s
-      elsif line =~ /^\s+Min=(.+)\s+Max=(.+)\s*$/
+      elsif line =~ /^\s+Minimum=(.+),\s+Maximum=(.+),.*$/ # Minimum=1.000, Maximum=3322.000
         info[:min] = [$1.to_f, info[:min]].min
         info[:max] = [$2.to_f, info[:max]].max
       end
