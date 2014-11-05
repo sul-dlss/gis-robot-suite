@@ -74,11 +74,12 @@ module Robots       # Robot package
             system(cmd)
             
             if File.exists?(sqlfn)
-              # XXX: Assumes PGHOST, PGUSER, PGDATABASE are set in environment
               cmd = 'psql --no-psqlrc --no-password --quiet ' +
                      "--file='#{sqlfn}' "
               LyberCore::Log.debug "Running: #{cmd}"
               system(cmd)
+            else
+              raise RuntimeError, "load-vector: #{druid} shp2pgsql failed to load #{schema}.#{druid}"
             end 
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
