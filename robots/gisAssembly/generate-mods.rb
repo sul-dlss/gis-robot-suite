@@ -26,9 +26,10 @@ module Robots       # Robot package
             LyberCore::Log.debug("generate-mods: opened #{shp_filename}")
             record = shp.next
             LyberCore::Log.debug("generate-mods: #{record.index} geometry #{record.geometry.as_text}")
-            s = record.geometry.geometry_type.as_text
+            s = record.geometry.geometry_type.to_s
             geometryType = s.downcase.gsub(/^multi/,'')
-            geometryType = geometryType[0].upcase + geometryType[1..-1] # Point, Line, Polygon
+            geometryType = geometryType[0].upcase + geometryType[1..-1] # Point, Linestring, Polygon
+            geometryType = 'LineString' if geometryType =~ /^Line/
             return geometryType
           end
         end
