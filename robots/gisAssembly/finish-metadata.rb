@@ -26,7 +26,7 @@ module Robots       # Robot package
             unless File.readable?(fn) and File.size(fn) > 0
               raise RuntimeError, "finish-metadata: #{druid} is missing metadata: #{f}"
             end
-            LyberCore::Log.debug "finish-metadata found #{fn}"
+            LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end
 
           %w{preview.jpg}.each do |f|
@@ -34,7 +34,7 @@ module Robots       # Robot package
             unless File.readable?(fn) and File.size(fn) > 0
               raise RuntimeError, "finish-metadata: #{druid} is missing metadata content: #{f}"
             end
-            LyberCore::Log.debug "finish-metadata found #{fn}"
+            LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end
         end
       end
