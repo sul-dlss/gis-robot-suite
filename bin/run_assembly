@@ -18,6 +18,7 @@ for s in \
   normalize-data \
   finish-data \
   generate-content-metadata \
+  finish-gis-assembly-workflow \
   ; do
   run_robot dor:gisAssemblyWF:$s -d $druid
 done
