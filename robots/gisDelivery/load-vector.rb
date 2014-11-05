@@ -21,6 +21,18 @@ module Robots       # Robot package
           system("unzip '#{zipfn}' -d '#{tmpdir}'")
           tmpdir
         end
+        
+        def run_shp2pgsql(projection, encoding, shpfn, schema, druid, sqlfn, errfn)
+          # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
+          # XXX: -G for the geography column causes some issues with GeoServer
+          cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding}" +
+                 " '#{shpfn}' #{schema}.#{druid} " +
+                 "> '#{sqlfn}' 2> '#{errfn}'"
+          LyberCore::Log.debug "Running: #{cmd}"
+          success = system(cmd)
+          raise RuntimeError, "load-vector: #{druid} cannot convert Shapefile to PostGIS: #{File.open(errfn).readlines}" unless success
+          raise RuntimeError, "load-vector: #{druid} shp2pgsql generated no SQL?" unless File.size?(sqlfn)
+        end
 
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
@@ -57,30 +69,34 @@ module Robots       # Robot package
           
           begin
             schema = Dor::Config.geohydra.postgis.schema || 'druid'
-            encoding = 'UTF-8'
+            # encoding =  # XXX: these are hardcoded encodings for certain druids -- these should be read from the metadata somewhere
+            #   case druid
+            #   when 'bt348dh6363', 'cc936tf6277'
+            #     'LATIN1'
+            #   else
+            #     'UTF-8'
+            #   end
             
             # sniff out shapefile from extraction
             Dir.chdir(tmpdir)
             shpfn = Dir.glob("*.shp").first
             sqlfn = shpfn.gsub(/\.shp$/, '.sql')
+            errfn = 'shp2pgsql.err'
             LyberCore::Log.debug "load-vector: #{druid} is working on Shapefile: #{shpfn}"
 
-            # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
-            # XXX: -G for the geography column causes some issues with GeoServer
-            cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding}" +
-                   " '#{shpfn}' #{schema}.#{druid} " +
-                   "> '#{sqlfn}'"
-            LyberCore::Log.debug "Running: #{cmd}"
-            system(cmd)
+            # first try decoding with UTF-8 and if that fails use LATIN1
+            begin
+              run_shp2pgsql(projection, 'UTF-8', shpfn, schema, druid, sqlfn, errfn)
+            rescue RuntimeError => e
+              run_shp2pgsql(projection, 'LATIN1', shpfn, schema, druid, sqlfn, errfn)
+            end
             
-            if File.exists?(sqlfn)
-              cmd = 'psql --no-psqlrc --no-password --quiet ' +
-                     "--file='#{sqlfn}' "
-              LyberCore::Log.debug "Running: #{cmd}"
-              system(cmd)
-            else
-              raise RuntimeError, "load-vector: #{druid} shp2pgsql failed to load #{schema}.#{druid}"
-            end 
+            # Load the data into PostGIS
+            cmd = 'psql --no-psqlrc --no-password --quiet ' +
+                   "--file='#{sqlfn}' "
+            LyberCore::Log.debug "Running: #{cmd}"
+            success = system(cmd)
+            raise RuntimeError, "load-vector: #{druid} psql failed to load #{schema}.#{druid}" unless success
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir
