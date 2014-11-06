@@ -12,6 +12,13 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'normalize-data', check_queued_status: true) # init LyberCore::Robot
         end
         
+        def system_with_check(cmd)
+          LyberCore::Log.debug "normalize-data: running: #{cmd}"
+          _retcode = system cmd
+          raise RuntimeError, "normalize-data: could not execute command successfully: #{cmd}" if _retcode
+          _retcode
+        end
+        
         def extract_data_from_zip druid, zipfn, tmpdir
           LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
           raise RuntimeError, "normalize-data: #{druid} cannot locate packaged data: #{zipfn}" unless File.exists?(zipfn)
@@ -19,8 +26,64 @@ module Robots       # Robot package
           tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
           FileUtils.mkdir_p tmpdir
-          system("unzip '#{zipfn}' -d '#{tmpdir}'")
+          system_with_check "unzip '#{zipfn}' -d '#{tmpdir}'"
           tmpdir
+        end
+        
+        # XXX: need to verify whether raster data are continous or discrete to choose the correct resampling method
+        def reproject(ifn, ofn, srid, tiffname, druid, proj, resample = 'bilinear')
+          ifn = "#{tmpdir}/#{tiffname}.tif"
+          ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
+          FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
+          unless proj == "EPSG:#{srid}"
+            tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
+            
+            # reproject with gdalwarp (must uncompress here to prevent bloat)
+            LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} to #{proj}"
+            system_with_check "gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
+            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+            
+            # compress tempfn with gdal_translate
+            LyberCore::Log.info "normalize-data: #{druid} is compressing reprojection to #{proj}"
+            system_with_check "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
+            FileUtils.rm_f(tempfn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+          else
+            # just compress with gdal_translate
+            LyberCore::Log.info "normalize-data: #{druid} is compressing original #{proj}"
+            system_with_check "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+          end
+        end
+        
+        def convert_8bit_to_rgb(tifffn)
+          # if using 8-bit color palette, convert into RGB
+          cmd = "gdalinfo -norat -noct '#{tifffn}'"
+          infotxt = IO.popen(cmd) do |f|
+            f.readlines
+          end
+          uses_palette = false
+          infotxt.each do |line|
+            # Band 1 Block=4063x2 Type=Byte, ColorInterp=Palette
+            if line =~ /^Band (.+) Block=(.+) Type=Byte, ColorInterp=(.+)$/
+              uses_palette = true if $3.to_s = 'Palette'
+            end
+          end
+          if uses_palette
+            tmpfn = "#{tmpdir}/raw8bit.tif"
+            system_with_check "mv #{tifffn} #{tmpfn}"
+            system_with_check "gdal_translate -expand rgb #{tmpfn} #{tifffn}"
+          end
+        end
+        
+        def compute_statistics(tifffn)
+          system_with_check "gdalinfo -mm -stats -norat -noct #{tifffn}"
+        end
+        
+        def zip_up(ozip, tifffn)
+          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          LyberCore::Log.debug  "Repacking #{ozip}"
+          system_with_check "zip -Dj '#{ozip}' '#{tifffn}'*"
         end
         
         def reproject_geotiff druid, zipfn, proj, flags, srid = 4326
@@ -39,37 +102,18 @@ module Robots       # Robot package
 
           ifn = "#{tmpdir}/#{tiffname}.tif"
           ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
-          FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
-          unless proj == "EPSG:#{srid}"
-            tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
-            
-            # reproject with gdalwarp (must uncompress here to prevent bloat)
-            LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} to #{proj}"
-            system "gdalwarp -r bilinear -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
-            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
-            
-            # compress tempfn with gdal_translate
-            LyberCore::Log.info "normalize-data: #{druid} is compressing reprojection to #{proj}"
-            system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
-            FileUtils.rm_f(tempfn)
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
-          else
-            # just compress with gdal_translate
-            LyberCore::Log.info "normalize-data: #{druid} is compressing original #{proj}"
-            system "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
-          end
+          reproject(ifn, ofn, srid, tiffname, druid, proj)
+                    
+          # if using 8-bit color palette, convert into RGB
+          convert_8bit_to_rgb ofn          
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
-          cmd = "gdalinfo -mm -stats -norat -noct #{ofn}"
-          system cmd
+          compute_statistics ofn          
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
-          FileUtils.rm_f(ozip) if File.exists?(ozip)
-          LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -Dj '#{ozip}' '#{ofn}'*")
+          zip_up ozip, ofn
           
           # cleanup
           LyberCore::Log.debug "Removing #{tmpdir}"
@@ -90,44 +134,21 @@ module Robots       # Robot package
             raise ArgumentError, "normalize-data: #{druid} cannot locate ArcGRID in #{tmpdir}"
           end
           
+          # reproject
           gridfn = "#{tmpdir}/#{gridname}"
-          tifffn = "#{tmpdir}/#{gridname}.tif"
+          tifffn = "#{tmpdir}/#{gridname}.tif"          
+          reproject(gridfn, tifffn, srid, gridname, druid, proj)
           
-          unless proj == "EPSG:#{srid}"
-            warpflags = ''
-            unless flags[:wkt][proj.to_s.gsub(/^EPSG:/, '')].nil?
-              warpflags = "-s_srs '#{proj}'" # we know the source WKT for this so use it
-            end
-            # reproject with gdalwarp (must uncompress here to prevent bloat)
-            tempfn = "#{tmpdir}/#{gridname}_uncompressed.tif"
-            LyberCore::Log.info "normalize-data: #{druid} reprojecting #{File.basename(gridfn)} to #{proj}"
-            cmd = "gdalwarp #{warpflags} -r bilinear -t_srs EPSG:#{srid} #{gridfn} #{tempfn}"
-            LyberCore::Log.debug "Running: #{cmd}"
-            system cmd
-            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
-          
-            # compress GeoTIFF
-            LyberCore::Log.info "normalize-data: #{druid} is compressing to #{File.basename(tifffn)}"
-            system "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{tifffn} -co 'COMPRESS=LZW'"
-            FileUtils.rm_f(tempfn)
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
-          else
-            # translate and compress GeoTIFF
-            LyberCore::Log.info "normalize-data: #{druid} is compressing original #{proj} to #{File.basename(tifffn)}"
-            system "gdal_translate -a_srs EPSG:#{srid} #{gridfn} #{tifffn} -co 'COMPRESS=LZW'"
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{tifffn}" unless File.exists?(tifffn)
-          end
+          # if using 8-bit color palette, convert into RGB
+          convert_8bit_to_rgb tifffn
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
-          cmd = "gdalinfo -mm -stats -norat -noct #{tifffn}"
-          system cmd
+          compute_statistics tifffn
           
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
-          FileUtils.rm_f(ozip) if File.exists?(ozip)
-          LyberCore::Log.debug  "Repacking #{ozip}"
-          system("zip -Dj '#{ozip}' '#{tifffn}'*")
+          zip_up ozip, tifffn
           
           # cleanup
           LyberCore::Log.debug  "Removing #{tmpdir}"
@@ -168,28 +189,24 @@ module Robots       # Robot package
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
-          _cmd = "ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
-          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
-          _success = system(_cmd)
-          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn) && _success
+          system_with_check "ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
+          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn)
           
           # normalize prj file
           if flags[:overwrite_prj] && wkt
             prj_fn = ofn.gsub('.shp', '.prj')
-            LyberCore::Log.debug "Overwriting #{prj_fn}"
+            LyberCore::Log.debug "normalize-data: #{druid} overwriting #{prj_fn}"
             File.open(prj_fn, 'w') {|f| f.write(wkt)}
           end
 
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
           FileUtils.rm_f(ozip) if File.exists?(ozip)
-          _cmd = "zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*"
-          LyberCore::Log.debug "normalize-data: #{druid} running #{_cmd}"
-          _success = system(_cmd)
+          system_with_check "zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*"
 
           # cleanup
-          LyberCore::Log.debug "Removing #{tmpdir}"
+          LyberCore::Log.debug "normalize-data: #{druid} removing #{tmpdir}"
           FileUtils.rm_rf tmpdir
         end
 
@@ -200,9 +217,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "normalize-data working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          LyberCore::Log.debug "Using rootdir=#{rootdir}"
-          
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           datafn = "#{rootdir}/content/data_EPSG_4326.zip"
           if File.exists?(datafn)
             LyberCore::Log.info "normalize-data: #{druid} found existing normalized data: #{File.basename(datafn)}"
