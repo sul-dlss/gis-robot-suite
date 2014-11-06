@@ -69,6 +69,7 @@ module Robots       # Robot package
             end
           end
           if uses_palette
+            LyberCore::Log.info "normalize-data: expanding color palette into rgb for #{tifffn}"
             tmpfn = "#{tmpdir}/raw8bit.tif"
             system_with_check "mv #{tifffn} #{tmpfn}"
             system_with_check "gdal_translate -expand rgb #{tmpfn} #{tifffn}"
