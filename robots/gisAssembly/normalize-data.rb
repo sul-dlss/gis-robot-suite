@@ -54,7 +54,7 @@ module Robots       # Robot package
           end
         end
         
-        def convert_8bit_to_rgb(tifffn)
+        def convert_8bit_to_rgb(tifffn, tmpdir)
           # if using 8-bit color palette, convert into RGB
           cmd = "gdalinfo -norat -noct '#{tifffn}'"
           infotxt = IO.popen(cmd) do |f|
@@ -72,7 +72,7 @@ module Robots       # Robot package
             LyberCore::Log.info "normalize-data: expanding color palette into rgb for #{tifffn}"
             tmpfn = "#{tmpdir}/raw8bit.tif"
             system_with_check "mv #{tifffn} #{tmpfn}"
-            system_with_check "gdal_translate -expand rgb #{tmpfn} #{tifffn}"
+            system_with_check "gdal_translate -expand rgb #{tmpfn} #{tifffn} -co 'COMPRESS=LZW'"
           end
         end
         
@@ -105,7 +105,7 @@ module Robots       # Robot package
           reproject(ifn, ofn, srid, tiffname, druid, proj)
                     
           # if using 8-bit color palette, convert into RGB
-          convert_8bit_to_rgb ofn          
+          convert_8bit_to_rgb ofn, tmpdir          
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
@@ -140,7 +140,7 @@ module Robots       # Robot package
           reproject(gridfn, tifffn, srid, gridname, druid, proj)
           
           # if using 8-bit color palette, convert into RGB
-          convert_8bit_to_rgb tifffn
+          convert_8bit_to_rgb tifffn, tmpdir
           
           # compute statistics
           LyberCore::Log.info "normalize-data: #{druid} computing statistics"
