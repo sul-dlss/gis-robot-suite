@@ -14,9 +14,9 @@ module Robots       # Robot package
         
         def system_with_check(cmd)
           LyberCore::Log.debug "normalize-data: running: #{cmd}"
-          _retcode = system cmd
-          raise RuntimeError, "normalize-data: could not execute command successfully: #{cmd}" if _retcode
-          _retcode
+          _success = system cmd
+          raise RuntimeError, "normalize-data: could not execute command successfully: #{_retcode}: #{cmd}" unless _success
+          _success
         end
         
         def extract_data_from_zip druid, zipfn, tmpdir
@@ -26,14 +26,12 @@ module Robots       # Robot package
           tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
           FileUtils.mkdir_p tmpdir
-          system_with_check "unzip '#{zipfn}' -d '#{tmpdir}'"
+          system_with_check "unzip -o '#{zipfn}' -d '#{tmpdir}'"
           tmpdir
         end
         
         # XXX: need to verify whether raster data are continous or discrete to choose the correct resampling method
         def reproject(ifn, ofn, srid, tiffname, druid, proj, resample = 'bilinear')
-          ifn = "#{tmpdir}/#{tiffname}.tif"
-          ofn = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
           FileUtils.mkdir_p(File.dirname(ofn)) unless File.directory?(File.dirname(ofn))
           unless proj == "EPSG:#{srid}"
             tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
@@ -65,8 +63,9 @@ module Robots       # Robot package
           uses_palette = false
           infotxt.each do |line|
             # Band 1 Block=4063x2 Type=Byte, ColorInterp=Palette
-            if line =~ /^Band (.+) Block=(.+) Type=Byte, ColorInterp=(.+)$/
-              uses_palette = true if $3.to_s = 'Palette'
+            if line =~ /^Band (.+) Block=(.+) Type=Byte, ColorInterp=Palette\s*$/
+              uses_palette = true
+              break
             end
           end
           if uses_palette
