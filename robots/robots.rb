@@ -26,6 +26,7 @@ require 'gisDelivery/load-vector'
 require 'gisDelivery/seed-geowebcache'
 require 'gisDelivery/start-gis-discovery-workflow'
 
+require 'gisDiscovery/export-opengeometadata'
 require 'gisDiscovery/finish-gis-discovery-workflow'
 require 'gisDiscovery/generate-geoblacklight'
 require 'gisDiscovery/load-geoblacklight'

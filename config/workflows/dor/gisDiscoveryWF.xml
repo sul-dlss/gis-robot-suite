@@ -11,8 +11,12 @@
     <prereq>generate-geoblacklight</prereq>
     <label>Load Solr document into GeoBlacklight</label>
   </process>
-  <process name="finish-gis-discovery-workflow" sequence="4">
+  <process name="export-opengeometadata" sequence="4">
     <prereq>load-geoblacklight</prereq>
+    <label>Export metadata files for import into OpenGeoMetadata repository</label>
+  </process>
+  <process name="finish-gis-discovery-workflow" sequence="5">
+    <prereq>export-opengeometadata</prereq>
     <label>Finalize GIS discovery workflow for the object</label>
   </process> 
 </workflow-def>
