@@ -8,6 +8,7 @@ druid="$1"
 for s in \
   generate-geoblacklight \
   load-geoblacklight \
+  export-opengeometadata \
   finish-gis-discovery-workflow \
   ; do
   run_robot dor:gisDiscoveryWF:$s -d $druid
