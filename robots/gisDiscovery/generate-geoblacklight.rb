@@ -63,11 +63,12 @@ module Robots       # Robot package
           rights = 'Restricted'
           begin
             item = Dor::Item.find("druid:#{druid}")
-            if item.rightsMetadata.ng_xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length == 1
+            xml = item.rightsMetadata.ng_xml
+            if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
               rights = 'Public'
             end
           rescue ActiveFedora::ObjectNotFoundError => e
-            LyberCore::Log.warn "generate-geoblacklight: #{druid} not found in DOR"
+            LyberCore::Log.warn "generate-geoblacklight: #{druid} cannot determine rights, item not found in DOR"
           end
           
           convert_mods2geoblacklight rootdir, druid, rights
