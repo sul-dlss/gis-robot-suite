@@ -70,17 +70,24 @@ module Robots       # Robot package
             end
           end
           
+          # Export HTML transformation
+          LyberCore::Log.debug "export-opengeometadata: #{druid} converting ISO 19139 to HTML"
+          system("xsltproc -o #{File.join(exportdir, 'iso19139.html')} schema/tools/iso2html/iso-html.xsl #{File.join(exportdir, 'iso19139.xml')}")
+          
           # Export MODS
+          LyberCore::Log.debug "export-opengeometadata: #{druid} extracting MODS"
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           ofn = File.join(exportdir, 'mods.xml')
           FileUtils.cp(ifn, ofn)
           
           # Export preview
+          LyberCore::Log.debug "export-opengeometadata: #{druid} extracting preview.jpg"
           ifn = File.join(rootdir, 'content', 'preview.jpg')
           ofn = File.join(exportdir, 'preview.jpg')
           FileUtils.cp(ifn, ofn)
           
           # Export GeoBlacklight
+          LyberCore::Log.debug "export-opengeometadata: #{druid} extracting GeoBlacklight"
           ifn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
           ofn = File.join(exportdir, 'geoblacklight.xml')
           FileUtils.cp(ifn, ofn)
