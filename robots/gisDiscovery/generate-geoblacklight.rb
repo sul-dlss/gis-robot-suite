@@ -26,7 +26,7 @@ module Robots       # Robot package
           raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
           
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          if File.exists?(ofn)
+          if File.size?(ofn)
             if FileUtils.uptodate?(ofn, [ifn])
               LyberCore::Log.info "generate-geoblacklight: #{druid} found existing GeoBlacklight metadata"
               return
