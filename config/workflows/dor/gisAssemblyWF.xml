@@ -54,23 +54,27 @@
     <prereq>package-data</prereq>
     <label>Reproject the data into common SRS projection and/or file format</label>
   </process>  
-  <process name="finish-data" sequence="15">
+  <process name="extract-boundingbox" sequence="15">
     <prereq>normalize-data</prereq>
+    <label>Extract bounding box for MODS record</label>
+  </process>  
+  <process name="finish-data" sequence="16">
+    <prereq>extract-boundingbox</prereq>
     <label>Finalize the data preparation</label>
   </process>  
-  <process name="generate-content-metadata" sequence="16">
+  <process name="generate-content-metadata" sequence="17">
     <prereq>finish-data</prereq>
     <label>Generate contentMetadata manifest</label>
   </process>  
-  <process name="finish-gis-assembly-workflow" sequence="17">
+  <process name="finish-gis-assembly-workflow" sequence="18">
     <prereq>generate-content-metadata</prereq>
     <label>Finalize assembly workflow to prepare for assembly/delivery/discovery</label>
   </process>
-  <process name="start-assembly-workflow" sequence="18">
+  <process name="start-assembly-workflow" sequence="19">
     <prereq>finish-gis-assembly-workflow</prereq>
     <label>Kickstart the core assembly workflow at assemblyWF</label>
   </process>
-  <process name="start-delivery-workflow" sequence="19">
+  <process name="start-delivery-workflow" sequence="20">
     <prereq>start-accessioning-workflow</prereq>
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
