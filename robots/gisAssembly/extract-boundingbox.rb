@@ -18,20 +18,78 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
         end
 
+        def extract_data_from_zip druid, zipfn, tmpdir
+          LyberCore::Log.info "extract-boundingbox: #{druid} is extracting data: #{zipfn}"
+          
+          tmpdir = File.join(tmpdir, "extractboundingbox_#{druid}")
+          FileUtils.rm_rf tmpdir if File.directory? tmpdir
+          FileUtils.mkdir_p tmpdir
+          system("unzip '#{zipfn}' -d '#{tmpdir}'")
+          tmpdir
+        end
+
         # Reads the shapefile to determine extent
         #
         # @return [Array#Float] ulx uly lrx lry
-        def extent_shapefile(shp_filename)
-          IO.popen("ogrinfo -ro -so -al '#{shp_filename}'") do |f|
+        def extent_shapefile(shpfn)
+          LyberCore::Log.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
+          IO.popen("ogrinfo -ro -so -al '#{shpfn}'") do |f|
             f.readlines.each do |line|
-              if line =~ /^Extent:\s+(.*)\s+-\s+(.*)\s*$/
-                ulx, uly = $1.split(/,/)
-                lrx, lry = $2.split(/,/)
-                return [ulx, uly, lrx, lry].map {|x| x.to_f }
+              # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500)
+              if line =~ /^Extent:\s+\((.*)\)\s+-\s+\((.*)\)/
+                lr, ul = [$1, $2].map {|x| x.to_s}
+                ulx, uly = ul.split(/,/)
+                lrx, lry = lr.split(/,/)
+                return [ulx, uly, lrx, lry].map {|x| x.to_s.strip.to_f }
               end
             end
           end
         end
+        
+        # Reads the GeoTIFF to determine extent
+        #
+        # @return [Array#Float] ulx uly lrx lry
+        def extent_geotiff(tiffn)
+          LyberCore::Log.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
+          IO.popen("gdalinfo '#{shp_filename}'") do |f|
+            f.readlines.each do |line|
+              # Corner Coordinates:
+              # Upper Left  (-122.2846400,  35.9770286) (122d17' 4.70"W, 35d58'37.30"N)
+              # Lower Left  (-122.2846400,  35.5581835) (122d17' 4.70"W, 35d33'29.46"N)
+              # Upper Right (-121.9094764,  35.9770286) (121d54'34.12"W, 35d58'37.30"N)
+              # Lower Right (-121.9094764,  35.5581835) (121d54'34.12"W, 35d33'29.46"N)
+              # Center      (-122.0970582,  35.7676061) (122d 5'49.41"W, 35d46' 3.38"N)              
+              if line =~ /^Upper Left\s+\((.*)\)/
+                ulx, uly = $1.split(/,/)
+              elsif line =~ /^Lower Right\s+\((.*)\)/
+                lrx, lry = $1.split(/,/)
+              end
+            end
+            return [ulx, uly, lrx, lry].map {|x| x.to_s.strip.to_f }
+          end
+        end
+
+        
+        def rewrite_mods(modsfn, ulx, uly, lrx, lry)
+          doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
+          doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
+            'xmlns:mods' => 'http://www.loc.gov/mods/v3',
+            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'xmlns:gml' => 'http://www.opengis.net/gml/3.2/'
+          ).each do |node|
+            node['gml:srsName'] = 'ESPG:4326'
+            node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
+              x.content = [ulx, uly].join(' ')
+            end
+            node.xpath('gml:lowerCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
+              x.content = [lrx, lry].join(' ')
+            end
+          end
+          File.open(modsfn, 'wb') do |f|
+            f << doc.to_xml(:indent => 2)
+          end
+        end
+        
                         
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
@@ -42,9 +100,32 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           
-          raise NotImplementedError
+          modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          
+          projection = '4326' # always use EPSG:4326 derivative
+          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
+          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
+          tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
+          
+          begin
+            Dir.chdir(tmpdir)
+            shpfn = Dir.glob("*.shp").first
+            unless shpfn.nil?
+              ulx, uly, lrx, lry = extent_shapefile shpfn
+            else
+              tiffn = Dir.glob("*.tif").first
+              ulx, uly, lrx, lry = extent_geotiff tiffn              
+            end
+            LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+            rewrite_mods(modsfn, ulx, uly, lrx, lry)
+          ensure
+            LyberCore::Log.debug "Cleaning: #{tmpdir}"
+            FileUtils.rm_rf tmpdir
+          end          
         end
-        
+
       end      
     end
   end
