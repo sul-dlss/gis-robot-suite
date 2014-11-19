@@ -91,19 +91,6 @@ module Robots       # Robot package
           end
 
           # cleanup projection and coords for human-readable
-          doc.xpath('/mods:mods' + 
-            '/mods:subject' + 
-            '/mods:cartographics' + 
-            '/mods:projection', 
-            'xmlns:mods' => MODS_NS).each do |e|
-            # XXX: Retrieve this mapping from config file
-            case e.content.downcase
-            when 'epsg:4326', 'epsg::4326', 'urn:ogc:def:crs:epsg::4326'
-              e.content = 'World Geodetic System (WGS84)'
-            when 'epsg:4269', 'epsg::4269', 'urn:ogc:def:crs:epsg::4269'
-              e.content = 'North American Datum (NAD83)'
-            end
-          end
           doc.xpath('/mods:mods' +
             '/mods:subject' +
             '/mods:cartographics' +
