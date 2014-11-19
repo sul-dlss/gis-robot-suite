@@ -72,7 +72,6 @@ module Robots       # Robot package
         
         def rewrite_mods(modsfn, ulx, uly, lrx, lry)
           doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
-          puts doc
           
           # Modify geo extension
           doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
@@ -116,7 +115,6 @@ module Robots       # Robot package
           doc.root.add_child(note)
           
           # Save
-          puts doc
           File.open(modsfn, 'wb') do |f|
             f << doc.to_xml(:indent => 2)
           end
