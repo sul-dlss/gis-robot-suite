@@ -72,6 +72,8 @@ module Robots       # Robot package
         
         def rewrite_mods(modsfn, ulx, uly, lrx, lry)
           doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
+          
+          # Modify geo extension
           doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
             'xmlns:mods' => 'http://www.loc.gov/mods/v3',
             'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -85,9 +87,33 @@ module Robots       # Robot package
               x.content = [lrx, lry].join(' ')
             end
           end
-          File.open(modsfn, 'wb') do |f|
-            f << doc.to_xml(:indent => 2)
-          end
+          
+          # Add subject/cartographics for WGS84 projection
+          subj = Nokogiri::XML::Node.new 'subject', doc
+          carto = Nokogiri::XML::Node.new 'cartographics', doc
+          scale = Nokogiri::XML::Node.new 'scale', doc
+          projection = Nokogiri::XML::Node.new 'projection', doc
+          coordinates = Nokogiri::XML::Node.new 'coordinates', doc
+
+          subj['authority'] = 'EPSG'
+          subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
+          subj['displayLabel'] = 'WGS84'
+          scale.content = 'Scale not given.'
+          projection.content = 'EPSG:4326'
+          coordinates.content = "#{ulx} -- #{lrx}/#{uly} -- #{lry}"
+          
+          carto << scale << projection << coordinates
+          subj << carto
+          doc.root << subj
+          
+          # Add note
+          note = Nokogiri::XML::Node.new 'note', doc
+          note['displayLabel'] = 'WGS84 Cartographics'
+          note.content = 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.'
+          doc.root << note
+          
+          # Save
+          doc.write_xml_to File.open(modsfn, 'wb'), :indent => 2, :encoding => 'UTF-8'
         end
         
                         

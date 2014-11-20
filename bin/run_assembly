@@ -16,6 +16,7 @@ for s in \
   wrangle-data \
   package-data \
   normalize-data \
+  extract-boundingbox \
   finish-data \
   generate-content-metadata \
   finish-gis-assembly-workflow \
