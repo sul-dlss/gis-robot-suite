@@ -1,3 +1,5 @@
+require 'open-uri'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -156,7 +158,7 @@ module Robots       # Robot package
         end
         
         # @param zipfn [String] ZIP file
-        def reproject_shapefile druid, zipfn, flags, srid = 4326
+        def reproject_shapefile druid, zipfn, modsfn, flags, srid = 4326
           tmpdir = extract_data_from_zip druid, zipfn, flags[:tmpdir]
       
           # Sniff out Shapefile location
@@ -171,7 +173,7 @@ module Robots       # Robot package
           end
     
           # setup
-          wkt = flags[:wkt][srid.to_s]
+          wkt = open("http://spatialreference.org/ref/epsg/#{srid.to_s}/prettywkt/").read
           ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise RuntimeError, "normalize-data: #{druid} is missing Shapefile: #{ifn}" unless File.exist? ifn
       
@@ -180,17 +182,32 @@ module Robots       # Robot package
           
           # Verify source projection
           prjfn = File.join(tmpdir, "#{shpname}.prj")
-          unless File.exists?(prjfn)
-            LyberCore::Log.warn "normalize-data: #{druid} is missing projection #{prjfn}, assuming EPSG:#{srid}" 
-            ogr_flags = "-s_srs '#{wkt}'"
-          else
-            ogr_flags = ''
+          unless File.size?(prjfn)
+            LyberCore::Log.warn "normalize-data: #{druid} is missing projection #{prjfn}" 
+            
+            # Read correct projection from MODS or geoMetadata
+            # <subject>
+            #   <cartographics>
+            #     <scale>Scale not given.</scale>
+            #     <projection>EPSG::26910</projection>
+            doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
+            p = doc.xpath('/mods:mods/mods:subject/mods:cartographics[not(@authority)]/mods:projection', 
+              'xmlns:mods' => 'http://www.loc.gov/mods/v3')
+            raise RuntimeError, "normalize-data: #{druid} has no native projection information in MODS" if p.nil?
+            p = p.first
+              
+            LyberCore::Log.debug "normalize-data: #{druid} reports native projection: #{p.content}" 
+            src_srid = p.content.gsub(/EPSG:+/, '').strip.to_i
+              
+            LyberCore::Log.info "normalize-data: #{druid} has native projection of #{src_srid}, overwriting #{prjfn}" 
+            prj = open("http://spatialreference.org/ref/epsg/#{src_srid}/prj/").read
+            File.open(prjfn, 'wb') {|f| f << prj }
           end
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
-          system_with_check "ogr2ogr -progress #{ogr_flags} -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
+          system_with_check "ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
           raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn)
           
           # normalize prj file
@@ -227,42 +244,7 @@ module Robots       # Robot package
           File.umask(002)
           flags = {
             :overwrite_prj => true,
-            :tmpdir => Dor::Config.geohydra.tmpdir,
-            #
-            # ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3.1.
-            # As implemented by EPSG database on HSQL:
-            #  http://docs.geotools.org/latest/userguide/library/referencing/hsql.html
-            # Also see:
-            #  http://spatialreference.org/ref/epsg/4326/prettywkt/
-            #
-            :wkt => {
-              '4326' => %Q{
-              GEOGCS["WGS 84",
-                  DATUM["WGS_1984",
-                      SPHEROID["WGS 84",6378137,298.257223563,
-                          AUTHORITY["EPSG","7030"]],
-                      AUTHORITY["EPSG","6326"]],
-                  PRIMEM["Greenwich",0,
-                      AUTHORITY["EPSG","8901"]],
-                  UNIT["degree",0.01745329251994328,
-                      AUTHORITY["EPSG","9122"]],
-                  AUTHORITY["EPSG","4326"]]
-              }.split.join.freeze,
-              '54009' => %Q{
-                PROJCS["World_Mollweide",
-                    GEOGCS["GCS_WGS_1984",
-                        DATUM["WGS_1984",
-                            SPHEROID["WGS_1984",6378137,298.257223563]],
-                        PRIMEM["Greenwich",0],
-                        UNIT["Degree",0.017453292519943295]],
-                    PROJECTION["Mollweide"],
-                    PARAMETER["False_Easting",0],
-                    PARAMETER["False_Northing",0],
-                    PARAMETER["Central_Meridian",0],
-                    UNIT["Meter",1],
-                    AUTHORITY["EPSG","54009"]]
-              }.split.join.freeze
-            }
+            :tmpdir => Dor::Config.geohydra.tmpdir
           }
           
           fn = "#{rootdir}/content/data.zip" # original content
@@ -278,7 +260,7 @@ module Robots       # Robot package
           mimetype = format.split(/;/).first # nix mimetype flags
           case mimetype
           when GisRobotSuite.determine_mimetype(:vector)
-            reproject_shapefile druid, fn, flags 
+            reproject_shapefile druid, fn, modsfn, flags 
           when GisRobotSuite.determine_mimetype(:raster)
             proj = GisRobotSuite.determine_projection_from_mods modsfn
             proj.gsub!('ESRI', 'EPSG')
