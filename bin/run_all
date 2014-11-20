@@ -1,0 +1,5 @@
+#!/bin/bash
+export PATH=./bin:$PATH
+run_assembly $1
+run_delivery $1
+run_discovery $1
