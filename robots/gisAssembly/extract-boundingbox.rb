@@ -102,22 +102,18 @@ module Robots       # Robot package
           projection.content = 'EPSG:4326'
           coordinates.content = "#{ulx} -- #{lrx}/#{uly} -- #{lry}"
           
-          carto.add_child(scale)
-          carto.add_child(projection)
-          carto.add_child(coordinates)
-          subj.add_child(carto)
-          doc.root.add_child(subj)
+          carto << scale << projection << coordinates
+          subj << carto
+          doc.root << subj
           
           # Add note
           note = Nokogiri::XML::Node.new 'note', doc
           note['displayLabel'] = 'WGS84 Cartographics'
           note.content = 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.'
-          doc.root.add_child(note)
+          doc.root << note
           
           # Save
-          File.open(modsfn, 'wb') do |f|
-            f << doc.to_xml(:indent => 2)
-          end
+          doc.write_xml_to File.open(modsfn, 'wb'), :indent => 2, :encoding => 'UTF-8'
         end
         
                         
