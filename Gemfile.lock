@@ -210,7 +210,7 @@ GEM
     rgeo-shapefile (0.2.3)
       dbf (>= 1.7.0)
       rgeo (>= 0.3.3)
-    rgeoserver (0.7.6)
+    rgeoserver (0.7.7)
       activemodel (~> 3.2.0)
       activesupport (~> 3.2.0)
       confstruct (~> 0.2.0)
@@ -307,7 +307,7 @@ DEPENDENCIES
   lyberteam-capistrano-devel (~> 3.0)
   pry (~> 0.10.0)
   rake (~> 10.3.2)
-  rgeoserver (~> 0.7.1)
+  rgeoserver (~> 0.7.7)
   robot-controller (~> 1.0)
   rsolr (~> 1.0.10)
   rspec
