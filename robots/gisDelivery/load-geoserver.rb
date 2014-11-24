@@ -81,7 +81,7 @@ module Robots       # Robot package
                              mods.term_values([:subject, 'geographic'])].flatten.compact.collect {|k| k.strip},
               'metadata_links' => [{
                 'metadataType' => 'TC211',
-                'content' => "http://purl.stanford.edu/#{druid}.iso19139"
+                'content' => "http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/#{druid}/iso19139.xml"
               }]
             }
           }
