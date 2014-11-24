@@ -47,7 +47,7 @@ module Robots       # Robot package
             # Verify Gazetteer keyword
             uri = g.find_placename_uri(k)
             if uri.nil?
-              LyberCore::Log.warn "assign-placenames: #{druid} is missing gazetteer entry for '#{k}'"
+              LyberCore::Log.warn "assign-placenames: #{druid} is missing gazetteer entry for '#{k}'" unless g.blank?(k)
               next
             end
 
