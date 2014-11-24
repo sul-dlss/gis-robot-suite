@@ -138,7 +138,8 @@ module Robots       # Robot package
               raise RuntimeError, "load-geoserver: #{druid} cannot save CoverageStore"
             end
           else
-            LyberCore::Log.debug "Found existing CoverageStore: #{ws.name}/#{cs.name}"
+            LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{ws.name}/#{cs.name}"
+            raise RuntimeError, "load-geoserver: #{druid} found disabled CoverageStore" unless cs.enabled
           end
           
           # create or update coverage
