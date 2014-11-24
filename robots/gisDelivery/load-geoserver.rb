@@ -104,7 +104,7 @@ module Robots       # Robot package
           else
             LyberCore::Log.debug "Found existing FeatureType #{druid}"
           end
-          ft.enabled = true unless ft.enabled
+          ft.enabled = true
           ft.title = layer['title']
           ft.abstract = layer['abstract']  
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
