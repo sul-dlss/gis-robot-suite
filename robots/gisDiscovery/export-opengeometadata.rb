@@ -24,6 +24,7 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           exportdir = Dor::Config.geohydra.opengeometadata.dir
+          FileUtils.mkdir_p(exportdir) unless File.directory?(exportdir)
 
           # determine export folder
           if druid =~ /^(\w{2})(\d{3})(\w{2})(\d{4})$/
