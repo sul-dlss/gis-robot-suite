@@ -17,7 +17,7 @@ module Robots       # Robot package
         def system_with_check(cmd)
           LyberCore::Log.debug "normalize-data: running: #{cmd}"
           _success = system cmd
-          raise RuntimeError, "normalize-data: could not execute command successfully: #{_retcode}: #{cmd}" unless _success
+          raise RuntimeError, "normalize-data: could not execute command successfully: #{_success}: #{cmd}" unless _success
           _success
         end
         
