@@ -128,9 +128,9 @@ module Robots       # Robot package
           
           # Check to see whether the current native projection is WGS84
           cartos = doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
-          raise RuntimeException, "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
+          raise RuntimeError, "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
           LyberCore::Log.debug "extract-boundingbox: #{druid} has #{cartos.size} subject/cartographics elements"
-          raise RuntimeException, "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
+          raise RuntimeError, "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
           
           carto = cartos.first
           proj = carto.xpath('mods:projection', 'xmlns:mods' => 'http://www.loc.gov/mods/v3').first
