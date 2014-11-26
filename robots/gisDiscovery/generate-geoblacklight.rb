@@ -26,16 +26,7 @@ module Robots       # Robot package
           raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
           
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          if File.size?(ofn)
-            if FileUtils.uptodate?(ofn, [ifn])
-              LyberCore::Log.info "generate-geoblacklight: #{druid} found existing GeoBlacklight metadata"
-              return
-            else
-              LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
-              FileUtils.rm_f(ofn)
-            end
-          end
-          
+                    
           # run XSLT
           xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
           cmd = ['xsltproc',
@@ -59,6 +50,21 @@ module Robots       # Robot package
           LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
+          
+          # GeoBlacklight Solr document from descMetadataDS
+          ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.size?(ifn)
+          
+          ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
+          if File.size?(ofn)
+            if FileUtils.uptodate?(ofn, [ifn])
+              LyberCore::Log.info "generate-geoblacklight: #{druid} found existing GeoBlacklight metadata"
+              return
+            else
+              LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
+              FileUtils.rm_f(ofn)
+            end
+          end
           
           rights = 'Restricted'
           begin
