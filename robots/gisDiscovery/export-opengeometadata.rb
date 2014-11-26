@@ -41,7 +41,7 @@ module Robots       # Robot package
             layers = {}
           end
           LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
-          layers["edu.stanford.purl:#{druid}"] = druidtree
+          layers["http://purl.stanford.edu/#{druid}"] = druidtree
           json = JSON.pretty_generate(layers)
           File.open(fn, 'w') do |f|
             f << json
