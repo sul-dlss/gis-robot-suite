@@ -41,7 +41,7 @@ module Robots       # Robot package
             layers = {}
           end
           LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
-          layers["http://purl.stanford.edu/#{druid}"] = druidtree
+          layers["druid:#{druid}"] = druidtree
           json = JSON.pretty_generate(layers)
           File.open(fn, 'w') do |f|
             f << json
@@ -72,8 +72,8 @@ module Robots       # Robot package
           end
           
           # Export HTML transformation
-          LyberCore::Log.debug "export-opengeometadata: #{druid} converting ISO 19139 to HTML"
-          system("xsltproc -o #{File.join(exportdir, 'iso19139.html')} schema/tools/iso2html/iso-html.xsl #{File.join(exportdir, 'iso19139.xml')}")
+          # LyberCore::Log.debug "export-opengeometadata: #{druid} converting ISO 19139 to HTML"
+          # system("xsltproc -o #{File.join(exportdir, 'iso19139.html')} schema/tools/iso2html/iso-html.xsl #{File.join(exportdir, 'iso19139.xml')}")
           
           # Export MODS
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting MODS"
