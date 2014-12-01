@@ -34,17 +34,26 @@ module Robots       # Robot package
           end
           
           # Update layers.json
-          fn = File.join(exportdir, 'layers.json')
-          if File.size?(fn)
-            layers = JSON.parse(File.open(fn).read)
-          else
-            layers = {}
-          end
-          LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
-          layers["druid:#{druid}"] = druidtree
-          json = JSON.pretty_generate(layers)
-          File.open(fn, 'w') do |f|
-            f << json
+          lockfn = File.join(exportdir, 'layers.json.LOCK')
+          lockf = File.open(lockfn, 'w')
+          lockf.flock(File::LOCK_EX)
+          begin
+            fn = File.join(exportdir, 'layers.json')
+            if File.size?(fn)
+              layers = JSON.parse(File.open(fn).read)
+            else
+              layers = {}
+            end
+            LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
+            layers["druid:#{druid}"] = druidtree
+            json = JSON.pretty_generate(layers)
+            File.open(fn, 'w') do |f|
+              f << json
+            end
+          ensure
+            lockf.flock(File::LOCK_UN)
+            lockf.close
+            File.unlink(lockfn)
           end
           
           # Export files
