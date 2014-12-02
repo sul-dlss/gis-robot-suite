@@ -56,8 +56,8 @@ module Robots       # Robot package
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
         def to_coordinates_ddmmss s
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
-          raise ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
-          raise ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
+          raise ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
+          raise ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
@@ -149,13 +149,17 @@ module Robots       # Robot package
 
           # XXX: clean up dor-services geoMetadataDS to not generate transforms
           File.open(File.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
-            f << to_mods(geoMetadataDS,  {
-                  :geometryType => geometryType,
-                  :fileFormat => fileFormat,
-                  :purl => purl
-              }).to_xml(:index => 2) 
+            begin
+              f << to_mods(geoMetadataDS,  {
+                    :geometryType => geometryType,
+                    :fileFormat => fileFormat,
+                    :purl => purl
+                }).to_xml(:index => 2) 
+              
+            rescue ArgumentError => e
+              raise RuntimeError, "generate-mods: #{druid} cannot process MODS: #{e}"
+            end
           end
-          
         end
       end
 
