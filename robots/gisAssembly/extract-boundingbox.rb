@@ -203,6 +203,12 @@ module Robots       # Robot package
               ulx, uly, lrx, lry = extent_geotiff tiffn              
             end
             LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+            
+            # Check that we have a valid bounding box
+            unless ulx <= lrx && uly >= lry
+              raise RuntimeError, "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
+            end
+          
             rewrite_mods(druid, modsfn, ulx, uly, lrx, lry)
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
