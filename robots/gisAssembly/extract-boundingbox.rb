@@ -115,7 +115,7 @@ module Robots       # Robot package
             'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             'xmlns:gml' => 'http://www.opengis.net/gml/3.2/'
           ).each do |node|
-            node['gml:srsName'] = 'ESPG:4326'
+            node['gml:srsName'] = 'EPSG:4326'
             node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
               LyberCore::Log.debug "extract-boundingbox: #{druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
               x.content = [lrx, uly].join(' ') # NE
