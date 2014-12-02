@@ -39,7 +39,7 @@ module Robots       # Robot package
             tempfn = "#{File.dirname(ofn)}/#{tiffname}_uncompressed.tif"
             
             # reproject with gdalwarp (must uncompress here to prevent bloat)
-            LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} to #{proj}"
+            LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} from #{proj}"
             system_with_check "gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
             raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
             
