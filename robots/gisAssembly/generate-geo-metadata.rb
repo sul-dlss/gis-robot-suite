@@ -24,7 +24,7 @@ module Robots       # Robot package
           # short-circuit if work is already done
           metadatadir = "#{rootdir}/metadata"
           ofn = "#{metadatadir}/geoMetadata.xml"
-          if File.exists?(ofn)
+          if File.size?(ofn)
             LyberCore::Log.info "generate-geo-metadata: #{druid} already has geoMetadata: #{ofn}"
             return
           end
