@@ -11,5 +11,5 @@ for s in \
   load-geoserver \
   finish-gis-delivery-workflow \
   ; do
-  run_robot dor:gisDeliveryWF:$s -d $druid
+  bundle exec run_robot dor:gisDeliveryWF:$s -d $druid
 done

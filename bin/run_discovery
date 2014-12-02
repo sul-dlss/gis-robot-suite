@@ -11,5 +11,5 @@ for s in \
   export-opengeometadata \
   finish-gis-discovery-workflow \
   ; do
-  run_robot dor:gisDiscoveryWF:$s -d $druid
+  bundle exec run_robot dor:gisDiscoveryWF:$s -d $druid
 done

@@ -21,5 +21,5 @@ for s in \
   generate-content-metadata \
   finish-gis-assembly-workflow \
   ; do
-  run_robot dor:gisAssemblyWF:$s -d $druid
+  bundle exec run_robot dor:gisAssemblyWF:$s -d $druid
 done
