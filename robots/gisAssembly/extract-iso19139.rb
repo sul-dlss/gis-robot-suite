@@ -20,7 +20,14 @@ module Robots       # Robot package
           LyberCore::Log.debug "extract-iso19139 working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
+          
+          # See if generation is needed
+          fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
+          if File.size?(fn)
+            LyberCore::Log.info "extract-iso19139: #{druid} found #{fn}"
+            return
+          end
+          
           begin
             fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
             if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(.*/metadata).xml$}
