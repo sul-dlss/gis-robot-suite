@@ -53,7 +53,11 @@ module Robots       # Robot package
           ensure
             lockf.flock(File::LOCK_UN)
             lockf.close
-            File.unlink(lockfn)
+            begin
+              File.unlink(lockfn) if File.size?(lockfn)
+            rescue => e
+              # someone might delete before we can after our unlock
+            end
           end
           
           # Export files
