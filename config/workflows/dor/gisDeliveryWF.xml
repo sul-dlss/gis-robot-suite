@@ -25,7 +25,7 @@
     <prereq>load-geoserver</prereq>
     <label>Finalize delivery workflow for the object</label>
   </process> 
-  <process name="start-gis-discovery-workflow" sequence="8">
+  <process name="start-gis-discovery-workflow" sequence="8" status="skipped">
     <prereq>finish-gis-delivery-workflow</prereq>
     <label>Kickstart GIS discovery workflow with gisDiscoveryWF</label>
   </process> 
