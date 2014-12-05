@@ -148,7 +148,8 @@ module Robots       # Robot package
           purl = Dor::Config.purl.url + "/#{druid.gsub(/^druid:/, '')}"
 
           # XXX: clean up dor-services geoMetadataDS to not generate transforms
-          File.open(File.join(rootdir, 'metadata', 'descMetadata.xml'), 'wb') do |f| 
+          modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          File.open(modsFn, 'wb') do |f| 
             begin
               f << to_mods(geoMetadataDS,  {
                     :geometryType => geometryType,
@@ -160,6 +161,7 @@ module Robots       # Robot package
               raise RuntimeError, "generate-mods: #{druid} cannot process MODS: #{e}"
             end
           end
+          raise RuntimeError, "generate-mods: #{druid} did not write MODS correctly" unless File.size?(modsFn)
         end
       end
 
