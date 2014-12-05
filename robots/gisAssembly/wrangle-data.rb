@@ -23,7 +23,7 @@ module Robots       # Robot package
           
           # see if we've already created a data.zip
           datafn = "#{rootdir}/content/data.zip"
-          if File.exists?(datafn)
+          if File.size?(datafn)
             LyberCore::Log.info "wrangle-data: #{druid} found existing data.zip"
             return
           end

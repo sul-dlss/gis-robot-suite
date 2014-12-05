@@ -23,7 +23,7 @@ module Robots       # Robot package
 
           # GeoBlacklight Solr document from descMetadataDS
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.exists?(ifn)
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.size?(ifn)
           
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
                     
@@ -39,7 +39,7 @@ module Robots       # Robot package
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
-          raise RuntimeError, "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.exists?(ofn)
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.size?(ofn)
         end
         
         # `perform` is the main entry point for the robot. This is where

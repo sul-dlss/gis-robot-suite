@@ -49,7 +49,7 @@ module Robots       # Robot package
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
               File.open(pfn, 'wb') {|f| f << image }
-              raise RuntimeError, "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.exists?(pfn)
+              raise RuntimeError, "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
               return
             else
               LyberCore::Log.warn "extract-thumbnail: #{druid} has unknown EsriPropertyType: #{node['EsriPropertyType']}"

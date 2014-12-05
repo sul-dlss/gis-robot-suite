@@ -185,11 +185,11 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
           
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.exists?(zipfn)
+          raise RuntimeError, "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
           tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
           raise RuntimeError, "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
           

@@ -23,7 +23,7 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          raise RuntimeError, "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.exists?(xmlfn)
+          raise RuntimeError, "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.size?(xmlfn)
           
           LyberCore::Log.debug "Parsing #{xmlfn}"
           doc = Nokogiri::XML(File.read(xmlfn))

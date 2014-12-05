@@ -23,7 +23,7 @@ module Robots       # Robot package
         
         def extract_data_from_zip druid, zipfn, tmpdir
           LyberCore::Log.debug "Extracting #{druid} data from #{zipfn}"
-          raise RuntimeError, "normalize-data: #{druid} cannot locate packaged data: #{zipfn}" unless File.exists?(zipfn)
+          raise RuntimeError, "normalize-data: #{druid} cannot locate packaged data: #{zipfn}" unless File.size?(zipfn)
           
           tmpdir = File.join(tmpdir, "normalize_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
@@ -41,18 +41,18 @@ module Robots       # Robot package
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} from #{proj}"
             system_with_check "gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
-            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.exists?(tempfn)
+            raise RuntimeError, "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.size?(tempfn)
             
             # compress tempfn with gdal_translate
             LyberCore::Log.info "normalize-data: #{druid} is compressing reprojection to #{proj}"
             system_with_check "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.size?(ofn)
           else
             # just compress with gdal_translate
             LyberCore::Log.info "normalize-data: #{druid} is compressing original #{proj}"
             system_with_check "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
-            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.exists?(ofn)
+            raise RuntimeError, "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.size?(ofn)
           end
         end
         
@@ -83,7 +83,7 @@ module Robots       # Robot package
         end
         
         def zip_up(ozip, tifffn)
-          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          FileUtils.rm_f(ozip) if File.size?(ozip)
           LyberCore::Log.debug  "Repacking #{ozip}"
           system_with_check "zip -Dj '#{ozip}' '#{tifffn}'*"
         end
@@ -208,7 +208,7 @@ module Robots       # Robot package
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
           system_with_check "ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
-          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.exists?(ofn)
+          raise RuntimeError, "normalize-data: #{druid} failed to reproject #{ifn}" unless File.size?(ofn)
           
           # normalize prj file
           if flags[:overwrite_prj] && wkt
@@ -219,7 +219,7 @@ module Robots       # Robot package
 
           # package up reprojection
           ozip = File.join(File.dirname(zipfn), "data_EPSG_#{srid}.zip")
-          FileUtils.rm_f(ozip) if File.exists?(ozip)
+          FileUtils.rm_f(ozip) if File.size?(ozip)
           system_with_check "zip -Dj '#{ozip}' \"#{odr}/#{shpname}\".*"
 
           # cleanup
@@ -236,7 +236,7 @@ module Robots       # Robot package
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
           datafn = "#{rootdir}/content/data_EPSG_4326.zip"
-          if File.exists?(datafn)
+          if File.size?(datafn)
             LyberCore::Log.info "normalize-data: #{druid} found existing normalized data: #{File.basename(datafn)}"
             return
           end
@@ -252,7 +252,7 @@ module Robots       # Robot package
           
           # Determine file format
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          raise RuntimeError, "normalize-data: #{druid} is missing MODS metadata" unless File.exists?(modsfn)
+          raise RuntimeError, "normalize-data: #{druid} is missing MODS metadata" unless File.size?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
           raise RuntimeError, "normalize-data: #{druid} cannot determine file format from MODS" if format.nil?
           

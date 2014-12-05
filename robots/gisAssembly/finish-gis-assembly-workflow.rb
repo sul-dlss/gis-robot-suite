@@ -30,8 +30,9 @@ module Robots       # Robot package
             metadata/contentMetadata.xml
             metadata/descMetadata.xml
             metadata/geoMetadata.xml
-          }.each do |fn|
-            raise RuntimeError, "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.exists?("#{rootdir}/#{fn}")
+          }.each do |f|
+            fn = File.join(rootdir, f)
+            raise RuntimeError, "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
           end
           
           # delete all staged files in temp/

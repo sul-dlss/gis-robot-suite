@@ -28,7 +28,7 @@ module Robots       # Robot package
           
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.exists?(modsfn)
+          raise RuntimeError, "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
           raise RuntimeError, "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
           

@@ -118,7 +118,7 @@ module Robots       # Robot package
           end
           
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise RuntimeError, "generate-mods: #{druid} cannot locate #{fn}" unless File.exists?(fn)
+          raise RuntimeError, "generate-mods: #{druid} cannot locate #{fn}" unless File.size?(fn)
           
           # parse geometadata as input to MODS transform
           geoMetadataDS = Nokogiri::XML(File.read(fn))

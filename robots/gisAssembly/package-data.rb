@@ -54,7 +54,7 @@ module Robots       # Robot package
 
           zipfn = File.join(rootdir, 'content', 'data.zip')
           FileUtils.mkdir_p(File.dirname(zipfn)) unless File.directory?(File.dirname(zipfn))
-          FileUtils.rm_f(zipfn) if File.exists?(zipfn)
+          FileUtils.rm_f(zipfn) if File.size?(zipfn)
           
           LyberCore::Log.debug "Compressing #{druid} into #{zipfn}"
           system "zip -v#{recurse_flag ? 'r' : ''} '#{zipfn}' #{fns.join(' ')}"        
@@ -70,7 +70,7 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           
           datafn = "#{rootdir}/content/data.zip"
-          if File.exists?(datafn)
+          if File.size?(datafn)
             LyberCore::Log.info "package-data: #{druid} found existing packaged data: #{File.basename(datafn)}"
             return
           end
