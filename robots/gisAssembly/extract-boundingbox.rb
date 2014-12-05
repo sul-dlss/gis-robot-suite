@@ -210,6 +210,7 @@ module Robots       # Robot package
             end
           
             rewrite_mods(druid, modsfn, ulx, uly, lrx, lry)
+            raise RuntimeError, "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir
