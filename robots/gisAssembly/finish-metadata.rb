@@ -23,17 +23,13 @@ module Robots       # Robot package
           
           %w{descMetadata.xml geoMetadata.xml}.each do |f|
             fn = File.join(rootdir, 'metadata', f)
-            unless File.size?(fn)
-              raise RuntimeError, "finish-metadata: #{druid} is missing metadata: #{f}"
-            end
+            raise RuntimeError, "finish-metadata: #{druid} is missing metadata: #{fn}" unless File.size?(fn)
             LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end
 
           %w{preview.jpg}.each do |f|
             fn = File.join(rootdir, 'content', f)
-            unless File.size?(fn)
-              raise RuntimeError, "finish-metadata: #{druid} is missing metadata content: #{f}"
-            end
+            raise RuntimeError, "finish-metadata: #{druid} is missing content: #{fn}" unless File.size?(fn)
             LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end
         end
