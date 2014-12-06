@@ -19,6 +19,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
+          druid = $1 if druid =~ /^druid:(.*)$/
           LyberCore::Log.debug "load-geoblacklight working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
