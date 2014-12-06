@@ -19,6 +19,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
+          druid = $1 if druid =~ /^druid:(.*)$/
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
           extract_thumbnail druid
         end
