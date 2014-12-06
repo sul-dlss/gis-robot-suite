@@ -110,7 +110,7 @@ module Robots       # Robot package
         end
 
         PATTERNS = {
-          :Data => '*.{zip,TAB,tab,dat,bin,xls,xlsx,tar,tgz,csv,tif,json,geojson,topojson}',
+          :Data => '*.{zip,TAB,tab,dat,bin,xls,xlsx,tar,tgz,csv,tif,json,geojson,topojson,dbf}',
           :Preview => '*.{png,jpg,gif,jp2}',
           :Metadata => '*.{xml,txt}'
         }
