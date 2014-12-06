@@ -86,7 +86,9 @@ module Robots       # Robot package
           end
   
           # Save XML tree
-          mods.write_to(File.open(modsFn, 'wb'), :encoding => 'UTF-8', :indent => 2)
+          File.open(modsFn, 'wb') do |f|
+            mods.write_to(f, :encoding => 'UTF-8', :indent => 2)
+          end
         end
       end
     end

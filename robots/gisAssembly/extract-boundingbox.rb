@@ -171,7 +171,9 @@ module Robots       # Robot package
 
           # Save
           LyberCore::Log.debug "extract-boundingbox: #{druid} saving updated MODS to #{modsfn}"
-          doc.write_xml_to File.open(modsfn, 'wb'), :indent => 2, :encoding => 'UTF-8'
+          File.open(modsfn, 'wb') do |f|
+            doc.write_xml_to f, :indent => 2, :encoding => 'UTF-8'
+          end
         end
         
                         
