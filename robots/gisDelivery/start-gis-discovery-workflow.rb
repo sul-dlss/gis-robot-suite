@@ -17,10 +17,11 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
+          druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "start-gis-discovery-workflow working on #{druid}"
 
-          i = Dor::Item.find(druid)
-          i.initialize_workflow 'gisDiscoveryWF', 'dor'
+          i = Dor::Item.find("druid:#{druid}")
+          i.initialize_workflow 'gisDiscoveryWF'
         end
       end
 

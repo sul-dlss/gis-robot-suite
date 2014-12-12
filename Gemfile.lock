@@ -1,5 +1,5 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     active-fedora (5.7.1)
       activeresource (>= 3.0.0)

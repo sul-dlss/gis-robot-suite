@@ -20,6 +20,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
+          druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "export-opengeometadata working on #{druid}"
           
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace

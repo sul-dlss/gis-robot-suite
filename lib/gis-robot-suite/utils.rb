@@ -1,5 +1,12 @@
 module GisRobotSuite
-      
+  def self.initialize_robot(druid)
+    n = 5 # seconds
+    n = ENV['ROBOT_DELAY'].to_i unless ENV['ROBOT_DELAY'].nil?
+    sleep(n) if n > 0
+    druid = $1 if druid =~ /^druid:(.*)$/
+    return druid
+  end
+  
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
