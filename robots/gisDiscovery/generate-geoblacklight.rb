@@ -16,8 +16,7 @@ module Robots       # Robot package
 
         def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted')
           flags = {
-            :geoserver => Dor::Config.geohydra.geoserver.url_proxy,
-            :geoserver_internal => rights == 'Restricted' ? 
+            :geoserver => rights == 'Restricted' ? 
                 Dor::Config.geohydra.geoserver.url_restricted : 
                 Dor::Config.geohydra.geoserver.url_public,
             :stacks => Dor::Config.stacks.url,
@@ -34,7 +33,7 @@ module Robots       # Robot package
           xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
           cmd = ['xsltproc',
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
-                  "--stringparam wxs_geoserver_root '#{flags[:geoserver_internal]}'",
+                  "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
                   "--stringparam stacks_root '#{flags[:stacks]}'",
                   "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
                   "--stringparam rights '#{rights}'",
