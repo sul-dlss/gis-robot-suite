@@ -52,6 +52,7 @@ geomdtk-dev:
   - dor_gisAssemblyWF_generate-content-metadata
   - dor_gisAssemblyWF_generate-geo-metadata
   - dor_gisAssemblyWF_generate-mods
+  - dor_gisAssemblyWF_load-geo-metadata
   - dor_gisAssemblyWF_normalize-data
   - dor_gisAssemblyWF_package-data
   - dor_gisAssemblyWF_register-druid

@@ -65,16 +65,20 @@
   <process name="generate-content-metadata" sequence="17">
     <prereq>finish-data</prereq>
     <label>Generate contentMetadata manifest</label>
-  </process>  
-  <process name="finish-gis-assembly-workflow" sequence="18">
+  </process>
+  <process name="load-geo-metadata" sequence="18">
     <prereq>generate-content-metadata</prereq>
+    <label>Accession geoMetadata into DOR</label>
+  </process>
+  <process name="finish-gis-assembly-workflow" sequence="19">
+    <prereq>load-geo-metadata</prereq>
     <label>Finalize assembly workflow to prepare for assembly/delivery/discovery</label>
   </process>
-  <process name="start-assembly-workflow" sequence="19" status="skipped">
+  <process name="start-assembly-workflow" sequence="20" status="skipped">
     <prereq>finish-gis-assembly-workflow</prereq>
     <label>Kickstart the core assembly workflow at assemblyWF</label>
   </process>
-  <process name="start-delivery-workflow" sequence="20" status="skipped">
+  <process name="start-delivery-workflow" sequence="21" status="skipped">
     <prereq>start-assembly-workflow</prereq>
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
