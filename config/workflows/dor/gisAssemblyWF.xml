@@ -13,19 +13,19 @@
     <label>Author metadata using ArcCatalog</label>
   </process>
   <process name="approve-metadata" sequence="4" status="skipped">
-    <label>Approve metadata quality and release for workflow workflow</label>
+    <label>Approve metadata quality and release for workflow</label>
   </process>
   <process name="extract-thumbnail" sequence="5">
     <prereq>author-metadata</prereq>
-    <label>Extract thumbnail preview</label>
+    <label>Extract thumbnail preview from ArcCatalog metadata</label>
   </process>
   <process name="extract-iso19139" sequence="6">
     <prereq>extract-thumbnail</prereq>
-    <label>Extract ISO 19139 metadata from ArcCatalog</label>
+    <label>Transform ISO 19139 metadata from ArcCatalog metadata</label>
   </process>
   <process name="generate-geo-metadata" sequence="7">
     <prereq>extract-iso19139</prereq>
-    <label>Convert ISO 19139 metadata into geoMetadata</label>
+    <label>Convert ISO 19139 metadata into geoMetadata datastream</label>
   </process>
   <process name="generate-mods" sequence="8">
     <prereq>generate-geo-metadata</prereq>
@@ -37,14 +37,14 @@
   </process>
   <process name="finish-metadata" sequence="10">
     <prereq>assign-placenames</prereq>
-    <label>Finalize the data preparation</label>
+    <label>Finalize the metadata preparation</label>
   </process>  
   <process name="wrangle-data" sequence="11">
     <prereq>finish-metadata</prereq>
     <label>Wrangle the data into the digital work</label>
   </process>
   <process name="approve-data" sequence="12" status="skipped">
-    <label>Approve data quality for digital work and release for workflow workflow</label>
+    <label>Approve data quality for digital work and release for workflow</label>
   </process>
   <process name="package-data" sequence="13">
     <prereq>wrangle-data</prereq> <!-- data.zip should contain the ISO 19139/19110 metadata -->
@@ -56,7 +56,7 @@
   </process>  
   <process name="extract-boundingbox" sequence="15">
     <prereq>normalize-data</prereq>
-    <label>Extract bounding box for MODS record</label>
+    <label>Extract bounding box from data for MODS record</label>
   </process>  
   <process name="finish-data" sequence="16">
     <prereq>extract-boundingbox</prereq>
@@ -68,7 +68,7 @@
   </process>
   <process name="load-geo-metadata" sequence="18">
     <prereq>generate-content-metadata</prereq>
-    <label>Accession geoMetadata into DOR</label>
+    <label>Accession geoMetadata datastream into DOR repository</label>
   </process>
   <process name="finish-gis-assembly-workflow" sequence="19">
     <prereq>load-geo-metadata</prereq>

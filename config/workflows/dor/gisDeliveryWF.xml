@@ -19,7 +19,7 @@
     <label>Load layers into GeoWebCache</label>
   </process>
   <process name="seed-geowebcache" sequence="6" status="skipped">
-    <label>Generate tiles for GeoWebCache</label>
+    <label>Generate tiles for GeoWebCache layers</label>
   </process>
   <process name="finish-gis-delivery-workflow" sequence="7">
     <prereq>load-geoserver</prereq>

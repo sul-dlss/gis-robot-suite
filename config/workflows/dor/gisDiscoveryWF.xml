@@ -5,11 +5,11 @@
   </process>  
   <process name="generate-geoblacklight" sequence="2">
     <prereq>start-gis-discovery-workflow</prereq>
-    <label>Generate Solr document for GeoBlacklight</label>
+    <label>Generate Solr document for GeoBlacklight schema</label>
   </process>
   <process name="load-geoblacklight" sequence="3">
     <prereq>generate-geoblacklight</prereq>
-    <label>Load Solr document into GeoBlacklight</label>
+    <label>Load Solr document into GeoBlacklight Solr index</label>
   </process>
   <process name="export-opengeometadata" sequence="4">
     <prereq>load-geoblacklight</prereq>
