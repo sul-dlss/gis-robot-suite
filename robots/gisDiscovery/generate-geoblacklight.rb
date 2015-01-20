@@ -14,7 +14,7 @@ module Robots       # Robot package
           super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
         end
 
-        def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted')
+        def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted', rightsMetadata = nil)
           flags = {
             :geoserver => rights == 'Restricted' ? 
                 Dor::Config.geohydra.geoserver.url_restricted : 
@@ -37,6 +37,7 @@ module Robots       # Robot package
                   "--stringparam stacks_root '#{flags[:stacks]}'",
                   "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
                   "--stringparam rights '#{rights}'",
+                  "--stringparam rights_metadata '#{rightsMetadata}'",
                   "--output '#{ofn}'",
                   "'#{xslfn}'",
                   "'#{ifn}'"
@@ -71,9 +72,11 @@ module Robots       # Robot package
           end
           
           rights = 'Restricted'
+          rightsMetadata = nil
           begin
             item = Dor::Item.find("druid:#{druid}")
             xml = item.rightsMetadata.ng_xml
+            rightsMetadata = xml.to_xml(indent: 0)
             if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
               rights = 'Public'
             end
@@ -81,7 +84,7 @@ module Robots       # Robot package
             LyberCore::Log.warn "generate-geoblacklight: #{druid} cannot determine rights, item not found in DOR"
           end
           
-          convert_mods2geoblacklight rootdir, druid, rights
+          convert_mods2geoblacklight rootdir, druid, rights, rightsMetadata
         end
       end
     end
