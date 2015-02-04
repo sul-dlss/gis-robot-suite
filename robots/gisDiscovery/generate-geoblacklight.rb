@@ -60,15 +60,11 @@ module Robots       # Robot package
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.size?(ifn)
           
+          # Always overwrite any existing schema data because either MODS or the Rights may change.
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
           if File.size?(ofn)
-            if FileUtils.uptodate?(ofn, [ifn])
-              LyberCore::Log.info "generate-geoblacklight: #{druid} found existing GeoBlacklight metadata"
-              return
-            else
-              LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
-              FileUtils.rm_f(ofn)
-            end
+            LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
+            FileUtils.rm_f(ofn)
           end
           
           rights = 'Restricted'
