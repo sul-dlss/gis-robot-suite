@@ -120,7 +120,7 @@ module Robots       # Robot package
               h[k] << node.content
             end
           end
-          File.open(ofn, 'wb') {|f| f << h.to_json }
+          File.open(ofn, 'wb') {|f| f << JSON.pretty_generate(h) }
         end
       end
     end
