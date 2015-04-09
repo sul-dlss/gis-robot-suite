@@ -47,7 +47,7 @@ module Robots       # Robot package
             end
             LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
             layers["druid:#{druid}"] = druidtree
-            json = JSON.pretty_generate(layers)
+            json = JSON.pretty_generate(Hash[layers.keys.sort.map {|k| [k, layers[k]]}]) # sort by key
             File.open(fn, 'w') do |f|
               f << json
             end
