@@ -35,7 +35,7 @@ module Robots       # Robot package
           end
 
           # Update layers.json
-          lockfn = File.join(exportdir, 'layers.json.LOCK')
+          lockfn = File.join('/tmp', 'layers.json.LOCK')
           lockf = File.open(lockfn, 'w')
           lockf.flock(File::LOCK_EX)
           begin
