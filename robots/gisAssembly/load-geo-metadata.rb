@@ -6,18 +6,23 @@ module Robots       # Robot package
       class LoadGeoMetadata # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
         end
-                
+
         def load item, geoMetadataXML
           # load the geoMetadata datastream
           if item.datastreams['geoMetadata'].nil?
             item.add_datastream(Dor::GeoMetadataDS.new(item, 'geoMetadata'))
           end
           item.datastreams['geoMetadata'].content = geoMetadataXML
+        end
+
+        TAG_GIS = 'Dataset : GIS'
+        def tag item
+          item.add_tag(TAG_GIS) unless item.tags.include?(TAG_GIS)
         end
 
         # `perform` is the main entry point for the robot. This is where
@@ -29,15 +34,16 @@ module Robots       # Robot package
           LyberCore::Log.debug "load-geo-metadata: #{druid} working"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          
+
           # Locate geoMetadata datastream
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           raise RuntimeError, "load-geo-metadata: #{druid} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
-          
+
           # Load geoMetadata into DOR Item
           item = Dor::Item.find("druid:#{druid}")
           raise RuntimeError, "load-geo-metadata: #{druid} cannot find in DOR" if item.nil?
           load item, Nokogiri::XML(File.read(fn)).to_xml
+          tag item
           LyberCore::Log.debug "load-geo-metadata: #{druid} saving to DOR"
           item.save
         end
