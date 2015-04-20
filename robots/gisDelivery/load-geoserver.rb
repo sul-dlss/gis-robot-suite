@@ -1,4 +1,3 @@
-ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'config', 'environments', ENV['ROBOT_ENVIRONMENT'] + "_rgeoserver.yml"))
 require 'rgeoserver'
 require 'druid-tools'
 require 'mods'
@@ -11,7 +10,7 @@ module Robots       # Robot package
       class LoadGeoserver # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisDeliveryWF', 'load-geoserver', check_queued_status: true) # init LyberCore::Robot
@@ -24,15 +23,15 @@ module Robots       # Robot package
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "load-geoserver working on #{druid}"
-          
+
           rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
-          
+
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           raise RuntimeError, "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
           raise RuntimeError, "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
-          
+
           # reproject based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
           case mimetype
@@ -49,11 +48,14 @@ module Robots       # Robot package
           layer[(layertype == 'GeoTIFF'? 'raster' : 'vector')]['format'] = layertype
 
           # Connect to GeoServer
-          LyberCore::Log.debug "Connecting to catalog..."
-          catalog = RGeoServer::catalog
+          geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
+          master_opts = geoserver_options[:geoserver_master]
+          LyberCore::Log.debug "GeoServer options: #{geoserver_options}"
+          LyberCore::Log.debug "Connecting to catalog (#{master_opts})..."
+          catalog = RGeoServer::catalog master_opts
           LyberCore::Log.debug "Connected to #{catalog}"
 
-          # Obtain a handle to the workspace and clean it up. 
+          # Obtain a handle to the workspace and clean it up.
           ws = RGeoServer::Workspace.new catalog, :name => 'druid'
           raise RuntimeError, "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
           LyberCore::Log.debug "Workspace: #{ws.name} ready"
@@ -65,15 +67,22 @@ module Robots       # Robot package
           else
             raise NotImplementedError, "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
+
+          # Reload the slave catalog
+          slave_opts = geoserver_options[:geoserver_slave]
+          LyberCore::Log.debug "Connecting to slave catalog (#{slave_opts})..."
+          catalog = RGeoServer::catalog slave_opts
+          LyberCore::Log.debug "Connected to #{catalog}... reloading catalog"
+          catalog.reload
         end
-        
-        
+
+
         # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
         def layer_from_druid druid, modsfn, is_raster = false
           mods = Mods::Record.new
           mods.from_str(File.read(modsfn))
-  
-          h = { 
+
+          h = {
             (is_raster ? 'raster' : 'vector') => {
               'druid' => druid,
               'title' => mods.full_titles.first,
@@ -88,17 +97,17 @@ module Robots       # Robot package
           }
           h
         end
-        
+
         def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
           druid = layer['druid']
           %w{title abstract keywords metadata_links}.each do |i|
             raise ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
-          
+
           LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
           ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => dsname
           raise RuntimeError, "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
-          
+
           ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => druid
           if ft.new?
             LyberCore::Log.debug "Creating FeatureType #{druid}"
@@ -107,7 +116,7 @@ module Robots       # Robot package
           end
           ft.enabled = true
           ft.title = layer['title']
-          ft.abstract = layer['abstract']  
+          ft.abstract = layer['abstract']
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
           ft.metadata_links = layer['metadata_links']
           begin
@@ -115,7 +124,7 @@ module Robots       # Robot package
           rescue RGeoServer::GeoServerInvalidRequest => e
             raise RuntimeError, "load-geoserver: #{druid} cannot save FeatureType"
           end
-          
+
         end
 
         def create_raster(catalog, ws, layer)
@@ -123,7 +132,7 @@ module Robots       # Robot package
           %w{title abstract keywords metadata_links}.each do |i|
             raise ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
-          
+
           # create coverage store
           LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
           cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => druid
@@ -132,7 +141,7 @@ module Robots       # Robot package
             cs.enabled = true
             cs.description = layer['title']
             cs.data_type = 'GeoTIFF'
-            cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif" 
+            cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif"
             begin
               cs.save
             rescue GeoServerInvalidRequest => e
@@ -142,7 +151,7 @@ module Robots       # Robot package
             LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{ws.name}/#{cs.name}"
             raise RuntimeError, "load-geoserver: #{druid} found disabled CoverageStore" unless cs.enabled
           end
-          
+
           # create or update coverage
           LyberCore::Log.debug "Retrieving Coverage: #{ws.name}/#{cs.name}/#{druid}"
           cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => druid
@@ -153,7 +162,7 @@ module Robots       # Robot package
           end
           cv.enabled = true
           cv.title = layer['title']
-          cv.abstract = layer['abstract']  
+          cv.abstract = layer['abstract']
           cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
           cv.metadata_links = layer['metadata_links']
           begin
@@ -165,20 +174,20 @@ module Robots       # Robot package
           # determine raster style
           raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
-          
+
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
             _min = $1.to_f.floor
             _max = $2.to_f.ceil
-            if _max < 2**13 # custom SLD only works with relatively narrow bands            
+            if _max < 2**13 # custom SLD only works with relatively narrow bands
               # generate SLD definition
               raster_style = "raster_#{druid}"
               sldtxt = "
-  <StyledLayerDescriptor xmlns='http://www.opengis.net/sld' 
-                         xmlns:ogc='http://www.opengis.net/ogc' 
-                         xmlns:xlink='http://www.w3.org/1999/xlink' 
-                         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
-                         xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd' 
+  <StyledLayerDescriptor xmlns='http://www.opengis.net/sld'
+                         xmlns:ogc='http://www.opengis.net/ogc'
+                         xmlns:xlink='http://www.w3.org/1999/xlink'
+                         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                         xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd'
                          version='1.0.0'>
     <UserLayer>
       <Name>raster_layer</Name>
@@ -197,7 +206,7 @@ module Robots       # Robot package
     </UserLayer>
   </StyledLayerDescriptor>"
               puts sldtxt
-            
+
               # create a style with the SLD definition
               style = RGeoServer::Style.new catalog, :name => raster_style
               LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
@@ -231,7 +240,7 @@ module Robots       # Robot package
             end
           end
         end
-        
+
       end
     end
   end

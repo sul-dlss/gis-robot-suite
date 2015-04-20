@@ -6,7 +6,7 @@ module Robots       # Robot package
       class FinishGisDeliveryWorkflow # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisDeliveryWF', 'finish-gis-delivery-workflow', check_queued_status: true) # init LyberCore::Robot
@@ -19,14 +19,17 @@ module Robots       # Robot package
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "finish-gis-delivery-workflow working on #{druid}"
-          
-          # Connect to GeoServer
-          catalog = RGeoServer::catalog
-          LyberCore::Log.debug "Connected to #{catalog}"
-          
-          # Verify layer
-          layer = RGeoServer::Layer.new catalog, name: druid.to_s
-          raise RuntimeError, "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
+
+          # Connect to GeoServer master/slave to verify layer
+          geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
+          [:geoserver_master, :geoserver_slave].each do |k|
+            catalog = RGeoServer::catalog geoserver_options[k]
+            LyberCore::Log.debug "Connected to #{catalog}"
+
+            # Verify layer
+            layer = RGeoServer::Layer.new catalog, name: druid.to_s
+            raise RuntimeError, "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
+          end
         end
       end
 
