@@ -21,6 +21,8 @@ Dor::Config.configure do
     #  styledir '/var/geoserver/local/data/styles'
     end
     geowebcache do
+      user 'example_user'
+      password 'example_password'
       url 'https://localhost/geoserver/gwc'
     end
     geotiff do
