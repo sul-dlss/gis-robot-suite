@@ -1,19 +1,11 @@
 cert_dir = File.join(File.dirname(__FILE__), "..", "certs")
 
 Dor::Config.configure do
-
-  solrizer.url 'http://example.com/solr'
-  workflow.url 'http://example.com/workflow'
-  dor_services.url 'http://example.com/dor'
-
-  robots do 
-    workspace '/tmp'
-  end
-  
   fedora do
-    url 'http://example.com/fedora'
+    url 'https://localhost/fedora'
+    key_pass ''
   end
-    
+
   ssl do
     cert_file File.join(cert_dir,"example.crt")
     key_file File.join(cert_dir,"example.key")
@@ -21,20 +13,51 @@ Dor::Config.configure do
   end
 
   geohydra do
-    workspace "/var/example/workspace"
-    stage "/var/example/stage"
-    tmpdir "/var/example/tmp"
+    stage '/stage'
+    workspace '/workspace'
+    tmpdir '/tmp'
+    geoserver do
+      url 'http://localhost/geoserver'
+    #  styledir '/var/geoserver/local/data/styles'
+    end
+    geowebcache do
+      url 'https://localhost/geoserver/gwc'
+    end
+    geotiff do
+      host 'localhost'
+      dir '/geotiff'
+    end
+    postgis do 
+      schema 'druid'
+    end
+    solr do
+      url 'https://localhost/solr'
+      collection 'example'
+    end
+    opengeometadata do
+      dir '/opengeometadata'
+    end
   end
-   
-  geoserver do
-    url "http://example.com/geoserver"	
+
+  stacks do
+    url 'http://localhost/stacks'
+  end
+
+  purl do 
+    url 'http://localhost/purl'
+  end
+
+
+  solrizer.url 'https://localhost/solr/solrizer'
+  workflow.url 'https://localhost/workflow/'
+  dor_services.url 'https://localhost/dor'
 end
 
-  purl do
-    url 'http://example.com/purl'
-  end
-end
+REDIS_URL = 'localhost:6379/resque:development'
 
-REDIS_URL = '127.0.0.1:6379/resque:development' # hostname:port[:db][/namespace]
-# REDIS_TIMEOUT = '5' # seconds
+ENV['PGDATABASE'] ||= 'example_db'
+ENV['PGHOST'] ||= 'localhost'
+ENV['PGPORT'] ||= '5432'
+ENV['PGUSER'] ||= 'example_user'
 
+ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), ENV['ROBOT_ENVIRONMENT'] + "_rgeoserver.yml"))
