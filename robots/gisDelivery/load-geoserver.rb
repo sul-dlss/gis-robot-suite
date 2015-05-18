@@ -72,7 +72,7 @@ module Robots       # Robot package
           slave_opts = geoserver_options[:geoserver_slave]
           unless slave_opts.nil?
             LyberCore::Log.debug "Connecting to slave catalog (#{slave_opts})..."
-            catalog = RGeoServer::catalog slave_opts
+            catalog = RGeoServer::catalog slave_opts, true
             LyberCore::Log.debug "Connected to #{catalog}... reloading catalog"
             catalog.reload
           end
