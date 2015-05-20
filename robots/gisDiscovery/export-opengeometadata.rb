@@ -23,7 +23,7 @@ module Robots       # Robot package
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "export-opengeometadata working on #{druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          stagedir = GisRobotSuite.locate_druid_path druid, type: :stage
           exportdir = Dor::Config.geohydra.opengeometadata.dir
           FileUtils.mkdir_p(exportdir) unless File.directory?(exportdir)
 
@@ -33,6 +33,10 @@ module Robots       # Robot package
           else
             raise RuntimeError, "export-opengeometadata: Malformed druid? #{druid}"
           end
+          stacksdir = File.join(Dor::Config.geohydra.stacks || '/stacks', druidtree)
+
+          # Read object in DOR
+          item = Dor::Item.find("druid:#{druid}")
 
           # Update layers.json
           lockfn = File.join('/tmp', 'layers.json.LOCK') # lock must be on local filesystem
@@ -66,9 +70,7 @@ module Robots       # Robot package
           FileUtils.mkdir_p(exportdir) unless File.directory?(exportdir)
 
           # Export ISO 19139/19110
-          ifn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise RuntimeError, "export-opengeometadata: #{druid} cannot find ISO 19139 in #{ifn}" unless File.size?(ifn)
-          xml = Nokogiri::XML(File.read(ifn))
+          xml = item.geoMetadata.ng_xml.to_xml
           if xml.nil? or xml.root.nil?
             raise ArgumentError, "export-opengeometadata: #{druid} cannot parse ISO 19139 in #{ifn}"
           end
@@ -92,21 +94,20 @@ module Robots       # Robot package
 
           # Export MODS
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting MODS"
-          ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "export-opengeometadata: #{druid} cannot find MODS in #{ifn}" unless File.size?(ifn)
+          xml = item.descMetadata.ng_xml.to_xml
           ofn = File.join(exportdir, 'mods.xml')
-          FileUtils.cp(ifn, ofn)
+          File.write(ofn, xml)
 
           # Export preview
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting preview.jpg"
-          ifn = File.join(rootdir, 'content', 'preview.jpg')
+          ifn = File.join(stacksdir, 'preview.jpg')
           raise RuntimeError, "export-opengeometadata: #{druid} cannot find preview in #{ifn}" unless File.size?(ifn)
           ofn = File.join(exportdir, 'preview.jpg')
           FileUtils.cp(ifn, ofn)
 
           # Export GeoBlacklight as JSON
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting GeoBlacklight"
-          ifn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
+          ifn = File.join(stagedir, 'metadata', 'geoblacklight.xml')
           raise RuntimeError, "export-opengeometadata: #{druid} cannot find GeoBlacklight in #{ifn}" unless File.size?(ifn)
           ofn = File.join(exportdir, 'geoblacklight.json')
           # convert XML into JSON
