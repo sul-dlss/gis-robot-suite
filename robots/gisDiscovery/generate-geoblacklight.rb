@@ -14,23 +14,19 @@ module Robots       # Robot package
           super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
         end
 
-        def convert_mods2geoblacklight(rootdir, druid, rights = 'Restricted', rightsMetadata = nil)
+        def convert_mods2geoblacklight(ifn, ofn, druid, rights, rightsMetadata)
           flags = {
-            :geoserver => rights == 'Restricted' ? 
-                Dor::Config.geohydra.geoserver.url_restricted : 
-                Dor::Config.geohydra.geoserver.url_public,
-            :stacks => Dor::Config.stacks.url,
-            :purl => Dor::Config.purl.url + "/" + druid.gsub(/^druid:/, '')
+            :geoserver => (rights == 'Public') ? 
+                Dor::Config.geohydra.geoserver.url_public :
+                Dor::Config.geohydra.geoserver.url_restricted,
+            :stacks => Dor::Config.stacks.url
           }
 
-          # GeoBlacklight Solr document from descMetadataDS
-          ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.size?(ifn)
-          
-          ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-                    
-          # run XSLT
+          # locate XSLT
           xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
+          raise RuntimeError, "generate-geoblacklight: mods2geoblacklight.xsl is not installed" unless File.size?(xslfn)
+
+          # run XSLT
           cmd = ['xsltproc',
                   "--stringparam geoserver_root '#{flags[:geoserver]}'",
                   "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
@@ -43,7 +39,6 @@ module Robots       # Robot package
                   "'#{ifn}'"
                   ].join(' ')
           system cmd
-          raise RuntimeError, "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.size?(ofn)
         end
         
         # `perform` is the main entry point for the robot. This is where
@@ -54,11 +49,8 @@ module Robots       # Robot package
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
           
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :workspace
-          
-          # GeoBlacklight Solr document from descMetadataDS
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "generate-geoblacklight: #{druid} cannot find MODS metadata: #{ifn}" unless File.size?(ifn)
           
           # Always overwrite any existing schema data because either MODS or the Rights may change.
           ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
@@ -76,11 +68,22 @@ module Robots       # Robot package
             if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
               rights = 'Public'
             end
+          
+            unless File.size?(ifn) # load from DOR if not in file system
+              File.open(ifn, 'w') do |f|
+                f << item.descMetadata.ng_xml.to_xml
+              end
+            end
+          
           rescue ActiveFedora::ObjectNotFoundError => e
             LyberCore::Log.warn "generate-geoblacklight: #{druid} cannot determine rights, item not found in DOR"
           end
           
-          convert_mods2geoblacklight rootdir, druid, rights, rightsMetadata
+          # Generate GeoBlacklight Solr document from descMetadataDS
+          LyberCore::Log.debug "generate-geoblacklight: #{druid} generating GeoBlacklight metadata in #{ofn}"
+          convert_mods2geoblacklight ifn, ofn, druid, rights, rightsMetadata
+
+          raise RuntimeError, "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.size?(ofn)
         end
       end
     end
