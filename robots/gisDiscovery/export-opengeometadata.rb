@@ -70,7 +70,7 @@ module Robots       # Robot package
           FileUtils.mkdir_p(exportdir) unless File.directory?(exportdir)
 
           # Export ISO 19139/19110
-          xml = item.geoMetadata.ng_xml.to_xml
+          xml = item.geoMetadata.ng_xml
           if xml.nil? or xml.root.nil?
             raise ArgumentError, "export-opengeometadata: #{druid} cannot parse ISO 19139 in #{ifn}"
           end
