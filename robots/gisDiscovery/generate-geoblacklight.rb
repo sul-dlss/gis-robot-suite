@@ -70,6 +70,7 @@ module Robots       # Robot package
             end
           
             unless File.size?(ifn) # load from DOR if not in file system
+              FileUtils.mkdir_p(File.dirname(ifn)) unless File.directory?(File.dirname(ifn))
               File.open(ifn, 'w') do |f|
                 f << item.descMetadata.ng_xml.to_xml
               end
