@@ -84,7 +84,7 @@ module Robots       # Robot package
           params[:fileFormat] ||= 'Shapefile'
           raise ArgumentError, "generate-mods: Missing PURL parameter" if params[:purl].nil?
           
-          args = Nokogiri::XSLT.quote_params(Hash[params.map{|(k,v)| [k.to_s,v]}].to_a.flatten)
+          args = Nokogiri::XSLT.quote_params(Hash[params.map { |(k,v)| [k.to_s,v]}].to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
           unless doc.root and doc.root.children.size > 0
             raise CrosswalkError, 'generate-mods: to_mods produced incorrect xml'

@@ -90,7 +90,7 @@ module Robots       # Robot package
               'title' => mods.full_titles.first,
               'abstract' => mods.term_values(:abstract).compact.join("\n"),
               'keywords' => [mods.term_values([:subject, 'topic']),
-                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect {|k| k.strip},
+                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip),
               'metadata_links' => [{
                 'metadataType' => 'TC211',
                 'content' => "http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/#{druid}/iso19139.xml"

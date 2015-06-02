@@ -37,7 +37,7 @@ module Robots       # Robot package
             f.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               if line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
-                w, s, e, n = [$1, $2, $3, $4].map {|x| x.to_s}
+                w, s, e, n = [$1, $2, $3, $4].map(&:to_s)
                 ulx, uly = [w, n]
                 lrx, lry = [e, s]
                 return [ulx, uly, lrx, lry].map {|x| x.to_s.strip.to_f }

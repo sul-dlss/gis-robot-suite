@@ -35,7 +35,7 @@ bot = klazz.new
 bot.check_queued_status = false  # skipping the queued workflow status check
 
 if opts[:file]
-  druids = IO.readlines(opts[:file]).map {|l| l.strip}
+  druids = IO.readlines(opts[:file]).map(&:strip)
 else
   druids = [opts[:druid]]
 end

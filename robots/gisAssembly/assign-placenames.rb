@@ -1,4 +1,4 @@
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "schema", "lib"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "schema", "lib"))
 require 'geoblacklight/gazetteer'
 
 # Robot class to run under multiplexing infrastructure

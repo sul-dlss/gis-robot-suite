@@ -5,15 +5,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-Lint/AmbiguousOperator:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/BlockAlignment:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
@@ -394,21 +385,10 @@ Style/SpaceAroundEqualsInParameterDefault:
 Style/SpaceAroundOperators:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SpaceBeforeBlockBraces:
-  Enabled: false
-
 # Offense count: 29
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
 Style/SpaceInsideBlockBraces:
-  Enabled: false
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/SpaceInsideBrackets:
   Enabled: false
 
 # Offense count: 8
@@ -417,26 +397,10 @@ Style/SpaceInsideBrackets:
 Style/SpaceInsideHashLiteralBraces:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/SpecialGlobalVars:
-  Enabled: false
-
 # Offense count: 46
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/StringLiterals:
-  Enabled: false
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/SymbolProc:
-  Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/Tab:
   Enabled: false
 
 # Offense count: 7
@@ -454,17 +418,7 @@ Style/TrailingWhitespace:
 Style/UnlessElse:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/UnneededCapitalW:
-  Enabled: false
-
 # Offense count: 15
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/VariableName:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/WhileUntilDo:
   Enabled: false

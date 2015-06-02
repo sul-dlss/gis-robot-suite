@@ -38,7 +38,7 @@ set :scm, :git
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
-set :stages, %W(development staging production)
+set :stages, %w(development staging production)
 set :default_stage, "development"
 set :linked_dirs, %w(log run config/environments config/certs)
 
@@ -75,4 +75,4 @@ namespace :deploy do
 
   after :publishing, :restart
 
- end
+end

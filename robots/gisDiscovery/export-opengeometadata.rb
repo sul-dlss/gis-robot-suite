@@ -123,7 +123,7 @@ module Robots       # Robot package
               h[k] = v # assign singleton
             else
               unless h[k].is_a? Array
-                h[k] = [ h[k] ] # convert singleton into Array
+                h[k] = [h[k]] # convert singleton into Array
               end
               h[k] << v # add to array
             end

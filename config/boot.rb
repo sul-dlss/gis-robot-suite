@@ -1,6 +1,6 @@
 # Ensure subsequent requires search the correct local paths
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "robots"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "robots"))
 
 require 'rubygems'
 require 'bundler/setup'
