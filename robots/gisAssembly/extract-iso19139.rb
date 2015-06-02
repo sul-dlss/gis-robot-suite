@@ -2,11 +2,10 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-
       class ExtractIso19139 # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisAssemblyWF', 'extract-iso19139', check_queued_status: true) # init LyberCore::Robot
@@ -21,20 +20,20 @@ module Robots       # Robot package
           LyberCore::Log.debug "extract-iso19139 working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          
+
           # See if generation is needed
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           if File.size?(fn)
             LyberCore::Log.info "extract-iso19139: #{druid} found #{fn}"
             return
           end
-          
+
           begin
-            fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-            if fn =~ %r{^(.*).(shp|tif).xml$} || fn =~ %r{^(.*/metadata).xml$}
-              ofn = $1 + '-iso19139.xml'
-              ofn_fc = $1 + '-iso19110.xml'
-              ofn_fgdc = $1 + '-fgdc.xml'
+            fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
+            if fn =~ /^(.*).(shp|tif).xml$/ || fn =~ %r{^(.*/metadata).xml$}
+              ofn = Regexp.last_match(1) + '-iso19139.xml'
+              ofn_fc = Regexp.last_match(1) + '-iso19110.xml'
+              ofn_fgdc = Regexp.last_match(1) + '-fgdc.xml'
             end
             LyberCore::Log.debug "extract-iso19139 working on #{fn}"
             arcgis_to_iso19139 fn, ofn, ofn_fc, ofn_fgdc
@@ -43,40 +42,38 @@ module Robots       # Robot package
             raise e
           end
         end
-        
+
         # XXX hardcoded paths
         def self.search_for_xsl(filename)
-          path = %w{
+          path = %w(
             schema/lib/xslt
             /home/lyberadmin/ArcGIS/Transforms
-          }
+          )
           path.unshift(File.dirname(__FILE__))
           path.each do |d|
             fn = File.join(d, filename)
-            if File.exist?(fn)
-              return fn
-            end
+            return fn if File.exist?(fn)
           end
-          raise RuntimeError, "extract-iso19139: #{druid} cannot find #{filename} in search path"
+          fail "extract-iso19139: #{druid} cannot find #{filename} in search path"
         end
-        
+
         # XSLT file locations
         XSLT = {
-          :arcgis     => self.search_for_xsl('ArcGIS2ISO19139.xsl'),
-          :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19110.xsl'),
-          :arcgis_fgdc=> self.search_for_xsl('ArcGIS2FGDC.xsl')
+          arcgis: search_for_xsl('ArcGIS2ISO19139.xsl'),
+          arcgis_fc: search_for_xsl('arcgis_to_iso19110.xsl'),
+          arcgis_fgdc: search_for_xsl('ArcGIS2FGDC.xsl')
         }
-        
+
         # XSLT processor
         XSLTPROC = 'xsltproc --novalid --xinclude'
         # XML cleaner
         XMLLINT = 'xmllint --format --xinclude --nsclean'
-        
+
         # Converts an ESRI ArcCatalog metadata.xml into ISO 19139
         # @param [String] fn Input file
         # @param [String] ofn Output file
         # @param [String] ofn_fc Output file for the Feature Catalog (optional)
-        def arcgis_to_iso19139 fn, ofn, ofn_fc = nil, ofn_fgdc = nil
+        def arcgis_to_iso19139(fn, ofn, ofn_fc = nil, ofn_fgdc = nil)
           LyberCore::Log.debug "generating #{ofn}"
           system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -")
           unless ofn_fc.nil?
@@ -87,11 +84,8 @@ module Robots       # Robot package
             LyberCore::Log.debug "generating #{ofn_fgdc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -")
           end
-      
         end
-        
       end
-
     end
   end
 end

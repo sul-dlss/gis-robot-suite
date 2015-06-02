@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 # To start an pry session with gems and configuration loaded:
 # [robot_root] $ ./bin/console development
-unless(ARGV.first.nil?)
-  ENV['ROBOT_ENVIRONMENT'] = ARGV.shift
-end
+ENV['ROBOT_ENVIRONMENT'] = ARGV.shift unless ARGV.first.nil?
 
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 

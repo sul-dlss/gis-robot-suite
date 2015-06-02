@@ -4,11 +4,10 @@ require 'fileutils'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-
       class FinishGisAssemblyWorkflow # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisAssemblyWF', 'finish-gis-assembly-workflow', check_queued_status: true) # init LyberCore::Robot
@@ -21,28 +20,28 @@ module Robots       # Robot package
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage          
-          
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+
           # first ensure all files are ready
-          %w{
+          %w(
             content/data.zip
             content/data_EPSG_4326.zip
             content/preview.jpg
             metadata/contentMetadata.xml
             metadata/descMetadata.xml
             metadata/geoMetadata.xml
-          }.each do |f|
+          ).each do |f|
             fn = File.join(rootdir, f)
-            raise RuntimeError, "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
+            fail "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
           end
-          
+
           # delete all staged files in temp/
           tmpdir = "#{rootdir}/temp"
           if File.directory?(tmpdir)
             LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
-            FileUtils.rm_r(tmpdir) 
+            FileUtils.rm_r(tmpdir)
           end
-          
+
           # load workspace with identical copy of stage
           destdir = GisRobotSuite.locate_druid_path druid, type: :workspace
           FileUtils.mkdir_p(destdir) unless File.directory?(destdir)
@@ -50,7 +49,6 @@ module Robots       # Robot package
           system("rsync -av --delete #{rootdir}/ #{destdir}/")
         end
       end
-
     end
   end
 end

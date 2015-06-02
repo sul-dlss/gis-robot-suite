@@ -2,7 +2,6 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDelivery   # This is your workflow package name (using CamelCase)
-
       class FinishGisDeliveryWorkflow # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
@@ -28,11 +27,10 @@ module Robots       # Robot package
 
             # Verify layer
             layer = RGeoServer::Layer.new catalog, name: druid.to_s
-            raise RuntimeError, "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
+            fail "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
           end
         end
       end
-
     end
   end
 end

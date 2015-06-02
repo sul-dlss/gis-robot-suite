@@ -1,5 +1,5 @@
 # Save this file as lib/capistrano/tasks/git.cap
- 
+
 namespace :git do
   desc 'Copy repo to releases'
   task create_release: :'git:update' do

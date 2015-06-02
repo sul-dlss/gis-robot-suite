@@ -2,7 +2,6 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-
       class LoadGeoMetadata # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
@@ -12,7 +11,7 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
-        def load item, geoMetadataXML
+        def load(item, geoMetadataXML)
           # load the geoMetadata datastream
           if item.datastreams['geoMetadata'].nil?
             item.add_datastream(Dor::GeoMetadataDS.new(item, 'geoMetadata'))
@@ -21,7 +20,7 @@ module Robots       # Robot package
         end
 
         TAG_GIS = 'Dataset : GIS'
-        def tag item
+        def tag(item)
           item.add_tag(TAG_GIS) unless item.tags.include?(TAG_GIS)
         end
 
@@ -37,18 +36,17 @@ module Robots       # Robot package
 
           # Locate geoMetadata datastream
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise RuntimeError, "load-geo-metadata: #{druid} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
+          fail "load-geo-metadata: #{druid} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
           # Load geoMetadata into DOR Item
           item = Dor::Item.find("druid:#{druid}")
-          raise RuntimeError, "load-geo-metadata: #{druid} cannot find in DOR" if item.nil?
+          fail "load-geo-metadata: #{druid} cannot find in DOR" if item.nil?
           load item, Nokogiri::XML(File.read(fn)).to_xml
           tag item
           LyberCore::Log.debug "load-geo-metadata: #{druid} saving to DOR"
           item.save
         end
       end
-
     end
   end
 end

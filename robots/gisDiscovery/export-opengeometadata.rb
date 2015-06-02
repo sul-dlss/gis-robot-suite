@@ -4,7 +4,6 @@ require 'json'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDiscovery   # This is your workflow package name (using CamelCase)
-
       class ExportOpengeometadata # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
@@ -29,9 +28,9 @@ module Robots       # Robot package
 
           # determine export folder
           if druid =~ /^(\w{2})(\d{3})(\w{2})(\d{4})$/
-            druidtree =  File.join($1, $2, $3, $4)
+            druidtree =  File.join(Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4))
           else
-            raise RuntimeError, "export-opengeometadata: Malformed druid? #{druid}"
+            fail "export-opengeometadata: Malformed druid? #{druid}"
           end
           stacksdir = File.join(Dor::Config.geohydra.stacks || '/stacks', druidtree)
 
@@ -51,7 +50,7 @@ module Robots       # Robot package
             end
             LyberCore::Log.debug "export-opengeometadata: #{druid} updating layers.json"
             layers["druid:#{druid}"] = druidtree
-            json = JSON.pretty_generate(Hash[layers.keys.sort.map {|k| [k, layers[k]]}]) # sort by key
+            json = JSON.pretty_generate(Hash[layers.keys.sort.map { |k| [k, layers[k]] }]) # sort by key
             File.open(fn, 'w') do |f|
               f << json
             end
@@ -72,19 +71,19 @@ module Robots       # Robot package
           # Export ISO 19139/19110
           xml = item.geoMetadata.ng_xml
           if xml.nil? or xml.root.nil?
-            raise ArgumentError, "export-opengeometadata: #{druid} cannot parse ISO 19139 in #{ifn}"
+            fail ArgumentError, "export-opengeometadata: #{druid} cannot parse ISO 19139 in #{ifn}"
           end
 
           xml.xpath('//gmd:MD_Metadata', 'xmlns:gmd' => 'http://www.isotc211.org/2005/gmd').each do |node|
             LyberCore::Log.debug "export-opengeometadata: #{druid} extracting ISO 19139"
             File.open(File.join(exportdir, 'iso19139.xml'), 'w') do |f|
-              f << node.to_xml(:indent => 2)
+              f << node.to_xml(indent: 2)
             end
           end
           xml.xpath('//gfc:FC_FeatureCatalogue', 'xmlns:gfc' => 'http://www.isotc211.org/2005/gfc').each do |node|
             LyberCore::Log.debug "export-opengeometadata: #{druid} extracting ISO 19110"
             File.open(File.join(exportdir, 'iso19110.xml'), 'w') do |f|
-              f << node.to_xml(:indent => 2)
+              f << node.to_xml(indent: 2)
             end
           end
 
@@ -101,14 +100,14 @@ module Robots       # Robot package
           # Export preview
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting preview.jpg"
           ifn = File.join(stacksdir, 'preview.jpg')
-          raise RuntimeError, "export-opengeometadata: #{druid} cannot find preview in #{ifn}" unless File.size?(ifn)
+          fail "export-opengeometadata: #{druid} cannot find preview in #{ifn}" unless File.size?(ifn)
           ofn = File.join(exportdir, 'preview.jpg')
           FileUtils.cp(ifn, ofn)
 
           # Export GeoBlacklight as JSON
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting GeoBlacklight"
           ifn = File.join(stagedir, 'metadata', 'geoblacklight.xml')
-          raise RuntimeError, "export-opengeometadata: #{druid} cannot find GeoBlacklight in #{ifn}" unless File.size?(ifn)
+          fail "export-opengeometadata: #{druid} cannot find GeoBlacklight in #{ifn}" unless File.size?(ifn)
           ofn = File.join(exportdir, 'geoblacklight.json')
           # convert XML into JSON
           doc = Nokogiri::XML(File.read(ifn))
@@ -128,7 +127,7 @@ module Robots       # Robot package
               h[k] << v # add to array
             end
           end
-          File.open(ofn, 'wb') {|f| f << JSON.pretty_generate(h) }
+          File.open(ofn, 'wb') { |f| f << JSON.pretty_generate(h) }
         end
       end
     end

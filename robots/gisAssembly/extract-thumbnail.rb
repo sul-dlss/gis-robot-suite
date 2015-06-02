@@ -4,11 +4,10 @@ require 'base64'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-
       class ExtractThumbnail # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisAssemblyWF', 'extract-thumbnail', check_queued_status: true) # init LyberCore::Robot
@@ -23,16 +22,16 @@ module Robots       # Robot package
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
           extract_thumbnail druid
         end
-        
+
         # Extracts an inline thumbnail from the ESRI ArcCatalog metadata format
         # @raise [ArgumentError] if cannot find a thumbnail
-        def extract_thumbnail druid
+        def extract_thumbnail(druid)
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           # ensure content folder is present
           content_dir = File.join(rootdir, 'content')
           FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
-          
+
           # see if we have work to do
           pfn = File.join(content_dir, 'preview.jpg')
           if File.size?(pfn)
@@ -41,25 +40,24 @@ module Robots       # Robot package
           end
 
           # @param [String] fn the metadata
-          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"         
-          raise RuntimeError, "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
-          
+          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
+          fail "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
+
           # parse ESRI XML and extract base64 encoded thumbnail image
           doc = Nokogiri::XML(File.read(fn))
           doc.xpath('//Binary/Thumbnail/Data').each do |node|
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
-              File.open(pfn, 'wb') {|f| f << image }
-              raise RuntimeError, "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
+              File.open(pfn, 'wb') { |f| f << image }
+              fail "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
               return
             else
               LyberCore::Log.warn "extract-thumbnail: #{druid} has unknown EsriPropertyType: #{node['EsriPropertyType']}"
             end
           end
-          raise RuntimeError, "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
+          fail "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
         end
       end
-
     end
   end
 end

@@ -2,11 +2,10 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-
       class FinishData # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisAssemblyWF', 'finish-data', check_queued_status: true) # init LyberCore::Robot
@@ -21,17 +20,16 @@ module Robots       # Robot package
           LyberCore::Log.debug "finish-data working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          %w{data.zip data_EPSG_4326.zip}.each do |zipname|
+          %w(data.zip data_EPSG_4326.zip).each do |zipname|
             zipfn = File.join(rootdir, 'content', zipname)
             if File.size?(zipfn)
               LyberCore::Log.info "finish-data: #{druid} found #{zipname} #{File.size(zipfn)} bytes"
             else
-              raise RuntimeError, "finish-data: #{druid} is missing packaged data for #{zipname}"
+              fail "finish-data: #{druid} is missing packaged data for #{zipname}"
             end
           end
         end
       end
-
     end
   end
 end

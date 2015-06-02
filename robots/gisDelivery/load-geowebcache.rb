@@ -2,11 +2,10 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDelivery   # This is your workflow package name (using CamelCase)
-
       class LoadGeowebcache # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisDeliveryWF', 'load-geowebcache', check_queued_status: true) # init LyberCore::Robot
@@ -18,11 +17,10 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           LyberCore::Log.debug "load-geowebcache working on #{druid}"
-          
-          raise NotImplementedError # XXX: load to external geowebcache registry if needed
+
+          fail NotImplementedError # XXX: load to external geowebcache registry if needed
         end
       end
-
     end
   end
 end

@@ -4,11 +4,10 @@ require 'rsolr'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDiscovery   # This is your workflow package name (using CamelCase)
-
       class LoadGeoblacklight # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
-        include LyberCore::Robot 
+        include LyberCore::Robot
 
         def initialize
           super('dor', 'gisDiscoveryWF', 'load-geoblacklight', check_queued_status: true) # init LyberCore::Robot
@@ -24,21 +23,20 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          raise RuntimeError, "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.size?(xmlfn)
-          
+          fail "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.size?(xmlfn)
+
           LyberCore::Log.debug "Parsing #{xmlfn}"
           doc = Nokogiri::XML(File.read(xmlfn))
-          raise RuntimeError, "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata" if doc.nil?
-          
+          fail "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata" if doc.nil?
+
           url = File.join(Dor::Config.geohydra.solr.url, Dor::Config.geohydra.solr.collection)
           LyberCore::Log.debug "Connecting to #{url}"
-          solr = RSolr.connect :url => url
-          solr.update :data => doc.to_xml
+          solr = RSolr.connect url: url
+          solr.update data: doc.to_xml
           solr.commit
           LyberCore::Log.info "load-geoblacklight: #{druid} updated in #{url}"
         end
       end
-
     end
   end
 end

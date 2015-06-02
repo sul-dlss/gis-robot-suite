@@ -1,4 +1,4 @@
-cert_dir = File.join(File.dirname(__FILE__), "..", "certs")
+cert_dir = File.join(File.dirname(__FILE__), '..', 'certs')
 
 Dor::Config.configure do
   fedora do
@@ -7,8 +7,8 @@ Dor::Config.configure do
   end
 
   ssl do
-    cert_file File.join(cert_dir,"example.crt")
-    key_file File.join(cert_dir,"example.key")
+    cert_file File.join(cert_dir, 'example.crt')
+    key_file File.join(cert_dir, 'example.key')
     key_pass ''
   end
 
@@ -29,7 +29,7 @@ Dor::Config.configure do
       host 'localhost'
       dir '/geotiff'
     end
-    postgis do 
+    postgis do
       schema 'druid'
     end
     solr do
@@ -45,7 +45,7 @@ Dor::Config.configure do
     url 'http://localhost/stacks'
   end
 
-  purl do 
+  purl do
     url 'http://localhost/purl'
   end
 
@@ -62,4 +62,4 @@ ENV['PGHOST'] ||= 'localhost'
 ENV['PGPORT'] ||= '5432'
 ENV['PGUSER'] ||= 'example_user'
 
-ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), ENV['ROBOT_ENVIRONMENT'] + "_rgeoserver.yml"))
+ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), ENV['ROBOT_ENVIRONMENT'] + '_rgeoserver.yml'))

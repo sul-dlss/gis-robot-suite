@@ -2,7 +2,6 @@
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDelivery   # This is your workflow package name (using CamelCase)
-
       class SeedGeowebcache # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
@@ -20,7 +19,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "seed-geowebcache working on #{druid}"
 
           base_url = Dor::Config.geohydra.geowebcache.url
-          layer_id = "druid:{druid}"
+          layer_id = 'druid:{druid}'
           uri = "rest/seed/#{layer_id}.xml"
           xml = "
             <seedRequest>
@@ -34,14 +33,11 @@ module Robots       # Robot package
             </seedRequest>"
 
           LyberCore::Log.debug "Connecting to GeoWebCache at #{base_url}/#{uri}"
-          RestClient.post "#{base_url}/#{uri}", xml, {
-              :user => Dor::Config.geohydra.geowebcache.user,
-              :password => Dor::Config.geohydra.geowebcache.password,
-              :content_type => :xml
-            }
+          RestClient.post "#{base_url}/#{uri}", xml,               user: Dor::Config.geohydra.geowebcache.user,
+                                                                   password: Dor::Config.geohydra.geowebcache.password,
+                                                                   content_type: :xml
         end
       end
-
     end
   end
 end

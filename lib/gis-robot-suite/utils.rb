@@ -3,10 +3,10 @@ module GisRobotSuite
     n = 5 # seconds
     n = ENV['ROBOT_DELAY'].to_i unless ENV['ROBOT_DELAY'].nil?
     sleep(n) if n > 0
-    druid = $1 if druid =~ /^druid:(.*)$/
-    return druid
+    druid = Regexp.last_match(1) if druid =~ /^druid:(.*)$/
+    druid
   end
-  
+
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
@@ -14,24 +14,24 @@ module GisRobotSuite
     infotxt = IO.popen(cmd) do |f|
       f.readlines
     end
-    
+
     # parse gdalinfo
     info = {
-      :nbands => 0,
-      :type => 'Byte',
-      :min => Float::MAX,
-      :max => 0
+      nbands: 0,
+      type: 'Byte',
+      min: Float::MAX,
+      max: 0
     }
     infotxt.each do |line|
       if line =~ /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
-        info[:nbands] = [$1.to_i, info[:nbands]].max
-        info[:type] = $3.to_s
+        info[:nbands] = [Regexp.last_match(1).to_i, info[:nbands]].max
+        info[:type] = Regexp.last_match(3).to_s
       elsif line =~ /^\s+Minimum=(.+),\s+Maximum=(.+),.*$/ # Minimum=1.000, Maximum=3322.000
-        info[:min] = [$1.to_f, info[:min]].min
-        info[:max] = [$2.to_f, info[:max]].max
+        info[:min] = [Regexp.last_match(1).to_f, info[:min]].min
+        info[:max] = [Regexp.last_match(2).to_f, info[:max]].max
       end
     end
-    
+
     # determine raster style
     nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil
     if info[:nbands] == 1
@@ -45,7 +45,7 @@ module GisRobotSuite
       when 'Float32'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
-        raise RuntimeError, "Unknown 1-band raster data type: #{info[:type]}"
+        fail "Unknown 1-band raster data type: #{info[:type]}"
       end
     elsif info[:nbands] == 3
       case info[:type]
@@ -56,24 +56,24 @@ module GisRobotSuite
       when 'Int32'
         'rgb32'
       else
-        raise RuntimeError, "Unknown 3-band raster data type: #{info[:type]}"
+        fail "Unknown 3-band raster data type: #{info[:type]}"
       end
     else
-      raise NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
+      fail NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
     end
   end
-  
-  def self.determine_mimetype type
+
+  def self.determine_mimetype(type)
     if type == :vector
       'application/x-esri-shapefile'
     elsif type == :raster
       'image/tiff'
     else
-      raise ArgumentError, "Unknown type: #{type}"
+      fail ArgumentError, "Unknown type: #{type}"
     end
   end
-  
-  def self.locate_druid_path druid, opts = {}
+
+  def self.locate_druid_path(druid, opts = {})
     rootdir = '.'
     pid = druid.gsub(/^druid:/, '')
 
@@ -83,35 +83,33 @@ module GisRobotSuite
     elsif opts[:type] == :workspace
       rootdir = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace).path
     else
-      raise NotImplementedError, 'Only :stage, :workspace are supported'
+      fail NotImplementedError, 'Only :stage, :workspace are supported'
     end
-    
-    raise RuntimeError, "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
+
+    fail "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
     rootdir
   end
-  
-  def self.locate_esri_metadata dir, opts = {}
+
+  def self.locate_esri_metadata(dir, _opts = {})
     fn = Dir.glob("#{dir}/*.shp.xml").first # Shapefile
     if fn.nil? || File.size(fn) == 0
       fn = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
         if fn.nil? || File.size(fn) == 0
-          raise RuntimeError, "Missing ESRI metadata files in #{dir}"
+          fail "Missing ESRI metadata files in #{dir}"
         end
       end
     end
     fn
   end
-  
-  def self.determine_file_format_from_mods modsfn
+
+  def self.determine_file_format_from_mods(modsfn)
     doc = Nokogiri::XML(File.read(modsfn))
-    format = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/dc:format', 
-                       'mods' => 'http://www.loc.gov/mods/v3', 
+    format = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/dc:format',
+                       'mods' => 'http://www.loc.gov/mods/v3',
                        'dc' => 'http://purl.org/dc/elements/1.1/').first
-    unless format.nil?
-      format = format.text
-    end
+    format = format.text unless format.nil?
     format
   end
 
@@ -131,15 +129,12 @@ module GisRobotSuite
   #     </rdf:Description>
   #   </rdf:RDF>
 
-  def self.determine_projection_from_mods modsfn
+  def self.determine_projection_from_mods(modsfn)
     doc = Nokogiri::XML(File.read(modsfn))
-    proj = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/gml:boundedBy/gml:Envelope', 
-                       'mods' => 'http://www.loc.gov/mods/v3', 
+    proj = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/gml:boundedBy/gml:Envelope',
+                       'mods' => 'http://www.loc.gov/mods/v3',
                        'gml' => 'http://www.opengis.net/gml/3.2/').first
-    unless proj.nil?
-      proj = proj['gml:srsName']
-    end
+    proj = proj['gml:srsName'] unless proj.nil?
     proj.to_s.upcase
   end
-
 end

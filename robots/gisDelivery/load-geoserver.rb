@@ -6,7 +6,6 @@ require 'mods'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDelivery   # This is your workflow package name (using CamelCase)
-
       class LoadGeoserver # This is your robot name (using CamelCase)
         # Build off the base robot implementation which implements
         # features common to all robots
@@ -28,9 +27,9 @@ module Robots       # Robot package
 
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise RuntimeError, "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          fail "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
           format = GisRobotSuite::determine_file_format_from_mods modsfn
-          raise RuntimeError, "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
+          fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
 
           # reproject based on file format information
           mimetype = format.split(/;/).first # nix mimetype flags
@@ -40,12 +39,12 @@ module Robots       # Robot package
           when GisRobotSuite.determine_mimetype(:vector)
             layertype = 'PostGIS'
           else
-            raise RuntimeError, "load-geoserver: #{druid} has unknown format: #{format}"
+            fail "load-geoserver: #{druid} has unknown format: #{format}"
           end
 
           # Obtain layer details
           layer = layer_from_druid druid, modsfn, (layertype == 'GeoTIFF')
-          layer[(layertype == 'GeoTIFF'? 'raster' : 'vector')]['format'] = layertype
+          layer[(layertype == 'GeoTIFF' ? 'raster' : 'vector')]['format'] = layertype
 
           # Connect to GeoServer
           geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
@@ -56,8 +55,8 @@ module Robots       # Robot package
           LyberCore::Log.debug "Connected to #{catalog}"
 
           # Obtain a handle to the workspace and clean it up.
-          ws = RGeoServer::Workspace.new catalog, :name => 'druid'
-          raise RuntimeError, "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
+          ws = RGeoServer::Workspace.new catalog, name: 'druid'
+          fail "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
           LyberCore::Log.debug "Workspace: #{ws.name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
@@ -65,7 +64,7 @@ module Robots       # Robot package
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
             create_raster(catalog, ws, layer['raster'])
           else
-            raise NotImplementedError, "load-geoserver: #{druid} has unknown layer format: #{layer}"
+            fail NotImplementedError, "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
 
           # Reload the slave catalog
@@ -80,7 +79,7 @@ module Robots       # Robot package
 
 
         # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
-        def layer_from_druid druid, modsfn, is_raster = false
+        def layer_from_druid(druid, modsfn, is_raster = false)
           mods = Mods::Record.new
           mods.from_str(File.read(modsfn))
 
@@ -102,15 +101,15 @@ module Robots       # Robot package
 
         def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
           druid = layer['druid']
-          %w{title abstract keywords metadata_links}.each do |i|
-            raise ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+          %w(title abstract keywords metadata_links).each do |i|
+            fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
           LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
-          ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => dsname
-          raise RuntimeError, "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
+          ds = RGeoServer::DataStore.new catalog, workspace: ws, name: dsname
+          fail "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
 
-          ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => druid
+          ft = RGeoServer::FeatureType.new catalog, workspace: ws, data_store: ds, name: druid
           if ft.new?
             LyberCore::Log.debug "Creating FeatureType #{druid}"
           else
@@ -124,20 +123,19 @@ module Robots       # Robot package
           begin
             ft.save
           rescue RGeoServer::GeoServerInvalidRequest => e
-            raise RuntimeError, "load-geoserver: #{druid} cannot save FeatureType"
+            raise "load-geoserver: #{druid} cannot save FeatureType"
           end
-
         end
 
         def create_raster(catalog, ws, layer)
           druid = layer['druid']
-          %w{title abstract keywords metadata_links}.each do |i|
-            raise ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+          %w(title abstract keywords metadata_links).each do |i|
+            fail ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
           # create coverage store
           LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
-          cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => druid
+          cs = RGeoServer::CoverageStore.new catalog, workspace: ws, name: druid
           if cs.new?
             LyberCore::Log.debug "Creating CoverageStore: #{ws.name}/#{cs.name}"
             cs.enabled = true
@@ -147,16 +145,16 @@ module Robots       # Robot package
             begin
               cs.save
             rescue GeoServerInvalidRequest => e
-              raise RuntimeError, "load-geoserver: #{druid} cannot save CoverageStore"
+              raise "load-geoserver: #{druid} cannot save CoverageStore"
             end
           else
             LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{ws.name}/#{cs.name}"
-            raise RuntimeError, "load-geoserver: #{druid} found disabled CoverageStore" unless cs.enabled
+            fail "load-geoserver: #{druid} found disabled CoverageStore" unless cs.enabled
           end
 
           # create or update coverage
           LyberCore::Log.debug "Retrieving Coverage: #{ws.name}/#{cs.name}/#{druid}"
-          cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => druid
+          cv = RGeoServer::Coverage.new catalog, workspace: ws, coverage_store: cs, name: druid
           if cv.new?
             LyberCore::Log.debug "Creating Coverage #{druid}"
           else
@@ -170,7 +168,7 @@ module Robots       # Robot package
           begin
             cv.save
           rescue RGeoServer::GeoServerInvalidRequest => e
-            raise RuntimeError, "load-geoserver: #{druid} cannot save Coverage"
+            raise "load-geoserver: #{druid} cannot save Coverage"
           end
 
           # determine raster style
@@ -179,8 +177,8 @@ module Robots       # Robot package
 
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
-            _min = $1.to_f.floor
-            _max = $2.to_f.ceil
+            _min = Regexp.last_match(1).to_f.floor
+            _max = Regexp.last_match(2).to_f.ceil
             if _max < 2**13 # custom SLD only works with relatively narrow bands
               # generate SLD definition
               raster_style = "raster_#{druid}"
@@ -210,7 +208,7 @@ module Robots       # Robot package
               puts sldtxt
 
               # create a style with the SLD definition
-              style = RGeoServer::Style.new catalog, :name => raster_style
+              style = RGeoServer::Style.new catalog, name: raster_style
               LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
               if style.new?
                 style.sld_doc = sldtxt
@@ -219,18 +217,18 @@ module Robots       # Robot package
               end
             else
               raster_style = 'raster_grayband' # a simple band-oriented histogram adjusted style
-              style = RGeoServer::Style.new catalog, :name => raster_style
-              raise RuntimeError, "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
+              style = RGeoServer::Style.new catalog, name: raster_style
+              fail "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
             end
           else
-            style = RGeoServer::Style.new catalog, :name => raster_style
-            raise RuntimeError, "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
+            style = RGeoServer::Style.new catalog, name: raster_style
+            fail "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
           end
 
           # fetch layer to load raster style - it's created when the coverage is created via REST API
-          lyr = RGeoServer::Layer.new catalog, :workspace => ws, :name => druid
+          lyr = RGeoServer::Layer.new catalog, workspace: ws, name: druid
           if lyr.new?
-            raise RuntimeError, "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
+            fail "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
           end
           if lyr.default_style != style.name
             lyr.default_style = style.name
@@ -238,11 +236,10 @@ module Robots       # Robot package
             begin
               lyr.save
             rescue RGeoServer::GeoServerInvalidRequest => e
-              raise RuntimeError, "load-geoserver: #{druid} cannot save Layer"
+              raise "load-geoserver: #{druid} cannot save Layer"
             end
           end
         end
-
       end
     end
   end

@@ -7,12 +7,12 @@ require 'rsolr'
 require 'sitemap_generator'
 
 # fetch all the slugs
-solr = RSolr.connect :url => ARGV[0]
+solr = RSolr.connect url: ARGV[0]
 slugs = []
-response = solr.get 'select', :params => {
-  :q => '*:*',
-  :rows => 100000,
-  :fl => 'layer_slug_s'
+response = solr.get 'select', params: {
+  q: '*:*',
+  rows: 100_000,
+  fl: 'layer_slug_s'
 }
 response['response']['docs'].each do |doc|
   slugs << doc['layer_slug_s']

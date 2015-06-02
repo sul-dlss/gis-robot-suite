@@ -1,6 +1,6 @@
 # Ensure subsequent requires search the correct local paths
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "robots"))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'robots'))
 
 require 'rubygems'
 require 'bundler/setup'
@@ -8,7 +8,7 @@ require 'logger'
 
 # Load the environment file based on Environment.  Default to development
 environment = ENV['ROBOT_ENVIRONMENT'] ||= 'development'
-ROBOT_ROOT = File.expand_path(File.dirname(__FILE__) + "/..")
+ROBOT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 ROBOT_LOG = Logger.new(File.join(ROBOT_ROOT, "log/#{environment}.log"))
 ROBOT_LOG.level = Logger::SEV_LABEL.index(ENV['ROBOT_LOG_LEVEL']) || Logger::INFO
 
@@ -24,7 +24,7 @@ require 'dor-services'
 require 'lyber_core'
 LyberCore::Log.set_level(ROBOT_LOG.level)
 
-# TODO Maybe move auto-require to just run_robot and spec_helper?
+# TODO: Maybe move auto-require to just run_robot and spec_helper?
 
 # Load any library files and all the robots
 Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
@@ -41,8 +41,8 @@ begin
   if defined? REDIS_TIMEOUT
     _server, _namespace = REDIS_URL.split('/', 2)
     _host, _port, _db = _server.split(':')
-    _redis = Redis.new(:host => _host, :port => _port, :thread_safe => true, :db => _db, :timeout => REDIS_TIMEOUT.to_f)
-    Resque.redis = Redis::Namespace.new(_namespace, :redis => _redis)
+    _redis = Redis.new(host: _host, port: _port, thread_safe: true, db: _db, timeout: REDIS_TIMEOUT.to_f)
+    Resque.redis = Redis::Namespace.new(_namespace, redis: _redis)
   else
     Resque.redis = REDIS_URL
   end
