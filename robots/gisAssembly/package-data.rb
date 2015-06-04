@@ -32,6 +32,7 @@ module Robots       # Robot package
                 basename = File.basename(fn, '.tif.xml')
                 Dir.glob("#{basename}.*").each do |x|
                   fns << x
+                  recurse_flag = true if File.directory?(x)
                 end
                 Dir.glob("#{basename}-*.xml").each do |x|
                   fns << x
@@ -45,6 +46,7 @@ module Robots       # Robot package
             basename = File.basename(fn, '.shp.xml')
             Dir.glob("#{basename}.*").each do |x|
               fns << x
+              recurse_flag = true if File.directory?(x)
             end
             Dir.glob("#{basename}-*.xml").each do |x|
               fns << x
