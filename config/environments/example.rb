@@ -18,7 +18,7 @@ Dor::Config.configure do
     tmpdir '/tmp'
     geoserver do
       url 'http://localhost/geoserver'
-    #  styledir '/var/geoserver/local/data/styles'
+      #  styledir '/var/geoserver/local/data/styles'
     end
     geowebcache do
       user 'example_user'
@@ -48,7 +48,6 @@ Dor::Config.configure do
   purl do
     url 'http://localhost/purl'
   end
-
 
   solrizer.url 'https://localhost/solr/solrizer'
   workflow.url 'https://localhost/workflow/'

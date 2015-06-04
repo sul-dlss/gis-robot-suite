@@ -22,7 +22,7 @@ module Robots       # Robot package
           # Connect to GeoServer master/slave to verify layer
           geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
           [:geoserver_master, :geoserver_slave].each do |k|
-            catalog = RGeoServer::catalog geoserver_options[k]
+            catalog = RGeoServer.catalog geoserver_options[k]
             LyberCore::Log.debug "Connected to #{catalog}"
 
             # Verify layer

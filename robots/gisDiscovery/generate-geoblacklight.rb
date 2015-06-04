@@ -27,15 +27,15 @@ module Robots       # Robot package
 
           # run XSLT
           cmd = ['xsltproc',
-                  "--stringparam geoserver_root '#{flags[:geoserver]}'",
-                  "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
-                  "--stringparam stacks_root '#{flags[:stacks]}'",
-                  "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
-                  "--stringparam rights '#{rights}'",
-                  "--stringparam rights_metadata '#{rightsMetadata}'",
-                  "--output '#{ofn}'",
-                  "'#{xslfn}'",
-                  "'#{ifn}'"
+                 "--stringparam geoserver_root '#{flags[:geoserver]}'",
+                 "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
+                 "--stringparam stacks_root '#{flags[:stacks]}'",
+                 "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
+                 "--stringparam rights '#{rights}'",
+                 "--stringparam rights_metadata '#{rightsMetadata}'",
+                 "--output '#{ofn}'",
+                 "'#{xslfn}'",
+                 "'#{ifn}'"
                 ].join(' ')
           system cmd
         end

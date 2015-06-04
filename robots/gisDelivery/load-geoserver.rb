@@ -28,7 +28,7 @@ module Robots       # Robot package
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           fail "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-          format = GisRobotSuite::determine_file_format_from_mods modsfn
+          format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
 
           # reproject based on file format information
@@ -51,7 +51,7 @@ module Robots       # Robot package
           master_opts = geoserver_options[:geoserver_master]
           LyberCore::Log.debug "GeoServer options: #{geoserver_options}"
           LyberCore::Log.debug "Connecting to catalog (#{master_opts})..."
-          catalog = RGeoServer::catalog master_opts
+          catalog = RGeoServer.catalog master_opts
           LyberCore::Log.debug "Connected to #{catalog}"
 
           # Obtain a handle to the workspace and clean it up.
@@ -71,12 +71,11 @@ module Robots       # Robot package
           slave_opts = geoserver_options[:geoserver_slave]
           unless slave_opts.nil?
             LyberCore::Log.debug "Connecting to slave catalog (#{slave_opts})..."
-            catalog = RGeoServer::catalog slave_opts, true
+            catalog = RGeoServer.catalog slave_opts, true
             LyberCore::Log.debug "Connected to #{catalog}... reloading catalog"
             catalog.reload
           end
         end
-
 
         # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
         def layer_from_druid(druid, modsfn, is_raster = false)

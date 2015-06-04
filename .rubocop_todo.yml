@@ -66,23 +66,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 49
 
-# Offense count: 9
-# Cop supports --auto-correct.
-Style/AlignArray:
-  Enabled: false
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AlignParameters:
-  Enabled: false
-
-# Offense count: 40
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AndOr:
-  Enabled: false
-
 # Offense count: 5
 Style/AsciiComments:
   Enabled: false
@@ -96,16 +79,6 @@ Style/CaseIndentation:
 Style/ClassVars:
   Enabled: false
 
-# Offense count: 23
-# Cop supports --auto-correct.
-Style/ColonMethodCall:
-  Enabled: false
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/CommentIndentation:
-  Enabled: false
-
 # Offense count: 39
 Style/Documentation:
   Enabled: false
@@ -113,16 +86,6 @@ Style/Documentation:
 # Offense count: 3
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/EmptyElse:
-  Enabled: false
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/EmptyLines:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundAccessModifier:
   Enabled: false
 
 # Offense count: 33

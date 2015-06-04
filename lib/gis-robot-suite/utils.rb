@@ -113,7 +113,6 @@ module GisRobotSuite
     format
   end
 
-
   # <extension displayLabel="geo">
   #   <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   #     <rdf:Description rdf:about="http://purl.stanford.edu/dd452vk1873">
@@ -132,8 +131,8 @@ module GisRobotSuite
   def self.determine_projection_from_mods(modsfn)
     doc = Nokogiri::XML(File.read(modsfn))
     proj = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/gml:boundedBy/gml:Envelope',
-                       'mods' => 'http://www.loc.gov/mods/v3',
-                       'gml' => 'http://www.opengis.net/gml/3.2/').first
+                     'mods' => 'http://www.loc.gov/mods/v3',
+                     'gml' => 'http://www.opengis.net/gml/3.2/').first
     proj = proj['gml:srsName'] unless proj.nil?
     proj.to_s.upcase
   end

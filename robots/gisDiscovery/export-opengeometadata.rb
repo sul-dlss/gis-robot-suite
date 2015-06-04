@@ -13,7 +13,6 @@ module Robots       # Robot package
           super('dor', 'gisDiscoveryWF', 'export-opengeometadata', check_queued_status: true) # init LyberCore::Robot
         end
 
-
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
         #
@@ -70,7 +69,7 @@ module Robots       # Robot package
 
           # Export ISO 19139/19110
           xml = item.geoMetadata.ng_xml
-          if xml.nil? or xml.root.nil?
+          if xml.nil? || xml.root.nil?
             fail ArgumentError, "export-opengeometadata: #{druid} cannot parse ISO 19139 in #{ifn}"
           end
 

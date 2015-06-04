@@ -36,7 +36,7 @@ module Robots       # Robot package
 
           LyberCore::Log.debug "generate-geo-metadata processing #{fn}"
           isoXml = Nokogiri::XML(File.read(fn))
-          if isoXml.nil? or isoXml.root.nil?
+          if isoXml.nil? || isoXml.root.nil?
             fail ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{fn}"
           end
 
@@ -59,7 +59,7 @@ module Robots       # Robot package
         # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
         def to_geoMetadataDS(isoXml, fcXml, purl)
           fail ArgumentError, 'generate-geo-metadata: PURL is required' if purl.nil?
-          fail ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? or isoXml.root.nil?
+          fail ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? || isoXml.root.nil?
           Nokogiri::XML("
             <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
               <rdf:Description rdf:about=\"#{purl}\">
