@@ -32,7 +32,7 @@ module Robots       # Robot package
             xml.contentMetadata(objectId: "#{druid}", type: flags[:content_type] || 'geo') do
               seq = 1
               objects.each do |k, v|
-                next if v.nil? or v.empty?
+                next if v.nil? || v.empty?
                 resource_type = case k
                   when :Data
                     :object
@@ -81,7 +81,7 @@ module Robots       # Robot package
                       size: o.filesize,
                       role: roletype || 'master') do
                       if resource_type == :object
-                        if roletype == 'master' and !geoData.nil?
+                        if roletype == 'master' && !geoData.nil?
                           xml.geoData do
                             xml.parent.add_child geoData
                           end

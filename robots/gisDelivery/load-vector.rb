@@ -46,7 +46,7 @@ module Robots       # Robot package
           # determine whether we have a Shapefile to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           fail "load-vector: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-          format = GisRobotSuite::determine_file_format_from_mods modsfn
+          format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-vector: #{druid} cannot determine file format from MODS" if format.nil?
 
           # perform based on file format information

@@ -191,7 +191,7 @@ module Robots       # Robot package
             #     <projection>EPSG::26910</projection>
             doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
             p = doc.xpath('/mods:mods/mods:subject/mods:cartographics[not(@authority)]/mods:projection',
-              'xmlns:mods' => 'http://www.loc.gov/mods/v3')
+                          'xmlns:mods' => 'http://www.loc.gov/mods/v3')
             fail "normalize-data: #{druid} has no native projection information in MODS" if p.nil?
             p = p.first
 
@@ -253,7 +253,7 @@ module Robots       # Robot package
           # Determine file format
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
           fail "normalize-data: #{druid} is missing MODS metadata" unless File.size?(modsfn)
-          format = GisRobotSuite::determine_file_format_from_mods modsfn
+          format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "normalize-data: #{druid} cannot determine file format from MODS" if format.nil?
 
           # reproject based on file format information

@@ -55,7 +55,6 @@ module Robots       # Robot package
           "#{d}#{QDEG}" + (m > 0 ? "#{m}#{QMIN}" : '') + (s > 0 ? "#{s}#{QSEC}" : '')
         end
 
-
         # Convert to MARC 255 DD into DDMMSS
         # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
@@ -100,7 +99,7 @@ module Robots       # Robot package
             '/mods:subject' \
             '/mods:cartographics' \
             '/mods:coordinates',
-            'xmlns:mods' => MODS_NS).each do |e|
+                    'xmlns:mods' => MODS_NS).each do |e|
             e.content = '(' + to_coordinates_ddmmss(e.content.to_s) + ')'
           end
           doc

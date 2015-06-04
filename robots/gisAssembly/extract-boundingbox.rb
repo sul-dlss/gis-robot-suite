@@ -99,14 +99,13 @@ module Robots       # Robot package
           "#{d}#{QDEG}" + (m > 0 ? "#{m}#{QMIN}" : '') + (s > 0 ? "#{s}#{QSEC}" : '')
         end
 
-
         # Convert to MARC 255 DD into DDMMSS
         # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
         def to_coordinates_ddmmss(s)
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
-          fail ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
-          fail ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
+          fail ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
+          fail ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
@@ -121,9 +120,9 @@ module Robots       # Robot package
           # Update geo extension
           LyberCore::Log.debug "extract-boundingbox: #{druid} updating geo extension..."
           doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
-            'xmlns:mods' => 'http://www.loc.gov/mods/v3',
-            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-            'xmlns:gml' => 'http://www.opengis.net/gml/3.2/'
+                    'xmlns:mods' => 'http://www.loc.gov/mods/v3',
+                    'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                    'xmlns:gml' => 'http://www.opengis.net/gml/3.2/'
                    ).each do |node|
             node['gml:srsName'] = 'EPSG:4326'
             node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
@@ -185,7 +184,6 @@ module Robots       # Robot package
             doc.write_xml_to f, indent: 2, encoding: 'UTF-8'
           end
         end
-
 
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.

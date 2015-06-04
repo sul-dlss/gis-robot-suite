@@ -24,7 +24,7 @@ module Robots       # Robot package
           # determine whether we have a Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           fail "load-raster: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-          format = GisRobotSuite::determine_file_format_from_mods modsfn
+          format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-raster: #{druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
 
           # perform based on file format information
