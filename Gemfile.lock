@@ -217,7 +217,7 @@ GEM
       rgeo (~> 0.3.0)
       rgeo-shapefile (~> 0.2.0)
       rubyzip (~> 0.9.0)
-    robot-controller (2.0.beta1)
+    robot-controller (2.0.beta2)
       bluepill (= 0.0.68)
       rake (~> 10.3.2)
       resque (~> 1.25.2)
