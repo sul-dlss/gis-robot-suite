@@ -7,7 +7,7 @@ gem 'fastimage', '~> 1.6.3'
 gem 'lyber-core', '~> 3.2', '>=3.2.4'
 gem 'pry', '~> 0.10.0'          # for bin/console
 gem 'rake', '~> 10.3.2'
-gem 'robot-controller', '~> 1.0' # requires Resque
+gem 'robot-controller', '~> 2.0' # requires Resque
 gem 'bluepill', '0.0.68' # workaround for regression bug in 0.0.69
 gem 'slop', '~> 3.5.0'          # for bin/run_robot
 gem 'rsolr', '~> 1.0.10'
