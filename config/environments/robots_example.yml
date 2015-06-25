@@ -14,6 +14,7 @@
 #          - a list of identiers ('A,B,C'), or 
 #          - an asterix (*).
 #    3. instances is a single integer.
+#    4. host is a hostname or '*' for any host
 #
 #  Both lane and instances are optional. Lane defaults to 'default', and 
 #  instances defaults to 1.
@@ -40,10 +41,12 @@
 #      - dor_accessionWF_technical-metadata: A: 5
 #
 
-geomdtk-dev:
+*:
+  - dor_gisAssemblyWF_approve-data
+  - dor_gisAssemblyWF_approve-metadata
   - dor_gisAssemblyWF_assign-placenames
-  - dor_gisAssemblyWF_author-data
   - dor_gisAssemblyWF_author-metadata
+  - dor_gisAssemblyWF_extract-boundingbox
   - dor_gisAssemblyWF_extract-iso19139
   - dor_gisAssemblyWF_extract-thumbnail
   - dor_gisAssemblyWF_finish-data
@@ -55,7 +58,6 @@ geomdtk-dev:
   - dor_gisAssemblyWF_load-geo-metadata
   - dor_gisAssemblyWF_normalize-data
   - dor_gisAssemblyWF_package-data
-  - dor_gisAssemblyWF_register-druid
   - dor_gisAssemblyWF_start-assembly-workflow
   - dor_gisAssemblyWF_start-delivery-workflow
   - dor_gisAssemblyWF_wrangle-data
@@ -66,8 +68,7 @@ geomdtk-dev:
   - dor_gisDeliveryWF_load-vector
   - dor_gisDeliveryWF_seed-geowebcache
   - dor_gisDeliveryWF_start-gis-discovery-workflow
+  - dor_gisDiscoveryWF_export-opengeometadata
   - dor_gisDiscoveryWF_finish-gis-discovery-workflow
   - dor_gisDiscoveryWF_generate-geoblacklight
-  - dor_gisDiscoveryWF_generate-ogp
   - dor_gisDiscoveryWF_load-geoblacklight
-  - dor_gisDiscoveryWF_load-ogp
