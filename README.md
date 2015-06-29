@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sul-dlss/gis-robot-suite.svg?branch=master)](https://travis-ci.org/sul-dlss/gis-robot-suite)
+
 GIS-Robot-Suite
 ---------------
 
