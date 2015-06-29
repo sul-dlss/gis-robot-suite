@@ -22,6 +22,7 @@ group :development do
   gem 'awesome_print'
   gem 'debugger', platform: :ruby_19
   gem 'yard'
+  gem 'redcarpet'
   gem 'capistrano', '~> 3.2.1'
   gem 'capistrano-bundler', '~> 1.1'
   gem 'capistrano-rvm', '~> 0.1.1'
