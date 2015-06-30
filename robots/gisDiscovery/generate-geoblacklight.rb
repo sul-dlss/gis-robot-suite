@@ -9,35 +9,11 @@ module Robots       # Robot package
         # features common to all robots
         include LyberCore::Robot
 
+        XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')
+
         def initialize
           super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
-        end
-
-        def convert_mods2geoblacklight(ifn, ofn, _druid, rights, rightsMetadata)
-          flags = {
-            geoserver: (rights == 'Public') ?
-                Dor::Config.geohydra.geoserver.url_public :
-                Dor::Config.geohydra.geoserver.url_restricted,
-            stacks: Dor::Config.stacks.url
-          }
-
-          # locate XSLT
-          xslfn = "#{File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')}"
-          fail 'generate-geoblacklight: mods2geoblacklight.xsl is not installed' unless File.size?(xslfn)
-
-          # run XSLT
-          cmd = ['xsltproc',
-                 "--stringparam geoserver_root '#{flags[:geoserver]}'",
-                 "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
-                 "--stringparam stacks_root '#{flags[:stacks]}'",
-                 "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
-                 "--stringparam rights '#{rights}'",
-                 "--stringparam rights_metadata '#{rightsMetadata}'",
-                 "--output '#{ofn}'",
-                 "'#{xslfn}'",
-                 "'#{ifn}'"
-                ].join(' ')
-          system cmd
+          fail 'generate-geoblacklight: mods2geoblacklight.xsl is not installed' unless File.size?(XSLFN) # locate XSLT
         end
 
         # `perform` is the main entry point for the robot. This is where
@@ -46,44 +22,73 @@ module Robots       # Robot package
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
-          LyberCore::Log.debug "generate-geoblacklight working on #{druid}"
+          LyberCore::Log.debug "generate-geoblacklight: #{druid} working"
 
+          # Always overwrite any existing schema data because either MODS or the Rights may change.
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           ifn = File.join(rootdir, 'metadata', 'descMetadata.xml')
 
-          # Always overwrite any existing schema data because either MODS or the Rights may change.
-          ofn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          if File.size?(ofn)
-            LyberCore::Log.debug "generate-geoblacklight: #{druid} regenerating GeoBlacklight metadata"
-            FileUtils.rm_f(ofn)
-          end
-
-          rights = 'Restricted'
-          rightsMetadata = nil
-          begin
-            item = Dor::Item.find("druid:#{druid}")
-            xml = item.rightsMetadata.ng_xml
-            rightsMetadata = xml.to_xml(indent: 0)
-            if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
-              rights = 'Public'
-            end
-
-            unless File.size?(ifn) # load from DOR if not in file system
-              FileUtils.mkdir_p(File.dirname(ifn)) unless File.directory?(File.dirname(ifn))
-              File.open(ifn, 'w') do |f|
-                f << item.descMetadata.ng_xml.to_xml
-              end
-            end
-
-          rescue ActiveFedora::ObjectNotFoundError => e
-            LyberCore::Log.warn "generate-geoblacklight: #{druid} cannot determine rights, item not found in DOR"
-          end
+          # load MODS from DOR if not on file system
+          retrieve_mods(ifn, druid) unless File.size?(ifn)
 
           # Generate GeoBlacklight Solr document from descMetadataDS
-          LyberCore::Log.debug "generate-geoblacklight: #{druid} generating GeoBlacklight metadata in #{ofn}"
-          convert_mods2geoblacklight ifn, ofn, druid, rights, rightsMetadata
+          convert_mods2geoblacklight ifn, path_to_geoblacklight(rootdir), *determine_rights(druid)
+        end
 
+        protected
+
+        def convert_mods2geoblacklight(ifn, ofn, rights, rightsMetadata)
+          flags = {
+            geoserver: (rights == 'Public') ? # case-sensitive
+                Dor::Config.geohydra.geoserver.url_public :
+                Dor::Config.geohydra.geoserver.url_restricted,
+            stacks: Dor::Config.stacks.url
+          }
+
+          # run XSLT using xsltproc since Nokogiri doesn't support XPath2
+          LyberCore::Log.debug "generate-geoblacklight: generating GeoBlacklight metadata in #{ofn}"
+          cmd = ['xsltproc',
+                 "--stringparam geoserver_root '#{flags[:geoserver]}'",
+                 "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
+                 "--stringparam stacks_root '#{flags[:stacks]}'",
+                 "--stringparam now '#{Time.now.utc.strftime('%FT%TZ')}'",
+                 "--stringparam rights '#{rights}'",
+                 "--stringparam rights_metadata '#{rightsMetadata}'",
+                 "--output '#{ofn}'",
+                 "'#{XSLFN}'",
+                 "'#{ifn}'"
+                ].join(' ')
+          system cmd
           fail "generate-geoblacklight: #{druid} cannot transform MODS into GeoBlacklight schema" unless File.size?(ofn)
+        end
+
+        # load MODS from DOR
+        def retrieve_mods(fn, druid)
+          FileUtils.mkdir_p File.dirname(fn)
+          File.open(fn, 'w') { |f| f << Dor::Item.find("druid:#{druid}").descMetadata.ng_xml.to_xml }
+        end
+
+        # looks in DOR for rights information, defaults to Restricted
+        #
+        # @return [Array<String>] the rights and the full rightsMetadata
+        def determine_rights(druid)
+          rights = 'Restricted'
+          xml = Dor::Item.find("druid:#{druid}").rightsMetadata.ng_xml
+          if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
+            rights = 'Public'
+          end
+
+          [rights, xml.to_xml(indent: 0)]
+        end
+
+        # @return [String] fn for geoblacklight.xml and ensures that fn doesn't exist
+        def path_to_geoblacklight(rootdir)
+          File.join(rootdir, 'metadata', 'geoblacklight.xml').tap do |fn|
+            if File.size?(fn)
+              LyberCore::Log.debug "generate-geoblacklight: regenerating GeoBlacklight metadata in #{fn}"
+              FileUtils.rm_f(fn)
+            end
+          end
         end
       end
     end
