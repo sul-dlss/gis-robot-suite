@@ -12,5 +12,5 @@ begin
     end
   end
 rescue LoadError
-  puts 'Please install the YARD gem to generate doc.'
+  # ignore yard tasks
 end
