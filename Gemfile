@@ -13,6 +13,7 @@ gem 'slop', '~> 3.5.0'          # for bin/run_robot
 gem 'rsolr', '~> 1.0.10'
 gem 'rgeoserver', '~> 0.7.8'
 gem 'ffi-geos', '~> 1.0.0'
+gem 'whenever', '~> 0.9.2'
 
 group :development do
   if File.exist?(mygems = File.join(ENV['HOME'], '.gemfile'))
