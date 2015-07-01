@@ -1,6 +1,16 @@
-require 'yard'
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new do |t|
+    t.files = ['lib/**/*.rb', 'robots/**/*.rb']
+    t.options = ['--readme', 'README.md', '-m', 'markdown']
+  end
 
-YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb', 'robots/**/*.rb']
-  t.options = ['--readme', 'README.md', '-m', 'markdown'] # optional
+  namespace :yard do
+    desc 'Clean up documentation'
+    task :clean do
+      FileUtils.rm_rf('doc')
+    end
+  end
+rescue LoadError
+  puts 'Please install the YARD gem to generate doc.'
 end
