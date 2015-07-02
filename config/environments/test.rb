@@ -1,1 +1,1 @@
-REDIS_URL = 'localhost:6379/resque:development'
+REDIS_URL = 'localhost:6379/resque:test'
