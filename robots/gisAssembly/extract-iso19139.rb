@@ -48,13 +48,14 @@ module Robots       # Robot package
           path = %w(
             schema/lib/xslt
             /home/lyberadmin/ArcGIS/Transforms
+            spec/fixtures
           )
           path.unshift(File.dirname(__FILE__))
           path.each do |d|
             fn = File.join(d, filename)
             return fn if File.exist?(fn)
           end
-          fail "extract-iso19139: #{druid} cannot find #{filename} in search path"
+          fail "extract-iso19139: cannot find #{filename} in search path"
         end
 
         # XSLT file locations
