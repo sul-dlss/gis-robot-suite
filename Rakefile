@@ -14,7 +14,4 @@ task :environment do
   require_relative 'config/boot'
 end
 
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
-
-task :default => [ :app_version, :spec, :yard ]
+task :default => [ :app_version, 'spec:unit', :yard ]
