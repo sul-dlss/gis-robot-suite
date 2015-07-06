@@ -1,32 +1,26 @@
 source 'https://rubygems.org'
 
-gem 'addressable', '2.3.5'      # pin to avoid RDF bug
-gem 'assembly-objectfile', '~> 1.6.4'
-gem 'dor-services', '~> 4.8'
-gem 'fastimage', '~> 1.6.3'
-gem 'lyber-core', '~> 3.2', '>=3.2.4'
-gem 'pry', '~> 0.10.0'          # for bin/console
-gem 'rake', '~> 10.3.2'
-gem 'robot-controller', '~> 2.0' # requires Resque
-gem 'bluepill', '0.0.68' # workaround for regression bug in 0.0.69
-gem 'slop', '~> 3.5.0'          # for bin/run_robot
-gem 'rsolr', '~> 1.0.10'
-gem 'rgeoserver', '~> 0.7.8'
-gem 'ffi-geos', '~> 1.0.0'
-gem 'whenever', '~> 0.9.2'
+gem 'addressable', '2.3.5'        # pin to avoid RDF bug
+gem 'assembly-objectfile', '~> 1.6.6'
+gem 'bluepill', '0.0.68'          # workaround for regression bug in 0.0.69
+gem 'dor-services', '~> 4.21.1'
+gem 'fastimage', '~> 1.7'
+gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
+gem 'lyber-core', '~> 3.2'
+gem 'pry', '~> 0.10'              # for console
+gem 'rake', '~> 10.3'
+gem 'rgeoserver', '~> 0.7.10'
+gem 'robot-controller', '~> 2.0'  # requires Resque
+gem 'rsolr', '~> 1.0'
+gem 'slop', '~> 3.6'              # for bin/run_robot
+gem 'whenever', '~> 0.9'
 
 group :development do
-  if File.exist?(mygems = File.join(ENV['HOME'], '.gemfile'))
-    instance_eval(File.read(mygems))
-  end
-  gem 'rspec'
-  gem 'awesome_print'
-  gem 'debugger', platform: :ruby_19
-  gem 'yard'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
+  gem 'holepicker'
+  gem 'lyberteam-capistrano-devel'
   gem 'redcarpet'
-  gem 'capistrano', '~> 3.2.1'
-  gem 'capistrano-bundler', '~> 1.1'
-  gem 'capistrano-rvm', '~> 0.1.1'
-  gem 'lyberteam-capistrano-devel', '~> 3.0'
-  gem 'holepicker', '~> 0.3', '>= 0.3.3'
+  gem 'rspec'
+  gem 'yard'
 end
