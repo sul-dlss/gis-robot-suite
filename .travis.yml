@@ -5,3 +5,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.2
+
+before_script: 
+  - test -d log || mkdir log
+  - test -d run || mkdir run
