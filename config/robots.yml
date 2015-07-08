@@ -1,3 +1,6 @@
+#
+# robots.yml - Provides the complete list of all robots in this suite
+#
 - dor_gisAssemblyWF_approve-data
 - dor_gisAssemblyWF_approve-metadata
 - dor_gisAssemblyWF_assign-placenames
