@@ -206,7 +206,7 @@ module Robots       # Robot package
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
-          system_with_check "ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'"
+          system_with_check "env SHAPE_ENCODING= ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'" # prevent recoding
           fail "normalize-data: #{druid} failed to reproject #{ifn}" unless File.size?(ofn)
 
           # normalize prj file
