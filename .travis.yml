@@ -11,3 +11,8 @@ rvm:
 before_script: 
   - test -d log || mkdir log
   - test -d run || mkdir run
+
+# makes Travis run via Docker
+sudo: false
+
+cache: bundler
