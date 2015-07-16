@@ -10,6 +10,8 @@ rvm:
 
 sudo: false
 cache: bundler
+env:
+  - ROBOT_ENVIRONMENT=local
 
 before_script: 
   - test -d log || mkdir log
