@@ -122,7 +122,7 @@ module Robots       # Robot package
           begin
             ft.save
           rescue RGeoServer::GeoServerInvalidRequest => e
-            raise "load-geoserver: #{druid} cannot save FeatureType"
+            fail "load-geoserver: #{druid} cannot save FeatureType: #{e.message}"
           end
         end
 
@@ -144,7 +144,7 @@ module Robots       # Robot package
             begin
               cs.save
             rescue GeoServerInvalidRequest => e
-              raise "load-geoserver: #{druid} cannot save CoverageStore"
+              fail "load-geoserver: #{druid} cannot save CoverageStore: #{e.message}"
             end
           else
             LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{ws.name}/#{cs.name}"
@@ -167,7 +167,7 @@ module Robots       # Robot package
           begin
             cv.save
           rescue RGeoServer::GeoServerInvalidRequest => e
-            raise "load-geoserver: #{druid} cannot save Coverage"
+            fail "load-geoserver: #{druid} cannot save Coverage: #{e.message}"
           end
 
           # determine raster style
@@ -235,7 +235,7 @@ module Robots       # Robot package
             begin
               lyr.save
             rescue RGeoServer::GeoServerInvalidRequest => e
-              raise "load-geoserver: #{druid} cannot save Layer"
+              fail "load-geoserver: #{druid} cannot save Layer: #{e.message}"
             end
           end
         end
