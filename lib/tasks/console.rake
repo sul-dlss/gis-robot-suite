@@ -1,5 +1,5 @@
 desc 'Run a console booted with robots'
-task :console, :ROBOT_ENVIRONMENT do |t, args|
+task :console, :ROBOT_ENVIRONMENT do |_t, args|
   args.with_defaults(ROBOT_ENVIRONMENT: 'development')
 
   ENV['ROBOT_ENVIRONMENT'] ||= args[:ROBOT_ENVIRONMENT]
@@ -11,6 +11,7 @@ task :console, :ROBOT_ENVIRONMENT do |t, args|
   rescue LoadError
     require 'irb'
   end
-  
+
+  ARGV.clear
   IRB.start
 end
