@@ -6,7 +6,7 @@ Dir.glob('lib/tasks/*.rake').each { |r| import r }
 
 desc 'Get application version'
 task :app_version do
-  puts File.read(File.expand_path('../VERSION', __FILE__)).chomp
+  puts File.read('VERSION')
 end
 
 desc 'Load complete environment into rake process'

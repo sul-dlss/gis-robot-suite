@@ -14,7 +14,7 @@ module Robots       # Robot package
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
         #
-        # @param [String] druid -- the Druid identifier for the object to process
+        # @param [String] _druid -- the Druid identifier for the object to process
         def perform(_druid)
           fail NotImplementedError
         end

@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'addressable', '2.3.5'        # pin to avoid RDF bug
 gem 'assembly-objectfile', '~> 1.6.6'
-gem 'bluepill', '0.0.68'          # workaround for regression bug in 0.0.69
 gem 'dor-services', '~> 4.21.1'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
@@ -22,5 +21,6 @@ group :development do
   gem 'lyberteam-capistrano-devel'
   gem 'redcarpet'
   gem 'rspec'
+  gem 'simplecov'
   gem 'yard'
 end
