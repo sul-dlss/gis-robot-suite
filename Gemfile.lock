@@ -67,6 +67,7 @@ GEM
     deprecation (0.2.2)
       activesupport
     diff-lcs (1.2.5)
+    docile (1.1.5)
     docopt (0.5.0)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
@@ -260,6 +261,11 @@ GEM
       nokogiri
       rest-client
     rubyzip (0.9.9)
+    simplecov (0.10.0)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -306,7 +312,6 @@ PLATFORMS
 DEPENDENCIES
   addressable (= 2.3.5)
   assembly-objectfile (~> 1.6.6)
-  bluepill (= 0.0.68)
   capistrano-bundler
   capistrano-rvm
   dor-services (~> 4.21.1)
@@ -322,6 +327,7 @@ DEPENDENCIES
   robot-controller (~> 2.0)
   rsolr (~> 1.0)
   rspec
+  simplecov
   slop (~> 3.6)
   whenever (~> 0.9)
   yard

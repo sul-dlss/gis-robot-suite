@@ -8,6 +8,11 @@ rvm:
   - 2.0.0
   - 2.1.2
 
+sudo: false
+cache: bundler
+env:
+  - ROBOT_ENVIRONMENT=local
+
 before_script: 
   - test -d log || mkdir log
   - test -d run || mkdir run
