@@ -51,3 +51,40 @@ to start all robots defined in `config/environments/robots_ENV.yml`.
 * `export-opengeometadata` :: Export metadata files for import into OpenGeoMetadata repository
 * `finish-gis-discovery-workflow` :: Finalize GIS discovery workflow for the object (validity check
 )
+
+Data Wrangling
+==============
+
+Step 1: Preparing for stage
+---------------------------
+
+The file system structure will initially look like the following (see [Consul
+page](https://consul.stanford.edu/x/C5xSC) for a description) where the temp
+files for the shapefiles are all hard links to reduce space requirements: This
+is *pre-stage*:
+
+    zv925hd6723/
+      temp/
+        OGWELLS.dbf
+        OGWELLS.prj
+        OGWELLS.shp
+        OGWELLS.shp.xml
+        OGWELLS.shx
+
+
+Step 2: Assembly
+----------------
+
+Then at the end of assembly processing -- see above prior to accessioning -- it will
+look like in your workspace:
+
+    zv925hd6723/
+      metadata/
+        contentMetadata.xml
+        descMetadata.xml
+        geoMetadata.xml
+      content/
+        data.zip
+        data_ESRI_4326.zip
+        preview.jpg
+        some-other-file.ext (optionally)
