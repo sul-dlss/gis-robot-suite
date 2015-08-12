@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'addressable', '2.3.5'        # pin to avoid RDF bug
 gem 'assembly-objectfile', '~> 1.6.6'
+gem 'bundler', '~> 1.10.6'
 gem 'dor-services', '~> 4.21.1'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
