@@ -19,17 +19,19 @@ module Robots       # Robot package
           Dir.chdir(tmpdir)
           File.umask(002)
 
+          # cascade through different file format types as they have different packaging requirements
           fns = []
           recurse_flag = false
           fn = Dir.glob('*.shp.xml').first
           if fn.nil?
             fn = Dir.glob('*/metadata.xml').first
             if fn.nil?
-              fn = Dir.glob('*.tif.xml').first
+              fn = Dir.glob('*.{tif,asc}.xml').first
               if fn.nil?
                 fail "package-data: #{druid} cannot locate metadata in temp"
-              else # GeoTIFF
-                basename = File.basename(fn, '.tif.xml')
+              else # GeoTIFF or Arc/Info ASCII Grid
+                extname = File.extname(File.basename(fn, '.xml'))
+                basename = File.basename(fn, ".#{extname}.xml")
                 Dir.glob("#{basename}.*").each do |x|
                   fns << x
                   recurse_flag = true if File.directory?(x)

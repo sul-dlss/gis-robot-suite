@@ -28,14 +28,14 @@ module Robots       # Robot package
             return
           end
 
-          # ensure that we have either a .shp or a .tif or grid
+          # ensure that we have either a .shp or a .tif or grid or Arc/Info ASCII Grid
           fn = Dir.glob(File.join(rootdir, 'temp', '*.shp')).first
           if fn.nil?
-            fn = Dir.glob(File.join(rootdir, 'temp', '*.tif')).first
+            fn = Dir.glob(File.join(rootdir, 'temp', '*.{tif,asc}')).first
             if fn.nil?
               fn = Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first
               if fn.nil?
-                fail "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files"
+                fail "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID or Arc/Info ASCII Grid data files"
               end
             end
           end
