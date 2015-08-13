@@ -1,8 +1,7 @@
 # encoding: UTF-8
 
-require 'rgeo'
+require 'fileutils'
 require 'scanf'
-require 'open-uri'
 
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
@@ -17,13 +16,17 @@ module Robots       # Robot package
           super('dor', 'gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
         end
 
+        # unpacks a ZIP file into the given tmpdir
+        # @return [String] tmpdir the folder in which to extract files
         def extract_data_from_zip(druid, zipfn, tmpdir)
           LyberCore::Log.info "extract-boundingbox: #{druid} is extracting data: #{zipfn}"
 
           tmpdir = File.join(tmpdir, "extractboundingbox_#{druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
           FileUtils.mkdir_p tmpdir
-          system("unzip '#{zipfn}' -d '#{tmpdir}'")
+          Dir.chdir(tmpdir) do
+            system("unzip '#{zipfn}'")
+          end
           tmpdir
         end
 
@@ -74,10 +77,10 @@ module Robots       # Robot package
           end
         end
 
-        # Convert DD.DD to DD MM SS.SS
+        # Convert DD.DD to DD MM SS
         # e.g.,
-        # * -109.758319 => 109°45ʹ29.9484ʺ
-        # * 48.999336 => 48°59ʹ57.609ʺ
+        # * -109.758319 => 109°45ʹ30ʺ
+        # * 48.999336 => 48°59ʹ58ʺ
         E = 1
         QSEC = 'ʺ'
         QMIN = 'ʹ'
@@ -113,7 +116,8 @@ module Robots       # Robot package
           "#{w}--#{e}/#{n}--#{s}"
         end
 
-        def rewrite_mods(druid, modsfn, ulx, uly, lrx, lry)
+        # adds the geo extension to the MODS record
+        def add_geo_extension_to_mods(druid, modsfn, ulx, uly, lrx, lry)
           LyberCore::Log.debug "extract-boundingbox: #{druid} reading #{modsfn}"
           doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
 
@@ -184,6 +188,24 @@ module Robots       # Robot package
             doc.write_xml_to f, indent: 2, encoding: 'UTF-8'
           end
         end
+        
+        # gets the bounding box for the normalize data in tmpdir
+        #
+        # @param [String] datadir directory that holds data files
+        # @return [Array] ulx uly lrx lry for the bounding box
+        def determine_extent datadir
+          Dir.chdir(datadir) do          
+            shpfn = Dir.glob('*.shp').first
+            unless shpfn.nil?
+              ulx, uly, lrx, lry = extent_shapefile shpfn
+            else
+              tiffn = Dir.glob('*.tif').first
+              ulx, uly, lrx, lry = extent_geotiff tiffn # normalized version only
+            end
+          end
+          LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+          [ulx, uly, lrx, lry]
+        end
 
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
@@ -205,22 +227,14 @@ module Robots       # Robot package
           fail "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            Dir.chdir(tmpdir)
-            shpfn = Dir.glob('*.shp').first
-            unless shpfn.nil?
-              ulx, uly, lrx, lry = extent_shapefile shpfn
-            else
-              tiffn = Dir.glob('*.tif').first
-              ulx, uly, lrx, lry = extent_geotiff tiffn
-            end
-            LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+            ulx, uly, lrx, lry = determine_extent tmpdir
 
             # Check that we have a valid bounding box
             unless ulx <= lrx && uly >= lry
               fail "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
             end
 
-            rewrite_mods(druid, modsfn, ulx, uly, lrx, lry)
+            add_geo_extension_to_mods druid, modsfn, ulx, uly, lrx, lry
             fail "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
