@@ -110,7 +110,7 @@ module Robots       # Robot package
         PATTERNS = {
           Data: '*.{zip,TAB,tab,dat,bin,xls,xlsx,tar,tgz,csv,tif,json,geojson,topojson,dbf}',
           Preview: '*.{png,jpg,gif,jp2}',
-          Metadata: '*.{xml,txt}'
+          Metadata: '*.{xml,txt,pdf}'
         }
 
         # `perform` is the main entry point for the robot. This is where
