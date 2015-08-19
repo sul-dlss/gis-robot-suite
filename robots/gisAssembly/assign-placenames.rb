@@ -1,6 +1,3 @@
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'schema', 'lib'))
-require 'geoblacklight/gazetteer'
-
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -39,7 +36,7 @@ module Robots       # Robot package
         #
         def resolve_placenames(druid, modsFn)
           LyberCore::Log.debug "assign-placenames: #{druid} is processing #{modsFn}"
-          g = GeoBlacklightSchema::Gazetteer.new
+          g = GisRobotSuite::Gazetteer.new
           mods = Nokogiri::XML(File.open(modsFn, 'rb'))
           r = mods.xpath('//mods:geographic', 'mods' => 'http://www.loc.gov/mods/v3')
           r.each do |i|
