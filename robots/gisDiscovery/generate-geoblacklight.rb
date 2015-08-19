@@ -9,7 +9,7 @@ module Robots       # Robot package
         # features common to all robots
         include LyberCore::Robot
 
-        XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../schema/lib/xslt/mods2geoblacklight.xsl')
+        XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../lib/xslt/mods2geoblacklight.xsl')
 
         def initialize
           super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot

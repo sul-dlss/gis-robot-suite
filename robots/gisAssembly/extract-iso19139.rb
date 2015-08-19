@@ -46,7 +46,7 @@ module Robots       # Robot package
         # XXX hardcoded paths
         def self.search_for_xsl(filename)
           path = %w(
-            schema/lib/xslt
+            lib/xslt
             /home/lyberadmin/ArcGIS/Transforms
             spec/fixtures
           )

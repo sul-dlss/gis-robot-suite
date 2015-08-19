@@ -86,10 +86,6 @@ module Robots       # Robot package
             end
           end
 
-          # Export HTML transformation
-          # LyberCore::Log.debug "export-opengeometadata: #{druid} converting ISO 19139 to HTML"
-          # system("xsltproc -o #{File.join(exportdir, 'iso19139.html')} schema/tools/iso2html/iso-html.xsl #{File.join(exportdir, 'iso19139.xml')}")
-
           # Export MODS
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting MODS"
           xml = item.descMetadata.ng_xml.to_xml
