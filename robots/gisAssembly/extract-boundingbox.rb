@@ -202,9 +202,9 @@ module Robots       # Robot package
               tiffn = Dir.glob('*.tif').first
               ulx, uly, lrx, lry = extent_geotiff tiffn # normalized version only
             end
+            LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+            return [ulx, uly, lrx, lry]
           end
-          LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
-          [ulx, uly, lrx, lry]
         end
 
         # `perform` is the main entry point for the robot. This is where
