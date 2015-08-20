@@ -58,5 +58,5 @@ fail unless druid_mapping.size == druid_title.size
 
 druid_mapping.each_pair do |scanned, georeferenced|
   create_link(scanned, georeferenced, druid_title[georeferenced], 'Georeferenced Map')
-  create_link(georeferenced, scanned, Dor::Item.find("druid:#{scanned}").label, 'Scanned Map')
+  # create_link(georeferenced, scanned, Dor::Item.find("druid:#{scanned}").label, 'Scanned Map')
 end
