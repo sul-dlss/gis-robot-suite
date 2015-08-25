@@ -640,7 +640,7 @@
           <xsl:if test="contains(gmd:description, 'TIFF')">
               <relatedItem>
                   <xsl:attribute name="type">otherFormat</xsl:attribute>
-                  <xsl:attribute name="displayLabel">Digitized map</xsl:attribute>
+                  <xsl:attribute name="displayLabel">Scanned map</xsl:attribute>
                   <titleInfo>
                       <title>
                         <xsl:value-of select="ancestor-or-self::*/gmd:sourceCitation/gmd:CI_Citation/gmd:title"/>
