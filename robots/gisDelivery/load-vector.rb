@@ -50,13 +50,8 @@ module Robots       # Robot package
           fail "load-vector: #{druid} cannot determine file format from MODS" if format.nil?
 
           # perform based on file format information
-          mimetype = format.split(/;/).first # nix mimetype flags
-          unless mimetype == GisRobotSuite.determine_mimetype(:vector)
-            if mimetype == GisRobotSuite.determine_mimetype(:raster)
-              LyberCore::Log.info "load-vector: #{druid} is raster, skipping"
-            else
-              LyberCore::Log.warn "load-vector: #{druid} is not Shapefile: #{mimetype}"
-            end
+          unless GisRobotSuite.vector?(format)
+            LyberCore::Log.info "load-vector: #{druid} is not a vector, skipping"
             return
           end
 

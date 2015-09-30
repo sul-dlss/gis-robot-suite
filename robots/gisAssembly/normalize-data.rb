@@ -257,11 +257,9 @@ module Robots       # Robot package
           fail "normalize-data: #{druid} cannot determine file format from MODS" if format.nil?
 
           # reproject based on file format information
-          mimetype = format.split(/;/).first # nix mimetype flags
-          case mimetype
-          when GisRobotSuite.determine_mimetype(:vector)
+          if GisRobotSuite.vector?(format)
             reproject_shapefile druid, fn, modsfn, flags
-          when GisRobotSuite.determine_mimetype(:raster)
+          elsif GisRobotSuite.raster?(format)
             proj = GisRobotSuite.determine_projection_from_mods modsfn
             proj.gsub!('ESRI', 'EPSG')
             LyberCore::Log.debug "Projection = #{proj}"
@@ -277,7 +275,6 @@ module Robots       # Robot package
             else
               fail "normalize-data: #{druid} cannot locate filetype from MODS format: #{format}"
             end
-
           else
             fail NotImplementedError, "normalize-data: #{druid} has unsupported file format: #{format}"
           end

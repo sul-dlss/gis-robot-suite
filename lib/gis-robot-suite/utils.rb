@@ -63,15 +63,13 @@ module GisRobotSuite
       fail NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
     end
   end
-
-  def self.determine_mimetype(type)
-    if type == :vector
-      'application/x-esri-shapefile'
-    elsif type == :raster
-      'image/tiff'
-    else
-      fail ArgumentError, "Unknown type: #{type}"
-    end
+  
+  def self.vector?(mimetype)
+    %w(application/x-esri-shapefile).include? mimetype.split(/;/).first.strip
+  end
+  
+  def self.raster?(mimetype)
+    %w(image/tiff application/x-ogc-aig).include? mimetype.split(/;/).first.strip
   end
 
   def self.locate_druid_path(druid, opts = {})
