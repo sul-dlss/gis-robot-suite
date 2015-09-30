@@ -60,7 +60,7 @@
             <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Shapefile') or $fileFormat='Shapefile'">
                 <xsl:text>application/x-esri-shapefile; format=Shapefile</xsl:text>
             </xsl:when>
-            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info Binary Grid')">
+            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info Binary Grid') or $fileFormat='ArcGRID'">
                 <xsl:text>application/x-ogc-aig; format=ArcGRID</xsl:text>
             </xsl:when>
             <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info ASCII Grid')">
