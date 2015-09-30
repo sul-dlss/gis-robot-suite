@@ -59,7 +59,7 @@ module Robots       # Robot package
             coverages.each do |j|
               if j['dc:title'] == k
                 LyberCore::Log.debug "assign-placenames: #{druid} correcting dc:coverage@rdf:resource for #{k}"
-                j['rdf:resource'] = uri + 'about.rdf'
+                j['rdf:resource'] = uri
               end
             end
 
