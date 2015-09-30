@@ -32,14 +32,12 @@ module Robots       # Robot package
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
 
           # reproject based on file format information
-          mimetype = format.split(/;/).first # nix mimetype flags
-          case mimetype
-          when GisRobotSuite.determine_mimetype(:raster)
-            layertype = 'GeoTIFF'
-          when GisRobotSuite.determine_mimetype(:vector)
+          if GisRobotSuite.vector?(format)
             layertype = 'PostGIS'
+          elsif GisRobotSuite.raster?(format)
+            layertype = 'GeoTIFF'
           else
-            fail "load-geoserver: #{druid} has unknown format: #{format}"
+            fail "load-geoserver: #{druid} unknown format: #{format}"
           end
 
           # Obtain layer details
