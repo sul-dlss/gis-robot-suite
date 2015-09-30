@@ -123,7 +123,7 @@ module GisRobotSuite
   #           <gml:upperCorner>180 84</gml:upperCorner>
   #         </gml:Envelope>
   #       </gml:boundedBy>
-  #       <dc:coverage rdf:resource="http://sws.geonames.org/6295630/about.rdf" dc:language="eng" dc:title="Earth"/>
+  #       <dc:coverage rdf:resource="http://sws.geonames.org/6295630/" dc:language="eng" dc:title="Earth"/>
   #     </rdf:Description>
   #   </rdf:RDF>
 
