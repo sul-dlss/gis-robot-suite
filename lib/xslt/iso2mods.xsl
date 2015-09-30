@@ -42,6 +42,7 @@
   version="1.0" exclude-result-prefixes="gml gmd gco gmi xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
+  <xsl:param name="fileFormat"/>
   <xsl:param name="geometryType"/>
   <xsl:param name="purl"/>
   <xsl:param name="zipName" select="'data.zip'"/>
@@ -51,16 +52,16 @@
        -->
   <xsl:param name="geoformat" select="'MARC255'"/>
   <xsl:param name="fileIdentifier" select="''"/>
-    <xsl:variable name="format">
+    <xsl:variable name="mimeType">
         <xsl:choose>
-            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'GeoTIFF')">
-                <xsl:text>image/tiff</xsl:text>
+            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'GeoTIFF') or $fileFormat='GeoTIFF'">
+                <xsl:text>image/tiff; format=GeoTIFF</xsl:text>
             </xsl:when>
-            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Shapefile')">
-                <xsl:text>application/x-esri-shapefile</xsl:text>
+            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Shapefile') or $fileFormat='Shapefile'">
+                <xsl:text>application/x-esri-shapefile; format=Shapefile</xsl:text>
             </xsl:when>
-            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info Binary Grid')">
-                <xsl:text>application/x-ogc-aig</xsl:text>
+            <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info Binary Grid') or $fileFormat='ArcGRID'">
+                <xsl:text>application/x-ogc-aig; format=ArcGRID</xsl:text>
             </xsl:when>
             <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Arc/Info ASCII Grid')">
                 <xsl:text>application/x-ogc-aaigrid</xsl:text>
@@ -72,8 +73,11 @@
                 <xsl:text>application/x-ImageWebServer-ecw</xsl:text>
             </xsl:when>
             <xsl:when test="contains(//gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name, 'Raster Dataset')">
-                <xsl:text>image/tiff</xsl:text>
+                <xsl:text>application/x-unknown</xsl:text>
             </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>application/x-unknown</xsl:text>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
   <xsl:template match="/">
@@ -919,9 +923,7 @@
                 </xsl:attribute>
                 <!-- Output MIME type -->
                 <dc:format>
-                  <xsl:value-of select="$format"/>
-                  <xsl:text>; format=</xsl:text>
-                  <xsl:value-of select="$fileFormat"/>
+                  <xsl:value-of select="$mimeType"/>
                 </dc:format>
                 <!-- Output Dataset# point, linestring, polygon, raster, etc. -->
                 <dc:type>

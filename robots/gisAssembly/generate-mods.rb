@@ -77,7 +77,7 @@ module Robots       # Robot package
         # Generates MODS from ISO 19139
         #
         # @return [Nokogiri::XML::Document] Derived MODS metadata record
-        # @raise [CrosswalkError] Raises if the generated MODS is empty or has no children
+        # @raise [RuntimeError] Raises if the generated MODS is empty or has no children
         #
         # Uses GML SimpleFeatures for the geometry type (e.g., Polygon, LineString, etc.)
         # @see http://portal.opengeospatial.org/files/?artifact_id=25355
@@ -85,13 +85,12 @@ module Robots       # Robot package
         def to_mods(metadata, params)
           params[:geometryType] ||= 'Polygon'
           params[:zipName] ||= 'data.zip'
-          params[:fileFormat] ||= 'Shapefile'
           fail ArgumentError, 'generate-mods: Missing PURL parameter' if params[:purl].nil?
 
           args = Nokogiri::XSLT.quote_params(Hash[params.map { |(k, v)| [k.to_s, v] }].to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
           unless doc.root and doc.root.children.size > 0
-            fail CrosswalkError, 'generate-mods: to_mods produced incorrect xml'
+            fail 'generate-mods: to_mods produced incorrect xml'
           end
 
           # cleanup projection and coords for human-readable
