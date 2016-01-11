@@ -63,11 +63,11 @@ module GisRobotSuite
       fail NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
     end
   end
-  
+
   def self.vector?(mimetype)
     %w(application/x-esri-shapefile).include? mimetype.split(/;/).first.strip
   end
-  
+
   def self.raster?(mimetype)
     %w(image/tiff application/x-ogc-aig).include? mimetype.split(/;/).first.strip
   end

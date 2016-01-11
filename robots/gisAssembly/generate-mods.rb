@@ -60,8 +60,8 @@ module Robots       # Robot package
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
         def to_coordinates_ddmmss(s)
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
-          fail ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 and n <= 90 and s >= -90 and s <= 90
-          fail ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 and w <= 180 and e >= -180 and e <= 180
+          fail ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
+          fail ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
@@ -89,7 +89,7 @@ module Robots       # Robot package
 
           args = Nokogiri::XSLT.quote_params(Hash[params.map { |(k, v)| [k.to_s, v] }].to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
-          unless doc.root and doc.root.children.size > 0
+          unless doc.root && doc.root.children.size > 0
             fail 'generate-mods: to_mods produced incorrect xml'
           end
 
@@ -155,10 +155,9 @@ module Robots       # Robot package
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           File.open(modsFn, 'wb') do |f|
             begin
-              f << to_mods(geoMetadataDS,                      geometryType: geometryType,
-                                                               fileFormat: fileFormat,
-                                                               purl: purl).to_xml(index: 2)
-
+              f << to_mods(geoMetadataDS, geometryType: geometryType,
+                                          fileFormat: fileFormat,
+                                          purl: purl).to_xml(index: 2)
             rescue ArgumentError => e
               raise "generate-mods: #{druid} cannot process MODS: #{e}"
             end

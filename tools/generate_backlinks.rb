@@ -27,17 +27,17 @@ def add_link_to_mods(item, to_druid, to_title, display_label, type = 'otherForma
   location = doc.create_element 'location'
   url = doc.create_element 'url', "http://purl.stanford.edu/#{to_druid}"
   location << url
-  
+
   relatedItem << titleInfo
   relatedItem << location
   doc.root << relatedItem
-  
+
   item.datastreams['descMetadata'].content = doc.to_xml
 end
 
 def create_link(from_druid, to_druid, to_title, to_label, versioning = true)
   puts "creating link from #{from_druid} to #{to_druid} for #{to_label}..."
-  
+
   item = Dor::Item.find("druid:#{from_druid}")
   item.open_new_version if versioning
   add_link_to_mods(item, to_druid, to_title, to_label)

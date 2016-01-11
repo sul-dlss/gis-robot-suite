@@ -6,7 +6,7 @@ set :rvm_ruby_string, 'ruby-1.9.3-p484' # dor-services requires 1.9.3
 
 set :application, 'gisRobotSuite'
 set :repo_url, 'https://github.com/sul-dlss/gis-robot-suite.git'
-set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
+set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
