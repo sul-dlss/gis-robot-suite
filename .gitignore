@@ -14,5 +14,4 @@ config/certs
 .ruby-version
 .ruby-gemset
 run
-log
 config/environments
