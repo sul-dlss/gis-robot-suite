@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gem 'rsolr', '~> 1.0.0'
 gem 'sitemap_generator', '~> 5.0.0'
-gem 'dor-services', '~> 4.21.4'
+gem 'dor-services', '~> 5.3'
