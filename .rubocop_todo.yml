@@ -80,14 +80,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 24
 
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AndOr:
-  Exclude:
-    - 'robots/gisAssembly/assign-placenames.rb'
-    - 'robots/gisAssembly/generate-mods.rb'
-
 # Offense count: 5
 Style/AsciiComments:
   Exclude:
@@ -197,19 +189,6 @@ Style/SingleLineBlockParams:
     - 'bin/run_robot'
     - 'spec/unit/robots_spec.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: MultiSpaceAllowedForOperators.
-Style/SpaceAroundOperators:
-  Exclude:
-    - 'spec/unit/robots_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SpaceBeforeBlockBraces:
-  Enabled: false
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
@@ -237,29 +216,6 @@ Style/SymbolProc:
   Exclude:
     - 'lib/gis-robot-suite/utils.rb'
     - 'robots/gisAssembly/normalize-data.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/TrailingBlankLines:
-  Exclude:
-    - 'Rakefile'
-    - 'config/environments/local.rb'
-    - 'spec/unit/gisAssembly/generate_mods_spec.rb'
-    - 'spec/unit/utils_spec.rb'
-    - 'tools/generate_backlinks.rb'
-
-# Offense count: 25
-# Cop supports --auto-correct.
-Style/TrailingWhitespace:
-  Exclude:
-    - 'lib/gis-robot-suite/utils.rb'
-    - 'robots/gisAssembly/extract-boundingbox.rb'
-    - 'spec/unit/gazetteer_spec.rb'
-    - 'spec/unit/gisAssembly/generate_mods_spec.rb'
-    - 'spec/unit/robots_spec.rb'
-    - 'spec/unit/utils_spec.rb'
-    - 'tools/generate_backlinks.rb'
 
 # Offense count: 7
 Style/UnlessElse:

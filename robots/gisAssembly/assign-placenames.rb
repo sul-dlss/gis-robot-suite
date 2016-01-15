@@ -65,7 +65,7 @@ module Robots       # Robot package
 
             # Add a LC heading if needed
             lc = g.find_loc_keyword(k)
-            unless lc.nil? or k == lc
+            unless lc.nil? || k == lc
               LyberCore::Log.debug "assign-placenames: #{druid} adding Library of Congress entry to end of MODS record"
               lcauth = g.find_loc_authority(k)
               unless lcauth.nil?

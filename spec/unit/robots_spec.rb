@@ -7,13 +7,13 @@ describe 'robots' do
       require_relative '../../config/boot'
     }.not_to raise_error
   end
-  
+
   # Read robots.yml to get a list of all robots in suite and verify the class exists and is a LyberCore::Robot
   context 'with all robots' do
     robots = YAML.load(File.read('config/robots.yml'))
     robots.each do |r|
       if r =~ /^(.*)_gis(.*)WF_(.*)$/
-        wf = 'Gis' +  Regexp.last_match(2).capitalize
+        wf = 'Gis' + Regexp.last_match(2).capitalize
         robot = Regexp.last_match(3).split('-').collect(&:capitalize).join
         klass_name = "Robots::DorRepo::#{wf}::#{robot}"
         it klass_name do

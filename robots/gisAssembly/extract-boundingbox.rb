@@ -188,13 +188,13 @@ module Robots       # Robot package
             doc.write_xml_to f, indent: 2, encoding: 'UTF-8'
           end
         end
-        
+
         # gets the bounding box for the normalize data in tmpdir
         #
         # @param [String] datadir directory that holds data files
         # @return [Array] ulx uly lrx lry for the bounding box
         def determine_extent datadir
-          Dir.chdir(datadir) do          
+          Dir.chdir(datadir) do
             shpfn = Dir.glob('*.shp').first
             unless shpfn.nil?
               ulx, uly, lrx, lry = extent_shapefile shpfn
