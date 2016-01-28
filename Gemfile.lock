@@ -59,6 +59,11 @@ GEM
     deprecation (0.2.2)
       activesupport
     diff-lcs (1.2.5)
+    dlss-capistrano (3.2.0)
+      capistrano (~> 3.0)
+      capistrano-bundle_audit (>= 0.0.3)
+      capistrano-one_time_key
+      capistrano-releaseboard
     docile (1.1.5)
     docopt (0.5.0)
     domain_name (0.5.25)
@@ -114,9 +119,6 @@ GEM
     ffi (1.9.10)
     ffi-geos (1.1.0)
       ffi (>= 1.0.0)
-    holepicker (0.3.3)
-      json (~> 1.8)
-      rainbow (~> 2.0)
     hooks (0.3.6)
       uber (~> 0.0.4)
     http-cookie (1.0.2)
@@ -132,11 +134,6 @@ GEM
       nokogiri (>= 1.4.3.1)
       systemu (>= 1.2.0)
       validatable
-    lyberteam-capistrano-devel (3.2.0)
-      capistrano (~> 3.0)
-      capistrano-bundle_audit (>= 0.0.3)
-      capistrano-one_time_key
-      capistrano-releaseboard
     mediashelf-loggable (0.4.10)
     method_source (0.8.2)
     mime-types (2.99)
@@ -196,7 +193,6 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
-    rainbow (2.0.0)
     rake (10.4.2)
     rdf (1.1.17.1)
       link_header (~> 0.0, >= 0.0.8)
@@ -328,12 +324,11 @@ DEPENDENCIES
   bundler (~> 1.10)
   capistrano-bundler
   capistrano-rvm
+  dlss-capistrano
   dor-services (~> 5.3)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
-  holepicker
   lyber-core (~> 3.2)
-  lyberteam-capistrano-devel
   pry (~> 0.10)
   rake (~> 10.3)
   redcarpet
