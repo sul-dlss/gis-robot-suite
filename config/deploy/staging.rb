@@ -4,4 +4,4 @@ Capistrano::OneTimeKey.generate_one_time_key!
 
 set :deploy_environment, 'staging'
 set :whenever_environment, 'stage'
-set :default_env, robot_environment: 'stage'
+set :default_env, robot_environment: 'staging'
