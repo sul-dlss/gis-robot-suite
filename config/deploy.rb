@@ -12,7 +12,7 @@ set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/home/lyberadmin/gis-robot-suite'
+set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 
 # Default value for :scm is :git
 # set :scm, :git
