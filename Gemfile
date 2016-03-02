@@ -5,7 +5,7 @@ gem 'bundler', '~> 1.10'
 gem 'dor-services', '~> 5.4', '>= 5.4.2'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
-gem 'lyber-core', '~> 4.0', '>= 4.0.2'
+gem 'lyber-core', '~> 4.0', '>= 4.0.3'
 gem 'pry', '~> 0.10'              # for console
 gem 'rake', '~> 10.3'
 gem 'rgeoserver', '~> 0.7.10'
