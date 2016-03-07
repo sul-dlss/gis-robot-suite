@@ -43,15 +43,11 @@ module Robots       # Robot package
           end
         end
 
-        def self.search_for_xsl(filename)
-          File.join('config/ArcGIS/Transforms', filename)
-        end
-
         # XSLT file locations
         XSLT = {
-          arcgis: search_for_xsl('ArcGIS2ISO19139.xsl'),
-          arcgis_fc: search_for_xsl('arcgis_to_iso19110.xsl'),
-          arcgis_fgdc: search_for_xsl('ArcGIS2FGDC.xsl')
+          arcgis: 'config/ArcGIS/Transforms/ArcGIS2ISO19139.xsl',
+          arcgis_fc: 'lib/xslt/arcgis_to_iso19110.xsl',
+          arcgis_fgdc: 'config/ArcGIS/Transforms/ArcGIS2FGDC.xsl'
         }
 
         # XSLT processor
