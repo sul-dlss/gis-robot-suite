@@ -43,19 +43,8 @@ module Robots       # Robot package
           end
         end
 
-        # XXX hardcoded paths
         def self.search_for_xsl(filename)
-          path = %w(
-            lib/xslt
-            /home/lyberadmin/ArcGIS/Transforms
-            spec/fixtures
-          )
-          path.unshift(File.dirname(__FILE__))
-          path.each do |d|
-            fn = File.join(d, filename)
-            return fn if File.exist?(fn)
-          end
-          fail "extract-iso19139: cannot find #{filename} in search path"
+          File.join('config/ArcGIS/Transforms', filename)
         end
 
         # XSLT file locations

@@ -40,7 +40,7 @@ set :scm, :git
 
 set :stages, %w(development staging production)
 set :default_stage, 'development'
-set :linked_dirs, %w(log run config/environments config/certs)
+set :linked_dirs, %w(log run config/environments config/certs config/ArcGIS)
 
 namespace :deploy do
   # This is a try to configure a clean install
