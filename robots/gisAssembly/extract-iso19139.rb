@@ -65,14 +65,14 @@ module Robots       # Robot package
         # @param [String] ofn_fc Output file for the Feature Catalog (optional)
         def arcgis_to_iso19139(fn, ofn, ofn_fc = nil, ofn_fgdc = nil)
           LyberCore::Log.debug "generating #{ofn}"
-          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -")
+          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -") or fail
           unless ofn_fc.nil?
             LyberCore::Log.debug "generating #{ofn_fc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -")
+            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or fail
           end
           unless ofn_fgdc.nil?
             LyberCore::Log.debug "generating #{ofn_fgdc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -")
+            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or fail
           end
         end
       end
