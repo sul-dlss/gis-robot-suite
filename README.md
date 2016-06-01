@@ -5,6 +5,11 @@ GIS-Robot-Suite
 
 Robot code for accessioning, delivery, and discovery of GIS resources.
 
+
+# Documentation
+
+Check the [Wiki](https://github.com/sul-dlss/robot-master/wiki) in the robot-master repo.
+
 To run, use the `lyber-core` infrastructure, which uses `bundle exec controller boot` 
 to start all robots defined in `config/environments/robots_ENV.yml`.
 
