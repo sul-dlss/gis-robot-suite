@@ -2,7 +2,6 @@
 require 'json'
 
 SKIP_LAYERS = %w(
-  princeton-th83m123j
   sde-columbia-sudanadmn4
 )
 
