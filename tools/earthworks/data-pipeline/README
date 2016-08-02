@@ -10,6 +10,8 @@ Run these like this, in this order:
 
 	upgrade.rb # converts to GeoBlacklight v1.0
 
+	curate.rb # filters out layers we don't want
+
 	purge.rb kurma-earthworks-v1-dev http://localhost:8983/solr '*:*' # cleans out index
 
 	upload.rb http://localhost:8983/solr/kurma-earthworks-v1-dev geoblacklight.json # indexes
