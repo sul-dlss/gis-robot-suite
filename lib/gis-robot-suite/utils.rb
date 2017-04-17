@@ -92,7 +92,7 @@ module GisRobotSuite
   def self.locate_esri_metadata(dir, _opts = {})
     fn = Dir.glob("#{dir}/*.shp.xml").first # Shapefile
     if fn.nil? || File.size(fn) == 0
-      fn = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
+      fn = Dir.glob("#{dir}/*.{tif,asc}.xml").first # GeoTIFF or Arc/Info ASCII Grid
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
         if fn.nil? || File.size(fn) == 0

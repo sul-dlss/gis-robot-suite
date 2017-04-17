@@ -135,9 +135,10 @@ module Robots       # Robot package
             fileFormat = 'Shapefile'
           else
             geometryType = 'Raster'
-            fn = Dir.glob("#{rootdir}/temp/*.tif").first
+            fn = Dir.glob("#{rootdir}/temp/*.{tif,asc}").first
             unless fn.nil?
               fileFormat = 'GeoTIFF'
+              fileFormat = 'ASCIIGRID' if File.extname(fn) == 'asc'
             else
               fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
               unless fn.nil?
