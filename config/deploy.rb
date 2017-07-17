@@ -37,6 +37,8 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 
 set :linked_dirs, %w(log run config/environments config/certs config/ArcGIS)
 
+set :honeybadger_env, fetch(:stage)
+
 namespace :deploy do
   # This is a try to configure a clean install
   # desc 'Start application'

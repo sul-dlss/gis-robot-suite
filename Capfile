@@ -20,6 +20,7 @@ require 'capistrano/rvm'
 require 'capistrano/bundler'
 # require 'capistrano/rails/assets'
 # require 'capistrano/rails/migrations'
+require 'capistrano/honeybadger'
 require 'whenever/capistrano'
 require 'dlss/capistrano'
 
