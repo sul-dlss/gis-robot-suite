@@ -8,7 +8,7 @@ gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
 gem 'lyber-core', '~> 4.0', '>= 4.0.3'
 gem 'pry', '~> 0.10'              # for console
 gem 'rake', '~> 10.3'
-gem 'rgeoserver', '~> 0.8.0'
+gem 'rgeoserver', '~> 0.10'
 gem 'robot-controller', '~> 2.0', '>= 2.0.4'  # requires Resque
 gem 'rsolr', '~> 1.0'
 gem 'slop', '~> 3.6'              # for bin/run_robot
