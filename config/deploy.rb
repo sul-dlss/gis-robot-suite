@@ -36,6 +36,7 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 # set :keep_releases, 5
 
 set :linked_dirs, %w(log run config/environments config/certs config/ArcGIS)
+set :linked_files, %w(config/honeybadger.yml)
 
 set :honeybadger_env, fetch(:stage)
 
