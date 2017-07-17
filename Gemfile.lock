@@ -114,6 +114,7 @@ GEM
     ffi (1.9.10)
     ffi-geos (1.1.1)
       ffi (>= 1.0.0)
+    honeybadger (3.1.2)
     hooks (0.3.6)
       uber (~> 0.0.4)
     http-cookie (1.0.2)
@@ -315,6 +316,7 @@ DEPENDENCIES
   dor-services (~> 5.8, >= 5.8.2)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
+  honeybadger
   lyber-core (~> 4.0, >= 4.0.3)
   pry (~> 0.10)
   rake (~> 10.3)
@@ -329,4 +331,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.12.5
+   1.15.1
