@@ -15,6 +15,8 @@ gem 'slop', '~> 3.6'              # for bin/run_robot
 gem 'whenever', '~> 0.9'
 gem 'honeybadger'
 
+gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-http-persistent/issues/80
+
 group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
