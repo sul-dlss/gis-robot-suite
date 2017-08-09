@@ -140,7 +140,7 @@ GEM
     mime-types (2.99.3)
     mini_exiftool (2.5.1)
     mini_portile2 (2.2.0)
-    minitest (5.10.2)
+    minitest (5.10.3)
     moab-versioning (2.0.0)
       confstruct
       json
@@ -215,7 +215,7 @@ GEM
     rgeo-shapefile (0.4.2)
       dbf (~> 3.0)
       rgeo (~> 0.3)
-    rgeoserver (0.10.0)
+    rgeoserver (0.10.1)
       activemodel
       activesupport
       confstruct (~> 0.2.7)
@@ -338,4 +338,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.1
+   1.15.3
