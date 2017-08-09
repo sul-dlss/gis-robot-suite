@@ -141,7 +141,7 @@ module Robots       # Robot package
             cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif"
             begin
               cs.save
-            rescue GeoServerInvalidRequest => e
+            rescue RGeoServer::GeoServerInvalidRequest => e
               fail "load-geoserver: #{druid} cannot save CoverageStore: #{e.message}"
             end
           else
