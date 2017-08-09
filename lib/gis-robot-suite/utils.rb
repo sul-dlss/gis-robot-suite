@@ -43,7 +43,7 @@ module GisRobotSuite
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       when 'Int32'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      when 'Float32'
+      when 'Float32', 'Float64'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
         fail "Unknown 1-band raster data type: #{info[:type]}"
