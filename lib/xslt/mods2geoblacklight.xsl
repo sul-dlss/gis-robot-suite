@@ -36,8 +36,8 @@
     <xsl:variable name="druid" select="substring($purl, string-length($purl)-10)"/>
     <add>
       <doc>
-        <field name="uuid">
-          <xsl:value-of select="$purl"/>
+        <field name="geoblacklight_version">
+          <xsl:text>1.0</xsl:text>
         </field>
         <field name="dc_identifier_s">
           <xsl:value-of select="$purl"/>
@@ -58,22 +58,22 @@
         </field>
         <field name="dct_references_s">
           <xsl:text>{</xsl:text>
-          <xsl:text>"http://schema.org/url":"</xsl:text>              
+          <xsl:text>"http://schema.org/url":"</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>",</xsl:text>
-          <xsl:text>"http://schema.org/downloadUrl":"</xsl:text>              
+          <xsl:text>"http://schema.org/downloadUrl":"</xsl:text>
           <xsl:value-of select="$stacks_root"/>
           <xsl:text>/file/druid:</xsl:text>
           <xsl:value-of select="$druid"/>
           <xsl:text>/data.zip",</xsl:text>
-          <xsl:text>"http://www.loc.gov/mods/v3":"</xsl:text>              
+          <xsl:text>"http://www.loc.gov/mods/v3":"</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>.mods",</xsl:text>
-          <xsl:text>"http://www.isotc211.org/schemas/2005/gmd/":"</xsl:text>              
+          <xsl:text>"http://www.isotc211.org/schemas/2005/gmd/":"</xsl:text>
           <xsl:text>http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/druid:</xsl:text>
           <xsl:value-of select="$druid"/>
           <xsl:text>/iso19139.xml",</xsl:text>
-          <xsl:text>"http://www.w3.org/1999/xhtml":"</xsl:text>              
+          <xsl:text>"http://www.w3.org/1999/xhtml":"</xsl:text>
           <xsl:text>http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/druid:</xsl:text>
           <xsl:value-of select="$druid"/>
           <xsl:text>/default.html",</xsl:text>
@@ -125,7 +125,7 @@
         </xsl:for-each>
         <field name="layer_modified_dt">
           <xsl:value-of select='$now'/>
-        </field>        
+        </field>
         <field name="dc_format_s">
           <xsl:value-of select="substring-after(mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/dc:format/text(), 'format=')"/>
         </field>
@@ -180,52 +180,11 @@
             <xsl:value-of select="text()"/>
           </field>
         </xsl:for-each>
-        <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/dc:coverage">
-          <!-- XXX: leads to duplicates <field name="dct_spatial_sm">
-            <xsl:value-of select="@dc:title"/>
-          </field> -->
-          <xsl:if test="@rdf:resource!=''">
-            <field name="dc_relation_sm">
-              <xsl:value-of select="@rdf:resource"/>
-            </field>
-          </xsl:if>
-        </xsl:for-each>
         <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope">
           <xsl:variable name="x2" select="number(substring-before(gml:upperCorner/text(), ' '))"/><!-- E -->
           <xsl:variable name="x1" select="number(substring-before(gml:lowerCorner/text(), ' '))"/><!-- W -->
           <xsl:variable name="y2" select="number(substring-after(gml:upperCorner/text(), ' '))"/><!-- N -->
           <xsl:variable name="y1" select="number(substring-after(gml:lowerCorner/text(), ' '))"/><!-- S -->
-          <field name="georss_box_s">
-            <xsl:value-of select="$y1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$y2"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x2"/>
-          </field>
-          <field name="georss_polygon_s">
-            <xsl:text></xsl:text>
-            <xsl:value-of select="$y1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$y2"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$y2"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x2"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$y1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x2"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$y1"/>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$x1"/>
-          </field>
           <field name="solr_geom">
             <xsl:text>ENVELOPE(</xsl:text>
             <xsl:value-of select="$x1"/>
