@@ -1,0 +1,17 @@
+Run these like this, in this order:
+
+	dump.rb # downloads from Solr index
+
+	filter.rb # removes everything but OGP data that we want
+
+        (cd opengeometadata; clone.sh) # downloads the OGM data that we want
+
+	combine.rb data opengeometadata/edu.* # sucks in opengeometadata that we want
+
+	upgrade.rb # converts to GeoBlacklight v1.0
+
+	curate.rb # filters out layers we don't want
+
+	purge.rb kurma-earthworks-v1-dev http://localhost:8983/solr '*:*' # cleans out index
+
+	upload.rb http://localhost:8983/solr/kurma-earthworks-v1-dev geoblacklight.json # indexes
