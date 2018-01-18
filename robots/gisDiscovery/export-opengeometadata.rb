@@ -115,6 +115,7 @@ module Robots       # Robot package
             v = v.to_f if k =~ /_(d|f)$/ # decimal
             if h[k].nil?
               h[k] = v # assign singleton
+              h[k] = [v].flatten if k =~ /_sm$/ # unless it's supposed to be an Array
             else
               unless h[k].is_a? Array
                 h[k] = [h[k]] # convert singleton into Array
