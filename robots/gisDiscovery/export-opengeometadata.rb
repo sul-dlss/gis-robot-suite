@@ -101,28 +101,10 @@ module Robots       # Robot package
 
           # Export GeoBlacklight as JSON
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting GeoBlacklight"
-          ifn = File.join(stagedir, 'metadata', 'geoblacklight.xml')
+          ifn = File.join(stagedir, 'metadata', 'geoblacklight.json')
           fail "export-opengeometadata: #{druid} cannot find GeoBlacklight in #{ifn}" unless File.size?(ifn)
           ofn = File.join(exportdir, 'geoblacklight.json')
-          # convert XML into JSON
-          doc = Nokogiri::XML(File.read(ifn))
-          h = {}
-          doc.xpath('//xmlns:field').each do |node|
-            # for each field copy into hash, but if multiple values, copy into array
-            k = node['name'].to_s
-            v = node.content.to_s
-            v = v.to_i if k =~ /_(i|l)$/ # integer
-            v = v.to_f if k =~ /_(d|f)$/ # decimal
-            if h[k].nil?
-              h[k] = v # assign singleton
-            else
-              unless h[k].is_a? Array
-                h[k] = [h[k]] # convert singleton into Array
-              end
-              h[k] << v # add to array
-            end
-          end
-          File.open(ofn, 'wb') { |f| f << JSON.pretty_generate(h) }
+          FileUtils.cp(ifn, ofn)
         end
       end
     end
