@@ -34,6 +34,7 @@
     <!-- XXX: Handle other institution naming schemes -->
     <xsl:variable name="purl" select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/@rdf:about"/>
     <xsl:variable name="druid" select="substring($purl, string-length($purl)-10)"/>
+    <xsl:variable name="druid_split" select="concat(substring($druid, 1, 2), '/', substring($druid, 3, 3), '/', substring($druid, 6, 2), '/', substring($druid, 8, 4))"/>
     <add>
       <doc>
         <field name="geoblacklight_version">
@@ -70,13 +71,9 @@
           <xsl:value-of select="$purl"/>
           <xsl:text>.mods",</xsl:text>
           <xsl:text>"http://www.isotc211.org/schemas/2005/gmd/":"</xsl:text>
-          <xsl:text>http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/druid:</xsl:text>
-          <xsl:value-of select="$druid"/>
+          <xsl:text>https://raw.githubusercontent.com/OpenGeoMetadata/edu.stanford.purl/master/</xsl:text>
+          <xsl:value-of select="$druid_split"/>
           <xsl:text>/iso19139.xml",</xsl:text>
-          <xsl:text>"http://www.w3.org/1999/xhtml":"</xsl:text>
-          <xsl:text>http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/druid:</xsl:text>
-          <xsl:value-of select="$druid"/>
-          <xsl:text>/default.html",</xsl:text>
           <xsl:if test="substring-after(mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/dc:format/text(), 'format=')='Shapefile'">
             <xsl:text>"http://www.opengis.net/def/serviceType/ogc/wfs":"</xsl:text>
             <xsl:value-of select="$wxs_geoserver_root"/>
@@ -136,18 +133,18 @@
         <field name="dc_type_s">
           <xsl:value-of select="substring-before(mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/dc:type/text(),'#')"/>
         </field>
-        <xsl:if test="mods:originInfo/mods:publisher">    
+        <xsl:if test="mods:originInfo/mods:publisher">
         <field name="dc_publisher_s">
           <xsl:value-of select="mods:originInfo/mods:publisher"/>
         </field>
-        </xsl:if>    
-        <xsl:if test="mods:name">     
+        </xsl:if>
+        <xsl:if test="mods:name">
         <xsl:for-each select="mods:name">
           <field name="dc_creator_sm">
             <xsl:value-of select="mods:namePart"/>
           </field>
         </xsl:for-each>
-        </xsl:if>      
+        </xsl:if>
         <xsl:for-each select="mods:subject/mods:topic">
             <xsl:choose>
               <xsl:when test="@authority='ISO19115topicCategory'">
