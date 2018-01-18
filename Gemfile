@@ -14,6 +14,7 @@ gem 'rsolr', '~> 1.0'
 gem 'slop', '~> 3.6'              # for bin/run_robot
 gem 'whenever', '~> 0.9'
 gem 'honeybadger'
+gem 'geo_combine'
 
 gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-http-persistent/issues/80
 
