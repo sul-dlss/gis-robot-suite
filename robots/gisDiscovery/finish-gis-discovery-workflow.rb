@@ -16,15 +16,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid = GisRobotSuite.initialize_robot druid
-          LyberCore::Log.debug "finish-gis-discovery-workflow working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          fail "finish-gis-discovery-workflow: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.size?(xmlfn)
-
-          # XXX: check Solr index too
+          # noop
         end
       end
     end

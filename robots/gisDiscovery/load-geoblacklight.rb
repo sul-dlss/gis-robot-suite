@@ -22,18 +22,20 @@ module Robots       # Robot package
           LyberCore::Log.debug "load-geoblacklight working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          xmlfn = File.join(rootdir, 'metadata', 'geoblacklight.xml')
-          fail "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{xmlfn}" unless File.size?(xmlfn)
+          ifn = File.join(rootdir, 'metadata', 'geoblacklight.json')
+          fail "load-geoblacklight: #{druid} cannot locate GeoBlacklight metadata: #{ifn}" unless File.size?(ifn)
 
-          LyberCore::Log.debug "Parsing #{xmlfn}"
-          doc = Nokogiri::XML(File.read(xmlfn))
-          fail "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata" if doc.nil?
-
+          LyberCore::Log.debug "Indexing #{ifn}"
+          record = JSON.parse(File.read(ifn))
+          fail "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata: #{ifn}" if record.nil?
           url = File.join(Dor::Config.geohydra.solr.url, Dor::Config.geohydra.solr.collection)
           LyberCore::Log.debug "Connecting to #{url}"
           solr = RSolr.connect url: url
-          solr.update data: doc.to_xml
-          solr.commit
+          solr.update params: { overwrite: true },
+                      data: [record].to_json,
+                      headers: { 'Content-Type' => 'application/json' }
+          solr.commit # force commit
+
           LyberCore::Log.info "load-geoblacklight: #{druid} updated in #{url}"
         end
       end

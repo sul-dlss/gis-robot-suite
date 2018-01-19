@@ -1,4 +1,5 @@
 require 'date' # for rfc3339
+require 'geo_combine'
 
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
@@ -32,12 +33,46 @@ module Robots       # Robot package
           retrieve_mods(ifn, druid) unless File.size?(ifn)
 
           # Generate GeoBlacklight Solr document from descMetadataDS
-          convert_mods2geoblacklight ifn, path_to_geoblacklight(rootdir), *determine_rights(druid)
+          ofn = path_to_geoblacklight(rootdir)
+          convert_mods2geoblacklight druid, ifn, ofn, *determine_rights(druid)
+
+          # Enhance the metadata using GeoCombine
+          enhance_geoblacklight ofn
         end
 
         protected
 
-        def convert_mods2geoblacklight(ifn, ofn, rights, rightsMetadata)
+        def enhance_geoblacklight(ifn)
+          ofn = ifn.gsub(/\.xml$/, '.json')
+
+          # convert XML into JSON
+          doc = Nokogiri::XML(File.read(ifn))
+          h = {}
+          doc.xpath('//xmlns:field').each do |node|
+            # for each field copy into hash, but if multiple values, copy into array
+            k = node['name'].to_s
+            v = node.content.to_s
+            v = v.to_i if k =~ /_(i|l)$/ # integer
+            v = v.to_f if k =~ /_(d|f)$/ # decimal
+            if h[k].nil?
+              h[k] = v # assign singleton
+              h[k] = [v].flatten if k =~ /_sm$/ # unless multivalued field
+            else
+              unless h[k].is_a? Array
+                h[k] = [h[k]] # convert singleton into Array
+              end
+              h[k] << v # add to array
+            end
+          end
+          File.open(ofn, 'wb') { |f| f << JSON.pretty_generate(h) }
+
+          # Finally, do the enhancement
+          layer = GeoCombine::Geoblacklight.new(File.read(ofn))
+          layer.enhance_metadata
+          File.open(ofn, 'wb') { |f| f << JSON.pretty_generate(layer.metadata) }
+        end
+
+        def convert_mods2geoblacklight(druid, ifn, ofn, rights, rightsMetadata)
           flags = {
             geoserver: (rights == 'Public') ? # case-sensitive
                 Dor::Config.geohydra.geoserver.url_public :
@@ -46,7 +81,7 @@ module Robots       # Robot package
           }
 
           # run XSLT using xsltproc since Nokogiri doesn't support XPath2
-          LyberCore::Log.debug "generate-geoblacklight: generating GeoBlacklight metadata in #{ofn}"
+          LyberCore::Log.debug "generate-geoblacklight: #{druid} generating GeoBlacklight metadata in #{ofn}"
           cmd = ['xsltproc',
                  "--stringparam geoserver_root '#{flags[:geoserver]}'",
                  "--stringparam wxs_geoserver_root '#{flags[:geoserver]}'",
