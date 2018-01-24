@@ -37,12 +37,12 @@ module Robots       # Robot package
           convert_mods2geoblacklight druid, ifn, ofn, *determine_rights(druid)
 
           # Enhance the metadata using GeoCombine
-          enhance_geoblacklight ofn
+          enhance_geoblacklight ofn, druid, rootdir
         end
 
         protected
 
-        def enhance_geoblacklight(ifn)
+        def enhance_geoblacklight(ifn, druid, rootdir)
           ofn = ifn.gsub(/\.xml$/, '.json')
 
           # convert XML into JSON
@@ -69,6 +69,7 @@ module Robots       # Robot package
           # Finally, do the enhancement
           layer = GeoCombine::Geoblacklight.new(File.read(ofn))
           layer.enhance_metadata
+          add_index_maps(layer, druid, rootdir)
           File.open(ofn, 'wb') { |f| f << JSON.pretty_generate(layer.metadata) }
         end
 
@@ -124,6 +125,17 @@ module Robots       # Robot package
               FileUtils.rm_f(fn)
             end
           end
+        end
+
+        # adds an OpenIndexMaps pointer to stacks if we're dealing with an index map, which
+        # we determine as having an index_map.json file in its content
+        def add_index_maps(layer, druid, rootdir)
+          doc = Nokogiri::XML(File.read(File.join(rootdir, 'metadata', 'contentMetadata.xml')))
+          return unless doc.search('//file[@id=\'index_map.json\']').length > 0
+
+          refs = JSON.parse(layer.metadata['dct_references_s'])
+          refs['https://openindexmaps.org'] = "#{Dor::Config.stacks.url}/file/druid:#{druid}/index_map.json"
+          layer.metadata['dct_references_s'] = refs.to_json
         end
       end
     end
