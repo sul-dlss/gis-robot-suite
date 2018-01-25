@@ -347,8 +347,10 @@ PLATFORMS
 DEPENDENCIES
   assembly-objectfile (~> 1.6.6)
   bundler (~> 1.10)
+  capistrano
   capistrano-bundler
   capistrano-rvm
+  capistrano-shared_configs
   dlss-capistrano
   dor-services (~> 5.8, >= 5.8.2)
   fastimage (~> 1.7)
