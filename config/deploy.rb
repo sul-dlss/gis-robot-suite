@@ -40,6 +40,11 @@ set :linked_files, %w(config/honeybadger.yml)
 
 set :honeybadger_env, fetch(:stage)
 
+set :bundle_without, %w[development deployment].join(' ')
+
+# update shared_configs before restarting app
+before 'deploy:restart', 'shared_configs:update'
+
 namespace :deploy do
   # This is a try to configure a clean install
   # desc 'Start application'

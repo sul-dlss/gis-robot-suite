@@ -19,11 +19,16 @@ gem 'geo_combine'
 gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-http-persistent/issues/80
 
 group :development do
-  gem 'capistrano-bundler'
-  gem 'capistrano-rvm'
-  gem 'dlss-capistrano'
   gem 'redcarpet'
   gem 'rspec'
   gem 'simplecov'
   gem 'yard'
+end
+
+group :deployment do
+  gem 'capistrano'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
+  gem 'dlss-capistrano'
+  gem 'capistrano-shared_configs'
 end
