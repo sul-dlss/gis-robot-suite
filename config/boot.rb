@@ -48,3 +48,4 @@ begin
   end
 end
 require 'robot-controller'
+require 'honeybadger'
