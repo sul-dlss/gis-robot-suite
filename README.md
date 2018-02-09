@@ -81,7 +81,7 @@ Step 2: Assembly
 ----------------
 
 Then at the end of GIS assembly processing -- see above prior to accessioning -- it will
-look like this in your workspace:
+look like this in the workspace:
 
     zv925hd6723/
       metadata/
