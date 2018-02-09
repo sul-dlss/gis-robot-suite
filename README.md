@@ -80,8 +80,8 @@ is *pre-stage*:
 Step 2: Assembly
 ----------------
 
-Then at the end of assembly processing -- see above prior to accessioning -- it will
-look like in your workspace:
+Then at the end of GIS assembly processing -- see above prior to accessioning -- it will
+look like this in your workspace:
 
     zv925hd6723/
       metadata/
