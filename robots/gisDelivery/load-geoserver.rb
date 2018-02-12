@@ -86,11 +86,7 @@ module Robots       # Robot package
               'title' => mods.full_titles.first,
               'abstract' => mods.term_values(:abstract).compact.join("\n"),
               'keywords' => [mods.term_values([:subject, 'topic']),
-                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip),
-              'metadata_links' => [{
-                'metadataType' => 'TC211',
-                'content' => "http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/#{druid}/iso19139.xml"
-              }]
+                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip)
             }
           }
           h
@@ -98,7 +94,7 @@ module Robots       # Robot package
 
         def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
           druid = layer['druid']
-          %w(title abstract keywords metadata_links).each do |i|
+          %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
@@ -116,7 +112,6 @@ module Robots       # Robot package
           ft.title = layer['title']
           ft.abstract = layer['abstract']
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
-          ft.metadata_links = layer['metadata_links']
           begin
             ft.save
           rescue RGeoServer::GeoServerInvalidRequest => e
@@ -126,7 +121,7 @@ module Robots       # Robot package
 
         def create_raster(catalog, ws, layer)
           druid = layer['druid']
-          %w(title abstract keywords metadata_links).each do |i|
+          %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
@@ -161,7 +156,6 @@ module Robots       # Robot package
           cv.title = layer['title']
           cv.abstract = layer['abstract']
           cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
-          cv.metadata_links = layer['metadata_links']
           begin
             cv.save
           rescue RGeoServer::GeoServerInvalidRequest => e
