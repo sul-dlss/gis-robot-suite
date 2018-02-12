@@ -122,7 +122,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     fastimage (1.9.0)
       addressable (~> 2.3.5)
-    ffi (1.9.18)
+    ffi (1.9.21)
     ffi-geos (1.2.1)
       ffi (>= 1.0.0)
     geo_combine (0.3.1)
@@ -133,7 +133,7 @@ GEM
       thor
     haml (4.0.7)
       tilt
-    honeybadger (3.2.0)
+    honeybadger (3.3.0)
     hooks (0.4.1)
       uber (~> 0.0.14)
     htmlentities (4.3.4)
@@ -192,7 +192,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     nokogiri-happymapper (0.6.0)
       nokogiri (~> 1.5)
-    nokogumbo (1.4.13)
+    nokogumbo (1.5.0)
       nokogiri
     nom-xml (0.6.0)
       activesupport (>= 3.2.18)
@@ -206,7 +206,7 @@ GEM
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    rack (2.0.3)
+    rack (2.0.4)
     rack-protection (2.0.0)
       rack
     rake (10.5.0)
@@ -280,7 +280,7 @@ GEM
     rspec-mocks (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
-    rspec-support (3.7.0)
+    rspec-support (3.7.1)
     ruby-cache (0.3.0)
     ruby-graphviz (1.2.3)
     rubydora (1.9.1)
@@ -293,10 +293,10 @@ GEM
       nokogiri
       rest-client
     rubyzip (1.2.1)
-    sanitize (4.5.0)
+    sanitize (4.6.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
-      nokogumbo (~> 1.4.1)
+      nokogumbo (~> 1.4)
     simplecov (0.15.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -314,7 +314,7 @@ GEM
       nokogiri
       stomp
       xml-simple
-    sshkit (1.15.1)
+    sshkit (1.16.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stanford-mods (2.5.1)
