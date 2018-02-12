@@ -1,3 +1,5 @@
+require 'fileutils'
+
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
@@ -62,13 +64,16 @@ module Robots       # Robot package
         def arcgis_to_iso19139(fn, ofn, ofn_fc = nil, ofn_fgdc = nil)
           LyberCore::Log.debug "generating #{ofn}"
           system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -") or fail
+          fail "Failed to generate ISO19139 XML from ArcGIS metadata" unless File.size?(ofn)
           unless ofn_fc.nil?
             LyberCore::Log.debug "generating #{ofn_fc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or fail
+            FileUtils.rm_f(ofn_fc) if File.zero?(ofn_fc)
           end
           unless ofn_fgdc.nil?
             LyberCore::Log.debug "generating #{ofn_fgdc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or fail
+            FileUtils.rm_f(ofn_fgdc) if File.zero?(ofn_fgdc)
           end
         end
       end
