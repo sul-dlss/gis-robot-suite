@@ -22,7 +22,6 @@ group :development do
   gem 'redcarpet'
   gem 'rspec'
   gem 'simplecov'
-  gem 'yard'
 end
 
 group :deployment do
