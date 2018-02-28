@@ -370,7 +370,6 @@ PLATFORMS
 
 DEPENDENCIES
   assembly-objectfile
-  bundler (~> 1.10)
   capistrano
   capistrano-bundler
   capistrano-rvm
