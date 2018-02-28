@@ -221,7 +221,7 @@ GEM
     rack-protection (2.0.0)
       rack
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (12.3.0)
     rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (1.99.0)
@@ -385,7 +385,7 @@ DEPENDENCIES
   lyber-core (~> 4.0, >= 4.0.3)
   net-http-persistent (~> 2.9.4)
   pry (~> 0.10)
-  rake (~> 10.3)
+  rake
   rgeoserver (~> 0.10)
   robot-controller (~> 2.0, >= 2.0.4)
   rsolr
