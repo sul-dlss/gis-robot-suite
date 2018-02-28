@@ -12,7 +12,7 @@ gem 'rgeoserver', '~> 0.10'
 gem 'robot-controller', '~> 2.0', '>= 2.0.4'  # requires Resque
 gem 'rsolr'
 gem 'slop', '~> 3.6'              # for bin/run_robot
-gem 'whenever', '~> 0.9'
+gem 'whenever'
 gem 'honeybadger'
 gem 'geo_combine'
 

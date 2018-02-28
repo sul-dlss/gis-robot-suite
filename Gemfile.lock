@@ -393,7 +393,7 @@ DEPENDENCIES
   rubocop (~> 0.52.1)
   rubocop-rspec
   slop (~> 3.6)
-  whenever (~> 0.9)
+  whenever
 
 BUNDLED WITH
    1.16.0
