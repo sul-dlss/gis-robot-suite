@@ -15,6 +15,17 @@ task :environment do
 end
 
 begin
+  require 'rspec/core/rake_task'
+  desc 'Run RSpec'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+  desc 'Run RSpec'
+  task :spec do
+    abort 'Please install the rspec gem to run tests.'
+  end
+end
+
+begin
   require 'rubocop/rake_task'
   RuboCop::RakeTask.new
 rescue LoadError
@@ -24,4 +35,4 @@ rescue LoadError
   end
 end
 
-task :default => [ :app_version, 'spec:unit', :rubocop ]
+task :default => [:app_version, :spec, :rubocop]
