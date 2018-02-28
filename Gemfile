@@ -20,7 +20,7 @@ gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-htt
 
 group :development do
   gem 'rspec'
-  gem 'simplecov'
+  gem 'coveralls', require: false
 end
 
 group :deployment do

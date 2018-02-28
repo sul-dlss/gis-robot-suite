@@ -1,7 +1,4 @@
 .bundle
-.yardoc
-doc/
-docs/
 *~
 coverage/
 coverage.data
