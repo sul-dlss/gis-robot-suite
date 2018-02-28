@@ -229,7 +229,6 @@ GEM
       rdf (~> 1.1, >= 1.1.10)
     rdf-xsd (1.99.0)
       rdf (~> 1.99)
-    redcarpet (3.4.0)
     redis (4.0.1)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
@@ -361,7 +360,6 @@ DEPENDENCIES
   net-http-persistent (~> 2.9.4)
   pry (~> 0.10)
   rake (~> 10.3)
-  redcarpet
   rgeoserver (~> 0.10)
   robot-controller (~> 2.0, >= 2.0.4)
   rsolr

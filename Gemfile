@@ -19,7 +19,6 @@ gem 'geo_combine'
 gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-http-persistent/issues/80
 
 group :development do
-  gem 'redcarpet'
   gem 'rspec'
   gem 'simplecov'
 end
