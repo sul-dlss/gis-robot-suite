@@ -1,5 +1,74 @@
-AllCops:
-  Exclude:
-    - 'schema/**/*'
-
 inherit_from: .rubocop_todo.yml
+
+# Turn on RSpec cops
+require: rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  Include:
+    - Rakefile
+    - 'lib/**/*.rake'
+  Exclude:
+    - Gemfile.lock
+    - '**/*.md'
+    - 'vendor/**/*' # avoid running rubocop on travis cached bundler
+
+# --- Layout ---
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+
+# --- Lint ---
+
+# --- Metrics ---
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+Metrics/LineLength:
+  Max: 183 # this isn't 1994; FIXME: would like to get this down to 120
+
+# --- Naming ---
+
+Naming/FileName:
+  Exclude:
+    - Capfile
+    - Gemfile
+
+Naming/MethodName:
+  Exclude:
+    - robots/gisAssembly/generate-geo-metadata.rb # to_geoMetadataDS
+
+# --- Performance ---
+
+# --- RSpec ---
+
+RSpec/MessageSpies:
+  Enabled: false # receive is fine;  have_received is fine
+
+# --- Style ---
+
+Style/FrozenStringLiteralComment:
+  Enabled: false # avoid cruft in our files for something that MAY be default in Ruby 3.0
+
+Style/IfUnlessModifier:
+  Enabled: false
+    # robots/gisAssembly/extract-boundingbox.rb # line 233 unless ulx <= lrx && uly >= lry
+    # robots/gisDiscovery/export-opengeometadata.rb # line 72 if xml.nil? || xml.root.nil?
+
+Style/StringLiterals:
+  Enabled: false # ' vs " isn't a big deal for readability or maintainability or execution time
+
+Style/SymbolArray:
+  Exclude:
+    - Rakefile # because [:spec, :rubocop] isn't a big deal

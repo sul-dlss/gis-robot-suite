@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/sul-dlss/gis-robot-suite.svg?branch=master)](https://travis-ci.org/sul-dlss/gis-robot-suite)
+[![Coverage Status](https://coveralls.io/repos/github/sul-dlss/gis-robot-suite/badge.svg)](https://coveralls.io/github/sul-dlss/gis-robot-suite)
+[![Dependency Status](https://gemnasium.com/badges/github.com/sul-dlss/gis-robot-suite.svg)](https://gemnasium.com/github.com/sul-dlss/gis-robot-suite)
+[![GitHub version](https://badge.fury.io/gh/sul-dlss%2Fgis-robot-suite.svg)](https://badge.fury.io/gh/sul-dlss%2Fgis-robot-suite)
 
 GIS-Robot-Suite
 ---------------
@@ -10,7 +13,7 @@ Robot code for accessioning, delivery, and discovery of GIS resources.
 
 Check the [Wiki](https://github.com/sul-dlss/robot-master/wiki) in the robot-master repo.
 
-To run, use the `lyber-core` infrastructure, which uses `bundle exec controller boot` 
+To run, use the `lyber-core` infrastructure, which uses `bundle exec controller boot`
 to start all robots defined in `config/environments/robots_ENV.yml`.
 
 `gisAssemblyWF`
