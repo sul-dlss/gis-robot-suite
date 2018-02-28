@@ -21,6 +21,8 @@ gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-htt
 group :development do
   gem 'rspec'
   gem 'coveralls', require: false
+  gem 'rubocop', '~> 0.52.1', require: false # avoid code churn due to rubocop changes
+  gem 'rubocop-rspec'
 end
 
 group :deployment do

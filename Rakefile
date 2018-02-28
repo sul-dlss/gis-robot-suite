@@ -14,4 +14,14 @@ task :environment do
   require_relative 'config/boot'
 end
 
-task :default => [ :app_version, 'spec:unit', :yard ]
+begin
+  require 'rubocop/rake_task'
+  RuboCop::RakeTask.new
+rescue LoadError
+  desc 'Run rubocop'
+  task :rubocop do
+    abort 'Please install the rubocop gem to run rubocop.'
+  end
+end
+
+task :default => [ :app_version, 'spec:unit', :rubocop ]
