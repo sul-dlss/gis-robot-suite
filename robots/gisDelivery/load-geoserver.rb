@@ -112,6 +112,7 @@ module Robots       # Robot package
           ft.title = layer['title']
           ft.abstract = layer['abstract']
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+          ft.metadata_links = []
           begin
             ft.save
           rescue RGeoServer::GeoServerInvalidRequest => e
@@ -156,6 +157,7 @@ module Robots       # Robot package
           cv.title = layer['title']
           cv.abstract = layer['abstract']
           cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
+          cv.metadata_links = []
           begin
             cv.save
           rescue RGeoServer::GeoServerInvalidRequest => e
