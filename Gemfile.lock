@@ -141,7 +141,7 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (1.0.1)
+    i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     iso-639 (0.2.8)
     json (2.1.0)
@@ -152,9 +152,9 @@ GEM
       activesupport
       dor-workflow-service (>= 1.7, < 3)
     method_source (0.9.0)
-    mime-types (3.1)
+    mime-types (3.2.2)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0521)
+    mime-types-data (3.2018.0812)
     mini_exiftool (2.9.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
@@ -164,15 +164,15 @@ GEM
       json
       nokogiri
       nokogiri-happymapper
-    mods (2.3.1)
+    mods (2.4.0)
       edtf
       iso-639
       nokogiri
-      nom-xml (~> 0.6.0)
+      nom-xml (~> 1.0)
     mono_logger (1.1.0)
     multi_json (1.13.1)
     multipart-post (2.0.0)
-    mustermann (1.0.2)
+    mustermann (1.0.3)
     net-http-persistent (2.9.4)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -186,7 +186,7 @@ GEM
       nokogiri (~> 1.5)
     nokogumbo (1.5.0)
       nokogiri
-    nom-xml (0.6.0)
+    nom-xml (1.0.0)
       activesupport (>= 3.2.18)
       i18n
       nokogiri
@@ -226,7 +226,7 @@ GEM
       rdf (~> 1.1, >= 1.1.10)
     rdf-xsd (1.99.0)
       rdf (~> 1.99)
-    redis (4.0.1)
+    redis (4.0.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
     resque (1.27.4)
@@ -267,7 +267,7 @@ GEM
       rspec-mocks (~> 3.8.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
-    rspec-expectations (3.8.0)
+    rspec-expectations (3.8.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-mocks (3.8.0)
@@ -285,7 +285,7 @@ GEM
       rubocop (>= 0.52.1)
     ruby-cache (0.3.0)
     ruby-graphviz (1.2.3)
-    ruby-progressbar (1.9.0)
+    ruby-progressbar (1.10.0)
     rubydora (2.1.0)
       activemodel (>= 4.2.10)
       activesupport
