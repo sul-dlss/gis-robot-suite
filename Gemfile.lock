@@ -135,7 +135,7 @@ GEM
       thor
     haml (4.0.7)
       tilt
-    honeybadger (3.3.1)
+    honeybadger (4.0.0)
     hooks (0.4.1)
       uber (~> 0.0.14)
     htmlentities (4.3.4)
@@ -182,7 +182,7 @@ GEM
     netrc (0.11.0)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
-    nokogiri-happymapper (0.6.0)
+    nokogiri-happymapper (0.8.0)
       nokogiri (~> 1.5)
     nokogumbo (1.5.0)
       nokogiri
@@ -295,7 +295,7 @@ GEM
       mime-types
       nokogiri
       rest-client
-    rubyzip (1.2.1)
+    rubyzip (1.2.2)
     sanitize (4.6.6)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
