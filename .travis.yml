@@ -4,7 +4,6 @@ notifications:
   email: false
 
 rvm:
-  - 2.3.4
   - 2.5.3
 
 sudo: false
@@ -12,6 +11,6 @@ cache: bundler
 env:
   - ROBOT_ENVIRONMENT=local
 
-before_script: 
+before_script:
   - test -d log || mkdir log
   - test -d run || mkdir run
