@@ -113,6 +113,10 @@ module Robots       # Robot package
           ft.abstract = layer['abstract']
           ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
           ft.metadata_links = []
+          ft.metadata = ft.metadata.merge!(
+            'cacheAgeMax' => 86400,
+            'cachingEnabled' => true
+          )
           begin
             ft.save
           rescue RGeoServer::GeoServerInvalidRequest => e
@@ -158,6 +162,10 @@ module Robots       # Robot package
           cv.abstract = layer['abstract']
           cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
           cv.metadata_links = []
+          cv.metadata = cv.metadata.merge!(
+            'cacheAgeMax' => 86400,
+            'cachingEnabled' => true
+          )
           begin
             cv.save
           rescue RGeoServer::GeoServerInvalidRequest => e
