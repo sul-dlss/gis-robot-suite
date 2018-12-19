@@ -14,8 +14,7 @@ gem 'slop', '~> 3.6'              # for bin/run_robot
 gem 'whenever'
 gem 'honeybadger'
 gem 'geo_combine'
-
-gem 'net-http-persistent', '~> 2.9.4' # TODO: https://github.com/drbrain/net-http-persistent/issues/80
+gem 'net-http-persistent', '~> 3.0'
 
 group :development do
   gem 'rspec'
