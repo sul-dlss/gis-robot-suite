@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    active-fedora (8.6.0)
+    active-fedora (8.7.0)
       active-triples (~> 0.4.0)
       activesupport (>= 4.2.10)
       deprecation
@@ -60,7 +60,7 @@ GEM
     capistrano-shared_configs (0.2.2)
     chronic (0.10.2)
     coderay (1.1.2)
-    concurrent-ruby (1.1.3)
+    concurrent-ruby (1.1.4)
     confstruct (0.2.7)
     connection_pool (2.2.2)
     coveralls (0.8.22)
@@ -70,7 +70,7 @@ GEM
       thor (~> 0.19.4)
       tins (~> 1.6)
     crass (1.0.4)
-    daemons (1.2.6)
+    daemons (1.3.1)
     dbf (3.1.3)
     deprecation (0.99.0)
       activesupport
@@ -144,7 +144,7 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (1.1.1)
+    i18n (1.3.0)
       concurrent-ruby (~> 1.0)
     iso-639 (0.2.8)
     json (2.1.0)
@@ -159,7 +159,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
     mini_exiftool (2.9.0)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
     moab-versioning (4.2.2)
       confstruct
@@ -184,13 +184,13 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (5.0.2)
     netrc (0.11.0)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.9.1)
+      mini_portile2 (~> 2.4.0)
     nokogiri-happymapper (0.8.0)
       nokogiri (~> 1.5)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
-    nom-xml (1.0.0)
+    nom-xml (1.1.0)
       activesupport (>= 3.2.18)
       i18n
       nokogiri
@@ -230,7 +230,7 @@ GEM
       rdf (~> 1.1, >= 1.1.10)
     rdf-xsd (1.99.0)
       rdf (~> 1.99)
-    redis (4.0.3)
+    redis (4.1.0)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
     resque (1.27.4)
@@ -330,7 +330,7 @@ GEM
     stanford-mods-normalizer (0.1.0)
       nokogiri (~> 1.8)
     state_machine (1.2.0)
-    stomp (1.4.6)
+    stomp (1.4.8)
     systemu (2.6.5)
     temple (0.8.0)
     term-ansicolor (1.7.0)
@@ -345,7 +345,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
-    unicode-display_width (1.4.0)
+    unicode-display_width (1.4.1)
     uuidtools (2.1.5)
     vegas (0.1.11)
       rack (>= 1.0.0)
