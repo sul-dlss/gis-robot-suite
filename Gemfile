@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
-gem 'dor-services', '~> 5.8', '>= 5.8.2'
+gem 'dor-services', '~> 6.8'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
 gem 'lyber-core', '~> 4.0', '>= 4.0.3'
