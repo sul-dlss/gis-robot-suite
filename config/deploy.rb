@@ -3,7 +3,6 @@ set :rvm_ruby_string, 'ruby-2.2.2'
 
 set :application, 'gisRobotSuite'
 set :repo_url, 'https://github.com/sul-dlss/gis-robot-suite.git'
-set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -43,37 +42,6 @@ set :honeybadger_env, fetch(:stage)
 set :bundle_without, %w[development deployment].join(' ')
 
 # update shared_configs before restarting app
-before 'deploy:restart', 'shared_configs:update'
+before 'deploy:publishing', 'shared_configs:update'
 
-namespace :deploy do
-  # This is a try to configure a clean install
-  # desc 'Start application'
-  # task :start do
-  #   invoke 'deploy'
-  #  on roles(:app), in: :sequence, wait: 10 do
-  #    within release_path do
-  #      execute :bundle, :install
-  #      execute :bundle, :exec, :controller, :boot
-  #    end
-  #  end
-  # end
-
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 10 do
-      within release_path do
-        # Uncomment  with the first deploy
-        # execute :bundle, :install
-
-        # Comment with the first deploy
-        test :bundle, :exec, :controller, :stop
-        test :bundle, :exec, :controller, :quit
-
-        # Always call the boot
-        execute :bundle, :exec, :controller, :boot
-      end
-    end
-  end
-
-  after :publishing, :restart
-end
+after 'deploy:publishing', 'resque:pool:full_restart'

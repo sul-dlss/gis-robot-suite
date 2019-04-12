@@ -47,5 +47,5 @@ begin
     Resque.redis = REDIS_URL
   end
 end
-require 'robot-controller'
+
 require 'honeybadger'
