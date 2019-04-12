@@ -1,5 +1,5 @@
 require 'rake'
-require 'robot-controller/tasks'
+require 'resque/pool/tasks'
 
 # Import external rake tasks
 Dir.glob('lib/tasks/*.rake').each { |r| import r }
