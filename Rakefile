@@ -14,6 +14,8 @@ task :environment do
   require_relative 'config/boot'
 end
 
+task 'resque:setup' => :environment
+
 begin
   require 'rspec/core/rake_task'
   desc 'Run RSpec'
