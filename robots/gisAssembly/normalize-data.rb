@@ -270,13 +270,13 @@ module Robots       # Robot package
               elsif filetype == 'ArcGRID'
                 reproject_arcgrid druid, fn, proj, flags
               else
-                fail NotImplementedError, "normalize-data: #{druid} has unsupported Raster file format: #{format}"
+                fail "normalize-data: #{druid} has unsupported Raster file format: #{format}"
               end
             else
               fail "normalize-data: #{druid} cannot locate filetype from MODS format: #{format}"
             end
           else
-            fail NotImplementedError, "normalize-data: #{druid} has unsupported file format: #{format}"
+            fail "normalize-data: #{druid} has unsupported file format: #{format}"
           end
         end
       end

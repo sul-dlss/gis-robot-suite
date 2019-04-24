@@ -16,7 +16,7 @@ module Robots       # Robot package
         #
         # @param [String] _druid -- the Druid identifier for the object to process
         def perform(_druid)
-          fail NotImplementedError
+          fail 'not implemented'
         end
       end
     end

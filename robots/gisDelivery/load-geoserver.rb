@@ -62,7 +62,7 @@ module Robots       # Robot package
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
             create_raster(catalog, ws, layer['raster'])
           else
-            fail NotImplementedError, "load-geoserver: #{druid} has unknown layer format: #{layer}"
+            fail "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
 
           # Reload the slave catalog

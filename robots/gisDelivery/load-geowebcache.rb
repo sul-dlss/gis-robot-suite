@@ -18,7 +18,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "load-geowebcache working on #{druid}"
 
-          fail NotImplementedError # XXX: load to external geowebcache registry if needed
+          fail 'not implemented' # XXX: load to external geowebcache registry if needed
         end
       end
     end
