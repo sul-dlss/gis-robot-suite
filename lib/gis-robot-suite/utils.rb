@@ -60,7 +60,7 @@ module GisRobotSuite
         fail "Unknown 3-band raster data type: #{info[:type]}"
       end
     else
-      fail NotImplementedError, "Unsupported number of bands: #{info[:nbands]}"
+      fail "Unsupported number of bands: #{info[:nbands]}"
     end
   end
 
@@ -82,7 +82,7 @@ module GisRobotSuite
     elsif opts[:type] == :workspace
       rootdir = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace).path
     else
-      fail NotImplementedError, 'Only :stage, :workspace are supported'
+      fail 'Only :stage, :workspace are supported'
     end
 
     fail "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
