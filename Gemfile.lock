@@ -141,7 +141,7 @@ GEM
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
-    honeybadger (4.2.1)
+    honeybadger (4.2.2)
     hooks (0.4.1)
       uber (~> 0.0.14)
     htmlentities (4.3.4)
@@ -203,7 +203,7 @@ GEM
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
     parallel (1.17.0)
-    parser (2.6.2.1)
+    parser (2.6.3.0)
       ast (~> 2.4.0)
     powerpack (0.1.2)
     pry (0.12.2)
