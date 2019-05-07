@@ -3,7 +3,12 @@
 require 'spec_helper'
 require_relative '../../../config/boot'
 
-describe Robots::DorRepo::GisAssembly::GenerateMods do
+RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
+  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
+
+  before do
+    allow(Dor::Config.workflow).to receive(:client).and_return(workflow_client)
+  end
 
   it 'converts DD to DDMMSS' do
     expect(subject.dd2ddmmss_abs('-109.758319')).to eq('109°45ʹ30ʺ')
@@ -18,5 +23,4 @@ describe Robots::DorRepo::GisAssembly::GenerateMods do
   it 'handles bad arguments' do
     expect {subject.to_coordinates_ddmmss('-185 -- 185/95 -- -95')}.to raise_error(ArgumentError)
   end
-
 end
