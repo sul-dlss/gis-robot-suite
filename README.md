@@ -13,8 +13,8 @@ Robot code for accessioning, delivery, and discovery of GIS resources.
 
 Check the [Wiki](https://github.com/sul-dlss/robot-master/wiki) in the robot-master repo.
 
-To run, use the `lyber-core` infrastructure, which uses `bundle exec controller boot`
-to start all robots defined in `config/environments/robots_ENV.yml`.
+To run, use the `lyber-core` infrastructure, which uses resque-pool
+to start all robots defined in `config/resque-pool.yml`.
 
 `gisAssemblyWF`
 ---------------
