@@ -19,8 +19,7 @@ module Robots       # Robot package
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "start-gis-discovery-workflow working on #{druid}"
 
-          i = Dor::Item.find("druid:#{druid}")
-          i.initialize_workflow 'gisDiscoveryWF'
+          Dor::Config.workflow.client.create_workflow_by_name("druid:#{druid}", 'gisDiscoveryWF')
         end
       end
     end

@@ -18,9 +18,7 @@ module Robots       # Robot package
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "start-assembly-workflow working on #{druid}"
-
-          i = Dor::Item.find("druid:#{druid}")
-          i.initialize_workflow 'assemblyWF'
+          Dor::Config.workflow.client.create_workflow_by_name("druid:#{druid}", 'assemblyWF')
         end
       end
     end
