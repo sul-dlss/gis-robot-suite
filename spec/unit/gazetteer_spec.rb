@@ -1,9 +1,8 @@
 # encoding: UTF-8
 
 require 'spec_helper'
-require_relative '../../config/boot'
 
-describe GisRobotSuite::Gazetteer do
+RSpec.describe GisRobotSuite::Gazetteer do
   it 'can boot' do
     expect(subject.is_a? Object).to be_truthy
   end

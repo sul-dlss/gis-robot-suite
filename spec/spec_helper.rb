@@ -1,5 +1,8 @@
 # Make sure specs run with the definitions from local.rb
 ENV['ROBOT_ENVIRONMENT'] ||= 'local'
+
+require_relative '../config/boot'
+
 require 'pry'
 require 'rspec'
 

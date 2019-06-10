@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require_relative '../../../config/boot'
 
 RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }

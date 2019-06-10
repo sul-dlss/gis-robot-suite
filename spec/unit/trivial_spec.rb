@@ -1,12 +1,6 @@
 require 'spec_helper'
 
-describe 'booting' do
-  it 'can boot' do
-    expect {
-      require_relative '../../config/boot'
-    }.not_to raise_error
-  end
-
+RSpec.describe 'booting' do
   it 'can boot gisAssembly' do
     expect(Robots::DorRepo::GisAssembly.is_a? Module).to be_truthy
   end
