@@ -5,6 +5,7 @@ require: rubocop-rspec
 
 AllCops:
   DisplayCopNames: true
+  TargetRubyVersion: 2.5
   Include:
     - Rakefile
     - 'lib/**/*.rake'

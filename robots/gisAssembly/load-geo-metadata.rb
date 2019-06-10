@@ -21,7 +21,7 @@ module Robots       # Robot package
 
         TAG_GIS = 'Dataset : GIS'
         def tag(item)
-          item.add_tag(TAG_GIS) unless item.tags.include?(TAG_GIS)
+          Dor::TagService.add(item, TAG_GIS) unless item.tags.include?(TAG_GIS)
         end
 
         # `perform` is the main entry point for the robot. This is where
