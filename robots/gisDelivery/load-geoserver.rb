@@ -173,7 +173,12 @@ module Robots       # Robot package
           end
 
           # determine raster style
-          raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+          begin
+            raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+          rescue => e
+            LyberCore::Log.info "Raster style determination failed. Using default `raster`"
+            raster_style = 'raster'
+          end
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
 
           # need to create a style if it's a min/max style
