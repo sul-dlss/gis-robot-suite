@@ -149,7 +149,7 @@ module Robots       # Robot package
           end
 
           # load PURL
-          purl = Dor::Config.purl.url + "/#{druid.gsub(/^druid:/, '')}"
+          purl = Settings.purl.url + "/#{druid.gsub(/^druid:/, '')}"
 
           # XXX: clean up dor-services geoMetadataDS to not generate transforms
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')

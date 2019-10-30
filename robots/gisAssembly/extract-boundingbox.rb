@@ -223,7 +223,7 @@ module Robots       # Robot package
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
           fail "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
-          tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
           fail "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin

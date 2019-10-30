@@ -77,10 +77,10 @@ module GisRobotSuite
     pid = druid.gsub(/^druid:/, '')
 
     if opts[:type] == :stage
-      rootdir = Dor::Config.geohydra.stage
+      rootdir = Settings.geohydra.stage
       rootdir = File.join(rootdir, pid)
     elsif opts[:type] == :workspace
-      rootdir = DruidTools::Druid.new(druid, Dor::Config.geohydra.workspace).path
+      rootdir = DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
     else
       fail 'Only :stage, :workspace are supported'
     end

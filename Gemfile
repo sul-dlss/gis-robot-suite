@@ -1,9 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
+gem 'config', '~> 1.7'
 gem 'dor-services', '~> 7.1'
 gem 'fastimage', '~> 1.7'
-gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
+gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 gem 'lyber-core', '~> 5.0'
 gem 'pry', '~> 0.10'              # for console
 gem 'rake'

@@ -59,11 +59,11 @@ module Robots       # Robot package
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
           fail "load-vector: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
-          tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
           fail "load-vector: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            schema = Dor::Config.geohydra.postgis.schema || 'druid'
+            schema = Settings.geohydra.postgis.schema || 'druid'
             # encoding =  # XXX: these are hardcoded encodings for certain druids -- these should be read from the metadata somewhere
             #   case druid
             #   when 'bt348dh6363', 'cc936tf6277'
