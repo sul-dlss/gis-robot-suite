@@ -185,7 +185,7 @@ GEM
     json-schema (2.6.2)
       addressable (~> 2.3.8)
     link_header (0.0.8)
-    lyber-core (5.2.0)
+    lyber-core (5.3.0)
       activesupport
       dor-services (>= 7.0.0, < 9)
       dor-workflow-client (~> 3.8)
@@ -193,9 +193,9 @@ GEM
     mime-types (3.3)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.1009)
-    mini_exiftool (2.9.0)
+    mini_exiftool (2.9.1)
     mini_portile2 (2.4.0)
-    minitest (5.12.2)
+    minitest (5.13.0)
     moab-versioning (4.2.2)
       confstruct
       druid-tools (>= 1.0.0)
@@ -217,7 +217,7 @@ GEM
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
     netrc (0.11.0)
-    nokogiri (1.10.4)
+    nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
     nokogiri-happymapper (0.8.1)
       nokogiri (~> 1.5)
@@ -367,7 +367,7 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    tins (1.21.1)
+    tins (1.22.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uber (0.0.15)
@@ -378,7 +378,7 @@ GEM
     vegas (0.1.11)
       rack (>= 1.0.0)
     xml-simple (1.1.5)
-    zeitwerk (2.2.0)
+    zeitwerk (2.2.1)
 
 PLATFORMS
   ruby
