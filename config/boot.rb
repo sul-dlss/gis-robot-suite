@@ -21,8 +21,6 @@ rescue LoadError, NameError, NoMethodError
 end
 
 # Load core robot services
-require 'dor-services'
-require 'lyber_core'
 LyberCore::Log.set_level(ROBOT_LOG.level)
 
 # TODO: Maybe move auto-require to just run_robot and spec_helper?
@@ -58,17 +56,7 @@ Config.load_and_set_settings(
   Config.setting_files(File.expand_path(__dir__), environment)
 )
 
-module GisRobotSuite
-  def self.connect_dor_services_app
-    Dor::Services::Client.configure(url: Settings.dor_services.url,
-                                    token: Settings.dor_services.token)
-  end
-end
-
-GisRobotSuite.connect_dor_services_app
-
 # Load Resque configuration and controller
-require 'resque'
 begin
   if defined? REDIS_TIMEOUT
     _server, _namespace = REDIS_URL.split('/', 2)
@@ -79,5 +67,3 @@ begin
     Resque.redis = REDIS_URL
   end
 end
-
-require 'honeybadger'
