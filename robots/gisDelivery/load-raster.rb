@@ -37,7 +37,7 @@ module Robots       # Robot package
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
           fail "load-raster: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
-          tmpdir = extract_data_from_zip druid, zipfn, Dor::Config.geohydra.tmpdir
+          tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
           fail "load-raster: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
@@ -46,10 +46,10 @@ module Robots       # Robot package
             fail "load-raster: #{druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
 
             # copy to geoserver storage
-            unless Dor::Config.geohydra.geotiff.host == 'localhost'
-              path = [Dor::Config.geohydra.geotiff.host, Dor::Config.geohydra.geotiff.dir].join(':')
+            unless Settings.geohydra.geotiff.host == 'localhost'
+              path = [Settings.geohydra.geotiff.host, Settings.geohydra.geotiff.dir].join(':')
             else
-              path = Dor::Config.geohydra.geotiff.dir
+              path = Settings.geohydra.geotiff.dir
             end
             cmd = "rsync -v '#{tiffn}' #{path}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"

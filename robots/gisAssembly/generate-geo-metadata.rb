@@ -48,7 +48,7 @@ module Robots       # Robot package
 
           # GeoMetadataDS
           FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
-          xml = to_geoMetadataDS(isoXml, fcXml, Dor::Config.purl.url + "/#{druid}")
+          xml = to_geoMetadataDS(isoXml, fcXml, Settings.purl.url + "/#{druid}")
           File.open(ofn, 'wb') { |f| f << xml.to_xml(indent: 2) }
         end
 

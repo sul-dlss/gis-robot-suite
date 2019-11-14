@@ -76,8 +76,8 @@ module Robots       # Robot package
         def convert_mods2geoblacklight(druid, ifn, ofn, rights, rightsMetadata)
           flags = {
             geoserver: (rights == 'Public') ? # case-sensitive
-                Dor::Config.geohydra.geoserver.url_public :
-                Dor::Config.geohydra.geoserver.url_restricted,
+                Settings.geohydra.geoserver.url_public :
+                Settings.geohydra.geoserver.url_restricted,
             stacks: Dor::Config.stacks.url
           }
 

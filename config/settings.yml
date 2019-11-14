@@ -1,0 +1,28 @@
+dor_services:
+  url:  'https://dor-services-test.stanford.test'
+  token: secret-token
+
+geohydra:
+  stage: '/stage'
+  workspace: '/workspace'
+  tmpdir: '/tmp'
+  geoserver:
+    url: 'http://localhost/geoserver'
+    #  styledir '/var/geoserver/local/data/styles'
+  geowebcache:
+    user: 'example_user'
+    password: 'example_password'
+    url: 'https://localhost/geoserver/gwc'
+  geotiff:
+    host: 'localhost'
+    dir: '/geotiff'
+  postgis:
+    schema: 'druid'
+  solr:
+    url: 'https://localhost/solr'
+    collection: 'example'
+  opengeometadata:
+    dir: '/opengeometadata'
+
+purl:
+  url: 'http://localhost/purl'

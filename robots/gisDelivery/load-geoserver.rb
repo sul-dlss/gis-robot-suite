@@ -138,7 +138,7 @@ module Robots       # Robot package
             cs.enabled = true
             cs.description = layer['title']
             cs.data_type = 'GeoTIFF'
-            cs.url = "file:#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif"
+            cs.url = "file:#{Settings.geohydra.geotiff.dir}/#{druid}.tif"
             begin
               cs.save
             rescue RGeoServer::GeoServerInvalidRequest => e
@@ -174,7 +174,7 @@ module Robots       # Robot package
 
           # determine raster style
           begin
-            raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Dor::Config.geohydra.geotiff.dir}/#{druid}.tif")
+            raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")
           rescue => e
             LyberCore::Log.info "Raster style determination failed. Using default `raster`"
             raster_style = 'raster'

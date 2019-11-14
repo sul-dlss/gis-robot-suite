@@ -18,7 +18,7 @@ module Robots       # Robot package
         def perform(druid)
           LyberCore::Log.debug "seed-geowebcache working on #{druid}"
 
-          base_url = Dor::Config.geohydra.geowebcache.url
+          base_url = Settings.geohydra.geowebcache.url
           layer_id = 'druid:{druid}'
           uri = "rest/seed/#{layer_id}.xml"
           xml = "
@@ -33,8 +33,8 @@ module Robots       # Robot package
             </seedRequest>"
 
           LyberCore::Log.debug "Connecting to GeoWebCache at #{base_url}/#{uri}"
-          RestClient.post "#{base_url}/#{uri}", xml,               user: Dor::Config.geohydra.geowebcache.user,
-                                                                   password: Dor::Config.geohydra.geowebcache.password,
+          RestClient.post "#{base_url}/#{uri}", xml,               user: Settings.geohydra.geowebcache.user,
+                                                                   password: Settings.geohydra.geowebcache.password,
                                                                    content_type: :xml
         end
       end

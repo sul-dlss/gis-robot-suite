@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'rob
 
 require 'rubygems'
 require 'bundler/setup'
+Bundler.require(:default)
 require 'logger'
 
 # Load the environment file based on Environment.  Default to development
@@ -20,8 +21,6 @@ rescue LoadError, NameError, NoMethodError
 end
 
 # Load core robot services
-require 'dor-services'
-require 'lyber_core'
 LyberCore::Log.set_level(ROBOT_LOG.level)
 
 # TODO: Maybe move auto-require to just run_robot and spec_helper?
@@ -35,8 +34,29 @@ env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environm
 puts "Loading config from #{env_file}"
 require env_file
 
+Config.setup do |config|
+  # Name of the constant exposing loaded settings
+  config.const_name = 'Settings'
+  # Load environment variables from the `ENV` object and override any settings defined in files.
+  #
+  config.use_env = true
+
+  # Define ENV variable prefix deciding which variables to load into config.
+  #
+  config.env_prefix = 'SETTINGS'
+
+  # What string to use as level separator for settings loaded from ENV variables. Default value of '.' works well
+  # with Heroku, but you might want to change it for example for '__' to easy override settings from command line, where
+  # using dots in variable names might not be allowed (eg. Bash).
+  #
+  config.env_separator = '__'
+end
+
+Config.load_and_set_settings(
+  Config.setting_files(File.expand_path(__dir__), environment)
+)
+
 # Load Resque configuration and controller
-require 'resque'
 begin
   if defined? REDIS_TIMEOUT
     _server, _namespace = REDIS_URL.split('/', 2)
@@ -47,5 +67,3 @@ begin
     Resque.redis = REDIS_URL
   end
 end
-
-require 'honeybadger'

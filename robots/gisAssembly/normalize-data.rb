@@ -244,7 +244,7 @@ module Robots       # Robot package
           File.umask(002)
           flags = {
             overwrite_prj: true,
-            tmpdir: Dor::Config.geohydra.tmpdir
+            tmpdir: Settings.geohydra.tmpdir
           }
 
           fn = "#{rootdir}/content/data.zip" # original content

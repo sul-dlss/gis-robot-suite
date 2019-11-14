@@ -22,7 +22,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "export-opengeometadata working on #{druid}"
 
           stagedir = GisRobotSuite.locate_druid_path druid, type: :stage
-          exportdir = Dor::Config.geohydra.opengeometadata.dir
+          exportdir = Settings.geohydra.opengeometadata.dir
           FileUtils.mkdir_p(exportdir) unless File.directory?(exportdir)
 
           # determine export folder
@@ -31,7 +31,7 @@ module Robots       # Robot package
           else
             fail "export-opengeometadata: Malformed druid? #{druid}"
           end
-          stacksdir = File.join(Dor::Config.geohydra.stacks || '/stacks', druidtree)
+          stacksdir = File.join(Settings.geohydra.stacks || '/stacks', druidtree)
 
           # Read object in DOR
           item = Dor::Item.find("druid:#{druid}")

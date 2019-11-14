@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
-gem 'dor-services', '~> 7.1'
+gem 'config', '~> 1.7'
+gem 'dor-services', '~> 8.1'
 gem 'fastimage', '~> 1.7'
-gem 'ffi-geos', '~> 1.0'          # XXX: where is this used?
+gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 gem 'lyber-core', '~> 5.0'
 gem 'pry', '~> 0.10'              # for console
-gem 'rake'
+gem 'rake', '~> 12.0' # stuck on 12 until https://github.com/nevans/resque-pool/pull/183 is resolved
 gem 'rgeoserver', '~> 0.10'
 gem 'rsolr'
 gem 'slop', '~> 3.6'              # for bin/run_robot

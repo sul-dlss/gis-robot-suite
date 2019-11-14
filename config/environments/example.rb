@@ -12,41 +12,8 @@ Dor::Config.configure do
     key_pass ''
   end
 
-  geohydra do
-    stage '/stage'
-    workspace '/workspace'
-    tmpdir '/tmp'
-    geoserver do
-      url 'http://localhost/geoserver'
-      #  styledir '/var/geoserver/local/data/styles'
-    end
-    geowebcache do
-      user 'example_user'
-      password 'example_password'
-      url 'https://localhost/geoserver/gwc'
-    end
-    geotiff do
-      host 'localhost'
-      dir '/geotiff'
-    end
-    postgis do
-      schema 'druid'
-    end
-    solr do
-      url 'https://localhost/solr'
-      collection 'example'
-    end
-    opengeometadata do
-      dir '/opengeometadata'
-    end
-  end
-
   stacks do
     url 'http://localhost/stacks'
-  end
-
-  purl do
-    url 'http://localhost/purl'
   end
 
   solrizer.url 'https://localhost/solr/solrizer'
