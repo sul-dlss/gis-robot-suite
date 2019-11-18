@@ -216,7 +216,7 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
-    parallel (1.18.0)
+    parallel (1.19.0)
     parser (2.6.5.0)
       ast (~> 2.4.0)
     powerpack (0.1.2)
@@ -343,7 +343,7 @@ GEM
       mods (~> 2.2)
     stanford-mods-normalizer (0.1.0)
       nokogiri (~> 1.8)
-    stomp (1.4.8)
+    stomp (1.4.9)
     temple (0.8.2)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
