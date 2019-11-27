@@ -3,17 +3,12 @@ cert_dir = File.join(File.dirname(__FILE__), '..', 'certs')
 Dor::Config.configure do
   fedora do
     url 'https://localhost/fedora'
-    key_pass ''
   end
 
   ssl do
     cert_file File.join(cert_dir, 'example.crt')
     key_file File.join(cert_dir, 'example.key')
     key_pass ''
-  end
-
-  stacks do
-    url 'http://localhost/stacks'
   end
 
   solrizer.url 'https://localhost/solr/solrizer'
