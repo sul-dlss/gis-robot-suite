@@ -26,3 +26,6 @@ geohydra:
 
 purl:
   url: 'http://localhost/purl'
+
+stacks:
+  url: 'https://stacks.stanford.edu'

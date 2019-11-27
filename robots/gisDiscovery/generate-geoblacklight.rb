@@ -78,7 +78,7 @@ module Robots       # Robot package
             geoserver: (rights == 'Public') ? # case-sensitive
                 Settings.geohydra.geoserver.url_public :
                 Settings.geohydra.geoserver.url_restricted,
-            stacks: Dor::Config.stacks.url
+            stacks: Settings.stacks.url
           }
 
           # run XSLT using xsltproc since Nokogiri doesn't support XPath2
