@@ -27,7 +27,7 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 set :linked_files, %w(config/honeybadger.yml)
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w(log run tmp/pids config/environments config/certs config/ArcGIS)
+set :linked_dirs, %w(log run tmp/pids config/environments config/certs config/settings config/ArcGIS)
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
