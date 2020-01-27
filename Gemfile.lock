@@ -104,7 +104,7 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-workflow-client (3.16.0)
+    dor-workflow-client (3.18.1)
       activesupport (>= 3.2.1, < 7)
       deprecation (>= 0.99.0)
       faraday (>= 0.9.2, < 2.0)
@@ -177,7 +177,7 @@ GEM
     json-schema (2.6.2)
       addressable (~> 2.3.8)
     link_header (0.0.8)
-    lyber-core (5.4.0)
+    lyber-core (5.5.0)
       activesupport
       dor-services (>= 7.0.0, < 9)
       dor-workflow-client (~> 3.11)
@@ -315,7 +315,7 @@ GEM
       mime-types
       nokogiri
       rest-client
-    rubyzip (2.0.0)
+    rubyzip (2.1.0)
     sanitize (5.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
