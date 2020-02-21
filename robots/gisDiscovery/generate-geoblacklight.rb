@@ -134,7 +134,7 @@ module Robots       # Robot package
           return unless doc.search('//file[@id=\'index_map.json\']').length > 0
 
           refs = JSON.parse(layer.metadata['dct_references_s'])
-          refs['https://openindexmaps.org'] = "#{Dor::Config.stacks.url}/file/druid:#{druid}/index_map.json"
+          refs['https://openindexmaps.org'] = "#{Settings.stacks.url}/file/druid:#{druid}/index_map.json"
           layer.metadata['dct_references_s'] = refs.to_json
         end
       end
