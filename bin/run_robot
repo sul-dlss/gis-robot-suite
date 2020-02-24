@@ -1,44 +1,44 @@
+
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # Will run one robot as specified, either for a druid a file containing one druid per line
 #
 # To run With Options
 # Options must be placed AFTER workflow and robot name
-# robot_root$ ./bin/run_robot dor:accessionWF:shelve -e test -d druid:aa12bb1234
+# robot_root$ ./bin/run_robot Accession::Publish -e test -d druid:aa12bb1234
 require 'bundler/setup'
 require 'slop'
 
-slop = Slop.new do
-  banner 'Usage: run_robot repo:workflow:step [options]'
-  on :e, :environment=, 'Environment to run in (i.e. test, production). Defaults to development'
-  on :d, :druid=, 'One druid to run the robot with'
-  on :f, :file=, 'One file containing a druid per line'
+slop = Slop.parse do |o|
+  o.banner = 'Usage: ./bin/run_robot class_name [options]'
+  o.string '-e', '--environment', 'Environment to run in (i.e. test, production). Defaults to development', default: 'development'
+  o.string '-d', '--druid', 'One druid to run the robot with', required: true
+  o.string '-f', '--file', 'One file containing a druid per line'
+  o.on '--help' do
+    puts o
+    exit
+  end
 end
 
-unless ARGV.first =~ /^\w+:\w+:[-_\w]+$/
-  puts slop.help
-  exit 1
-end
+ARGV.replace slop.arguments
 
 robot = ARGV.shift
-slop.parse
 opts = slop.to_h
 
 ENV['ROBOT_ENVIRONMENT'] = opts[:environment] unless opts[:environment].nil?
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 
-# generate the robot job class name
-class_name = LyberCore::Robot.step_to_classname robot
-
 # instantiate a Robot object using the name
-klazz = class_name.split('::').inject(Object) { |o, c| o.const_get c }
+klazz = robot.split('::').inject(Robots::DorRepo) { |o, c| o.const_get c }
 bot = klazz.new
-bot.check_queued_status = false  # skipping the queued workflow status check
+bot.check_queued_status = false # skipping the queued workflow status check
 
-if opts[:file]
-  druids = IO.readlines(opts[:file]).map(&:strip)
-else
-  druids = [opts[:druid]]
-end
+druids = if opts[:file]
+           IO.readlines(opts[:file]).map(&:strip)
+         else
+           [opts[:druid]]
+         end
 
 druids.each do |druid|
   bot.work druid
