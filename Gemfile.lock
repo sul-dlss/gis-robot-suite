@@ -173,7 +173,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    iso-639 (0.3.1)
+    iso-639 (0.2.10)
     json (2.3.0)
     json-schema (2.6.2)
       addressable (~> 2.3.8)
@@ -387,6 +387,7 @@ DEPENDENCIES
   ffi-geos (~> 1.0)
   geo_combine
   honeybadger
+  iso-639 (~> 0.2.10)
   lyber-core (~> 5.0)
   net-http-persistent (~> 3.0)
   pry (~> 0.10)
