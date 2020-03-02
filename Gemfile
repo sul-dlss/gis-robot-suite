@@ -5,6 +5,9 @@ gem 'config', '~> 1.7'
 gem 'dor-services', '~> 8.1'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
+# iso-639 0.3.0 isn't compatible with ruby 2.5.  This declaration can be dropped when we upgrade to ruby 2.6
+# see https://github.com/alphabetum/iso-639/issues/12
+gem 'iso-639', '~> 0.2.10'
 gem 'lyber-core', '~> 5.0'
 gem 'pry', '~> 0.10'              # for console
 gem 'rake', '~> 12.0' # stuck on 12 until https://github.com/nevans/resque-pool/pull/183 is resolved
