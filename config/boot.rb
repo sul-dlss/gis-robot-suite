@@ -56,6 +56,15 @@ Config.load_and_set_settings(
   Config.setting_files(File.expand_path(__dir__), environment)
 )
 
+module GisRobotSuite
+  def self.connect_dor_services_app
+    Dor::Services::Client.configure(url: Settings.dor_services.url,
+                                    token: Settings.dor_services.token)
+  end
+end
+
+GisRobotSuite.connect_dor_services_app
+
 # Load Resque configuration and controller
 begin
   if defined? REDIS_TIMEOUT
