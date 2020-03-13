@@ -18,7 +18,9 @@ module Robots       # Robot package
         def perform(druid)
           druid = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "start-assembly-workflow working on #{druid}"
-          Dor::Config.workflow.client.create_workflow_by_name("druid:#{druid}", 'assemblyWF')
+          object_client = Dor::Services::Client.object(druid)
+          current_version = object_client.version.current
+          Dor::Config.workflow.client.create_workflow_by_name("druid:#{druid}", 'assemblyWF', version: current_version)
         end
       end
     end
