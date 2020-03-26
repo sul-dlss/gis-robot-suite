@@ -21,7 +21,10 @@ module Robots       # Robot package
 
         TAG_GIS = 'Dataset : GIS'
         def tag(item)
-          Dor::TagService.add(item, TAG_GIS) unless item.tags.include?(TAG_GIS)
+          current_tags = tags_client(item.pid).list
+          return if current_tags.include?(TAG_GIS)
+
+          tags_client.create(tags: [TAG_GIS])
         end
 
         # `perform` is the main entry point for the robot. This is where
@@ -45,6 +48,12 @@ module Robots       # Robot package
           tag item
           LyberCore::Log.debug "load-geo-metadata: #{druid} saving to DOR"
           item.save
+        end
+
+        private
+
+        def tags_client(pid)
+          Dor::Services::Client.object(pid).administrative_tags
         end
       end
     end

@@ -11,11 +11,15 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
   describe '#perform' do
     let(:druid) { 'druid:12345' }
     let(:stub_config) { double('Geohydra config', stage: '/stage') }
+    let(:fake_tags_client) do
+      instance_double(Dor::Services::Client::AdministrativeTags, list: [], create: nil)
+    end
     let(:geo_metadata) { instance_double(Dor::GeoMetadataDS, :content= => true) }
     let(:item) do
-      instance_double(Dor::Item, datastreams: { 'geoMetadata' => geo_metadata },
-                                 tags: [],
-                                 save: true)
+      instance_double(Dor::Item,
+                      datastreams: { 'geoMetadata' => geo_metadata },
+                      save: true,
+                      pid: 'druid:bc123df4567')
     end
     let(:xml) do
       <<~XML
@@ -28,12 +32,12 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
       allow(File).to receive(:size?).and_return(100)
       allow(Dor::Item).to receive(:find).and_return(item)
       allow(File).to receive(:read).and_return(xml)
-      allow(Dor::TagService).to receive(:add)
+      allow(robot).to receive(:tags_client).and_return(fake_tags_client)
     end
 
     it 'tags the object' do
       robot.perform(druid)
-      expect(Dor::TagService).to have_received(:add).with(item, 'Dataset : GIS')
+      expect(fake_tags_client).to have_received(:create).once.with(tags: ['Dataset : GIS'])
       expect(item).to have_received(:save)
     end
   end
