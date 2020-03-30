@@ -55,11 +55,17 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.29.0)
+    cocina-models (0.31.1)
+      activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
+      openapi3_parser
+      openapi_parser
+      thor
       zeitwerk (~> 2.1)
     coderay (1.1.2)
+    commonmarker (0.21.0)
+      ruby-enum (~> 0.5)
     concurrent-ruby (1.1.6)
     config (2.2.1)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -123,7 +129,7 @@ GEM
       zeitwerk (~> 2.1)
     druid-tools (2.1.0)
       deprecation
-    dry-configurable (0.11.4)
+    dry-configurable (0.11.5)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.4, >= 0.4.7)
       dry-equalizer (~> 0.2)
@@ -170,10 +176,10 @@ GEM
       activesupport (>= 3.0, < 7.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    faraday (0.17.3)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.14.0)
-      faraday (>= 0.7.4, < 1.0)
+    faraday_middleware (1.0.0)
+      faraday (~> 1.0)
     fastimage (1.9.0)
       addressable (~> 2.3.5)
     ffi (1.12.2)
@@ -250,6 +256,10 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
+    openapi3_parser (0.8.0)
+      commonmarker (~> 0.17)
+      psych (~> 3.1)
+    openapi_parser (0.9.0)
     parallel (1.19.1)
     parser (2.7.0.5)
       ast (~> 2.4.0)
@@ -257,6 +267,7 @@ GEM
     pry (0.13.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    psych (3.1.0)
     rack (2.2.2)
     rack-protection (2.0.8.1)
       rack
@@ -337,6 +348,8 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     rubocop-rspec (1.23.0)
       rubocop (>= 0.52.1)
+    ruby-enum (0.8.0)
+      i18n
     ruby-progressbar (1.10.1)
     ruby2_keywords (0.0.2)
     rubydora (2.1.0)
@@ -393,7 +406,7 @@ GEM
     uber (0.0.15)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.6)
+    unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
