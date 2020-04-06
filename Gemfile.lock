@@ -55,7 +55,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.32.0)
+    cocina-models (0.31.1)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
@@ -113,9 +113,9 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (4.20.0)
+    dor-services-client (5.1.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.29)
+      cocina-models (~> 0.31.0)
       deprecation
       faraday (>= 0.15, < 2)
       moab-versioning (~> 4.0)
@@ -428,7 +428,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano
   dor-services (~> 8.1)
-  dor-services-client (~> 4.19)
+  dor-services-client (~> 5.0)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine
