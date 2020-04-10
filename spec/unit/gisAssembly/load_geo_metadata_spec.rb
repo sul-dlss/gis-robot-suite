@@ -32,7 +32,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
       allow(File).to receive(:size?).and_return(100)
       allow(Dor::Item).to receive(:find).and_return(item)
       allow(File).to receive(:read).and_return(xml)
-      allow(robot).to receive(:tags_client).and_return(fake_tags_client)
+      allow(robot).to receive(:tags_client).with(item.pid).and_return(fake_tags_client)
     end
 
     it 'tags the object' do

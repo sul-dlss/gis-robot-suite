@@ -24,7 +24,7 @@ module Robots       # Robot package
           current_tags = tags_client(item.pid).list
           return if current_tags.include?(TAG_GIS)
 
-          tags_client.create(tags: [TAG_GIS])
+          tags_client(item.pid).create(tags: [TAG_GIS])
         end
 
         # `perform` is the main entry point for the robot. This is where
