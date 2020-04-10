@@ -1,0 +1,2 @@
+redis:
+  url: 'localhost:6379/resque:test'
