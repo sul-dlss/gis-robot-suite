@@ -29,11 +29,6 @@ LyberCore::Log.set_level(ROBOT_LOG.level)
 Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
 require 'robots'
 
-# Load local environment configuration
-env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environment}")
-puts "Loading config from #{env_file}"
-require env_file
-
 Config.setup do |config|
   # Name of the constant exposing loaded settings
   config.const_name = 'Settings'
@@ -55,6 +50,11 @@ end
 Config.load_and_set_settings(
   Config.setting_files(File.expand_path(__dir__), environment)
 )
+
+# Load local environment configuration
+env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environment}")
+puts "Loading config from #{env_file}"
+require env_file
 
 module GisRobotSuite
   def self.connect_dor_services_app
