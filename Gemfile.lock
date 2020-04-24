@@ -55,7 +55,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.31.1)
+    cocina-models (0.32.0)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
@@ -113,9 +113,9 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (5.1.0)
+    dor-services-client (6.0.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.31.0)
+      cocina-models (~> 0.32.0)
       deprecation
       faraday (>= 0.15, < 2)
       moab-versioning (~> 4.0)
@@ -220,7 +220,7 @@ GEM
     mini_exiftool (2.10.0)
     mini_portile2 (2.4.0)
     minitest (5.14.0)
-    moab-versioning (4.4.0)
+    moab-versioning (4.4.1)
       druid-tools (>= 1.0.0)
       json
       nokogiri
@@ -428,7 +428,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano
   dor-services (~> 8.1)
-  dor-services-client (~> 5.0)
+  dor-services-client (~> 6.0)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine
