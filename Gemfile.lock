@@ -366,6 +366,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
+    scanf (1.0.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -445,6 +446,7 @@ DEPENDENCIES
   rspec
   rubocop (~> 0.52.1)
   rubocop-rspec
+  scanf
   slop (~> 3.6)
 
 BUNDLED WITH

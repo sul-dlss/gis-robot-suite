@@ -21,6 +21,7 @@ gem 'net-http-persistent', '~> 3.0'
 gem 'activemodel', '~> 5.1', '< 5.2'  # due to https://github.com/sul-dlss/gis-robot-suite/issues/174
 gem 'resque'
 gem 'resque-pool'
+gem 'scanf'
 
 group :development do
   gem 'rspec'
