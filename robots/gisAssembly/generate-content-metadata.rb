@@ -21,7 +21,7 @@ module Robots       # Robot package
         )
 
         # @param [String] druid
-        # @param [Array<Assembly::ObjectFile>] objects
+        # @param [Hash<Symbol,Assembly::ObjectFile>] objects
         # @param [Nokogiri::XML::DocumentFragment] geoData
         # @param [Hash] flags
         # @return [Nokogiri::XML::Document]
