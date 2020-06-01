@@ -55,7 +55,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.32.0)
+    cocina-models (0.33.0)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
@@ -63,7 +63,7 @@ GEM
       openapi_parser
       thor
       zeitwerk (~> 2.1)
-    coderay (1.1.2)
+    coderay (1.1.3)
     commonmarker (0.21.0)
       ruby-enum (~> 0.5)
     concurrent-ruby (1.1.6)
@@ -113,9 +113,9 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (6.4.0)
+    dor-services-client (6.5.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.32.0)
+      cocina-models (~> 0.33.0)
       deprecation
       faraday (>= 0.15, < 2)
       moab-versioning (~> 4.0)
@@ -182,7 +182,7 @@ GEM
       faraday (~> 1.0)
     fastimage (1.9.0)
       addressable (~> 2.3.5)
-    ffi (1.12.2)
+    ffi (1.13.0)
     ffi-geos (1.2.2)
       ffi (>= 1.0.0)
     geo_combine (0.3.1)
@@ -261,7 +261,7 @@ GEM
       psych (~> 3.1)
     openapi_parser (0.11.2)
     parallel (1.19.1)
-    parser (2.7.1.2)
+    parser (2.7.1.3)
       ast (~> 2.4.0)
     powerpack (0.1.2)
     pry (0.13.1)
