@@ -13,7 +13,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
         end
 
         # unpacks a ZIP file into the given tmpdir

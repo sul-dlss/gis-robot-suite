@@ -8,7 +8,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisDeliveryWF', 'finish-gis-delivery-workflow', check_queued_status: true) # init LyberCore::Robot
+          super('gisDeliveryWF', 'finish-gis-delivery-workflow', check_queued_status: true) # init LyberCore::Robot
         end
 
         # `perform` is the main entry point for the robot. This is where

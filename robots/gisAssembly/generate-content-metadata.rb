@@ -12,7 +12,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
         FILE_ATTRIBUTES = Assembly::FILE_ATTRIBUTES.merge(

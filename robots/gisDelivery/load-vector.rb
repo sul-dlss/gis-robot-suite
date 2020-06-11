@@ -8,7 +8,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisDeliveryWF', 'load-vector', check_queued_status: true) # init LyberCore::Robot
+          super('gisDeliveryWF', 'load-vector', check_queued_status: true) # init LyberCore::Robot
         end
 
         def extract_data_from_zip(druid, zipfn, tmpdir)
