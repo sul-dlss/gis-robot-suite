@@ -1,6 +1,3 @@
-set :rvm_type, :system
-set :rvm_ruby_string, 'ruby-2.2.2'
-
 set :application, 'gisRobotSuite'
 set :repo_url, 'https://github.com/sul-dlss/gis-robot-suite.git'
 
