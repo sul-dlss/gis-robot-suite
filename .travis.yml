@@ -13,7 +13,7 @@ before_install:
 sudo: false
 cache: bundler
 env:
-  - ROBOT_ENVIRONMENT=local
+  - ROBOT_ENVIRONMENT=test
 
 before_script:
   - test -d log || mkdir log

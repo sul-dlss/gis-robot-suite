@@ -1,2 +1,5 @@
 redis:
   url: 'localhost:6379/resque:test'
+
+geohydra:
+  workspace: 'spec/fixtures/workspace'

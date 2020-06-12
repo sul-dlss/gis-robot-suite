@@ -30,6 +30,10 @@ group :development do
   gem 'rubocop-rspec'
 end
 
+group :test do
+  gem 'webmock'
+end
+
 group :deployment do
   gem 'capistrano'
   gem 'capistrano-rvm'

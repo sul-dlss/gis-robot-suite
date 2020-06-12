@@ -3,6 +3,8 @@ ENV['ROBOT_ENVIRONMENT'] ||= 'test'
 
 require 'coveralls'
 require 'simplecov'
+require 'webmock/rspec'
+
 SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   track_files 'bin/**/*'
@@ -16,3 +18,11 @@ require_relative '../config/boot'
 
 require 'pry'
 require 'rspec'
+
+def read_fixture(fname)
+  File.read(File.join(fixture_dir, fname))
+end
+
+def fixture_dir
+  @fixture_dir ||= File.join(File.dirname(__FILE__), 'fixtures')
+end

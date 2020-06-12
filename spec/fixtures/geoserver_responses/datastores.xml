@@ -1,0 +1,6 @@
+<dataStores>
+  <dataStore>
+    <name>postgis_druid</name>
+    <atom:link rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid.xml" type="application/atom+xml"/>
+  </dataStore>
+</dataStores>

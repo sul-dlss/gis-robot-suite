@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataStore>
+  <name>postgis_druid</name>
+  <description>postgis_druid</description>
+  <type>PostGIS</type>
+  <enabled>true</enabled>
+  <workspace>
+    <name>druid</name>
+    <atom:link rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid.xml" type="application/xml"/>
+  </workspace>
+  <connectionParameters>
+  </connectionParameters>
+  <__default>false</__default>
+  <featureTypes>
+    <atom:link rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes.xml" type="application/xml"/>
+  </featureTypes>
+</dataStore>

@@ -1,0 +1,17 @@
+<workspace>
+  <name>druid</name>
+  <isolated>false</isolated>
+  <dateCreated>2020-06-11 19:52:44.659 UTC</dateCreated>
+  <dataStores>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/datastores.xml" type="application/xml"/>
+  </dataStores>
+  <coverageStores>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/coveragestores.xml" type="application/xml"/>
+  </coverageStores>
+  <wmsStores>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/wmsstores.xml" type="application/xml"/>
+  </wmsStores>
+  <wmtsStores>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://example.com/geoserver/rest/workspaces/druid/wmtsstores.xml" type="application/xml"/>
+  </wmtsStores>
+</workspace>
