@@ -72,7 +72,7 @@ module Robots       # Robot package
         MODS_NS = 'http://www.loc.gov/mods/v3'
 
         # [Nokogiri::XSLT::Stylesheet] for ISO 19139 to MODS
-        XSLT_GEOMODS = Nokogiri::XSLT(File.read(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'xslt', 'iso2mods.xsl')))
+        XSLT_GEOMODS = Nokogiri::XSLT(File.read(File.join(File.dirname(__FILE__), '..', '..', '..', 'xslt', 'iso2mods.xsl')))
 
         # Generates MODS from ISO 19139
         #

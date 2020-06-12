@@ -22,6 +22,7 @@ gem 'activemodel', '~> 5.1', '< 5.2'  # due to https://github.com/sul-dlss/gis-r
 gem 'resque'
 gem 'resque-pool'
 gem 'scanf'
+gem 'zeitwerk', '~> 2.1'
 
 group :development do
   gem 'rspec'

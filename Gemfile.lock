@@ -454,6 +454,7 @@ DEPENDENCIES
   scanf
   slop (~> 3.6)
   webmock
+  zeitwerk (~> 2.1)
 
 BUNDLED WITH
    2.1.4

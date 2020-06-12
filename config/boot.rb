@@ -1,6 +1,5 @@
 # Ensure subsequent requires search the correct local paths
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'robots'))
 
 require 'rubygems'
 require 'bundler/setup'
@@ -14,20 +13,13 @@ ROBOT_LOG = Logger.new(File.join(ROBOT_ROOT, "log/#{environment}.log"))
 ROBOT_LOG.level = Logger::SEV_LABEL.index(ENV['ROBOT_LOG_LEVEL']) || Logger::INFO
 
 # Override Solrizer's logger before it gets a chance to load and pollute STDERR.
-begin
-  require 'solrizer'
-  Solrizer.logger = ROBOT_LOG
-rescue LoadError, NameError, NoMethodError
-end
+Solrizer.logger = ROBOT_LOG
+loader = Zeitwerk::Loader.new
+loader.push_dir(File.absolute_path("#{__FILE__}/../../lib"))
+loader.setup
 
 # Load core robot services
 LyberCore::Log.set_level(ROBOT_LOG.level)
-
-# TODO: Maybe move auto-require to just run_robot and spec_helper?
-
-# Load any library files and all the robots
-Dir["#{ROBOT_ROOT}/lib/*.rb"].each { |f| require f }
-require 'robots'
 
 Config.setup do |config|
   # Name of the constant exposing loaded settings

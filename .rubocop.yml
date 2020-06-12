@@ -48,7 +48,7 @@ Naming/FileName:
 
 Naming/MethodName:
   Exclude:
-    - robots/gisAssembly/generate-geo-metadata.rb # to_geoMetadataDS
+    - lib/robots/dor_repo/gis_assembly/generate_geo_metadata.rb # to_geoMetadataDS
 
 # --- Performance ---
 
