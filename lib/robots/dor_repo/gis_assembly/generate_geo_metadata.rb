@@ -60,6 +60,7 @@ module Robots       # Robot package
         def to_geoMetadataDS(isoXml, fcXml, purl)
           fail ArgumentError, 'generate-geo-metadata: PURL is required' if purl.nil?
           fail ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? || isoXml.root.nil?
+
           Nokogiri::XML("
             <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
               <rdf:Description rdf:about=\"#{purl}\">

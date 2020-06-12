@@ -6,9 +6,6 @@ require: rubocop-rspec
 AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.5
-  Include:
-    - Rakefile
-    - 'lib/**/*.rake'
   Exclude:
     - Gemfile.lock
     - '**/*.md'
@@ -25,6 +22,9 @@ Layout/EmptyLinesAroundClassBody:
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
+Layout/LineLength:
+  Max: 183 # this isn't 1994; FIXME: would like to get this down to 120
+
 Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
 
@@ -35,9 +35,6 @@ Layout/SpaceAroundEqualsInParameterDefault:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
-
-Metrics/LineLength:
-  Max: 183 # this isn't 1994; FIXME: would like to get this down to 120
 
 # --- Naming ---
 
@@ -73,3 +70,42 @@ Style/StringLiterals:
 Style/SymbolArray:
   Exclude:
     - Rakefile # because [:spec, :rubocop] isn't a big deal
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true

@@ -28,6 +28,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "Indexing #{ifn}"
           record = JSON.parse(File.read(ifn))
           fail "load-geoblacklight: #{druid} cannot parse GeoBlacklight metadata: #{ifn}" if record.nil?
+
           url = File.join(Settings.geohydra.solr.url, Settings.geohydra.solr.collection)
           LyberCore::Log.debug "Connecting to #{url}"
           solr = RSolr.connect url: url

@@ -109,6 +109,7 @@ module Robots       # Robot package
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
           fail ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
           fail ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
+
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
@@ -142,6 +143,7 @@ module Robots       # Robot package
           # Check to see whether the current native projection is WGS84
           cartos = doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
           fail "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
+
           LyberCore::Log.debug "extract-boundingbox: #{druid} has #{cartos.size} subject/cartographics elements"
           fail "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
 
@@ -223,6 +225,7 @@ module Robots       # Robot package
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
           fail "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+
           tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
           fail "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 

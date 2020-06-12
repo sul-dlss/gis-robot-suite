@@ -1,4 +1,3 @@
-#
 module GisRobotSuite
   def self.initialize_robot(druid)
     n = 5 # seconds
@@ -86,6 +85,7 @@ module GisRobotSuite
     end
 
     fail "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
+
     rootdir
   end
 

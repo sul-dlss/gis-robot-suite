@@ -263,7 +263,6 @@ GEM
     parallel (1.19.1)
     parser (2.7.1.3)
       ast (~> 2.4.0)
-    powerpack (0.1.2)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -295,6 +294,7 @@ GEM
     redis (4.2.1)
     redis-namespace (1.7.0)
       redis (>= 3.0.4)
+    regexp_parser (1.7.1)
     resque (2.0.0)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
@@ -310,6 +310,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retries (0.0.5)
+    rexml (3.2.4)
     rgeo (0.5.3)
     rgeo-shapefile (0.4.2)
       dbf (~> 3.0)
@@ -339,13 +340,17 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
-    rubocop (0.52.1)
+    rubocop (0.85.1)
       parallel (~> 1.10)
-      parser (>= 2.4.0.2, < 3.0)
-      powerpack (~> 0.1)
+      parser (>= 2.7.0.1)
       rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.7)
+      rexml
+      rubocop-ast (>= 0.0.3)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
+      unicode-display_width (>= 1.4.0, < 2.0)
+    rubocop-ast (0.0.3)
+      parser (>= 2.7.0.1)
     rubocop-rspec (1.23.0)
       rubocop (>= 0.52.1)
     ruby-enum (0.8.0)
@@ -449,7 +454,7 @@ DEPENDENCIES
   rgeoserver (~> 0.10)
   rsolr
   rspec
-  rubocop (~> 0.52.1)
+  rubocop
   rubocop-rspec
   scanf
   slop (~> 3.6)
