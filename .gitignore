@@ -11,5 +11,3 @@ config/certs
 .ruby-version
 .ruby-gemset
 run
-config/environments/*production*
-config/environments/*staging*
