@@ -3,6 +3,8 @@ ENV['ROBOT_ENVIRONMENT'] ||= 'test'
 
 require 'coveralls'
 require 'simplecov'
+require 'webmock/rspec'
+
 SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 SimpleCov.start do
   track_files 'bin/**/*'
