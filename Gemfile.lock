@@ -115,7 +115,7 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (6.5.0)
+    dor-services-client (6.6.0)
       activesupport (>= 4.2, < 7)
       cocina-models (~> 0.33.0)
       deprecation
@@ -434,7 +434,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano
   dor-services (~> 8.1)
-  dor-services-client (~> 6.0)
+  dor-services-client (~> 6.6)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine

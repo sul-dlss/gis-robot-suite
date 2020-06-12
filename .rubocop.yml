@@ -54,8 +54,8 @@ Naming/MethodName:
 
 # --- RSpec ---
 
-RSpec/MessageSpies:
-  Enabled: false # receive is fine;  have_received is fine
+RSpec/ExampleLength:
+    Enabled: false
 
 # --- Style ---
 
