@@ -10,16 +10,11 @@ Dor::Config.configure do
   end
 
   solr.url Settings.solr.url
-
-  workflow do
-    url Settings.workflow.url
-    logfile Settings.workflow.logfile
-    shift_age Settings.workflow.shift_age
-  end
 end
 
 REDIS_URL = Settings.redis.url
 
+# These are necessary for the gisDelivery/load-vector step which uses psql and shp2pgsql
 ENV['PGDATABASE'] ||= Settings.db.database
 ENV['PGHOST'] ||= Settings.db.host
 ENV['PGPORT'] ||= Settings.db.port
