@@ -13,7 +13,7 @@ module Robots       # Robot package
         XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../lib/xslt/mods2geoblacklight.xsl')
 
         def initialize
-          super('dor', 'gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
+          super('gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
           fail 'generate-geoblacklight: mods2geoblacklight.xsl is not installed' unless File.size?(XSLFN) # locate XSLT
         end
 

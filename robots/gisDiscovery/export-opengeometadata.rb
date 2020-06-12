@@ -10,7 +10,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisDiscoveryWF', 'export-opengeometadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisDiscoveryWF', 'export-opengeometadata', check_queued_status: true) # init LyberCore::Robot
         end
 
         # `perform` is the main entry point for the robot. This is where

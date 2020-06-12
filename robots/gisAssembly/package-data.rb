@@ -8,7 +8,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisAssemblyWF', 'package-data', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'package-data', check_queued_status: true) # init LyberCore::Robot
         end
 
         # Create data.zip for all digital work files

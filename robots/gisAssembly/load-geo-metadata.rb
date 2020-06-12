@@ -8,7 +8,7 @@ module Robots       # Robot package
         include LyberCore::Robot
 
         def initialize
-          super('dor', 'gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
         def load(item, geoMetadataXML)
