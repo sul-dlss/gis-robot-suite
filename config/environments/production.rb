@@ -25,6 +25,6 @@ ENV['PGHOST'] ||= Settings.db.host
 ENV['PGPORT'] ||= Settings.db.port
 ENV['PGUSER'] ||= Settings.db.user
 
-ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), ENV['ROBOT_ENVIRONMENT'] + "_rgeoserver.yml"))
+ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), "rgeoserver.yml"))
 
 ENV['ROBOT_DELAY'] = '0'
