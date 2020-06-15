@@ -11,20 +11,12 @@ module Robots       # Robot package
           super('gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
-        def load(item, geoMetadataXML)
-          # load the geoMetadata datastream
-          if item.datastreams['geoMetadata'].nil?
-            item.add_datastream(Dor::GeoMetadataDS.new(item, 'geoMetadata'))
-          end
-          item.datastreams['geoMetadata'].content = geoMetadataXML
-        end
-
         TAG_GIS = 'Dataset : GIS'
-        def tag(item)
-          current_tags = tags_client(item.pid).list
+        def tag(druid)
+          current_tags = tags_client(druid).list
           return if current_tags.include?(TAG_GIS)
 
-          tags_client(item.pid).create(tags: [TAG_GIS])
+          tags_client(druid).create(tags: [TAG_GIS])
         end
 
         # `perform` is the main entry point for the robot. This is where
@@ -32,22 +24,24 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid = GisRobotSuite.initialize_robot druid
+          druid_without_namespace = GisRobotSuite.initialize_robot druid
           LyberCore::Log.debug "load-geo-metadata: #{druid} working"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path druid_without_namespace, type: :stage
 
           # Locate geoMetadata datastream
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          fail "load-geo-metadata: #{druid} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
+          fail "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
-          # Load geoMetadata into DOR Item
-          item = Dor::Item.find("druid:#{druid}")
-          fail "load-geo-metadata: #{druid} cannot find in DOR" if item.nil?
-          load item, Nokogiri::XML(File.read(fn)).to_xml
-          tag item
-          LyberCore::Log.debug "load-geo-metadata: #{druid} saving to DOR"
-          item.save
+          # Load geoMetadata into DOR
+          Dor::Services::Client.object(druid).metadata.legacy_update(
+            geo: {
+              updated: File.mtime(fn),
+              content: File.read(fn)
+            }
+          )
+
+          tag druid
         end
 
         private

@@ -434,7 +434,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano
   dor-services (~> 8.1)
-  dor-services-client (~> 6.0)
+  dor-services-client (~> 6.6)
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine
