@@ -32,9 +32,9 @@ GEM
       nokogiri
     ast (2.4.1)
     builder (3.2.4)
-    bundler-audit (0.6.1)
+    bundler-audit (0.7.0.1)
       bundler (>= 1.2.0, < 3)
-      thor (~> 0.18)
+      thor (>= 0.18, < 2)
     capistrano (3.14.1)
       airbrussh (>= 1.0.0)
       i18n
@@ -115,7 +115,7 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (6.5.0)
+    dor-services-client (6.6.0)
       activesupport (>= 4.2, < 7)
       cocina-models (~> 0.33.0)
       deprecation
@@ -256,7 +256,7 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
-    openapi3_parser (0.8.1)
+    openapi3_parser (0.8.2)
       commonmarker (~> 0.17)
       psych (~> 3.1)
     openapi_parser (0.11.2)
@@ -398,7 +398,7 @@ GEM
     temple (0.8.2)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
-    thor (0.20.3)
+    thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
     tins (1.25.0)
