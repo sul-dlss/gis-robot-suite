@@ -96,6 +96,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting preview.jpg"
           ifn = File.join(stacksdir, 'preview.jpg')
           fail "export-opengeometadata: #{druid} cannot find preview in #{ifn}" unless File.size?(ifn)
+
           ofn = File.join(exportdir, 'preview.jpg')
           FileUtils.cp(ifn, ofn)
 
@@ -103,6 +104,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "export-opengeometadata: #{druid} extracting GeoBlacklight"
           ifn = File.join(stagedir, 'metadata', 'geoblacklight.json')
           fail "export-opengeometadata: #{druid} cannot find GeoBlacklight in #{ifn}" unless File.size?(ifn)
+
           ofn = File.join(exportdir, 'geoblacklight.json')
           FileUtils.cp(ifn, ofn)
         end

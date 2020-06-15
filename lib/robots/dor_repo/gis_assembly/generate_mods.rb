@@ -62,6 +62,7 @@ module Robots       # Robot package
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
           fail ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
           fail ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
+
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
           n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"

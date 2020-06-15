@@ -24,6 +24,7 @@ module Robots       # Robot package
           # determine whether we have a Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           fail "load-raster: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-raster: #{druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
 
@@ -37,6 +38,7 @@ module Robots       # Robot package
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
           fail "load-raster: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+
           tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
           fail "load-raster: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 

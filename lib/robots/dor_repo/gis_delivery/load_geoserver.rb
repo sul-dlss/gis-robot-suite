@@ -28,6 +28,7 @@ module Robots       # Robot package
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           fail "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
 
@@ -55,6 +56,7 @@ module Robots       # Robot package
           # Obtain a handle to the workspace and clean it up.
           ws = RGeoServer::Workspace.new catalog, name: 'druid'
           fail "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
+
           LyberCore::Log.debug "Workspace: #{ws.name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
@@ -236,6 +238,7 @@ module Robots       # Robot package
           if lyr.new?
             fail "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
           end
+
           if lyr.default_style != style.name
             lyr.default_style = style.name
             LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"

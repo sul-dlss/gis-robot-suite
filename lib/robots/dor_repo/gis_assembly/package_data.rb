@@ -16,6 +16,7 @@ module Robots       # Robot package
           tmpdir = File.join(rootdir, 'temp')
           LyberCore::Log.debug "Changing to #{tmpdir}"
           fail "package-data: #{druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
+
           Dir.chdir(tmpdir)
           File.umask(002)
 

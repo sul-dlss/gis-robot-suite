@@ -6,7 +6,6 @@ require 'csv'
 #   "l_kw","geonames_kw","geonames_id","lc_kw","lc_id"
 #   "Ahmadābād District (India)","Ahmadābād",1279234,"Ahmadābād (India : District)","n78019943"
 module GisRobotSuite
-  #
   class Gazetteer
     CSV_FN = File.join(File.dirname(__FILE__), 'gazetteer.csv')
 
@@ -70,6 +69,7 @@ module GisRobotSuite
       return 'lcsh' if lcid =~ /^sh\d+$/
       return 'lcnaf' if lcid =~ /^(n|no)\d+$/
       return 'lcsh' unless find_loc_keyword(k).nil? # default to lcsh if present
+
       nil
     end
 
@@ -77,6 +77,7 @@ module GisRobotSuite
     # @return [String] geonames uri (includes trailing / as specified)
     def find_placename_uri(k)
       return nil if _get(k, :geonames_id).nil?
+
       "http://sws.geonames.org/#{_get(k, :geonames_id)}/"
     end
 
@@ -97,6 +98,7 @@ module GisRobotSuite
     def _get(k, i)
       return nil unless @registry.include?(k.strip)
       fail ArgumentError unless i.is_a? Symbol
+
       @registry[k.strip].nil? ? nil : @registry[k.strip][i]
     end
   end

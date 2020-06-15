@@ -33,6 +33,7 @@ module Robots       # Robot package
               seq = 1
               objects.each do |k, v|
                 next if v.nil? || v.empty?
+
                 resource_type = case k
                   when :Data
                     :object
@@ -130,7 +131,7 @@ module Robots       # Robot package
           }
 
           # Process files
-          objects.keys.each do |k|
+          objects.each_key do |k|
             Dir.glob(rootdir + '/content/' + PATTERNS[k]).each do |fn|
               objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
             end
@@ -139,6 +140,7 @@ module Robots       # Robot package
           # extract the MODS extension cleanly
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
           fail "generate-content-metadata: #{druid} is missing MODS metadata" unless File.size?(modsfn)
+
           doc = Nokogiri::XML(File.read(modsfn))
           ns = {
             'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',

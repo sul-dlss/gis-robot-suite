@@ -17,6 +17,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "normalize-data: running: #{cmd}"
           _success = system cmd
           fail "normalize-data: could not execute command successfully: #{_success}: #{cmd}" unless _success
+
           _success
         end
 
@@ -193,6 +194,7 @@ module Robots       # Robot package
             p = doc.xpath('/mods:mods/mods:subject/mods:cartographics[not(@authority)]/mods:projection',
                           'xmlns:mods' => 'http://www.loc.gov/mods/v3')
             fail "normalize-data: #{druid} has no native projection information in MODS" if p.nil?
+
             p = p.first
 
             LyberCore::Log.debug "normalize-data: #{druid} reports native projection: #{p.content}"
@@ -253,6 +255,7 @@ module Robots       # Robot package
           # Determine file format
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
           fail "normalize-data: #{druid} is missing MODS metadata" unless File.size?(modsfn)
+
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "normalize-data: #{druid} cannot determine file format from MODS" if format.nil?
 

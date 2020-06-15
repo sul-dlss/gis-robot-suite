@@ -27,7 +27,7 @@ gem 'zeitwerk', '~> 2.1'
 group :development do
   gem 'rspec'
   gem 'coveralls', require: false
-  gem 'rubocop', '~> 0.52.1', require: false # avoid code churn due to rubocop changes
+  gem 'rubocop', require: false
   gem 'rubocop-rspec'
 end
 
