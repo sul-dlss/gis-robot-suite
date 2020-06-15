@@ -20,7 +20,7 @@ module Robots       # Robot package
           LyberCore::Log.debug "start-assembly-workflow working on #{druid}"
           object_client = Dor::Services::Client.object(druid)
           current_version = object_client.version.current
-          Dor::Config.workflow.client.create_workflow_by_name("druid:#{druid}", 'assemblyWF', version: current_version)
+          WorkflowClientFactory.build.create_workflow_by_name("druid:#{druid}", 'assemblyWF', version: current_version)
         end
       end
     end

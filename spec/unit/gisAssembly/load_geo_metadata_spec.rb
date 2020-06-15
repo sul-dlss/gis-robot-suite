@@ -5,7 +5,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
   let(:robot) { described_class.new }
 
   before do
-    allow(Dor::Config.workflow).to receive(:client).and_return(workflow_client)
+    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
   end
 
   describe '#perform' do

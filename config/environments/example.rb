@@ -12,12 +12,11 @@ Dor::Config.configure do
   end
 
   solrizer.url 'https://localhost/solr/solrizer'
-  workflow.url 'https://localhost/workflow/'
-  dor_services.url 'https://localhost/dor'
 end
 
 REDIS_URL = 'localhost:6379/resque:development'
 
+# These are necessary for the gisDelivery/load-vector step which uses psql and shp2pgsql
 ENV['PGDATABASE'] ||= 'example_db'
 ENV['PGHOST'] ||= 'localhost'
 ENV['PGPORT'] ||= '5432'

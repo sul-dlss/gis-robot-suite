@@ -7,7 +7,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
 
   before do
-    allow(Dor::Config.workflow).to receive(:client).and_return(workflow_client)
+    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid.xml")
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.xml'), headers: {})
     stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores.xml")
