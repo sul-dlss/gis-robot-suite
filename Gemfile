@@ -13,7 +13,7 @@ gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 gem 'iso-639', '~> 0.2.10'
 gem 'lyber-core', '~> 6.1'
 gem 'pry', '~> 0.10'              # for console
-gem 'rake', '~> 12.0' # stuck on 12 until https://github.com/nevans/resque-pool/pull/183 is resolved
+gem 'rake', '~> 13.0'
 gem 'rgeoserver', '~> 0.10'
 gem 'rsolr'
 gem 'slop', '~> 3.6'              # for bin/run_robot
