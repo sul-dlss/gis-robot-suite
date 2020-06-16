@@ -4,11 +4,7 @@ require 'open-uri'
 module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisAssembly   # This is your workflow package name (using CamelCase)
-      class NormalizeData # This is your robot name (using CamelCase)
-        # Build off the base robot implementation which implements
-        # features common to all robots
-        include LyberCore::Robot
-
+      class NormalizeData < Base
         def initialize
           super('gisAssemblyWF', 'normalize-data', check_queued_status: true) # init LyberCore::Robot
         end
