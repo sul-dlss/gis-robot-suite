@@ -264,7 +264,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     psych (3.1.0)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-protection (2.0.8.1)
       rack
     rainbow (3.0.0)
@@ -347,8 +347,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 2.0)
     rubocop-ast (0.0.3)
       parser (>= 2.7.0.1)
-    rubocop-rspec (1.23.0)
-      rubocop (>= 0.52.1)
+    rubocop-rspec (1.40.0)
+      rubocop (>= 0.68.1)
     ruby-enum (0.8.0)
       i18n
     ruby-progressbar (1.10.1)
@@ -364,7 +364,7 @@ GEM
       rest-client
     rubyzip (2.3.0)
     safe_yaml (1.0.5)
-    sanitize (5.2.0)
+    sanitize (5.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
