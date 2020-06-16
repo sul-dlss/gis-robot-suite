@@ -437,6 +437,7 @@ DEPENDENCIES
   dor-services (~> 9.5)
   dor-services-client (~> 6.6)
   dor-workflow-client (~> 3.1)
+  druid-tools
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine
