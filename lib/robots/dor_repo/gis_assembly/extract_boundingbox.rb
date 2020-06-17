@@ -32,7 +32,7 @@ module Robots       # Robot package
         # @return [Array#Float] ulx uly lrx lry
         def extent_shapefile(shpfn)
           LyberCore::Log.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
-          IO.popen("ogrinfo -ro -so -al '#{shpfn}'") do |f|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |f|
             f.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               if line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
@@ -52,7 +52,7 @@ module Robots       # Robot package
         # @return [Array#Float] ulx uly lrx lry
         def extent_geotiff(tiffn)
           LyberCore::Log.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
-          IO.popen("gdalinfo '#{tiffn}'") do |f|
+          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiffn}'") do |f|
             ulx = 0
             uly = 0
             lrx = 0

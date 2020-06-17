@@ -10,7 +10,7 @@ module GisRobotSuite
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
-    cmd = "gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
+    cmd = "#{Settings.gdal_path}gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
     infotxt = IO.popen(cmd) do |f|
       f.readlines
     end

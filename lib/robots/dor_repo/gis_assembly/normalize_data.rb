@@ -36,25 +36,25 @@ module Robots       # Robot package
 
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             LyberCore::Log.info "normalize-data: #{druid} projecting #{File.basename(ifn)} from #{proj}"
-            system_with_check "gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
+            system_with_check "#{Settings.gdal_path}gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{ifn} #{tempfn} -co 'COMPRESS=NONE'"
             fail "normalize-data: #{druid} gdalwarp failed to create #{tempfn}" unless File.size?(tempfn)
 
             # compress tempfn with gdal_translate
             LyberCore::Log.info "normalize-data: #{druid} is compressing reprojection to #{proj}"
-            system_with_check "gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
+            system_with_check "#{Settings.gdal_path}gdal_translate -a_srs EPSG:#{srid} #{tempfn} #{ofn} -co 'COMPRESS=LZW'"
             FileUtils.rm_f(tempfn)
             fail "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.size?(ofn)
           else
             # just compress with gdal_translate
             LyberCore::Log.info "normalize-data: #{druid} is compressing original #{proj}"
-            system_with_check "gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
+            system_with_check "#{Settings.gdal_path}gdal_translate -a_srs EPSG:#{srid} #{ifn} #{ofn} -co 'COMPRESS=LZW'"
             fail "normalize-data: #{druid} gdal_translate failed to create #{ofn}" unless File.size?(ofn)
           end
         end
 
         def convert_8bit_to_rgb(tifffn, tmpdir)
           # if using 8-bit color palette, convert into RGB
-          cmd = "gdalinfo -norat -noct '#{tifffn}'"
+          cmd = "#{Settings.gdal_path}gdalinfo -norat -noct '#{tifffn}'"
           infotxt = IO.popen(cmd) do |f|
             f.readlines
           end
@@ -70,12 +70,12 @@ module Robots       # Robot package
             LyberCore::Log.info "normalize-data: expanding color palette into rgb for #{tifffn}"
             tmpfn = "#{tmpdir}/raw8bit.tif"
             system_with_check "mv #{tifffn} #{tmpfn}"
-            system_with_check "gdal_translate -expand rgb #{tmpfn} #{tifffn} -co 'COMPRESS=LZW'"
+            system_with_check "#{Settings.gdal_path}gdal_translate -expand rgb #{tmpfn} #{tifffn} -co 'COMPRESS=LZW'"
           end
         end
 
         def compute_statistics(tifffn)
-          system_with_check "gdalinfo -mm -stats -norat -noct #{tifffn}"
+          system_with_check "#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{tifffn}"
         end
 
         def zip_up(ozip, tifffn)
@@ -204,7 +204,7 @@ module Robots       # Robot package
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p odr unless File.directory? odr
           LyberCore::Log.info "normalize-data: #{druid} is projecting #{File.basename(ifn)} to EPSG:#{srid}"
-          system_with_check "env SHAPE_ENCODING= ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'" # prevent recoding
+          system_with_check "env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{ofn}' '#{ifn}'" # prevent recoding
           fail "normalize-data: #{druid} failed to reproject #{ifn}" unless File.size?(ofn)
 
           # normalize prj file
