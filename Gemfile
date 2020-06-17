@@ -5,6 +5,7 @@ gem 'config', '~> 2.0'
 gem 'dor-services', '~> 9.5'
 gem 'dor-services-client', '~> 6.6'
 gem 'dor-workflow-client', '~> 3.1'
+gem 'druid-tools'
 gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 # iso-639 0.3.0 isn't compatible with ruby 2.5.  This declaration can be dropped when we upgrade to ruby 2.6
