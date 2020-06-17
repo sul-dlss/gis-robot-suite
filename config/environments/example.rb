@@ -21,5 +21,3 @@ ENV['PGDATABASE'] ||= 'example_db'
 ENV['PGHOST'] ||= 'localhost'
 ENV['PGPORT'] ||= '5432'
 ENV['PGUSER'] ||= 'example_user'
-
-ENV['RGEOSERVER_CONFIG'] ||= File.expand_path(File.join(File.dirname(__FILE__), ENV['ROBOT_ENVIRONMENT'] + '_rgeoserver.yml'))
