@@ -33,6 +33,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
         stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716.xml")
           .to_return(status: 404)
       end
+
       it 'runs without error' do
         stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes.xml')
                        .with(headers: { 'Content-Type' => 'application/xml' }, body: post_body)
