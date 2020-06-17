@@ -48,6 +48,8 @@ env_file = File.expand_path(File.dirname(__FILE__) + "/./environments/#{environm
 puts "Loading config from #{env_file}"
 require env_file
 
+ENV['RGEOSERVER_CONFIG'] ||= File.expand_path('rgeoserver.yml', __dir__)
+
 module GisRobotSuite
   def self.connect_dor_services_app
     Dor::Services::Client.configure(url: Settings.dor_services.url,
