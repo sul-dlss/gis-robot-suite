@@ -15,7 +15,7 @@ module Robots       # Robot package
         #
         # @return [String] Point, Polygon, LineString as appropriate
         def geometry_type_ogrinfo(shp_filename)
-          IO.popen("ogrinfo -ro -so -al '#{shp_filename}'") do |f|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_filename}'") do |f|
             f.readlines.each do |line|
               if line =~ /^Geometry:\s+(.*)\s*$/
                 LyberCore::Log.debug "generate-mods: parsing ogrinfo geometry output: #{line}"

@@ -29,3 +29,5 @@ purl:
 
 stacks:
   url: 'https://stacks.example.org'
+
+gdal_path: ''
