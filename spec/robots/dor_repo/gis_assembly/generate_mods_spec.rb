@@ -22,4 +22,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
   it 'handles bad arguments' do
     expect {subject.to_coordinates_ddmmss('-185 -- 185/95 -- -95')}.to raise_error(ArgumentError)
   end
+
+  describe '#to_mods' do
+    let(:geo_metadata) { Nokogiri::XML(read_fixture('geoMetadata.xml')) }
+
+    it 'runs without error' do
+      expect do
+        subject.to_mods(geo_metadata, { purl: 'https://purl.stanford.edu/ym947vs2726', newfoo: 123 })
+      end.not_to raise_error
+    end
+  end
 end
