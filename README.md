@@ -7,6 +7,11 @@ GIS-Robot-Suite
 
 Robot code for accessioning, delivery, and discovery of GIS resources.
 
+# Dependencies
+These robots require several dependencies needed to perform its tasks. These are often shelled out to using `system` calls.
+
+ - [GDAL](https://gdal.org/) Needed for several geospatial tasks. Also needed on servers are the utils and clients
+ - rsync also used as part of the robot process and is needed
 
 # Documentation
 
