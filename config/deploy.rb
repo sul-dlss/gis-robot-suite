@@ -21,7 +21,7 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 
 # Default value for :linked_files is []
 # set :linked_files, %w{config/database.yml}
-set :linked_files, %w(config/honeybadger.yml config/rgeoserver_public.yml config/rgeoserver_restricted.yml)
+set :linked_files, %w(config/honeybadger.yml config/rgeoserver.yml config/rgeoserver_public.yml config/rgeoserver_restricted.yml)
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w(log run tmp/pids config/certs config/settings config/ArcGIS)
