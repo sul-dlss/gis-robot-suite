@@ -56,9 +56,6 @@ RSpec/ExampleLength:
 
 # --- Style ---
 
-Style/FrozenStringLiteralComment:
-  Enabled: false # avoid cruft in our files for something that MAY be default in Ruby 3.0
-
 Style/IfUnlessModifier:
   Enabled: false
     # robots/gisAssembly/extract-boundingbox.rb # line 233 unless ulx <= lrx && uly >= lry

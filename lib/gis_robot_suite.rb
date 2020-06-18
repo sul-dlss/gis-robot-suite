@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GisRobotSuite
   def self.initialize_robot(druid)
     n = 5 # seconds

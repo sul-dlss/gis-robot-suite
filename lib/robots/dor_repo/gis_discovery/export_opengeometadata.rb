@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 # Robot class to run under multiplexing infrastructure

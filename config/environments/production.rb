@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Dor::Config.configure do
   fedora do
     url Settings.fedora.url

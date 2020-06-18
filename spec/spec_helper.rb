@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Make sure specs run with the definitions from local.rb
 ENV['ROBOT_ENVIRONMENT'] ||= 'test'
 

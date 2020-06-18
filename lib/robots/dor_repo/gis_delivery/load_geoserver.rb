@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rgeoserver'
 require 'druid-tools'
 require 'mods'

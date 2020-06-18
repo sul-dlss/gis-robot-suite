@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # To start an pry session with gems and configuration loaded:
 # [robot_root] $ ./bin/console development
 ENV['ROBOT_ENVIRONMENT'] = ARGV.shift unless ARGV.first.nil?
