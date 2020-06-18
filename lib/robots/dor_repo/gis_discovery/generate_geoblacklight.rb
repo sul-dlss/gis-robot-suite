@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date' # for rfc3339
 require 'geo_combine'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fastimage'
 require 'mime/types'
 require 'assembly-objectfile'
