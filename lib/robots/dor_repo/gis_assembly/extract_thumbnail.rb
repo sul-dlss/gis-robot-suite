@@ -15,7 +15,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid = GisRobotSuite.initialize_robot druid
+          druid = druid.delete_prefix('druid:')
           LyberCore::Log.debug "extract-thumbnail working on #{druid}"
           extract_thumbnail druid
         end

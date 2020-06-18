@@ -20,7 +20,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid_without_namespace = GisRobotSuite.initialize_robot druid
+          druid_without_namespace = druid.delete_prefix('druid:')
           LyberCore::Log.debug "load-geo-metadata: #{druid} working"
 
           rootdir = GisRobotSuite.locate_druid_path druid_without_namespace, type: :stage

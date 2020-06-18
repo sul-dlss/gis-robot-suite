@@ -16,7 +16,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid = GisRobotSuite.initialize_robot druid
+          druid = druid.delete_prefix('druid:')
           LyberCore::Log.debug "start-gis-discovery-workflow working on #{druid}"
           object_client = Dor::Services::Client.object(druid)
           current_version = object_client.version.current
