@@ -21,5 +21,3 @@ ENV['PGDATABASE'] ||= Settings.db.database
 ENV['PGHOST'] ||= Settings.db.host
 ENV['PGPORT'] ||= Settings.db.port
 ENV['PGUSER'] ||= Settings.db.user
-
-ENV['ROBOT_DELAY'] = '0'

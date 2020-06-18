@@ -20,7 +20,7 @@ module Robots       # Robot package
         #
         # @param [String] druid -- the Druid identifier for the object to process
         def perform(druid)
-          druid = GisRobotSuite.initialize_robot druid
+          druid = druid.delete_prefix('druid:')
           LyberCore::Log.debug "generate-geoblacklight: #{druid} working"
 
           # Always overwrite any existing schema data because either MODS or the Rights may change.
