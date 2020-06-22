@@ -13,6 +13,9 @@ AllCops:
 
 # --- Layout ---
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
@@ -28,7 +31,22 @@ Layout/LineLength:
 Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
 
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
 # --- Lint ---
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
 
 # --- Metrics ---
 
@@ -68,22 +86,7 @@ Style/SymbolArray:
   Exclude:
     - Rakefile # because [:spec, :rubocop] isn't a big deal
 
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
-
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
+Style/RedundantFetchBlock:
   Enabled: true
 
 Style/ExponentialNotation:
