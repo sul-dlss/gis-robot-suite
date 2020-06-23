@@ -8,7 +8,7 @@ module Robots       # Robot package
   module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
     module GisDiscovery   # This is your workflow package name (using CamelCase)
       class GenerateGeoblacklight < Base
-        XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../lib/xslt/mods2geoblacklight.xsl')
+        XSLFN = File.expand_path(File.dirname(__FILE__) + '../../../../../lib/xslt/mods2geoblacklight.xsl')
 
         def initialize
           super('gisDiscoveryWF', 'generate-geoblacklight', check_queued_status: true) # init LyberCore::Robot
