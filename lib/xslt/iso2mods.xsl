@@ -230,7 +230,7 @@
           </xsl:for-each>
         </originInfo>
         <language>
-          <languageTerm authority="iso639-2b">
+          <languageTerm type="code" authority="iso639-2b">
             <xsl:value-of select="gmd:language/gmd:LanguageCode/@codeListValue"/>
           </languageTerm>
         </language>
