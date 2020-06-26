@@ -6,7 +6,7 @@
 GIS-Robot-Suite
 ---------------
 
-Robot code for accessioning, delivery, and discovery of GIS resources.
+Robot code for accessioning and delivery of GIS resources.
 
 # Dependencies
 These robots require several dependencies needed to perform its tasks. These are often shelled out to using `system` calls.
@@ -54,16 +54,6 @@ to start all robots defined in `config/resque-pool.yml`.
 * `load-geowebcache` :: Load layers into GeoWebCache (skipped)
 * `seed-geowebcache` :: Generate tiles for GeoWebCache layers (skipped)
 * `finish-gis-delivery-workflow` :: Finalize delivery workflow for the object (validity check)
-* `start-gis-discovery-workflow` :: Kickstart GIS discovery workflow with gisDiscoveryWF (manual step)
-
-`gisDiscoveryWF`
-----------------
-
-* `generate-geoblacklight` :: Generate Solr document for GeoBlacklight schema
-* `load-geoblacklight` :: Load Solr document into GeoBlacklight Solr index
-* `export-opengeometadata` :: Export metadata files for import into OpenGeoMetadata repository
-* `finish-gis-discovery-workflow` :: Finalize GIS discovery workflow for the object (validity check
-)
 
 Data Wrangling
 ==============
