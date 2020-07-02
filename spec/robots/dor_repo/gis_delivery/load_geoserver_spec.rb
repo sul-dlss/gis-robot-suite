@@ -8,35 +8,27 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
   before do
     allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid.xml")
-      .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.xml'), headers: {})
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores.xml")
-      .to_return(status: 200, body: read_fixture('geoserver_responses/datastores.xml'), headers: {})
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/coveragestores.xml")
-      .to_return(status: 200, body: '<coverageStores/>', headers: {})
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/wmsstores.xml")
-      .to_return(status: 200, body: '<wmsStores/>', headers: {})
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/wmtsstores.xml")
-      .to_return(status: 200, body: '<wmtsStores/>', headers: {})
+    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid")
+      .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
 
   describe '#perform' do
     describe 'loading a vector dataset' do
       let(:druid) { 'bb338jh0716' }
       let(:post_body) do
-        "<?xml version=\"1.0\"?>\n<featureType>\n  <nativeName>bb338jh0716</nativeName>\n  <name>bb338jh0716</name>\n  <enabled>true</enabled>\n  <title>Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999</title>\n  <abstract>This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.</abstract>\n  <keywords>\n    <string>Hydrology</string>\n    <string>Watersheds</string>\n    <string>Boundaries</string>\n    <string>Inland Waters</string>\n    <string>Sonoma County (Calif.)</string>\n    <string>Mendocino County (Calif.)</string>\n    <string>Russian River Watershed (Calif.)</string>\n  </keywords>\n  <store class=\"dataStore\">\n    <name>postgis_druid</name>\n  </store>\n  <projectionPolicy>NONE</projectionPolicy>\n</featureType>\n" # rubocop:disable Layout/LineLength
+        "{\"featureType\":{\"name\":\"bb338jh0716\",\"title\":\"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999\",\"enabled\":true,\"abstract\":\"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.\",\"keywords\":{\"string\":[\"Hydrology\",\"Watersheds\",\"Boundaries\",\"Inland Waters\",\"Sonoma County (Calif.)\",\"Mendocino County (Calif.)\",\"Russian River Watershed (Calif.)\"]},\"metadata_links\":[],\"metadata\":{\"cacheAgeMax\":86400,\"cachingEnabled\":true}}}" # rubocop:disable Layout/LineLength
       end
 
       before do
-        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid.xml")
-          .to_return(status: 200, body: read_fixture('geoserver_responses/postgis_druid.xml'), headers: {})
-        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716.xml")
-          .to_return(status: 404)
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid")
+          .to_return(status: 200, body: read_fixture('geoserver_responses/postgis_druid.json'), headers: {})
+        # stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716.xml")
+        #   .to_return(status: 404)
       end
 
       it 'runs without error' do
-        stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes.xml')
-                       .with(headers: { 'Content-Type' => 'application/xml' }, body: post_body)
+        stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes')
+                       .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
                        .to_return(status: 201)
         robot.perform(druid)
         expect(stubbed_post).to have_been_requested
@@ -60,6 +52,14 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
           .to_return(status: 404)
         stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.xml')
           .to_return(status: 404)
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores.xml")
+          .to_return(status: 200, body: read_fixture('geoserver_responses/datastores.xml'), headers: {})
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/coveragestores.xml")
+          .to_return(status: 200, body: '<coverageStores/>', headers: {})
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/wmsstores.xml")
+          .to_return(status: 200, body: '<wmsStores/>', headers: {})
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/wmtsstores.xml")
+          .to_return(status: 200, body: '<wmtsStores/>', headers: {})
         stub_request(:get, 'http://example.com/geoserver/rest/styles/raster.xml')
           .to_return(status: 200, body: '<style><name>raster</name><format>sld</format><languageVersion><version>1.0.0</version></languageVersion><filename>raster.sld</filename></style>') # rubocop:disable Layout/LineLength
         stub_request(:get, 'http://example.com/geoserver/rest/styles/raster.sld')

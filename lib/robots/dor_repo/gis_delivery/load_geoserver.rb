@@ -45,20 +45,27 @@ module Robots       # Robot package
 
           # Connect to GeoServer
           geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
-          master_opts = geoserver_options[:geoserver_master]
+          primary_opts = geoserver_options[:geoserver_primary]
           LyberCore::Log.debug "GeoServer options: #{geoserver_options}"
-          LyberCore::Log.debug "Connecting to catalog (#{master_opts})..."
-          catalog = RGeoServer.catalog master_opts
-          LyberCore::Log.debug "Connected to #{catalog}"
+          LyberCore::Log.debug "Connecting to catalog (#{primary_opts})..."
+          connection = Geoserver::Publish::Connection.new(
+            {
+              "url" => primary_opts[:url],
+              "user" => primary_opts[:user],
+              "password" => primary_opts[:password]
+            }
+          )
 
           # Obtain a handle to the workspace and clean it up.
-          ws = RGeoServer::Workspace.new catalog, name: 'druid'
-          fail "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
+          ws = Geoserver::Publish::Workspace.new(connection)
+          workspace_name = 'druid'
 
-          LyberCore::Log.debug "Workspace: #{ws.name} ready"
+          fail "load-geoserver: #{druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name: workspace_name)
+
+          LyberCore::Log.debug "Workspace: #{workspace_name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
-            create_vector(catalog, ws, layer['vector'])
+            create_vector(connection, ws, layer['vector'], workspace_name)
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
             create_raster(catalog, ws, layer['raster'])
           else
@@ -83,34 +90,36 @@ module Robots       # Robot package
           h
         end
 
-        def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
+        def create_vector(connection, ws, layer, workspace_name, dsname = 'postgis_druid')
           druid = layer['druid']
           %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
-          LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
-          ds = RGeoServer::DataStore.new catalog, workspace: ws, name: dsname
-          fail "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
+          LyberCore::Log.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
+          ds = Geoserver::Publish::DataStore.new(connection)
+          fail "load-geoserver: #{druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
 
-          ft = RGeoServer::FeatureType.new catalog, workspace: ws, data_store: ds, name: druid
-          if ft.new?
-            LyberCore::Log.debug "Creating FeatureType #{druid}"
-          else
-            LyberCore::Log.debug "Found existing FeatureType #{druid}"
-          end
+          feature_type = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
+          ft = feature_type.new
           ft.enabled = true
           ft.title = layer['title']
           ft.abstract = layer['abstract']
-          ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+          ft.keywords = { string: [layer['keywords']].flatten.compact.uniq }
           ft.metadata_links = []
-          ft.metadata = ft.metadata.merge!(
+          ft.metadata = ft.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
             'cachingEnabled' => true
           )
           begin
-            ft.save
-          rescue RGeoServer::GeoServerInvalidRequest => e
+            Geoserver::Publish::FeatureType.new(connection).create(
+              workspace_name: workspace_name,
+              data_store_name: dsname,
+              feature_type_name: druid,
+              title: layer['title'],
+              additional_payload: ft.to_h
+            )
+          rescue Geoserver::Publish::Error => e
             fail "load-geoserver: #{druid} cannot save FeatureType: #{e.message}"
           end
         end
