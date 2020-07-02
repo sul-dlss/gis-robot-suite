@@ -64,15 +64,6 @@ module Robots       # Robot package
           else
             fail "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
-
-          # Reload the slave catalog
-          slave_opts = geoserver_options[:geoserver_slave]
-          unless slave_opts.nil?
-            LyberCore::Log.debug "Connecting to slave catalog (#{slave_opts})..."
-            catalog = RGeoServer.catalog slave_opts, true
-            LyberCore::Log.debug "Connected to #{catalog}... reloading catalog"
-            catalog.reload
-          end
         end
 
         # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
