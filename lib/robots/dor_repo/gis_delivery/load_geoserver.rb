@@ -100,6 +100,21 @@ module Robots       # Robot package
           ds = Geoserver::Publish::DataStore.new(connection)
           fail "load-geoserver: #{druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
 
+          feature_type_exists = Geoserver::Publish::FeatureType.new(connection).find(
+            workspace_name: workspace_name,
+            data_store_name: dsname,
+            feature_type_name: druid
+          )
+
+          resource_action = case feature_type_exists
+                            when nil
+                              LyberCore::Log.debug "Creating FeatureType #{druid}"
+                              :create
+                            else
+                              LyberCore::Log.debug "Found existing FeatureType #{druid}"
+                              :update
+                            end
+
           feature_type = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
           ft = feature_type.new
           ft.enabled = true
@@ -112,7 +127,8 @@ module Robots       # Robot package
             'cachingEnabled' => true
           )
           begin
-            Geoserver::Publish::FeatureType.new(connection).create(
+            Geoserver::Publish::FeatureType.new(connection).send(
+              resource_action,
               workspace_name: workspace_name,
               data_store_name: dsname,
               feature_type_name: druid,

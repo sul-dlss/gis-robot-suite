@@ -22,12 +22,22 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
       before do
         stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid")
           .to_return(status: 200, body: read_fixture('geoserver_responses/postgis_druid.json'), headers: {})
-        # stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716.xml")
-        #   .to_return(status: 404)
       end
 
       it 'runs without error' do
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716")
+          .to_return(status: 404)
         stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes')
+                       .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
+                       .to_return(status: 201)
+        robot.perform(druid)
+        expect(stubbed_post).to have_been_requested
+      end
+
+      it 'already existing, runs without error' do
+        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716")
+          .to_return(status: 200, body: {}.to_json)
+        stubbed_post = stub_request(:put, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716')
                        .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
                        .to_return(status: 201)
         robot.perform(druid)
