@@ -86,7 +86,7 @@ GEM
     deep_merge (1.2.1)
     deprecation (0.99.0)
       activesupport
-    diff-lcs (1.4.3)
+    diff-lcs (1.4.4)
     dlss-capistrano (3.9.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.3.0)
@@ -205,7 +205,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     iso-639 (0.2.10)
-    json (2.3.0)
+    json (2.3.1)
     json-schema (2.6.2)
       addressable (~> 2.3.8)
     link_header (0.0.8)
@@ -347,7 +347,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 2.0)
     rubocop-ast (0.1.0)
       parser (>= 2.7.0.1)
-    rubocop-rspec (1.40.0)
+    rubocop-rspec (1.41.0)
       rubocop (>= 0.68.1)
     ruby-enum (0.8.0)
       i18n
