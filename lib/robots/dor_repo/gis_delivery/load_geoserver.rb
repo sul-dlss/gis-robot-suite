@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rgeoserver'
 require 'druid-tools'
 require 'mods'
 
@@ -29,7 +28,7 @@ module Robots       # Robot package
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
-
+          rights = determine_rights(druid).downcase
           # reproject based on file format information
           if GisRobotSuite.vector?(format)
             layertype = 'PostGIS'
@@ -44,15 +43,12 @@ module Robots       # Robot package
           layer[(layertype == 'GeoTIFF' ? 'raster' : 'vector')]['format'] = layertype
 
           # Connect to GeoServer
-          geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
-          primary_opts = geoserver_options[:geoserver_primary]
-          LyberCore::Log.debug "GeoServer options: #{geoserver_options}"
-          LyberCore::Log.debug "Connecting to catalog (#{primary_opts})..."
+          LyberCore::Log.debug "GeoServer options: #{Settings.geoserver[rights][:primary]}"
           connection = Geoserver::Publish::Connection.new(
             {
-              "url" => primary_opts[:url],
-              "user" => primary_opts[:user],
-              "password" => primary_opts[:password]
+              "url" => Settings.geoserver[rights][:primary][:url],
+              "user" => Settings.geoserver[rights][:primary][:user],
+              "password" => Settings.geoserver[rights][:primary][:password]
             }
           )
 
@@ -290,6 +286,16 @@ module Robots       # Robot package
               fail "load-geoserver: #{druid} cannot save Layer: #{e.message}"
             end
           end
+        end
+
+        def determine_rights(druid)
+          rights = 'Restricted'
+          xml = Dor.find("druid:#{druid}").rightsMetadata.ng_xml
+          if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
+            rights = 'Public'
+          end
+
+          rights
         end
       end
     end
