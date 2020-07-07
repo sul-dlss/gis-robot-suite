@@ -187,7 +187,7 @@ module Robots       # Robot package
           cv.enabled = true
           cv.title = layer['title']
           cv.abstract = layer['abstract']
-          cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
+          cv.keywords = { string: [layer['keywords']].flatten.compact.uniq }
           cv.metadata_links = []
           cv.metadata = cv.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
