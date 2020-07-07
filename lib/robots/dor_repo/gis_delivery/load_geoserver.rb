@@ -61,9 +61,9 @@ module Robots       # Robot package
           LyberCore::Log.debug "Workspace: #{workspace_name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
-            create_vector(connection, ws, layer['vector'], workspace_name)
+            create_vector(connection, layer['vector'], workspace_name)
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
-            create_raster(connection, ws, layer['raster'], workspace_name)
+            create_raster(connection, layer['raster'], workspace_name)
           else
             fail "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
@@ -86,7 +86,7 @@ module Robots       # Robot package
           h
         end
 
-        def create_vector(connection, ws, layer, workspace_name, dsname = 'postgis_druid')
+        def create_vector(connection, layer, workspace_name, dsname = 'postgis_druid')
           druid = layer['druid']
           %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
@@ -136,7 +136,7 @@ module Robots       # Robot package
           end
         end
 
-        def create_raster(connection, ws, layer, workspace_name)
+        def create_raster(connection, layer, workspace_name)
           druid = layer['druid']
           %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
