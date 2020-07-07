@@ -410,7 +410,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activemodel (~> 5.1, < 5.2)
   assembly-objectfile
   capistrano
   capistrano-bundler
