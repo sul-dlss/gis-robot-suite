@@ -17,16 +17,19 @@ module Robots       # Robot package
           druid = druid.delete_prefix('druid:')
           LyberCore::Log.debug "finish-gis-delivery-workflow working on #{druid}"
 
-          # Connect to GeoServer master/slave to verify layer
-          geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
-          [:geoserver_master, :geoserver_slave].each do |k|
-            catalog = RGeoServer.catalog geoserver_options[k]
-            LyberCore::Log.debug "Connected to #{catalog}"
-
-            # Verify layer
-            layer = RGeoServer::Layer.new catalog, name: druid.to_s
-            fail "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" if layer.new?
+          # Connect to both the public and restricted GeoServers to verify layer
+          # exists
+          available_in_geoserver = Settings.geoserver.map do |_key, setting|
+            connection = Geoserver::Publish::Connection.new(
+              {
+                "url" => setting[:primary][:url],
+                "user" => setting[:primary][:user],
+                "password" => setting[:primary][:password]
+              }
+            )
+            Geoserver::Publish::Layer.new(connection).find(layer_name: druid)
           end
+          fail "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" unless available_in_geoserver.any?
         end
       end
     end

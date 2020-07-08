@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rgeoserver'
 require 'druid-tools'
 require 'mods'
 
@@ -29,7 +28,7 @@ module Robots       # Robot package
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
-
+          rights = determine_rights(druid).downcase
           # reproject based on file format information
           if GisRobotSuite.vector?(format)
             layertype = 'PostGIS'
@@ -44,34 +43,29 @@ module Robots       # Robot package
           layer[(layertype == 'GeoTIFF' ? 'raster' : 'vector')]['format'] = layertype
 
           # Connect to GeoServer
-          geoserver_options = YAML.load(File.read(ENV['RGEOSERVER_CONFIG']))
-          master_opts = geoserver_options[:geoserver_master]
-          LyberCore::Log.debug "GeoServer options: #{geoserver_options}"
-          LyberCore::Log.debug "Connecting to catalog (#{master_opts})..."
-          catalog = RGeoServer.catalog master_opts
-          LyberCore::Log.debug "Connected to #{catalog}"
+          LyberCore::Log.debug "GeoServer options: #{Settings.geoserver[rights][:primary]}"
+          connection = Geoserver::Publish::Connection.new(
+            {
+              "url" => Settings.geoserver[rights][:primary][:url],
+              "user" => Settings.geoserver[rights][:primary][:user],
+              "password" => Settings.geoserver[rights][:primary][:password]
+            }
+          )
 
           # Obtain a handle to the workspace and clean it up.
-          ws = RGeoServer::Workspace.new catalog, name: 'druid'
-          fail "load-geoserver: #{druid}: No such workspace: 'druid'" if ws.new?
+          ws = Geoserver::Publish::Workspace.new(connection)
+          workspace_name = 'druid'
 
-          LyberCore::Log.debug "Workspace: #{ws.name} ready"
+          fail "load-geoserver: #{druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name: workspace_name)
+
+          LyberCore::Log.debug "Workspace: #{workspace_name} ready"
 
           if layer['vector'] && layer['vector']['format'] == 'PostGIS'
-            create_vector(catalog, ws, layer['vector'])
+            create_vector(connection, layer['vector'], workspace_name)
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
-            create_raster(catalog, ws, layer['raster'])
+            create_raster(connection, layer['raster'], workspace_name)
           else
             fail "load-geoserver: #{druid} has unknown layer format: #{layer}"
-          end
-
-          # Reload the slave catalog
-          slave_opts = geoserver_options[:geoserver_slave]
-          unless slave_opts.nil?
-            LyberCore::Log.debug "Connecting to slave catalog (#{slave_opts})..."
-            catalog = RGeoServer.catalog slave_opts, true
-            LyberCore::Log.debug "Connected to #{catalog}... reloading catalog"
-            catalog.reload
           end
         end
 
@@ -92,83 +86,122 @@ module Robots       # Robot package
           h
         end
 
-        def create_vector(catalog, ws, layer, dsname = 'postgis_druid')
+        def create_vector(connection, layer, workspace_name, dsname = 'postgis_druid')
           druid = layer['druid']
           %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
-          LyberCore::Log.debug "Retrieving DataStore: #{ws.name}/#{dsname}"
-          ds = RGeoServer::DataStore.new catalog, workspace: ws, name: dsname
-          fail "load-geoserver: #{druid}: Datastore #{dsname} not found on #{catalog}" if ds.nil? || ds.new?
+          LyberCore::Log.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
+          ds = Geoserver::Publish::DataStore.new(connection)
+          fail "load-geoserver: #{druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
 
-          ft = RGeoServer::FeatureType.new catalog, workspace: ws, data_store: ds, name: druid
-          if ft.new?
-            LyberCore::Log.debug "Creating FeatureType #{druid}"
-          else
-            LyberCore::Log.debug "Found existing FeatureType #{druid}"
-          end
+          feature_type_exists = Geoserver::Publish::FeatureType.new(connection).find(
+            workspace_name: workspace_name,
+            data_store_name: dsname,
+            feature_type_name: druid
+          )
+
+          resource_action = case feature_type_exists
+                            when nil
+                              LyberCore::Log.debug "Creating FeatureType #{druid}"
+                              :create
+                            else
+                              LyberCore::Log.debug "Found existing FeatureType #{druid}"
+                              :update
+                            end
+
+          feature_type = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
+          ft = feature_type.new
           ft.enabled = true
           ft.title = layer['title']
           ft.abstract = layer['abstract']
-          ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+          ft.keywords = { string: [layer['keywords']].flatten.compact.uniq }
           ft.metadata_links = []
-          ft.metadata = ft.metadata.merge!(
+          ft.metadata = ft.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
             'cachingEnabled' => true
           )
           begin
-            ft.save
-          rescue RGeoServer::GeoServerInvalidRequest => e
+            Geoserver::Publish::FeatureType.new(connection).send(
+              resource_action,
+              workspace_name: workspace_name,
+              data_store_name: dsname,
+              feature_type_name: druid,
+              title: layer['title'],
+              additional_payload: ft.to_h
+            )
+          rescue Geoserver::Publish::Error => e
             fail "load-geoserver: #{druid} cannot save FeatureType: #{e.message}"
           end
         end
 
-        def create_raster(catalog, ws, layer)
+        def create_raster(connection, layer, workspace_name)
           druid = layer['druid']
           %w(title abstract keywords).each do |i|
             fail ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
           # create coverage store
-          LyberCore::Log.debug "Retrieving CoverageStore: #{ws.name}/#{druid}"
-          cs = RGeoServer::CoverageStore.new catalog, workspace: ws, name: druid
-          if cs.new?
-            LyberCore::Log.debug "Creating CoverageStore: #{ws.name}/#{cs.name}"
-            cs.enabled = true
-            cs.description = layer['title']
-            cs.data_type = 'GeoTIFF'
-            cs.url = "file:#{Settings.geohydra.geotiff.dir}/#{druid}.tif"
+          LyberCore::Log.debug "Retrieving CoverageStore: #{workspace_name}/#{druid}"
+          coverage_store = Geoserver::Publish::CoverageStore.new(connection)
+          coverage_store_exists = coverage_store.find(
+            coverage_store_name: druid,
+            workspace_name: workspace_name
+          )
+          if coverage_store_exists.nil?
+            LyberCore::Log.debug "Creating CoverageStore: #{workspace_name}/#{druid}"
             begin
-              cs.save
-            rescue RGeoServer::GeoServerInvalidRequest => e
+              coverage_store.create(
+                workspace_name: workspace_name,
+                coverage_store_name: druid,
+                url: "file:#{Settings.geohydra.geotiff.dir}/#{druid}.tif",
+                type: 'GeoTIFF',
+                additional_payload: {
+                  description: layer['title']
+                }
+              )
+            rescue Geoserver::Publish::Error => e
               fail "load-geoserver: #{druid} cannot save CoverageStore: #{e.message}"
             end
           else
-            LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{ws.name}/#{cs.name}"
-            fail "load-geoserver: #{druid} found disabled CoverageStore" unless cs.enabled
+            LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{workspace_name}/#{druid}"
           end
 
           # create or update coverage
-          LyberCore::Log.debug "Retrieving Coverage: #{ws.name}/#{cs.name}/#{druid}"
-          cv = RGeoServer::Coverage.new catalog, workspace: ws, coverage_store: cs, name: druid
-          if cv.new?
+          LyberCore::Log.debug "Retrieving Coverage: #{workspace_name}/#{druid}/#{druid}"
+          coverage = Geoserver::Publish::Coverage.new(connection)
+          coverage_exists = coverage.find(
+            coverage_name: druid,
+            coverage_store_name: druid,
+            workspace_name: workspace_name
+          )
+
+          if coverage_exists.nil?
             LyberCore::Log.debug "Creating Coverage #{druid}"
           else
             LyberCore::Log.debug "Found existing Coverage #{druid}"
           end
+          coverage_struct = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
+          cv = coverage_struct.new
           cv.enabled = true
           cv.title = layer['title']
           cv.abstract = layer['abstract']
-          cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
+          cv.keywords = { string: [layer['keywords']].flatten.compact.uniq }
           cv.metadata_links = []
-          cv.metadata = cv.metadata.merge!(
+          cv.metadata = cv.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
             'cachingEnabled' => true
           )
           begin
-            cv.save
-          rescue RGeoServer::GeoServerInvalidRequest => e
+            coverage.create(
+              workspace_name: workspace_name,
+              coverage_store_name: druid,
+              coverage_name: druid,
+              title: layer['title'],
+              additional_payload: cv.to_h
+            )
+          rescue Geoserver::Publish::Error => e
             fail "load-geoserver: #{druid} cannot save Coverage: #{e.message}"
           end
 
@@ -180,7 +213,7 @@ module Robots       # Robot package
             raster_style = 'raster'
           end
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
-
+          style = Geoserver::Publish::Style.new(connection)
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
             _min = Regexp.last_match(1).to_f.floor
@@ -214,38 +247,55 @@ module Robots       # Robot package
               puts sldtxt
 
               # create a style with the SLD definition
-              style = RGeoServer::Style.new catalog, name: raster_style
-              LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{style.name}"
-              if style.new?
-                style.sld_doc = sldtxt
-                LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{style.name}"
-                style.save
+              style_exists = style.find(
+                style_name: raster_style
+              )
+              LyberCore::Log.debug "load-geoserver: #{druid} loaded style #{raster_style}"
+              if style_exists.nil?
+                LyberCore::Log.debug "load-geoserver: #{druid} saving new style #{raster_style}"
+                style.create(style_name: raster_style)
+                style.update(style_name: raster_style, filename: nil, payload: sldtxt)
               end
             else
               raster_style = 'raster_grayband' # a simple band-oriented histogram adjusted style
-              style = RGeoServer::Style.new catalog, name: raster_style
-              fail "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
+              style_exists = style.find(
+                style_name: raster_style
+              )
+              fail "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
             end
           else
-            style = RGeoServer::Style.new catalog, name: raster_style
-            fail "load-geoserver: #{druid} has missing style #{raster_style} on #{catalog}" if style.new?
+            style_exists = style.find(
+              style_name: raster_style
+            )
+            fail "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
           end
 
           # fetch layer to load raster style - it's created when the coverage is created via REST API
-          lyr = RGeoServer::Layer.new catalog, workspace: ws, name: druid
-          if lyr.new?
-            fail "load-geoserver: Layer #{druid} is missing for coverage #{ws.name}/#{cs.name}/#{druid}"
+          layer = Geoserver::Publish::Layer.new(connection)
+          layer_exists = layer.find(layer_name: druid)
+          if layer_exists.nil?
+            fail "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}"
           end
 
-          if lyr.default_style != style.name
-            lyr.default_style = style.name
-            LyberCore::Log.debug "load-geoserver: #{druid} updating #{lyr.name} with default style #{style.name}"
+          if layer_exists.dig('layer', 'defaultStyle', 'name') != raster_style
+            layer_exists['layer']['defaultStyle'] = raster_style
+            LyberCore::Log.debug "load-geoserver: #{druid} updating #{druid} with default style #{raster_style}"
             begin
-              lyr.save
-            rescue RGeoServer::GeoServerInvalidRequest => e
+              layer.update(layer_name: druid, additional_payload: layer_exists)
+            rescue Geoserver::Publish::Error => e
               fail "load-geoserver: #{druid} cannot save Layer: #{e.message}"
             end
           end
+        end
+
+        def determine_rights(druid)
+          rights = 'Restricted'
+          xml = Dor.find("druid:#{druid}").rightsMetadata.ng_xml
+          if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
+            rights = 'Public'
+          end
+
+          rights
         end
       end
     end

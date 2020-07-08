@@ -1,0 +1,1 @@
+{"dataStore":{"name":"postgis_druid","description":"postgis_druid","type":"PostGIS","enabled":true,"workspace":{"name":"druid","href":"http://example.com/geoserver/rest/workspaces/druid.json"}}}

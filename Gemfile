@@ -12,17 +12,16 @@ gem 'fastimage', '~> 1.7'
 gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 # iso-639 0.3.0 isn't compatible with ruby 2.5.  This declaration can be dropped when we upgrade to ruby 2.6
 # see https://github.com/alphabetum/iso-639/issues/12
+gem 'geoserver-publish', '>= 0.4.0'
 gem 'iso-639', '~> 0.2.10'
 gem 'lyber-core', '~> 6.1'
 gem 'pry', '~> 0.10'              # for console
 gem 'rake', '~> 13.0'
-gem 'rgeoserver', '~> 0.10'
 gem 'rsolr'
 gem 'slop', '~> 3.6'              # for bin/run_robot
 gem 'honeybadger'
 gem 'geo_combine'
 gem 'net-http-persistent', '~> 3.0'
-gem 'activemodel', '~> 5.1', '< 5.2'  # due to https://github.com/sul-dlss/gis-robot-suite/issues/174
 gem 'resque'
 gem 'resque-pool'
 gem 'scanf'
