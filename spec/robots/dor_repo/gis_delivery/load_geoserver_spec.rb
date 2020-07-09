@@ -19,15 +19,9 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
     context 'when public' do
       let(:dor_item) do
-        instance_double(
-          Dor::Item,
-          rightsMetadata:
-          double( # rubocop:disable RSpec/VerifiedDoubles
-            ng_xml: Nokogiri::XML(
-              read_fixture('workspace/fx/392/st/8577/fx392st8577/metadata/rightsMetadata.xml')
-            )
-          )
-        )
+        Dor::Item.new(pid: druid).tap do |item|
+          item.rightsMetadata.content = read_fixture('workspace/fx/392/st/8577/fx392st8577/metadata/rightsMetadata.xml')
+        end
       end
 
       let(:druid) { 'fx392st8577' }
@@ -39,15 +33,9 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
     context 'when restricted' do
       let(:dor_item) do
-        instance_double(
-          Dor::Item,
-          rightsMetadata:
-          double( # rubocop:disable RSpec/VerifiedDoubles
-            ng_xml: Nokogiri::XML(
-              read_fixture('workspace/bb/338/jh/0716/bb338jh0716/metadata/rightsMetadata.xml')
-            )
-          )
-        )
+        Dor::Item.new(pid: druid).tap do |item|
+          item.rightsMetadata.content = read_fixture('workspace/bb/338/jh/0716/bb338jh0716/metadata/rightsMetadata.xml')
+        end
       end
 
       let(:druid) { 'fx392st8577' }
