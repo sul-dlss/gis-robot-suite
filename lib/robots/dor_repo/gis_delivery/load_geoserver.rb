@@ -290,8 +290,7 @@ module Robots       # Robot package
 
         def determine_rights(druid)
           rights = 'Restricted'
-          xml = Dor.find("druid:#{druid}").rightsMetadata.ng_xml
-          if xml.search('//rightsMetadata/access[@type=\'read\']/machine/world').length > 0
+          if Dor.find("druid:#{druid}").rights == 'World'
             rights = 'Public'
           end
 
