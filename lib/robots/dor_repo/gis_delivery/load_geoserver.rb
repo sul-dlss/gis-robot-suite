@@ -28,7 +28,7 @@ module Robots       # Robot package
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
-          rights = determine_rights(druid).downcase
+          rights = GisRobotSuite.determine_rights(druid).downcase
           # reproject based on file format information
           if GisRobotSuite.vector?(format)
             layertype = 'PostGIS'
@@ -286,15 +286,6 @@ module Robots       # Robot package
               fail "load-geoserver: #{druid} cannot save Layer: #{e.message}"
             end
           end
-        end
-
-        def determine_rights(druid)
-          rights = 'Restricted'
-          if Dor.find("druid:#{druid}").rights == 'World'
-            rights = 'Public'
-          end
-
-          rights
         end
       end
     end
