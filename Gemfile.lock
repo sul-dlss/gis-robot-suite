@@ -192,7 +192,7 @@ GEM
       rsolr
       sanitize
       thor
-    geoserver-publish (0.4.0)
+    geoserver-publish (0.5.0)
       faraday
     haml (5.1.2)
       temple (>= 0.8.0)
@@ -430,7 +430,7 @@ DEPENDENCIES
   fastimage (~> 1.7)
   ffi-geos (~> 1.0)
   geo_combine
-  geoserver-publish (>= 0.4.0)
+  geoserver-publish (>= 0.5.0)
   honeybadger
   iso-639 (~> 0.2.10)
   lyber-core (~> 6.1)
