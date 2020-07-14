@@ -29,7 +29,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
     end
 
     before do
-      allow(Dor::Config).to receive(:geohydra).and_return(stub_config)
       allow(File).to receive(:size?).and_return(100)
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
       allow(File).to receive(:read).and_return(xml)

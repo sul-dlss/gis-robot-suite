@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'druid-tools'
-require 'mods'
 
 # Robot class to run under multiplexing infrastructure
 module Robots       # Robot package

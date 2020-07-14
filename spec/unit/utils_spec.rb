@@ -2,8 +2,7 @@
 
 require 'spec_helper'
 
-describe 'utilities' do
-
+RSpec.describe 'utilities' do
   it 'can type vectors' do
     expect(GisRobotSuite.vector?('application/x-esri-shapefile')).to be_truthy
     expect(GisRobotSuite.vector?('application/x-esri-shapefile; format=Shapefile')).to be_truthy
@@ -23,36 +22,41 @@ describe 'utilities' do
   end
 
   describe '.determine_rights' do
+    subject { GisRobotSuite.determine_rights(druid) }
+
+    let(:object_client) do
+      instance_double(Dor::Services::Client::Object, find: cocina_model)
+    end
+    let(:druid) { 'fx392st8577' }
+    let(:cocina_model) do
+      Cocina::Models.build(
+        'externalIdentifier' => 'druid:fx392st8577',
+        'label' => 'GIS object',
+        'version' => 1,
+        'type' => Cocina::Models::Vocab.object,
+        'access' => {
+          'access' => access
+        },
+        'administrative' => {
+          'hasAdminPolicy' => 'druid:xx999xx9999'
+        }
+      )
+    end
+
     before do
-      allow(Dor).to receive(:find).and_return(dor_item)
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     end
 
     context 'when public' do
-      let(:dor_item) do
-        Dor::Item.new(pid: druid).tap do |item|
-          item.rightsMetadata.content = read_fixture('workspace/fx/392/st/8577/fx392st8577/metadata/rightsMetadata.xml')
-        end
-      end
+      let(:access) { 'world' }
 
-      let(:druid) { 'fx392st8577' }
-
-      it do
-        expect(GisRobotSuite.determine_rights(druid)).to be 'Public'
-      end
+      it { is_expected.to be 'Public' }
     end
 
     context 'when restricted' do
-      let(:dor_item) do
-        Dor::Item.new(pid: druid).tap do |item|
-          item.rightsMetadata.content = read_fixture('workspace/bb/338/jh/0716/bb338jh0716/metadata/rightsMetadata.xml')
-        end
-      end
+      let(:access) { 'stanford' }
 
-      let(:druid) { 'fx392st8577' }
-
-      it do
-        expect(GisRobotSuite.determine_rights(druid)).to be 'Restricted'
-      end
+      it { is_expected.to be 'Restricted' }
     end
   end
 end
