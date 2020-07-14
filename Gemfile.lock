@@ -1,23 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    active-fedora (8.7.0)
-      active-triples (~> 0.4.0)
-      activesupport (>= 4.2.10)
-      deprecation
-      nom-xml (>= 0.5.1)
-      om (~> 3.1)
-      rdf-rdfxml (~> 1.1)
-      rsolr (>= 1.0.11, < 3)
-      rubydora (>= 1.8.0, < 3)
-    active-triples (0.4.1)
-      activemodel (>= 3.0.0)
-      activesupport (>= 3.0.0)
-      deprecation (~> 0.1)
-      rdf (~> 1.1)
-      rdf-vocab (~> 0.8)
-    activemodel (5.2.4.3)
-      activesupport (= 5.2.4.3)
     activesupport (5.2.4.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
@@ -84,7 +67,6 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.6)
-    daemons (1.3.1)
     deep_merge (1.2.1)
     deprecation (0.99.0)
       activesupport
@@ -95,25 +77,6 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.3.2)
-    domain_name (0.5.20190701)
-      unf (>= 0.0.5, < 1.0.0)
-    dor-rights-auth (1.4.0)
-      nokogiri
-    dor-services (9.5.0)
-      active-fedora (>= 8.7.0, < 9)
-      activesupport (~> 5.1)
-      deprecation (~> 0)
-      dor-rights-auth (~> 1.0, >= 1.2.0)
-      json (>= 1.8.1)
-      nokogiri (~> 1.6)
-      om (~> 3.0)
-      rdf (~> 1.1, >= 1.1.7)
-      rest-client (>= 1.7, < 3)
-      rsolr (>= 1.0.3, < 3)
-      rubydora (~> 2.1)
-      solrizer (~> 3.0)
-      stanford-mods (>= 2.3.1)
-      stanford-mods-normalizer (~> 0.1)
     dor-services-client (6.7.0)
       activesupport (>= 4.2, < 7)
       cocina-models (~> 0.34.1)
@@ -175,8 +138,6 @@ GEM
       dry-schema (~> 1.5)
     edtf (3.0.5)
       activesupport (>= 3.0, < 7.0)
-    equivalent-xml (0.6.0)
-      nokogiri (>= 1.4.3)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (1.0.0)
@@ -194,17 +155,8 @@ GEM
       thor
     geoserver-publish (0.5.0)
       faraday
-    haml (5.1.2)
-      temple (>= 0.8.0)
-      tilt
     hashdiff (1.0.1)
     honeybadger (4.7.0)
-    hooks (0.4.1)
-      uber (~> 0.0.14)
-    htmlentities (4.3.4)
-    http-accept (1.7.0)
-    http-cookie (1.0.3)
-      domain_name (~> 0.5)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -212,7 +164,6 @@ GEM
     json (2.3.1)
     json-schema (2.6.2)
       addressable (~> 2.3.8)
-    link_header (0.0.8)
     lyber-core (6.1.1)
     method_source (1.0.0)
     mime-types (3.3.1)
@@ -241,7 +192,6 @@ GEM
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
-    netrc (0.11.0)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nokogiri-happymapper (0.8.1)
@@ -252,11 +202,6 @@ GEM
       activesupport (>= 3.2.18)
       i18n
       nokogiri
-    om (3.2.0)
-      activemodel (>= 5.1, < 7)
-      activesupport
-      nokogiri (>= 1.4.2)
-      solrizer (~> 3.3)
     openapi3_parser (0.8.2)
       commonmarker (~> 0.17)
       psych (~> 3.1)
@@ -273,25 +218,6 @@ GEM
       rack
     rainbow (3.0.0)
     rake (13.0.1)
-    rdf (1.99.1)
-      link_header (~> 0.0, >= 0.0.8)
-    rdf-aggregate-repo (1.99.0)
-      rdf (~> 1.99)
-    rdf-rdfa (1.99.3)
-      haml (>= 4.0, < 6.0)
-      htmlentities (~> 4.3)
-      rdf (~> 1.99)
-      rdf-aggregate-repo (~> 1.1)
-      rdf-xsd (~> 1.1)
-    rdf-rdfxml (1.99.1)
-      htmlentities (~> 4.3)
-      rdf (~> 1.99)
-      rdf-rdfa (~> 1.99)
-      rdf-xsd (~> 1.99)
-    rdf-vocab (0.8.8)
-      rdf (~> 1.1, >= 1.1.10)
-    rdf-xsd (1.99.0)
-      rdf (~> 1.99)
     redis (4.2.1)
     redis-namespace (1.7.0)
       redis (>= 3.0.4)
@@ -305,11 +231,6 @@ GEM
     resque-pool (0.7.1)
       rake (>= 10.0, < 14.0)
       resque (>= 1.22, < 3)
-    rest-client (2.1.0)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
     rexml (3.2.4)
     rsolr (2.3.0)
       builder (>= 2.1.2)
@@ -344,15 +265,6 @@ GEM
       i18n
     ruby-progressbar (1.10.1)
     ruby2_keywords (0.0.2)
-    rubydora (2.1.0)
-      activemodel (>= 4.2.10)
-      activesupport
-      deprecation
-      equivalent-xml
-      hooks (~> 0.3)
-      mime-types
-      nokogiri
-      rest-client
     safe_yaml (1.0.5)
     sanitize (5.2.1)
       crass (~> 1.0.2)
@@ -370,23 +282,13 @@ GEM
       rack-protection (= 2.0.8.1)
       tilt (~> 2.0)
     slop (3.6.0)
-    solrizer (3.4.1)
-      activesupport
-      daemons
-      nokogiri
-      stomp
-      xml-simple
     sshkit (1.21.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stanford-mods (2.6.1)
       activesupport
       mods (~> 2.2)
-    stanford-mods-normalizer (0.1.0)
-      nokogiri (~> 1.8)
-    stomp (1.4.9)
     sync (0.5.0)
-    temple (0.8.2)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
     thor (1.0.1)
@@ -396,10 +298,6 @@ GEM
       sync
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
-    uber (0.0.15)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
@@ -407,7 +305,6 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    xml-simple (1.1.5)
     zeitwerk (2.3.1)
 
 PLATFORMS
@@ -423,7 +320,6 @@ DEPENDENCIES
   config (~> 2.0)
   coveralls
   dlss-capistrano
-  dor-services (~> 9.5)
   dor-services-client (~> 6.6)
   dor-workflow-client (~> 3.1)
   druid-tools
@@ -445,6 +341,7 @@ DEPENDENCIES
   rubocop-rspec
   scanf
   slop (~> 3.6)
+  stanford-mods
   webmock
   zeitwerk (~> 2.1)
 

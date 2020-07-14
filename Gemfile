@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
 gem 'config', '~> 2.0'
-gem 'dor-services', '~> 9.5'
 gem 'dor-services-client', '~> 6.6'
 gem 'dor-workflow-client', '~> 3.1'
 gem 'druid-tools'
@@ -15,6 +14,7 @@ gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
 gem 'geoserver-publish', '>= 0.5.0'
 gem 'iso-639', '~> 0.2.10'
 gem 'lyber-core', '~> 6.1'
+gem 'stanford-mods'               # for GisDelivery::LoadGeoserver
 gem 'pry', '~> 0.10'              # for console
 gem 'rake', '~> 13.0'
 gem 'rsolr'
