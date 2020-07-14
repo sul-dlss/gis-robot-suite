@@ -64,7 +64,5 @@
   - dor_gisDeliveryWF_finish-gis-delivery-workflow
   - dor_gisDeliveryWF_load-geoserver
   - dor_gisDeliveryWF_reset-geowebcache
-  - dor_gisDeliveryWF_load-geowebcache
   - dor_gisDeliveryWF_load-raster
   - dor_gisDeliveryWF_load-vector
-  - dor_gisDeliveryWF_seed-geowebcache

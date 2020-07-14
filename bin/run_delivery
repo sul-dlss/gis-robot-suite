@@ -9,7 +9,7 @@ for s in \
   load-raster \
   load-vector \
   load-geoserver \
-  seed-geowebcache \
+  reset-geowebcache \
   finish-gis-delivery-workflow \
   ; do
   bundle exec run_robot dor:gisDeliveryWF:$s -d $druid
