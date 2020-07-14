@@ -38,16 +38,16 @@ geoserver:
       url: 'http://example.com/geoserver/rest'
       user: admin
       password: geoserver
-    replica: # Replica not filled out as it is not used yet
-      url:
-      user:
-      password:
+    replica:
+      url: 'http://example-2.com/geoserver/rest'
+      user: admin
+      password: geoserver
   restricted:
     primary:
       url: 'http://example.com/restricted/geoserver/rest'
       user: admin
       password: geoserver
-    replica: # Replica not filled out as it is not used yet
-      url:
-      user:
-      password:
+    replica:
+      url: 'http://examplep-2.com/restricted/geoserver/rest'
+      user: admin
+      password: geoserver

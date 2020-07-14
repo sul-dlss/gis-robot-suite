@@ -12,43 +12,9 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
 
-  describe '#determine_rights' do
-    before do
-      allow(Dor).to receive(:find).and_return(dor_item)
-    end
-
-    context 'when public' do
-      let(:dor_item) do
-        Dor::Item.new(pid: druid).tap do |item|
-          item.rightsMetadata.content = read_fixture('workspace/fx/392/st/8577/fx392st8577/metadata/rightsMetadata.xml')
-        end
-      end
-
-      let(:druid) { 'fx392st8577' }
-
-      it do
-        expect(robot.determine_rights(druid)).to be 'Public'
-      end
-    end
-
-    context 'when restricted' do
-      let(:dor_item) do
-        Dor::Item.new(pid: druid).tap do |item|
-          item.rightsMetadata.content = read_fixture('workspace/bb/338/jh/0716/bb338jh0716/metadata/rightsMetadata.xml')
-        end
-      end
-
-      let(:druid) { 'fx392st8577' }
-
-      it do
-        expect(robot.determine_rights(druid)).to be 'Restricted'
-      end
-    end
-  end
-
   describe '#perform' do
     before do
-      allow(robot).to receive(:determine_rights).and_return 'Public'
+      allow(GisRobotSuite).to receive(:determine_rights).and_return 'Public'
     end
 
     describe 'loading a vector dataset' do

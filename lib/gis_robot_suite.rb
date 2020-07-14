@@ -129,4 +129,13 @@ module GisRobotSuite
     proj = proj['gml:srsName'] unless proj.nil?
     proj.to_s.upcase
   end
+
+  def self.determine_rights(druid)
+    rights = 'Restricted'
+    if Dor.find("druid:#{druid}").rights == 'World'
+      rights = 'Public'
+    end
+
+    rights
+  end
 end

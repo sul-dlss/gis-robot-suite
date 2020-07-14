@@ -51,8 +51,7 @@ to start all robots defined in `config/resque-pool.yml`.
 * `load-vector` :: Load vector data into PostGIS database
 * `load-raster` :: Load raster into GeoTIFF data store
 * `load-geoserver` :: Load layers into GeoServer
-* `load-geowebcache` :: Load layers into GeoWebCache (skipped)
-* `seed-geowebcache` :: Generate tiles for GeoWebCache layers (skipped)
+* `reset-geowebcache` :: Reset GeoWebCache for the layer
 * `finish-gis-delivery-workflow` :: Finalize delivery workflow for the object (validity check)
 
 Data Wrangling
