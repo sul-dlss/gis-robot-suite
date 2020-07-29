@@ -13,8 +13,8 @@ module Robots       # Robot package
           super('gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
-        FILE_ATTRIBUTES = ContentMetadata::File::ATTRIBUTES_FOR_TYPE.merge(
-          'image/png' => ContentMetadata::File::ATTRIBUTES_FOR_TYPE['image/jp2'] # preview image
+        FILE_ATTRIBUTES = Assembly::ContentMetadata::File::ATTRIBUTES_FOR_TYPE.merge(
+          'image/png' => Assembly::ContentMetadata::File::ATTRIBUTES_FOR_TYPE['image/jp2'] # preview image
         )
 
         # @param [String] druid
