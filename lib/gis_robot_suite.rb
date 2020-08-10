@@ -28,7 +28,8 @@ module GisRobotSuite
 
     # determine raster style
     nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil
-    if info[:nbands] == 1
+    case info[:nbands]
+    when 1
       case info[:type]
       when 'Byte'
         "grayscale#{nbits > 4 ? 8 : 4 }"
@@ -41,7 +42,7 @@ module GisRobotSuite
       else
         fail "Unknown 1-band raster data type: #{info[:type]}"
       end
-    elsif info[:nbands] == 3
+    when 3
       case info[:type]
       when 'Byte'
         'rgb8'
@@ -69,10 +70,11 @@ module GisRobotSuite
     rootdir = '.'
     pid = druid.gsub(/^druid:/, '')
 
-    if opts[:type] == :stage
+    case opts[:type]
+    when :stage
       rootdir = Settings.geohydra.stage
       rootdir = File.join(rootdir, pid)
-    elsif opts[:type] == :workspace
+    when :workspace
       rootdir = DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
     else
       fail 'Only :stage, :workspace are supported'
