@@ -266,9 +266,10 @@ module Robots       # Robot package
             LyberCore::Log.debug "Projection = #{proj}"
             filetype = format.split(/format=/)[1]
             unless filetype.nil?
-              if filetype == 'GeoTIFF'
+              case filetype
+              when 'GeoTIFF'
                 reproject_geotiff druid, fn, proj, flags
-              elsif filetype == 'ArcGRID'
+              when 'ArcGRID'
                 reproject_arcgrid druid, fn, proj, flags
               else
                 fail "normalize-data: #{druid} has unsupported Raster file format: #{format}"

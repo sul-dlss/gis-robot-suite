@@ -73,7 +73,7 @@ module Robots       # Robot package
           mods = Mods::Record.new
           mods.from_str(File.read(modsfn))
 
-          h = {
+          {
             (is_raster ? 'raster' : 'vector') => {
               'druid' => druid,
               'title' => mods.full_titles.first,
@@ -82,7 +82,6 @@ module Robots       # Robot package
                              mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip)
             }
           }
-          h
         end
 
         def create_vector(connection, layer, workspace_name, dsname = 'postgis_druid')
