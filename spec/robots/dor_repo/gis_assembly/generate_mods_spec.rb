@@ -21,7 +21,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
   end
 
   it 'handles bad arguments' do
-    expect {subject.to_coordinates_ddmmss('-185 -- 185/95 -- -95')}.to raise_error(ArgumentError)
+    expect { subject.to_coordinates_ddmmss('-185 -- 185/95 -- -95') }.to raise_error(ArgumentError)
   end
 
   describe '#to_mods' do

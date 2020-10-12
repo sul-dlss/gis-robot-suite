@@ -193,7 +193,7 @@ module Robots       # Robot package
         #
         # @param [String] datadir directory that holds data files
         # @return [Array] ulx uly lrx lry for the bounding box
-        def determine_extent datadir
+        def determine_extent(datadir)
           Dir.chdir(datadir) do
             shpfn = Dir.glob('*.shp').first
             unless shpfn.nil?
