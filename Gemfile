@@ -42,7 +42,6 @@ group :deployment do
   gem 'capistrano'
   gem 'capistrano-rvm'
   gem 'capistrano-bundler'
-  gem 'capistrano-resque-pool'
   gem 'dlss-capistrano'
   gem 'capistrano-shared_configs'
 end
