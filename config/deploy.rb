@@ -22,11 +22,11 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, %w{config/database.yml}
-set :linked_files, %w(config/honeybadger.yml config/rgeoserver.yml config/rgeoserver_public.yml config/rgeoserver_restricted.yml tmp/resque-pool.lock)
+# set :linked_files, %w[config/database.yml]
+set :linked_files, %w[config/honeybadger.yml config/rgeoserver.yml config/rgeoserver_public.yml config/rgeoserver_restricted.yml tmp/resque-pool.lock]
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w(log run tmp/pids config/certs config/settings config/ArcGIS)
+set :linked_dirs, %w[log run tmp/pids config/certs config/settings config/ArcGIS]
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }

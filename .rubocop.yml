@@ -39,14 +39,36 @@ Layout/SpaceAroundMethodCallOperator:
 Lint/DeprecatedOpenSSLConstant:
   Enabled: true
 
+Lint/DuplicateBranch: # (new in 1.3)
+  Enabled: true
+
+Lint/DuplicateRegexpCharacterClassElement: # (new in 1.1)
+  Enabled: true
+
+Lint/EmptyBlock: # (new in 1.1)
+  Enabled: true
+
+Lint/EmptyClass: # (new in 1.3)
+  Enabled: true
+
 Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/NoReturnInBeginEndBlocks: # (new in 1.2)
   Enabled: true
 
 Lint/RaiseException:
   Enabled: true
 
+Lint/ToEnumArguments: # (new in 1.1)
+  Enabled: true
+
 Lint/StructNewOverride:
   Enabled: true
+
+Lint/UnmodifiedReduceAccumulator: # (new in 1.1)
+  Enabled: true
+
 
 # --- Metrics ---
 
@@ -73,6 +95,15 @@ RSpec/ExampleLength:
     Enabled: false
 
 # --- Style ---
+
+Style/ArgumentsForwarding: # (new in 1.1)
+  Enabled: true
+
+Style/CollectionCompact: # (new in 1.2)
+  Enabled: true
+
+Style/DocumentDynamicEvalDefinition: # (new in 1.1)
+  Enabled: true
 
 Style/IfUnlessModifier:
   Enabled: false
@@ -108,6 +139,18 @@ Style/RedundantRegexpEscape:
   Enabled: true
 
 Style/SlicingWithRange:
+  Enabled: true
+
+Style/NegatedIfElseCondition: # (new in 1.2)
+  Enabled: true
+
+Style/NilLambda: # (new in 1.3)
+  Enabled: true
+
+Style/RedundantArgument: # (new in 1.4)
+  Enabled: true
+
+Style/SwapValues: # (new in 1.1)
   Enabled: true
 
 Lint/BinaryOperatorWithIdenticalOperands:
