@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/sul-dlss/gis-robot-suite.svg?style=svg)](https://circleci.com/gh/sul-dlss/gis-robot-suite)
 [![Code Climate](https://codeclimate.com/github/sul-dlss/gis-robot-suite/badges/gpa.svg)](https://codeclimate.com/github/sul-dlss/gis-robot-suite)
-[![Code Climate Test Coverage](https://codeclimate.com/github/sul-dlss/gis-robot-suite/badges/coverage.svg)](https://codeclimate.com/github/sul-dlss/
+[![Code Climate Test Coverage](https://codeclimate.com/github/sul-dlss/gis-robot-suite/badges/coverage.svg)](https://codeclimate.com/github/sul-dlss/)
 [![GitHub version](https://badge.fury.io/gh/sul-dlss%2Fgis-robot-suite.svg)](https://badge.fury.io/gh/sul-dlss%2Fgis-robot-suite)
 
 GIS-Robot-Suite
