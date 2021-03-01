@@ -42,6 +42,6 @@ group :deployment do
   gem 'capistrano'
   gem 'capistrano-rvm'
   gem 'capistrano-bundler'
-  gem 'dlss-capistrano'
+  gem 'dlss-capistrano', '~> 3.11'
   gem 'capistrano-shared_configs'
 end
