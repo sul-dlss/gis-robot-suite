@@ -35,7 +35,8 @@ RSpec.describe 'utilities' do
         'version' => 1,
         'type' => Cocina::Models::Vocab.object,
         'access' => {
-          'access' => access
+          'access' => access,
+          'download' => access
         },
         'administrative' => {
           'hasAdminPolicy' => 'druid:xx999xx9999'
