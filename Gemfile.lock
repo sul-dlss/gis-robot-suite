@@ -40,7 +40,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.59.1)
+    cocina-models (0.60.0)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
@@ -75,9 +75,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (6.34.0)
+    dor-services-client (6.35.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.59.0)
+      cocina-models (~> 0.60.0)
       deprecation
       faraday (>= 0.15, < 2)
       moab-versioning (~> 4.0)
@@ -212,7 +212,7 @@ GEM
     openapi3_parser (0.9.0)
       commonmarker (~> 0.17)
       psych (~> 3.1)
-    openapi_parser (0.13.0)
+    openapi_parser (0.14.0)
     parallel (1.20.1)
     parser (3.0.1.1)
       ast (~> 2.4.1)
@@ -226,7 +226,7 @@ GEM
       rack
     rainbow (3.0.0)
     rake (13.0.3)
-    redis (4.2.5)
+    redis (4.3.1)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
     regexp_parser (2.1.1)
@@ -256,7 +256,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
-    rubocop (1.16.0)
+    rubocop (1.16.1)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -267,7 +267,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.7.0)
       parser (>= 3.0.1.1)
-    rubocop-rspec (2.3.0)
+    rubocop-rspec (2.4.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-enum (0.9.0)
