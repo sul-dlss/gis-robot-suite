@@ -40,7 +40,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.60.0)
+    cocina-models (0.61.0)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
@@ -74,9 +74,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (6.36.0)
+    dor-services-client (7.0.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.60.0)
+      cocina-models (~> 0.61.0)
       deprecation
       faraday (>= 0.15, < 2)
       moab-versioning (~> 4.0)
@@ -328,7 +328,7 @@ DEPENDENCIES
   config (~> 2.0)
   coveralls
   dlss-capistrano (~> 3.11)
-  dor-services-client (~> 6.6)
+  dor-services-client (~> 7.0)
   dor-workflow-client (~> 3.1)
   druid-tools
   fastimage (~> 1.7)
