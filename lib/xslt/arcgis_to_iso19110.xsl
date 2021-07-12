@@ -11,9 +11,10 @@
   xmlns:gml="http://www.opengis.net/gml/3.2" 
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <xsl:output method="xml" encoding="utf-8" indent="yes"/>
+   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
 
   <xsl:template match="/">
+  <xsl:if test="metadata/contInfo/FetCatDesc">        
   <gfc:FC_FeatureCatalogue xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmd="http://www.isotc211.org/2005/gmd" 
     xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -25,6 +26,7 @@
       
        <xsl:apply-templates select="child::node()"/>
      </gfc:FC_FeatureCatalogue>
+   </xsl:if>     
   </xsl:template> 
  
   <xsl:template match="metadata">
