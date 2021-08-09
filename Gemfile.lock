@@ -7,7 +7,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.3.8)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     assembly-objectfile (1.10.3)
@@ -151,8 +152,7 @@ GEM
     faraday-rack (1.0.0)
     faraday_middleware (1.1.0)
       faraday (~> 1.0)
-    fastimage (1.9.0)
-      addressable (~> 2.3.5)
+    fastimage (2.2.4)
     ffi (1.15.3)
     ffi-geos (1.2.2)
       ffi (>= 1.0.0)
@@ -171,8 +171,8 @@ GEM
     ice_nine (0.11.2)
     iso-639 (0.2.10)
     json (2.5.1)
-    json-schema (2.6.2)
-      addressable (~> 2.3.8)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     lyber-core (6.1.1)
     method_source (1.0.0)
     mime-types (3.3.1)
@@ -223,6 +223,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     psych (3.3.2)
+    public_suffix (4.0.6)
     racc (1.5.2)
     rack (2.2.3)
     rack-protection (2.1.0)
@@ -330,7 +331,7 @@ DEPENDENCIES
   dor-services-client (~> 7.0)
   dor-workflow-client (~> 3.1)
   druid-tools
-  fastimage (~> 1.7)
+  fastimage (~> 2.2)
   ffi-geos (~> 1.0)
   geo_combine
   geoserver-publish (>= 0.5.0)
@@ -353,4 +354,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-   2.2.15
+   2.2.17
