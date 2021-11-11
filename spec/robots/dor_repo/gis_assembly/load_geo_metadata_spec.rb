@@ -11,17 +11,30 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
   end
 
   describe '#perform' do
-    let(:druid) { 'druid:12345' }
+    let(:druid) { 'druid:gg777gg7777' }
     let(:stub_config) { double('Geohydra config', stage: '/stage') }
     let(:fake_tags_client) do
       instance_double(Dor::Services::Client::AdministrativeTags, list: [], create: nil)
     end
     let(:object_client) do
-      instance_double(Dor::Services::Client::Object, metadata: metadata_client)
+      instance_double(Dor::Services::Client::Object, find: cocina_object,
+                                                     update: true)
     end
-    let(:metadata_client) do
-      instance_double(Dor::Services::Client::Metadata, legacy_update: true)
+    let(:cocina_object) do
+      Cocina::Models::DRO.new(type: Cocina::Models::Vocab.image,
+                              label: 'test obj',
+                              version: 1,
+                              access: {
+                                access: 'world',
+                                download: 'none'
+                              },
+                              administrative: {
+                                hasAdminPolicy: 'druid:dd999df4567'
+                              },
+                              externalIdentifier: druid,
+                              structural: {})
     end
+
     let(:xml) do
       <<~XML
         <xml />
@@ -32,19 +45,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
       allow(File).to receive(:size?).and_return(100)
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
       allow(File).to receive(:read).and_return(xml)
-      allow(File).to receive(:mtime).and_return(Time.now)
       allow(robot).to receive(:tags_client).with(druid).and_return(fake_tags_client)
     end
 
     it 'tags the object' do
       robot.perform(druid)
       expect(fake_tags_client).to have_received(:create).once.with(tags: ['Dataset : GIS'])
-      expect(metadata_client).to have_received(:legacy_update).with(
-        geo: {
-          updated: Time,
-          content: "<xml />\n"
-        }
-      )
+      expect(object_client).to have_received(:update).with(params: Cocina::Models::DRO)
     end
   end
 end

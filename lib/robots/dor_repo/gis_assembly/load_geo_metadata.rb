@@ -32,12 +32,12 @@ module Robots       # Robot package
           fail "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
           # Load geoMetadata into DOR
-          Dor::Services::Client.object(druid).metadata.legacy_update(
-            geo: {
-              updated: File.mtime(fn),
-              content: File.read(fn)
-            }
+          client = Dor::Services::Client.object(druid)
+          cocina_object = client.find
+          cocina_geo = Cocina::Models::Geographic.new(
+            iso19139: File.read(fn)
           )
+          client.update(params: cocina_object.new(geographic: cocina_geo))
 
           tag druid
         end
