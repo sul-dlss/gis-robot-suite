@@ -37,8 +37,5 @@ set :honeybadger_env, fetch(:stage)
 
 set :bundle_without, %w[development deployment].join(' ')
 
-# Enable bundle2 style config
-set :bundler2_config_use_hook, true # this is how to opt-in to bundler 2-style config. it's false by default
-
 # update shared_configs before restarting app
 before 'deploy:publishing', 'shared_configs:update'
