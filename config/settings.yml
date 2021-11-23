@@ -18,17 +18,11 @@ geohydra:
     dir: '/geotiff'
   postgis:
     schema: 'druid'
-  solr:
-    url: 'https://localhost/solr'
-    collection: 'example'
   opengeometadata:
     dir: '/opengeometadata'
 
 purl:
   url: 'http://localhost/purl'
-
-stacks:
-  url: 'https://stacks.example.org'
 
 gdal_path: ''
 
