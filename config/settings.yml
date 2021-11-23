@@ -27,9 +27,6 @@ geohydra:
 purl:
   url: 'http://localhost/purl'
 
-stacks:
-  url: 'https://stacks.example.org'
-
 gdal_path: ''
 
 geoserver:
