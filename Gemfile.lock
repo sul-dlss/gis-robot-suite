@@ -51,7 +51,7 @@ GEM
     coderay (1.1.3)
     commonmarker (0.23.2)
     concurrent-ruby (1.1.9)
-    config (2.2.3)
+    config (3.1.1)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.2.5)
@@ -313,7 +313,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-rvm
   capistrano-shared_configs
-  config (~> 2.0)
+  config (~> 3.1)
   coveralls
   dlss-capistrano (~> 3.11)
   dor-services-client (~> 7.0)
