@@ -29,7 +29,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
 
     it 'runs without error' do
       expect do
-        subject.to_mods(geo_metadata, { purl: 'https://purl.stanford.edu/ym947vs2726', newfoo: 123 })
+        subject.to_mods(geo_metadata, { purl: 'https://purl.stanford.edu/ym947vs2726', newfoo: '123' })
       end.not_to raise_error
     end
   end
