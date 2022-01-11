@@ -21,7 +21,6 @@ gem 'rsolr'
 gem 'slop', '~> 3.6'              # for bin/run_robot
 gem 'honeybadger'
 gem 'geo_combine'
-gem 'net-http-persistent', '~> 3.0'
 gem 'resque'
 gem 'resque-pool'
 gem 'scanf'

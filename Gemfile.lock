@@ -54,7 +54,6 @@ GEM
     config (3.1.1)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
-    connection_pool (2.2.5)
     coveralls (0.8.23)
       json (>= 1.8, < 3)
       simplecov (~> 0.16.1)
@@ -191,8 +190,6 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    net-http-persistent (3.1.0)
-      connection_pool (~> 2.2)
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
@@ -330,7 +327,6 @@ DEPENDENCIES
   honeybadger
   iso-639 (~> 0.2.10)
   lyber-core (~> 6.1)
-  net-http-persistent (~> 3.0)
   pry (~> 0.10)
   rake (~> 13.0)
   resque
@@ -346,4 +342,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-   2.2.27
+   2.3.4
