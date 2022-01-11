@@ -29,19 +29,19 @@ RSpec.describe 'utilities' do
     end
     let(:druid) { 'fx392st8577' }
     let(:cocina_model) do
-      Cocina::Models.build(
-        'externalIdentifier' => 'druid:fx392st8577',
-        'label' => 'GIS object',
-        'version' => 1,
-        'type' => Cocina::Models::Vocab.object,
-        'access' => {
-          'access' => access,
-          'download' => access
-        },
-        'administrative' => {
-          'hasAdminPolicy' => 'druid:xx999xx9999'
-        }
-      )
+      Cocina::Models.build({
+                             'externalIdentifier' => 'druid:fx392st8577',
+                             'label' => 'GIS object',
+                             'version' => 1,
+                             'type' => Cocina::Models::Vocab.object,
+                             'access' => {
+                               'access' => access,
+                               'download' => access
+                             },
+                             'administrative' => {
+                               'hasAdminPolicy' => 'druid:xx999xx9999'
+                             }
+                           })
     end
 
     before do

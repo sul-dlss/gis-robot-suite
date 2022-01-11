@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.7.1
+      - image: cimg/ruby:3.0
         environment:
           CC_TEST_REPORTER_ID: fb5d866bafc3b239467167d34e3743f250b65dc84703513c5e29441c8de90a45
           RAILS_ENV: test

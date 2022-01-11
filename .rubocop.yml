@@ -5,7 +5,7 @@ require: rubocop-rspec
 
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.0
   Exclude:
     - Gemfile.lock
     - '**/*.md'
