@@ -1,35 +1,10 @@
 version: 2.1
-
-jobs:
+orbs:
+  ruby-rails: sul-dlss/ruby-rails@2.0.0
+workflows:
   build:
-    docker:
-      - image: cimg/ruby:3.0
-        environment:
-          CC_TEST_REPORTER_ID: fb5d866bafc3b239467167d34e3743f250b65dc84703513c5e29441c8de90a45
-          RAILS_ENV: test
-    steps:
-      - checkout
-      - run:
-          name: Install Bundler
-          command: gem install bundler
-      - run:
-          name: Which bundler?
-          command: bundle -v
-      - run:
-          name: Bundle Install
-          command: bundle check || bundle install
-      - run:
-          name: Lint using rubocop
-          command: bundle exec rubocop
-      - run:
-          name: Setup Code Climate test-reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
-            ./cc-test-reporter before-build
-      - run:
-          name: rspec
-          command: bundle exec rspec
-      - run:
-          name: upload test coverage report to Code Climate
-          command: ./cc-test-reporter after-build --coverage-input-type simplecov --exit-code $?
+    jobs:
+      - ruby-rails/lint:
+          name: lint
+      - ruby-rails/test-gem:
+          name: test

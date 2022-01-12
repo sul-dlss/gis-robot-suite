@@ -28,13 +28,13 @@ gem 'zeitwerk', '~> 2.1'
 
 group :development do
   gem 'rspec'
-  gem 'coveralls', require: false
   gem 'rubocop', require: false
   gem 'rubocop-rspec'
 end
 
 group :test do
   gem 'webmock'
+  gem 'rspec_junit_formatter'
 end
 
 group :deployment do
