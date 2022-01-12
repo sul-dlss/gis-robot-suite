@@ -34,7 +34,8 @@ end
 
 group :test do
   gem 'webmock'
-  gem 'rspec_junit_formatter'
+  gem 'rspec_junit_formatter' # For circleCI
+  gem 'simplecov', require: 'false'
 end
 
 group :deployment do
