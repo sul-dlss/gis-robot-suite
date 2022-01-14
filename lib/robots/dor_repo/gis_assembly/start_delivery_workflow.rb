@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class StartDeliveryWorkflow < Base
         def initialize
           super('gisAssemblyWF', 'start-delivery-workflow', check_queued_status: true) # init LyberCore::Robot

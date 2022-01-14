@@ -4,21 +4,21 @@ require 'spec_helper'
 
 RSpec.describe 'utilities' do
   it 'can type vectors' do
-    expect(GisRobotSuite.vector?('application/x-esri-shapefile')).to be_truthy
-    expect(GisRobotSuite.vector?('application/x-esri-shapefile; format=Shapefile')).to be_truthy
+    expect(GisRobotSuite).to be_vector('application/x-esri-shapefile')
+    expect(GisRobotSuite).to be_vector('application/x-esri-shapefile; format=Shapefile')
   end
 
   it 'can type rasters' do
-    expect(GisRobotSuite.raster?('image/tiff')).to be_truthy
-    expect(GisRobotSuite.raster?('image/tiff; format=GeoTIFF')).to be_truthy
-    expect(GisRobotSuite.raster?('application/x-ogc-aig')).to be_truthy
+    expect(GisRobotSuite).to be_raster('image/tiff')
+    expect(GisRobotSuite).to be_raster('image/tiff; format=GeoTIFF')
+    expect(GisRobotSuite).to be_raster('application/x-ogc-aig')
   end
 
   it 'can handle bogus types' do
-    expect(GisRobotSuite.vector?('image/tiff')).to be_falsey
-    expect(GisRobotSuite.vector?('application/unknown')).to be_falsey
-    expect(GisRobotSuite.raster?('application/x-esri-shapefile')).to be_falsey
-    expect(GisRobotSuite.raster?('application/unknown')).to be_falsey
+    expect(GisRobotSuite).not_to be_vector('image/tiff')
+    expect(GisRobotSuite).not_to be_vector('application/unknown')
+    expect(GisRobotSuite).not_to be_raster('application/x-esri-shapefile')
+    expect(GisRobotSuite).not_to be_raster('application/unknown')
   end
 
   describe '.determine_rights' do

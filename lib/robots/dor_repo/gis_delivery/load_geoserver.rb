@@ -2,10 +2,9 @@
 
 require 'druid-tools'
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisDelivery   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisDelivery
       class LoadGeoserver < Base
         def initialize
           super('gisDeliveryWF', 'load-geoserver', check_queued_status: true) # init LyberCore::Robot
@@ -23,10 +22,11 @@ module Robots       # Robot package
 
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          fail "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          raise "load-geoserver: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
-          fail "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
+          raise "load-geoserver: #{druid} cannot determine file format from MODS" if format.nil?
+
           rights = GisRobotSuite.determine_rights(druid).downcase
           # reproject based on file format information
           if GisRobotSuite.vector?(format)
@@ -34,7 +34,7 @@ module Robots       # Robot package
           elsif GisRobotSuite.raster?(format)
             layertype = 'GeoTIFF'
           else
-            fail "load-geoserver: #{druid} unknown format: #{format}"
+            raise "load-geoserver: #{druid} unknown format: #{format}"
           end
 
           # Obtain layer details
@@ -55,7 +55,7 @@ module Robots       # Robot package
           ws = Geoserver::Publish::Workspace.new(connection)
           workspace_name = 'druid'
 
-          fail "load-geoserver: #{druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name: workspace_name)
+          raise "load-geoserver: #{druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name: workspace_name)
 
           LyberCore::Log.debug "Workspace: #{workspace_name} ready"
 
@@ -64,7 +64,7 @@ module Robots       # Robot package
           elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
             create_raster(connection, layer['raster'], workspace_name)
           else
-            fail "load-geoserver: #{druid} has unknown layer format: #{layer}"
+            raise "load-geoserver: #{druid} has unknown layer format: #{layer}"
           end
         end
 
@@ -86,13 +86,13 @@ module Robots       # Robot package
 
         def create_vector(connection, layer, workspace_name, dsname = 'postgis_druid')
           druid = layer['druid']
-          %w(title abstract keywords).each do |i|
-            fail ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+          %w[title abstract keywords].each do |i|
+            raise ArgumentError, "load-geoserver: #{druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
           LyberCore::Log.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
           ds = Geoserver::Publish::DataStore.new(connection)
-          fail "load-geoserver: #{druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
+          raise "load-geoserver: #{druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
 
           feature_type_exists = Geoserver::Publish::FeatureType.new(connection).find(
             workspace_name: workspace_name,
@@ -130,14 +130,14 @@ module Robots       # Robot package
               additional_payload: ft.to_h
             )
           rescue Geoserver::Publish::Error => e
-            fail "load-geoserver: #{druid} cannot save FeatureType: #{e.message}"
+            raise "load-geoserver: #{druid} cannot save FeatureType: #{e.message}"
           end
         end
 
         def create_raster(connection, layer, workspace_name)
           druid = layer['druid']
-          %w(title abstract keywords).each do |i|
-            fail ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+          %w[title abstract keywords].each do |i|
+            raise ArgumentError, "load-geoserver: #{druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
           end
 
           # create coverage store
@@ -160,7 +160,7 @@ module Robots       # Robot package
                 }
               )
             rescue Geoserver::Publish::Error => e
-              fail "load-geoserver: #{druid} cannot save CoverageStore: #{e.message}"
+              raise "load-geoserver: #{druid} cannot save CoverageStore: #{e.message}"
             end
           else
             LyberCore::Log.debug "load-geoserver:: #{druid} found existing CoverageStore: #{workspace_name}/#{druid}"
@@ -200,12 +200,12 @@ module Robots       # Robot package
               additional_payload: cv.to_h
             )
           rescue Geoserver::Publish::Error => e
-            fail "load-geoserver: #{druid} cannot save Coverage: #{e.message}"
+            raise "load-geoserver: #{druid} cannot save Coverage: #{e.message}"
           end
 
           # determine raster style
           begin
-            raster_style = 'raster_' + GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")
+            raster_style = "raster_#{GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")}"
           rescue => e
             LyberCore::Log.info "Raster style determination failed. Using default `raster`"
             raster_style = 'raster'
@@ -259,20 +259,20 @@ module Robots       # Robot package
               style_exists = style.find(
                 style_name: raster_style
               )
-              fail "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
+              raise "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
             end
           else
             style_exists = style.find(
               style_name: raster_style
             )
-            fail "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
+            raise "load-geoserver: #{druid} has missing style #{raster_style}" if style_exists.nil?
           end
 
           # fetch layer to load raster style - it's created when the coverage is created via REST API
           layer = Geoserver::Publish::Layer.new(connection)
           layer_exists = layer.find(layer_name: druid)
           if layer_exists.nil?
-            fail "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}"
+            raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}"
           end
 
           if layer_exists.dig('layer', 'defaultStyle', 'name') != raster_style
@@ -281,7 +281,7 @@ module Robots       # Robot package
             begin
               layer.update(layer_name: druid, additional_payload: layer_exists)
             rescue Geoserver::Publish::Error => e
-              fail "load-geoserver: #{druid} cannot save Layer: #{e.message}"
+              raise "load-geoserver: #{druid} cannot save Layer: #{e.message}"
             end
           end
         end

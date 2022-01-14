@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 require 'csv'
@@ -30,8 +29,8 @@ module GisRobotSuite
       end
     end
 
-    def each
-      @registry.each_key.to_a.sort.each { |k| yield k }
+    def each(&block)
+      @registry.each_key.to_a.sort.each(&block)
     end
 
     # @return [String] geonames name
@@ -52,14 +51,13 @@ module GisRobotSuite
     # @return [String] library of congress valueURI
     def find_loc_uri(k)
       lcid = _get(k, :loc_id)
-      if lcid =~ /^lcsh:(\d+)$/ || lcid =~ /^sh(\d+)$/
+      case lcid
+      when /^lcsh:(\d+)$/, /^sh(\d+)$/
         "http://id.loc.gov/authorities/subjects/sh#{Regexp.last_match(1)}"
-      elsif lcid =~ /^lcnaf:(\d+)$/ || lcid =~ /^n(\d+)$/
+      when /^lcnaf:(\d+)$/, /^n(\d+)$/
         "http://id.loc.gov/authorities/names/n#{Regexp.last_match(1)}"
-      elsif lcid =~ /^no(\d+)$/
+      when /^no(\d+)$/
         "http://id.loc.gov/authorities/names/no#{Regexp.last_match(1)}"
-      else
-        nil
       end
     end
 
@@ -98,7 +96,7 @@ module GisRobotSuite
 
     def _get(k, i)
       return nil unless @registry.include?(k.strip)
-      fail ArgumentError unless i.is_a? Symbol
+      raise ArgumentError unless i.is_a? Symbol
 
       @registry[k.strip].nil? ? nil : @registry[k.strip][i]
     end

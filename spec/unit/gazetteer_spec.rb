@@ -1,11 +1,10 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 require 'spec_helper'
 
 RSpec.describe GisRobotSuite::Gazetteer do
   it 'can boot' do
-    expect(subject.is_a? Object).to be_truthy
+    expect(subject).to be_a(Object)
   end
 
   it 'can translate to GeoNames IDs' do
@@ -59,13 +58,13 @@ RSpec.describe GisRobotSuite::Gazetteer do
     expect(subject.find_placename('Melli Bāzār (India)')).to eq 'Melli Bāzār'
   end
 
-  it 'should never have a LC mapping but not a GeoNames mapping' do
+  it 'never has a LC mapping without a GeoNames mapping' do
     subject.each do |k|
       expect(subject.find_loc_uri(k) && !subject.find_placename_uri(k)).to be_falsey
     end
   end
 
-  it 'should never load bogus placenames' do
-    expect(subject.blank? 'BogusBogusBogus').to be_falsey
+  it 'never loads bogus placenames' do
+    expect(subject).not_to be_blank('BogusBogusBogus')
   end
 end

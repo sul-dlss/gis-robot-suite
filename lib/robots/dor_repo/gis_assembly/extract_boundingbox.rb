@@ -1,13 +1,11 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 require 'fileutils'
 require 'scanf'
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class ExtractBoundingbox < Base
 
         def initialize
@@ -36,14 +34,14 @@ module Robots       # Robot package
           IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |f|
             f.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
-              if line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
-                w, s, e, n = [Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4)].map(&:to_s)
-                ulx = w
-                uly = n
-                lrx = e
-                lry = s
-                return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
-              end
+              next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
+
+              w, s, e, n = [Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4)].map(&:to_s)
+              ulx = w
+              uly = n
+              lrx = e
+              lry = s
+              return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
             end
           end
         end
@@ -65,9 +63,10 @@ module Robots       # Robot package
               # Upper Right (-121.9094764,  35.9770286) (121d54'34.12"W, 35d58'37.30"N)
               # Lower Right (-121.9094764,  35.5581835) (121d54'34.12"W, 35d33'29.46"N)
               # Center      (-122.0970582,  35.7676061) (122d 5'49.41"W, 35d46' 3.38"N)
-              if line =~ /^Upper Left\s+\((.*)\)\s+\(/
+              case line
+              when /^Upper Left\s+\((.*)\)\s+\(/
                 ulx, uly = Regexp.last_match(1).split(/,/)
-              elsif line =~ /^Lower Right\s+\((.*)\)\s+\(/
+              when /^Lower Right\s+\((.*)\)\s+\(/
                 lrx, lry = Regexp.last_match(1).split(/,/)
               end
             end
@@ -105,8 +104,8 @@ module Robots       # Robot package
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
         def to_coordinates_ddmmss(s)
           w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
-          fail ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
-          fail ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
+          raise ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
+          raise ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
 
           w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
           e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
@@ -118,15 +117,14 @@ module Robots       # Robot package
         # adds the geo extension to the MODS record
         def add_geo_extension_to_mods(druid, modsfn, ulx, uly, lrx, lry)
           LyberCore::Log.debug "extract-boundingbox: #{druid} reading #{modsfn}"
-          doc = Nokogiri::XML(File.open(modsfn, 'rb').read)
+          doc = Nokogiri::XML(File.binread(modsfn))
 
           # Update geo extension
           LyberCore::Log.debug "extract-boundingbox: #{druid} updating geo extension..."
           doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
                     'xmlns:mods' => 'http://www.loc.gov/mods/v3',
                     'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-                    'xmlns:gml' => 'http://www.opengis.net/gml/3.2/'
-                   ).each do |node|
+                    'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |node|
             node['gml:srsName'] = 'EPSG:4326'
             node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
               LyberCore::Log.debug "extract-boundingbox: #{druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
@@ -140,10 +138,10 @@ module Robots       # Robot package
 
           # Check to see whether the current native projection is WGS84
           cartos = doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
-          fail "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
+          raise "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
 
           LyberCore::Log.debug "extract-boundingbox: #{druid} has #{cartos.size} subject/cartographics elements"
-          fail "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
+          raise "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
 
           carto = cartos.first
           proj = carto.xpath('mods:projection', 'xmlns:mods' => 'http://www.loc.gov/mods/v3').first
@@ -196,11 +194,11 @@ module Robots       # Robot package
         def determine_extent(datadir)
           Dir.chdir(datadir) do
             shpfn = Dir.glob('*.shp').first
-            unless shpfn.nil?
-              ulx, uly, lrx, lry = extent_shapefile shpfn
-            else
+            if shpfn.nil?
               tiffn = Dir.glob('*.tif').first
               ulx, uly, lrx, lry = extent_geotiff tiffn # normalized version only
+            else
+              ulx, uly, lrx, lry = extent_shapefile shpfn
             end
             LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
             return [ulx, uly, lrx, lry]
@@ -218,25 +216,25 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          fail "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          raise "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          fail "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+          raise "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
 
           tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
-          fail "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
+          raise "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
             ulx, uly, lrx, lry = determine_extent tmpdir
 
             # Check that we have a valid bounding box
             unless ulx <= lrx && uly >= lry
-              fail "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
+              raise "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
             end
 
             add_geo_extension_to_mods druid, modsfn, ulx, uly, lrx, lry
-            fail "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)
+            raise "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir

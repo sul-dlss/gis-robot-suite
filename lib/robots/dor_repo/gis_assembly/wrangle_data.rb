@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class WrangleData < Base
         def initialize
           super('gisAssemblyWF', 'wrangle-data', check_queued_status: true) # init LyberCore::Robot
@@ -33,7 +32,7 @@ module Robots       # Robot package
             if fn.nil?
               fn = Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first
               if fn.nil?
-                fail "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files"
+                raise "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files"
               end
             end
           end

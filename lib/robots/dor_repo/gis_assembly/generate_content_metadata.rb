@@ -4,10 +4,9 @@ require 'fastimage'
 require 'mime/types'
 require 'assembly-objectfile'
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class GenerateContentMetadata < Base
         def initialize
           super('gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
@@ -26,19 +25,19 @@ module Robots       # Robot package
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
         def create_content_metadata(druid, objects, geoData, flags = {})
           Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-            xml.contentMetadata(objectId: "#{druid}", type: flags[:content_type] || 'geo') do
+            xml.contentMetadata(objectId: druid, type: flags[:content_type] || 'geo') do
               seq = 1
               objects.each do |k, v|
                 next if v.nil? || v.empty?
 
                 resource_type = case k
-                  when :Data
-                    :object
-                  when :Preview
-                    :preview
-                  else
-                    :attachment
-                  end
+                                when :Data
+                                  :object
+                                when :Preview
+                                  :preview
+                                else
+                                  :attachment
+                                end
                 xml.resource(
                   id: "#{druid}_#{seq}",
                   sequence: seq,
@@ -46,7 +45,7 @@ module Robots       # Robot package
                 ) do
                   xml.label k.to_s
                   v.each do |o|
-                    fail ArgumentError unless o.is_a? Assembly::ObjectFile
+                    raise ArgumentError unless o.is_a? Assembly::ObjectFile
 
                     mimetype = o.image? ? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
                     o.file_attributes ||= FILE_ATTRIBUTES[mimetype] || FILE_ATTRIBUTES['default']
@@ -66,28 +65,26 @@ module Robots       # Robot package
                                  end
                                end || nil
 
-                    case roletype
-                    when 'master'
-                      o.file_attributes[:preserve] = 'yes'
-                    else
-                      o.file_attributes[:preserve] = 'no'
-                    end
+                    o.file_attributes[:preserve] = if roletype == 'master'
+                                                     'yes'
+                                                   else
+                                                     'no'
+                                                   end
 
                     xml.file o.file_attributes.merge(
                       id: o.filename,
                       mimetype: mimetype,
                       size: o.filesize,
-                      role: roletype || 'master') do
+                      role: roletype || 'master'
+                    ) do
                       if resource_type == :object
                         if roletype == 'master' && !geoData.nil?
                           xml.geoData do
                             xml.parent.add_child geoData
                           end
                           geoData = nil # only once
-                        else
-                          if o.filename =~ /_EPSG_(\d+)\.zip/i
-                            xml.geoData srsName: "EPSG:#{Regexp.last_match(1)}"
-                          end
+                        elsif o.filename =~ /_EPSG_(\d+)\.zip/i
+                          xml.geoData srsName: "EPSG:#{Regexp.last_match(1)}"
                         end
                       end
                       xml.checksum(o.sha1, type: 'sha1')
@@ -109,7 +106,7 @@ module Robots       # Robot package
           Data: '*.{zip,TAB,tab,dat,bin,xls,xlsx,tar,tgz,csv,tif,json,geojson,topojson,dbf}',
           Preview: '*.{png,jpg,gif,jp2}',
           Metadata: '*.{xml,txt,pdf}'
-        }
+        }.freeze
 
         # `perform` is the main entry point for the robot. This is where
         # all of the robot's work is done.
@@ -129,14 +126,14 @@ module Robots       # Robot package
 
           # Process files
           objects.each_key do |k|
-            Dir.glob(rootdir + '/content/' + PATTERNS[k]).each do |fn|
+            Dir.glob("#{rootdir}/content/#{PATTERNS[k]}").each do |fn|
               objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
             end
           end
 
           # extract the MODS extension cleanly
           modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          fail "generate-content-metadata: #{druid} is missing MODS metadata" unless File.size?(modsfn)
+          raise "generate-content-metadata: #{druid} is missing MODS metadata" unless File.size?(modsfn)
 
           doc = Nokogiri::XML(File.read(modsfn))
           ns = {
@@ -147,10 +144,8 @@ module Robots       # Robot package
 
           xml = create_content_metadata druid, objects, geoData
           fn = "#{rootdir}/metadata/contentMetadata.xml"
-          File.open(fn, 'wb') do |f|
-            f.write(xml)
-          end
-          fail "generate-content-metadata: #{druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)
+          File.binwrite(fn, xml)
+          raise "generate-content-metadata: #{druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)
         end
       end
     end

@@ -8,7 +8,7 @@ gem 'dor-services-client', '~> 7.0'
 gem 'dor-workflow-client', '~> 3.1'
 gem 'druid-tools'
 gem 'fastimage', '~> 2.2'
-gem 'ffi-geos', '~> 1.0', require: false  # XXX: where is this used?
+gem 'ffi-geos', '~> 1.0', require: false # XXX: where is this used?
 # iso-639 0.3.0 isn't compatible with ruby 2.5.  This declaration can be dropped when we upgrade to ruby 2.6
 # see https://github.com/alphabetum/iso-639/issues/12
 gem 'geoserver-publish', '>= 0.5.0'

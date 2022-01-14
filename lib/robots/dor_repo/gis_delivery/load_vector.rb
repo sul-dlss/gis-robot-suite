@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisDelivery   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisDelivery
       class LoadVector < Base
         def initialize
           super('gisDeliveryWF', 'load-vector', check_queued_status: true) # init LyberCore::Robot
@@ -23,12 +22,12 @@ module Robots       # Robot package
           # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
           # XXX: -G for the geography column causes some issues with GeoServer
           cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding}" \
-                 " '#{shpfn}' #{schema}.#{druid} " \
-                 "> '#{sqlfn}' 2> '#{errfn}'"
+                " '#{shpfn}' #{schema}.#{druid} " \
+                "> '#{sqlfn}' 2> '#{errfn}'"
           LyberCore::Log.debug "Running: #{cmd}"
           success = system(cmd)
-          fail "load-vector: #{druid} cannot convert Shapefile to PostGIS: #{File.open(errfn).readlines}" unless success
-          fail "load-vector: #{druid} shp2pgsql generated no SQL?" unless File.size?(sqlfn)
+          raise "load-vector: #{druid} cannot convert Shapefile to PostGIS: #{File.open(errfn).readlines}" unless success
+          raise "load-vector: #{druid} shp2pgsql generated no SQL?" unless File.size?(sqlfn)
         end
 
         # `perform` is the main entry point for the robot. This is where
@@ -43,10 +42,10 @@ module Robots       # Robot package
 
           # determine whether we have a Shapefile to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          fail "load-vector: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          raise "load-vector: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
-          fail "load-vector: #{druid} cannot determine file format from MODS" if format.nil?
+          raise "load-vector: #{druid} cannot determine file format from MODS" if format.nil?
 
           # perform based on file format information
           unless GisRobotSuite.vector?(format)
@@ -57,10 +56,10 @@ module Robots       # Robot package
           # extract derivative 4326 nomalized content
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          fail "load-vector: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+          raise "load-vector: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
 
           tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
-          fail "load-vector: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
+          raise "load-vector: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
             schema = Settings.geohydra.postgis.schema || 'druid'
@@ -88,10 +87,10 @@ module Robots       # Robot package
 
             # Load the data into PostGIS
             cmd = 'psql --no-psqlrc --no-password --quiet ' \
-                   "--file='#{sqlfn}' "
+                  "--file='#{sqlfn}' "
             LyberCore::Log.debug "Running: #{cmd}"
             success = system(cmd)
-            fail "load-vector: #{druid} psql failed to load #{schema}.#{druid}" unless success
+            raise "load-vector: #{druid} psql failed to load #{schema}.#{druid}" unless success
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class LoadGeoMetadata < Base
         def initialize
           super('gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
@@ -29,7 +28,7 @@ module Robots       # Robot package
 
           # Locate geoMetadata datastream
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          fail "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
+          raise "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
           # Load geoMetadata into DOR
           Dor::Services::Client.object(druid).metadata.legacy_update(
