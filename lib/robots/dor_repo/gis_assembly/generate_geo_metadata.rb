@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class GenerateGeoMetadata < Base
         def initialize
           super('gisAssemblyWF', 'generate-geo-metadata', check_queued_status: true) # init LyberCore::Robot
@@ -29,13 +28,13 @@ module Robots       # Robot package
 
           fn = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
           if fn.nil?
-            fail "generate-geo-metadata: #{druid} is missing ISO 19139 file"
+            raise "generate-geo-metadata: #{druid} is missing ISO 19139 file"
           end
 
           LyberCore::Log.debug "generate-geo-metadata processing #{fn}"
           isoXml = Nokogiri::XML(File.read(fn))
           if isoXml.nil? || isoXml.root.nil?
-            fail ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{fn}"
+            raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{fn}"
           end
 
           fn = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
@@ -56,8 +55,8 @@ module Robots       # Robot package
         # @param [String] purl The unique purl url
         # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
         def to_geoMetadataDS(isoXml, fcXml, purl)
-          fail ArgumentError, 'generate-geo-metadata: PURL is required' if purl.nil?
-          fail ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? || isoXml.root.nil?
+          raise ArgumentError, 'generate-geo-metadata: PURL is required' if purl.nil?
+          raise ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? || isoXml.root.nil?
 
           Nokogiri::XML("
             <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
@@ -67,8 +66,7 @@ module Robots       # Robot package
               <rdf:Description rdf:about=\"#{purl}\">
                 #{fcXml.nil? ? '' : fcXml.root.to_s}
               </rdf:Description>
-            </rdf:RDF>"
-                       )
+            </rdf:RDF>")
         end
       end
     end

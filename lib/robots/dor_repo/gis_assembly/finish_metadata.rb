@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class FinishMetadata < Base
         def initialize
           super('gisAssemblyWF', 'finish-metadata', check_queued_status: true) # init LyberCore::Robot
@@ -19,16 +18,16 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
-          %w(descMetadata.xml geoMetadata.xml).each do |f|
+          %w[descMetadata.xml geoMetadata.xml].each do |f|
             fn = File.join(rootdir, 'metadata', f)
-            fail "finish-metadata: #{druid} is missing metadata: #{fn}" unless File.size?(fn)
+            raise "finish-metadata: #{druid} is missing metadata: #{fn}" unless File.size?(fn)
 
             LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end
 
-          %w(preview.jpg).each do |f|
+          %w[preview.jpg].each do |f|
             fn = File.join(rootdir, 'content', f)
-            fail "finish-metadata: #{druid} is missing content: #{fn}" unless File.size?(fn)
+            raise "finish-metadata: #{druid} is missing content: #{fn}" unless File.size?(fn)
 
             LyberCore::Log.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
           end

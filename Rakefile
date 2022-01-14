@@ -39,4 +39,4 @@ rescue LoadError
   end
 end
 
-task :default => [:app_version, :spec, :rubocop]
+task default: [:app_version, :spec, :rubocop]

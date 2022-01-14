@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class ExtractIso19139 < Base
         def initialize
           super('gisAssemblyWF', 'extract-iso19139', check_queued_status: true) # init LyberCore::Robot
@@ -29,9 +28,9 @@ module Robots       # Robot package
           begin
             fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
             if fn =~ /^(.*).(shp|tif).xml$/ || fn =~ %r{^(.*/metadata).xml$}
-              ofn = Regexp.last_match(1) + '-iso19139.xml'
-              ofn_fc = Regexp.last_match(1) + '-iso19110.xml'
-              ofn_fgdc = Regexp.last_match(1) + '-fgdc.xml'
+              ofn = "#{Regexp.last_match(1)}-iso19139.xml"
+              ofn_fc = "#{Regexp.last_match(1)}-iso19110.xml"
+              ofn_fgdc = "#{Regexp.last_match(1)}-fgdc.xml"
             end
             LyberCore::Log.debug "extract-iso19139 working on #{fn}"
             arcgis_to_iso19139 fn, ofn, ofn_fc, ofn_fgdc
@@ -46,7 +45,7 @@ module Robots       # Robot package
           arcgis: 'config/ArcGIS/Transforms/ArcGIS2ISO19139.xsl',
           arcgis_fc: 'lib/xslt/arcgis_to_iso19110.xsl',
           arcgis_fgdc: 'config/ArcGIS/Transforms/ArcGIS2FGDC.xsl'
-        }
+        }.freeze
 
         # XSLT processor
         XSLTPROC = 'xsltproc --novalid --xinclude'
@@ -59,14 +58,14 @@ module Robots       # Robot package
         # @param [String] ofn_fc Output file for the Feature Catalog (optional)
         def arcgis_to_iso19139(fn, ofn, ofn_fc = nil, ofn_fgdc = nil)
           LyberCore::Log.debug "generating #{ofn}"
-          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -") or fail
+          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -") or raise
           unless ofn_fc.nil?
             LyberCore::Log.debug "generating #{ofn_fc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or fail
+            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or raise
           end
           unless ofn_fgdc.nil?
             LyberCore::Log.debug "generating #{ofn_fgdc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or fail
+            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or raise
           end
         end
       end

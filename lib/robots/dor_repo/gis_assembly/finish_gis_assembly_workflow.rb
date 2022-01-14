@@ -2,10 +2,9 @@
 
 require 'fileutils'
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class FinishGisAssemblyWorkflow < Base
         def initialize
           super('gisAssemblyWF', 'finish-gis-assembly-workflow', check_queued_status: true) # init LyberCore::Robot
@@ -21,16 +20,16 @@ module Robots       # Robot package
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           # first ensure all files are ready
-          %w(
+          %w[
             content/data.zip
             content/data_EPSG_4326.zip
             content/preview.jpg
             metadata/contentMetadata.xml
             metadata/descMetadata.xml
             metadata/geoMetadata.xml
-          ).each do |f|
+          ].each do |f|
             fn = File.join(rootdir, f)
-            fail "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
+            raise "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
           end
 
           # delete all staged files in temp/

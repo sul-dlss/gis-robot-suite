@@ -2,10 +2,9 @@
 
 require 'base64'
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class ExtractThumbnail < Base
 
         def initialize
@@ -40,7 +39,7 @@ module Robots       # Robot package
 
           # @param [String] fn the metadata
           fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
-          fail "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
+          raise "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
 
           # parse ESRI XML and extract base64 encoded thumbnail image
           doc = Nokogiri::XML(File.read(fn))
@@ -48,14 +47,14 @@ module Robots       # Robot package
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
               File.open(pfn, 'wb') { |f| f << image }
-              fail "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
+              raise "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
 
               return
             else
               LyberCore::Log.warn "extract-thumbnail: #{druid} has unknown EsriPropertyType: #{node['EsriPropertyType']}"
             end
           end
-          fail "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
+          raise "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
         end
       end
     end

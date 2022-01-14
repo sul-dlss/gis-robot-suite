@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class AuthorMetadata < Base
 
         def initialize
@@ -24,7 +23,7 @@ module Robots       # Robot package
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           unless File.size?(fn)
             fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
-            fail "author-metadata: #{druid} is missing ESRI metadata files" if fn.nil?
+            raise "author-metadata: #{druid} is missing ESRI metadata files" if fn.nil?
           end
 
           LyberCore::Log.debug "author-metadata found #{fn}"

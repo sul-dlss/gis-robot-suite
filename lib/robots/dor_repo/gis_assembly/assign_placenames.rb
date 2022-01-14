@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class AssignPlacenames < Base
         def initialize
           super('gisAssemblyWF', 'assign-placenames', check_queued_status: true) # init LyberCore::Robot
@@ -19,10 +18,10 @@ module Robots       # Robot package
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          fail "assign-placenames: #{druid} is missing MODS metadata" unless File.size?(modsFn)
+          raise "assign-placenames: #{druid} is missing MODS metadata" unless File.size?(modsFn)
 
           resolve_placenames(druid, modsFn)
-          fail "assign-placenames: #{druid} corrupted MODS metadata" unless File.size?(modsFn)
+          raise "assign-placenames: #{druid} corrupted MODS metadata" unless File.size?(modsFn)
         end
 
         #
@@ -63,19 +62,19 @@ module Robots       # Robot package
 
             # Add a LC heading if needed
             lc = g.find_loc_keyword(k)
-            unless lc.nil? || k == lc
-              LyberCore::Log.debug "assign-placenames: #{druid} adding Library of Congress entry to end of MODS record"
-              lcauth = g.find_loc_authority(k)
-              unless lcauth.nil?
-                lcuri = g.find_loc_authority(k)
-                lcuri = " valueURI='#{lcuri}'" unless lcuri.nil?
-                i.parent.parent << Nokogiri::XML("
-        <subject>
-          <geographic authority='#{lcauth}'#{lcuri}>#{lc}</geographic>
-        </subject>
-        ").root
-              end
-            end
+            next if lc.nil? || k == lc
+
+            LyberCore::Log.debug "assign-placenames: #{druid} adding Library of Congress entry to end of MODS record"
+            lcauth = g.find_loc_authority(k)
+            next if lcauth.nil?
+
+            lcuri = g.find_loc_authority(k)
+            lcuri = " valueURI='#{lcuri}'" unless lcuri.nil?
+            i.parent.parent << Nokogiri::XML("
+                  <subject>
+                    <geographic authority='#{lcauth}'#{lcuri}>#{lc}</geographic>
+                  </subject>
+                  ").root
           end
 
           # Save XML tree

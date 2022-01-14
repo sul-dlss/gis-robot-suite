@@ -5,9 +5,7 @@ module GisRobotSuite
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
     cmd = "#{Settings.gdal_path}gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
-    infotxt = IO.popen(cmd) do |f|
-      f.readlines
-    end
+    infotxt = IO.popen(cmd, &:readlines)
 
     # parse gdalinfo
     info = {
@@ -17,10 +15,11 @@ module GisRobotSuite
       max: 0
     }
     infotxt.each do |line|
-      if line =~ /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
+      case line
+      when /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
         info[:nbands] = [Regexp.last_match(1).to_i, info[:nbands]].max
         info[:type] = Regexp.last_match(3).to_s
-      elsif line =~ /^\s+Minimum=(.+),\s+Maximum=(.+),.*$/ # Minimum=1.000, Maximum=3322.000
+      when /^\s+Minimum=(.+),\s+Maximum=(.+),.*$/ # Minimum=1.000, Maximum=3322.000
         info[:min] = [Regexp.last_match(1).to_f, info[:min]].min
         info[:max] = [Regexp.last_match(2).to_f, info[:max]].max
       end
@@ -32,7 +31,7 @@ module GisRobotSuite
     when 1
       case info[:type]
       when 'Byte'
-        "grayscale#{nbits > 4 ? 8 : 4 }"
+        "grayscale#{nbits > 4 ? 8 : 4}"
       when 'Int16', 'UInt16'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       when 'Int32'
@@ -40,7 +39,7 @@ module GisRobotSuite
       when 'Float32', 'Float64'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
-        fail "Unknown 1-band raster data type: #{info[:type]}"
+        raise "Unknown 1-band raster data type: #{info[:type]}"
       end
     when 3
       case info[:type]
@@ -51,19 +50,19 @@ module GisRobotSuite
       when 'Int32'
         'rgb32'
       else
-        fail "Unknown 3-band raster data type: #{info[:type]}"
+        raise "Unknown 3-band raster data type: #{info[:type]}"
       end
     else
-      fail "Unsupported number of bands: #{info[:nbands]}"
+      raise "Unsupported number of bands: #{info[:nbands]}"
     end
   end
 
   def self.vector?(mimetype)
-    %w(application/x-esri-shapefile).include? mimetype.split(/;/).first.strip
+    %w[application/x-esri-shapefile].include? mimetype.split(/;/).first.strip
   end
 
   def self.raster?(mimetype)
-    %w(image/tiff application/x-ogc-aig).include? mimetype.split(/;/).first.strip
+    %w[image/tiff application/x-ogc-aig].include? mimetype.split(/;/).first.strip
   end
 
   def self.locate_druid_path(druid, opts = {})
@@ -77,10 +76,10 @@ module GisRobotSuite
     when :workspace
       rootdir = DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
     else
-      fail 'Only :stage, :workspace are supported'
+      raise 'Only :stage, :workspace are supported'
     end
 
-    fail "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
+    raise "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)
 
     rootdir
   end
@@ -92,7 +91,7 @@ module GisRobotSuite
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
         if fn.nil? || File.size(fn) == 0
-          fail "Missing ESRI metadata files in #{dir}"
+          raise "Missing ESRI metadata files in #{dir}"
         end
       end
     end

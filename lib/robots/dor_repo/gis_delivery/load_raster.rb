@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisDelivery   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisDelivery
       class LoadRaster < Base
         def initialize
           super('gisDeliveryWF', 'load-raster', check_queued_status: true) # init LyberCore::Robot
@@ -21,10 +20,10 @@ module Robots       # Robot package
 
           # determine whether we have a Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          fail "load-raster: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          raise "load-raster: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
           format = GisRobotSuite.determine_file_format_from_mods modsfn
-          fail "load-raster: #{druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
+          raise "load-raster: #{druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
 
           # perform based on file format information
           unless GisRobotSuite.raster?(format)
@@ -35,22 +34,22 @@ module Robots       # Robot package
           # extract derivative 4326 nomalized content
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          fail "load-raster: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+          raise "load-raster: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
 
           tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
-          fail "load-raster: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
+          raise "load-raster: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
             Dir.chdir(tmpdir)
             tiffn = Dir.glob('*.tif').first
-            fail "load-raster: #{druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
+            raise "load-raster: #{druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
 
             # copy to geoserver storage
-            unless Settings.geohydra.geotiff.host == 'localhost'
-              path = [Settings.geohydra.geotiff.host, Settings.geohydra.geotiff.dir].join(':')
-            else
-              path = Settings.geohydra.geotiff.dir
-            end
+            path = if Settings.geohydra.geotiff.host == 'localhost'
+                     Settings.geohydra.geotiff.dir
+                   else
+                     [Settings.geohydra.geotiff.host, Settings.geohydra.geotiff.dir].join(':')
+                   end
             cmd = "rsync -v '#{tiffn}' #{path}/#{druid}.tif"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
@@ -59,7 +58,6 @@ module Robots       # Robot package
             cmd = "rsync -v '#{tiffn}'.aux.xml #{path}/#{druid}.tif.aux.xml"
             LyberCore::Log.debug "Running: #{cmd}"
             system(cmd)
-
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir

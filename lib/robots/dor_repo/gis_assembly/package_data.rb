@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisAssembly   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisAssembly
       class PackageData < Base
         def initialize
           super('gisAssemblyWF', 'package-data', check_queued_status: true) # init LyberCore::Robot
@@ -13,7 +12,7 @@ module Robots       # Robot package
         def generate_data_zip(druid, rootdir)
           tmpdir = File.join(rootdir, 'temp')
           LyberCore::Log.debug "Changing to #{tmpdir}"
-          fail "package-data: #{druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
+          raise "package-data: #{druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
 
           Dir.chdir(tmpdir)
           File.umask(002)
@@ -26,7 +25,7 @@ module Robots       # Robot package
             if fn.nil?
               fn = Dir.glob('*.tif.xml').first
               if fn.nil?
-                fail "package-data: #{druid} cannot locate metadata in temp"
+                raise "package-data: #{druid} cannot locate metadata in temp"
               else # GeoTIFF
                 basename = File.basename(fn, '.tif.xml')
                 Dir.glob("#{basename}.*").each do |x|

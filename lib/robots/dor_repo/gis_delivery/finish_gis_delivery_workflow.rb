@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Robot class to run under multiplexing infrastructure
-module Robots       # Robot package
-  module DorRepo    # Use DorRepo/SdrRepo to avoid name collision with Dor module
-    module GisDelivery   # This is your workflow package name (using CamelCase)
+module Robots
+  module DorRepo
+    module GisDelivery
       class FinishGisDeliveryWorkflow < Base
         def initialize
           super('gisDeliveryWF', 'finish-gis-delivery-workflow', check_queued_status: true) # init LyberCore::Robot
@@ -29,7 +28,7 @@ module Robots       # Robot package
             )
             Geoserver::Publish::Layer.new(connection).find(layer_name: druid)
           end
-          fail "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" unless available_in_geoserver.any?
+          raise "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" unless available_in_geoserver.any?
         end
       end
     end
