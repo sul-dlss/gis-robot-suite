@@ -30,13 +30,11 @@ module Robots
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           raise "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
+          client = Dor::Services::Client.object(druid)
+          cocina = client.find
+          updated = cocina.new(geographic: { iso19139: File.read(fn) })
           # Load geoMetadata into DOR
-          Dor::Services::Client.object(druid).metadata.legacy_update(
-            geo: {
-              updated: File.mtime(fn),
-              content: File.read(fn)
-            }
-          )
+          client.update(params: updated)
 
           tag druid
         end

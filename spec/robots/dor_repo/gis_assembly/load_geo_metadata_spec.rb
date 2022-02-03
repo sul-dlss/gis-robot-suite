@@ -17,10 +17,17 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
       instance_double(Dor::Services::Client::AdministrativeTags, list: [], create: nil)
     end
     let(:object_client) do
-      instance_double(Dor::Services::Client::Object, metadata: metadata_client)
+      instance_double(Dor::Services::Client::Object, find: cocina, update: true)
     end
-    let(:metadata_client) do
-      instance_double(Dor::Services::Client::Metadata, legacy_update: true)
+    let(:cocina) do
+      Cocina::Models::DRO.new(externalIdentifier: 'druid:bc234fg5678',
+                              type: Cocina::Models::Vocab.geo,
+                              label: '',
+                              version: 1,
+                              access: {},
+                              administrative: {
+                                hasAdminPolicy: 'druid:hv992ry2431'
+                              })
     end
     let(:xml) do
       <<~XML
@@ -39,12 +46,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
     it 'tags the object' do
       robot.perform(druid)
       expect(fake_tags_client).to have_received(:create).once.with(tags: ['Dataset : GIS'])
-      expect(metadata_client).to have_received(:legacy_update).with(
-        geo: {
-          updated: Time,
-          content: "<xml />\n"
-        }
-      )
+      expect(object_client).to have_received(:update).with(params: Cocina::Models::DRO)
     end
   end
 end
