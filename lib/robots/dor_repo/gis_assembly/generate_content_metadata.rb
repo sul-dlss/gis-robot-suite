@@ -19,13 +19,12 @@ module Robots
         # @param [String] druid
         # @param [Hash<Symbol,Assembly::ObjectFile>] objects
         # @param [Nokogiri::XML::DocumentFragment] geoData
-        # @param [Hash] flags
         # @return [Nokogiri::XML::Document]
         # @see [Assembly::ContentMetadata]
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-        def create_content_metadata(druid, objects, geoData, flags = {})
+        def create_content_metadata(druid, objects, geoData)
           Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-            xml.contentMetadata(objectId: druid, type: flags[:content_type] || 'geo') do
+            xml.contentMetadata(objectId: druid, type: 'geo') do
               seq = 1
               objects.each do |k, v|
                 next if v.nil? || v.empty?
