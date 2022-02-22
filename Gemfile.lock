@@ -61,7 +61,7 @@ GEM
     deprecation (1.1.0)
       activesupport
     diff-lcs (1.5.0)
-    dlss-capistrano (3.11.1)
+    dlss-capistrano (4.0.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.3.0)
       capistrano-one_time_key
@@ -308,7 +308,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano-shared_configs
   config (~> 3.1)
-  dlss-capistrano (~> 3.11)
+  dlss-capistrano
   dor-services-client (~> 7.0)
   dor-workflow-client (~> 3.1)
   druid-tools
@@ -336,4 +336,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-   2.3.4
+   2.3.7
