@@ -149,7 +149,7 @@ GEM
     ffi (1.15.5)
     ffi-geos (1.2.2)
       ffi (>= 1.0.0)
-    geo_combine (0.5.1)
+    geo_combine (0.6.0)
       activesupport
       json-schema
       net-http-persistent (~> 2.0)
@@ -258,7 +258,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.16.0)
       parser (>= 3.1.1.0)
-    rubocop-rspec (2.8.0)
+    rubocop-rspec (2.9.0)
       rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
