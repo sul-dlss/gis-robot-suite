@@ -67,17 +67,18 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (7.12.0)
+    dor-services-client (8.0.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.66.0)
       deprecation
-      faraday (>= 0.15, < 2)
+      faraday (~> 2.0)
+      faraday-retry
       zeitwerk (~> 2.1)
-    dor-workflow-client (3.24.0)
+    dor-workflow-client (4.0.0)
       activesupport (>= 3.2.1, < 8)
       deprecation (>= 0.99.0)
-      faraday (>= 0.9.2, < 2.0)
-      faraday_middleware
+      faraday (~> 2.0)
+      faraday-retry
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
     druid-tools (2.1.0)
@@ -120,31 +121,11 @@ GEM
       dry-schema (~> 1.9, >= 1.9.1)
     edtf (3.0.8)
       activesupport (>= 3.0, < 8.0)
-    faraday (1.10.0)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0)
-      faraday-multipart (~> 1.0)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.0)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      faraday-retry (~> 1.0)
+    faraday (2.2.0)
+      faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.3)
-      multipart-post (>= 1.2, < 3)
-    faraday-net_http (1.0.1)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
+    faraday-net_http (2.0.1)
     faraday-retry (1.0.3)
-    faraday_middleware (1.2.0)
-      faraday (~> 1.0)
     fastimage (2.2.6)
     ffi (1.15.5)
     ffi-geos (1.2.2)
@@ -157,8 +138,8 @@ GEM
       rsolr
       sanitize
       thor
-    geoserver-publish (0.5.0)
-      faraday
+    geoserver-publish (0.6.0)
+      faraday (~> 2.2)
     hashdiff (1.0.1)
     honeybadger (4.11.0)
     i18n (1.10.0)
@@ -182,7 +163,6 @@ GEM
       nom-xml (~> 1.0)
     mono_logger (1.1.1)
     multi_json (1.15.0)
-    multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     net-http-persistent (2.9.4)
@@ -309,8 +289,8 @@ DEPENDENCIES
   capistrano-shared_configs
   config (~> 3.1)
   dlss-capistrano
-  dor-services-client (~> 7.0)
-  dor-workflow-client (~> 3.1)
+  dor-services-client (~> 8.0)
+  dor-workflow-client (~> 4.0)
   druid-tools
   fastimage (~> 2.2)
   ffi-geos (~> 1.0)
