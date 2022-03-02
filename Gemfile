@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
 gem 'config', '~> 3.1'
-gem 'dor-services-client', '~> 7.0'
-gem 'dor-workflow-client', '~> 3.1'
+gem 'dor-services-client', '~> 8.0'
+gem 'dor-workflow-client', '~> 4.0'
 gem 'druid-tools'
 gem 'fastimage', '~> 2.2'
 gem 'ffi-geos', '~> 1.0', require: false # XXX: where is this used?
