@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open-uri'
-
 module Robots
   module DorRepo
     module GisAssembly
@@ -167,7 +165,7 @@ module Robots
           end
 
           # setup
-          wkt = open("https://spatialreference.org/ref/epsg/#{srid}/prettywkt/").read
+          wkt = URI.open("https://spatialreference.org/ref/epsg/#{srid}/prettywkt/").read
           ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise "normalize-data: #{druid} is missing Shapefile: #{ifn}" unless File.exist? ifn
 
