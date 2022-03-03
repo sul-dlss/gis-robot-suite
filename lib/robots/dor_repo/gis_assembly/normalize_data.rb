@@ -167,7 +167,7 @@ module Robots
           end
 
           # setup
-          wkt = open("http://spatialreference.org/ref/epsg/#{srid}/prettywkt/").read
+          wkt = open("https://spatialreference.org/ref/epsg/#{srid}/prettywkt/").read
           ifn = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise "normalize-data: #{druid} is missing Shapefile: #{ifn}" unless File.exist? ifn
 
