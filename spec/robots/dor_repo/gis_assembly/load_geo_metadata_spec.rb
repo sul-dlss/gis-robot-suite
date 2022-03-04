@@ -22,9 +22,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
     let(:cocina) do
       Cocina::Models::DRO.new(externalIdentifier: 'druid:bc234fg5678',
                               type: Cocina::Models::Vocab.geo,
-                              label: '',
+                              label: 'my repository object',
                               version: 1,
                               access: {},
+                              description: {
+                                title: [{ value: 'my repository object' }],
+                                purl: "https://purl.stanford.edu/bc234fg5678"
+                              },
                               administrative: {
                                 hasAdminPolicy: 'druid:hv992ry2431'
                               })

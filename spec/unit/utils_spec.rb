@@ -34,6 +34,10 @@ RSpec.describe 'utilities' do
                              'label' => 'GIS object',
                              'version' => 1,
                              'type' => Cocina::Models::Vocab.object,
+                             'description' => {
+                               'title' => [{ 'value' => 'GIS object' }],
+                               'purl' => "https://purl.stanford.edu/fx392st8577"
+                             },
                              'access' => {
                                'access' => access,
                                'download' => access
