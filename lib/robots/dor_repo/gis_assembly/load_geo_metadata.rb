@@ -33,7 +33,7 @@ module Robots
           client = Dor::Services::Client.object(druid)
           cocina = client.find
           updated = cocina.new(
-            type: Cocina::Models::Vocab.geo,
+            type: Cocina::Models::ObjectType.geo,
             geographic: { iso19139: File.read(fn) }
           )
           # Load geoMetadata into DOR
