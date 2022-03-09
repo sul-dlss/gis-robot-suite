@@ -21,7 +21,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
     end
     let(:cocina) do
       Cocina::Models::DRO.new(externalIdentifier: 'druid:bc234fg5678',
-                              type: Cocina::Models::Vocab.geo,
+                              type: Cocina::Models::ObjectType.geo,
                               label: 'my repository object',
                               version: 1,
                               access: {},

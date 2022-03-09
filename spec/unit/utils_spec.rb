@@ -33,13 +33,13 @@ RSpec.describe 'utilities' do
                              'externalIdentifier' => 'druid:fx392st8577',
                              'label' => 'GIS object',
                              'version' => 1,
-                             'type' => Cocina::Models::Vocab.object,
+                             'type' => Cocina::Models::ObjectType.object,
                              'description' => {
                                'title' => [{ 'value' => 'GIS object' }],
                                'purl' => "https://purl.stanford.edu/fx392st8577"
                              },
                              'access' => {
-                               'access' => access,
+                               'view' => access,
                                'download' => access
                              },
                              'administrative' => {

@@ -134,7 +134,7 @@ module GisRobotSuite
   def self.determine_rights(druid)
     rights = 'Restricted'
     cocina_model = Dor::Services::Client.object("druid:#{druid}").find
-    if cocina_model.access.access == 'world'
+    if cocina_model.access.view == 'world'
       rights = 'Public'
     end
 
