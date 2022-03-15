@@ -1,12 +1,9 @@
-## Why was this change made?
+## Why was this change made? 🤔
 
 
 
-## How was this change tested?
+## How was this change tested? 🤨
 
-
-
-## Which documentation and/or configurations were updated?
-
+⚡ ⚠ If this change involves consuming from other services or writing to shared file systems, test that GIS accessioning works properly in [stage|qa] environment, in addition to specs. ⚡
 
 
