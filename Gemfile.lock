@@ -41,7 +41,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.69.1)
+    cocina-models (0.69.2)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
