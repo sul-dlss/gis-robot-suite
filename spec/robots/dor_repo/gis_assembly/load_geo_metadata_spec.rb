@@ -29,6 +29,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
                                 title: [{ value: 'my repository object' }],
                                 purl: "https://purl.stanford.edu/bc234fg5678"
                               },
+                              structural: {},
+                              identification: {},
                               administrative: {
                                 hasAdminPolicy: 'druid:hv992ry2431'
                               })
