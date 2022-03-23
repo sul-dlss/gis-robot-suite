@@ -42,6 +42,8 @@ RSpec.describe 'utilities' do
                                'view' => access,
                                'download' => access
                              },
+                             'structural' => {},
+                             'identification' => {},
                              'administrative' => {
                                'hasAdminPolicy' => 'druid:xx999xx9999'
                              }
