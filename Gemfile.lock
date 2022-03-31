@@ -41,8 +41,9 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.70.0)
+    cocina-models (0.71.0)
       activesupport
+      deprecation
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
       openapi3_parser
@@ -69,9 +70,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (8.4.0)
+    dor-services-client (8.5.0)
       activesupport (>= 4.2, < 8)
-      cocina-models (~> 0.70.0)
+      cocina-models (~> 0.71.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry

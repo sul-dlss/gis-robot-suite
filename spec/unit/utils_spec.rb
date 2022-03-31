@@ -43,7 +43,7 @@ RSpec.describe 'utilities' do
                                'download' => access
                              },
                              'structural' => {},
-                             'identification' => {},
+                             identification: { sourceId: 'sul:1234' },
                              'administrative' => {
                                'hasAdminPolicy' => 'druid:xx999xx9999'
                              }

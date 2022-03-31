@@ -30,7 +30,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
                                 purl: "https://purl.stanford.edu/bc234fg5678"
                               },
                               structural: {},
-                              identification: {},
+                              identification: { sourceId: 'sul:1234' },
                               administrative: {
                                 hasAdminPolicy: 'druid:hv992ry2431'
                               })
