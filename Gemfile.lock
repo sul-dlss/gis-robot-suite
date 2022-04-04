@@ -84,7 +84,7 @@ GEM
       faraday-retry
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
-    druid-tools (2.1.0)
+    druid-tools (2.2.1)
       deprecation
     dry-configurable (0.14.0)
       concurrent-ruby (~> 1.0)
@@ -144,7 +144,7 @@ GEM
     geoserver-publish (0.6.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
-    honeybadger (4.11.0)
+    honeybadger (4.12.1)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -224,7 +224,7 @@ GEM
     rspec-expectations (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
-    rspec-mocks (3.11.0)
+    rspec-mocks (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
