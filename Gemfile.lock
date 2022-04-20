@@ -70,7 +70,7 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (8.9.0)
+    dor-services-client (9.0.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.75.0)
       deprecation
@@ -294,7 +294,7 @@ DEPENDENCIES
   capistrano-shared_configs
   config (~> 3.1)
   dlss-capistrano
-  dor-services-client (~> 8.0)
+  dor-services-client (~> 9.0)
   dor-workflow-client (~> 4.0)
   druid-tools
   fastimage (~> 2.2)
