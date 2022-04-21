@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
 gem 'config', '~> 3.1'
-gem 'dor-services-client', '~> 9.0'
+gem 'dor-services-client', '~> 10.0'
 gem 'dor-workflow-client', '~> 4.0'
 gem 'druid-tools'
 gem 'fastimage', '~> 2.2'
