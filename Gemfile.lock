@@ -41,7 +41,7 @@ GEM
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.77.0)
+    cocina-models (0.78.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -72,9 +72,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (10.2.0)
+    dor-services-client (11.0.0)
       activesupport (>= 4.2, < 8)
-      cocina-models (~> 0.77.0)
+      cocina-models (~> 0.78.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -298,7 +298,7 @@ DEPENDENCIES
   capistrano-shared_configs
   config (~> 3.1)
   dlss-capistrano
-  dor-services-client (~> 10.0)
+  dor-services-client (~> 11.0)
   dor-workflow-client (~> 4.0)
   druid-tools
   fastimage (~> 2.2)
