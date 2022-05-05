@@ -39,3 +39,6 @@ set :bundle_without, %w[development deployment].join(' ')
 
 # update shared_configs before restarting app
 before 'deploy:publishing', 'shared_configs:update'
+
+# Prevent deployment if application ruby not installed
+set :validate_ruby_on_deploy, true

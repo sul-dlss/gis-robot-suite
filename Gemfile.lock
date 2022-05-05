@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/sul-dlss/dlss-capistrano.git
+  revision: 6104bb256d4f5881db73259be11449bd69eb5a13
+  branch: ruby-version-reporting
+  specs:
+    dlss-capistrano (4.1.1)
+      capistrano (~> 3.0)
+      capistrano-bundle_audit (>= 0.3.0)
+      capistrano-one_time_key
+      capistrano-rvm
+      capistrano-shared_configs
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -66,11 +78,6 @@ GEM
     deprecation (1.1.0)
       activesupport
     diff-lcs (1.5.0)
-    dlss-capistrano (4.1.1)
-      capistrano (~> 3.0)
-      capistrano-bundle_audit (>= 0.3.0)
-      capistrano-one_time_key
-      capistrano-shared_configs
     docile (1.4.0)
     dor-services-client (11.0.0)
       activesupport (>= 4.2, < 8)
@@ -297,7 +304,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano-shared_configs
   config (~> 3.1)
-  dlss-capistrano
+  dlss-capistrano!
   dor-services-client (~> 11.0)
   dor-workflow-client (~> 4.0)
   druid-tools
@@ -323,6 +330,9 @@ DEPENDENCIES
   stanford-mods
   webmock
   zeitwerk (~> 2.1)
+
+RUBY VERSION
+   ruby 3.0.3p157
 
 BUNDLED WITH
    2.3.9

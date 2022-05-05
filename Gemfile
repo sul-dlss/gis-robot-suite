@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ruby '3.0.3'
+
 source 'https://rubygems.org'
 
 gem 'assembly-objectfile'
@@ -42,6 +44,6 @@ group :deployment do
   gem 'capistrano'
   gem 'capistrano-rvm'
   gem 'capistrano-bundler'
-  gem 'dlss-capistrano', require: false
+  gem 'dlss-capistrano', require: false, github: 'sul-dlss/dlss-capistrano', branch: 'ruby-version-reporting'
   gem 'capistrano-shared_configs'
 end
