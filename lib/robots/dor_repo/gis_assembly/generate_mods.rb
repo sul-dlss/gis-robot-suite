@@ -121,7 +121,7 @@ module Robots
           raise "generate-mods: #{druid} cannot locate #{fn}" unless File.size?(fn)
 
           # parse geometadata as input to MODS transform
-          geoMetadataDS = Nokogiri::XML(File.read(fn))
+          geo_metadata_rdf_xml = Nokogiri::XML(File.read(fn))
 
           # detect fileFormat and geometryType
           fn = Dir.glob("#{rootdir}/temp/*.shp").first
@@ -147,13 +147,13 @@ module Robots
           # load PURL
           purl = Settings.purl.url + "/#{druid.gsub(/^druid:/, '')}"
 
-          # XXX: clean up dor-services geoMetadataDS to not generate transforms
+          # clean up geo_metadata_rdf_xml to not generate transforms
           modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           File.open(modsFn, 'wb') do |f|
 
-            f << to_mods(geoMetadataDS, geometryType: geometryType,
-                                        fileFormat: fileFormat,
-                                        purl: purl).to_xml(index: 2)
+            f << to_mods(geo_metadata_rdf_xml, geometryType: geometryType,
+                                            fileFormat: fileFormat,
+                                            purl: purl).to_xml(index: 2)
           rescue ArgumentError => e
             raise "generate-mods: #{druid} cannot process MODS: #{e}"
 

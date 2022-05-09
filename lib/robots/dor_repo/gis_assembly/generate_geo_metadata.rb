@@ -26,45 +26,45 @@ module Robots
             return
           end
 
-          fn = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
-          if fn.nil?
+          iso19139_xml_file = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
+          if iso19139_xml_file.nil?
             raise "generate-geo-metadata: #{druid} is missing ISO 19139 file"
           end
 
-          LyberCore::Log.debug "generate-geo-metadata processing #{fn}"
-          isoXml = Nokogiri::XML(File.read(fn))
-          if isoXml.nil? || isoXml.root.nil?
-            raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{fn}"
+          LyberCore::Log.debug "generate-geo-metadata processing #{iso19139_xml_file}"
+          iso19139_ng_xml = Nokogiri::XML(File.read(iso19139_xml_file))
+          if iso19139_ng_xml.nil? || iso19139_ng_xml.root.nil?
+            raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{iso19139_xml_file}"
           end
 
-          fn = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
-          unless fn.nil?
-            LyberCore::Log.debug "generate-geo-metadata processing #{fn}"
-            fcXml = Nokogiri::XML(File.read(fn))
+          iso19110_xml_file = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
+          unless iso19110_xml_file.nil?
+            LyberCore::Log.debug "generate-geo-metadata processing #{iso19110_xml_file}"
+            iso19110_ng_xml = Nokogiri::XML(File.read(iso19110_xml_file))
           end
 
-          # GeoMetadataDS
+          # create geoMetadata RDF XML file
           FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
-          xml = to_geoMetadataDS(isoXml, fcXml, Settings.purl.url + "/#{druid}")
+          xml = geo_metadata_rdf_xml(iso19139_ng_xml, iso19110_ng_xml, Settings.purl.url + "/#{druid}")
           File.open(ofn, 'wb') { |f| f << xml.to_xml(indent: 2) }
         end
 
-        # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
-        # @param [Nokogiri::XML::Document] isoXml ISO 19193 MD_Metadata node
-        # @param [Nokogiri::XML::Document] fcXml ISO 19193 feature catalog
+        # Converts a ISO 19139 into RDF-bundled document geoMetadata XML file
+        # @param [Nokogiri::XML::Document] iso19139_ng_xml ISO 19193 MD_Metadata node
+        # @param [Nokogiri::XML::Document] iso19110_ng_xml ISO 19110 feature catalog
         # @param [String] purl The unique purl url
-        # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
-        def to_geoMetadataDS(isoXml, fcXml, purl)
+        # @return [Nokogiri::XML::Document] the geoMetadata file with RDF as XML
+        def geo_metadata_rdf_xml(iso19139_ng_xml, iso19110_ng_xml, purl)
           raise ArgumentError, 'generate-geo-metadata: PURL is required' if purl.nil?
-          raise ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if isoXml.nil? || isoXml.root.nil?
+          raise ArgumentError, 'generate-geo-metadata: ISO 19139 is required' if iso19139_ng_xml.nil? || iso19139_ng_xml.root.nil?
 
           Nokogiri::XML("
             <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
               <rdf:Description rdf:about=\"#{purl}\">
-                #{isoXml.root}
+                #{iso19139_ng_xml.root}
               </rdf:Description>
               <rdf:Description rdf:about=\"#{purl}\">
-                #{fcXml.nil? ? '' : fcXml.root.to_s}
+                #{iso19110_ng_xml.nil? ? '' : iso19110_ng_xml.root.to_s}
               </rdf:Description>
             </rdf:RDF>")
         end

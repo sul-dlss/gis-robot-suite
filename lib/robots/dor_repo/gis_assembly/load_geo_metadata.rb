@@ -26,7 +26,7 @@ module Robots
 
           rootdir = GisRobotSuite.locate_druid_path druid_without_namespace, type: :stage
 
-          # Locate geoMetadata datastream
+          # Locate geoMetadata xml file
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           raise "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
