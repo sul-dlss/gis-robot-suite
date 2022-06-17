@@ -37,7 +37,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `normalize-data` :: Reproject the data into common SRS projection and/or file format
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
 * `finish-data` :: Finalize the data preparation (validity check)
-* `generate-content-metadata` :: Generate contentMetadata manifest
+* `generate-content-metadata` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
 
@@ -78,7 +78,6 @@ look like this in the workspace:
 
     zv925hd6723/
       metadata/
-        contentMetadata.xml
       content/
         data.zip
         data_ESRI_4326.zip
