@@ -69,7 +69,7 @@ GEM
     deprecation (1.1.0)
       activesupport
     diff-lcs (1.5.0)
-    dlss-capistrano (4.1.2)
+    dlss-capistrano (4.2.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.3.0)
       capistrano-one_time_key
@@ -104,7 +104,7 @@ GEM
     dry-logic (1.2.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.5, >= 0.5)
-    dry-schema (1.9.2)
+    dry-schema (1.9.3)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.13, >= 0.13.0)
       dry-core (~> 0.5, >= 0.5)
@@ -168,7 +168,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_exiftool (2.10.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.0)
+    minitest (5.16.1)
     mods (3.0.2)
       edtf (~> 3.0)
       iso-639
@@ -209,7 +209,7 @@ GEM
       rack
     rainbow (3.1.1)
     rake (13.0.6)
-    redis (4.6.0)
+    redis (4.7.0)
     redis-namespace (1.8.2)
       redis (>= 3.0.4)
     regexp_parser (2.5.0)
@@ -242,7 +242,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.2.9)
       rexml
-    rubocop (1.30.1)
+    rubocop (1.31.0)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -287,7 +287,7 @@ GEM
     tilt (2.0.10)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.1.0)
+    unicode-display_width (2.2.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
