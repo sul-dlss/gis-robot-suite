@@ -12,15 +12,30 @@ module Robots
           super('gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
         end
 
-        FILE_ATTRIBUTES = Assembly::ContentMetadata::File::ATTRIBUTES_FOR_TYPE.merge(
-          'image/png' => Assembly::ContentMetadata::File::ATTRIBUTES_FOR_TYPE['image/jp2'] # preview image
-        )
+        # default publish/preserve/shelve attributes used in content metadata
+        # if no mimetype specific attributes are specified for a given file, define some defaults, and override for specific mimetypes below
+        FILE_ATTRIBUTES = {
+          'default' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'image/tif' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'image/tiff' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'image/jp2' => { preserve: 'no', shelve: 'yes', publish: 'yes' },
+          'image/jpeg' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'audio/wav' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'audio/x-wav' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'audio/mp3' => { preserve: 'no', shelve: 'yes', publish: 'yes' },
+          'audio/mpeg' => { preserve: 'no', shelve: 'yes', publish: 'yes' },
+          'application/pdf' => { preserve: 'yes', shelve: 'yes', publish: 'yes' },
+          'plain/text' => { preserve: 'yes', shelve: 'yes', publish: 'yes' },
+          'text/plain' => { preserve: 'yes', shelve: 'yes', publish: 'yes' },
+          'image/png' => { preserve: 'no', shelve: 'yes', publish: 'yes' }, # preview image
+          'application/zip' => { preserve: 'yes', shelve: 'no', publish: 'no' },
+          'application/json' => { preserve: 'yes', shelve: 'yes', publish: 'yes' }
+        }.freeze
 
         # @param [String] druid
         # @param [Hash<Symbol,Assembly::ObjectFile>] objects
         # @param [Nokogiri::XML::DocumentFragment] geoData
         # @return [Nokogiri::XML::Document]
-        # @see [Assembly::ContentMetadata]
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
         def create_content_metadata(druid, objects, geoData)
           Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
