@@ -21,8 +21,8 @@ module Robots
         def run_shp2pgsql(projection, encoding, shpfn, schema, druid, sqlfn, errfn)
           # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
           # XXX: -G for the geography column causes some issues with GeoServer
-          cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding}" \
-                " '#{shpfn}' #{schema}.#{druid} " \
+          cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding} " \
+                "'#{shpfn}' #{schema}.#{druid} " \
                 "> '#{sqlfn}' 2> '#{errfn}'"
           LyberCore::Log.debug "Running: #{cmd}"
           success = system(cmd)
