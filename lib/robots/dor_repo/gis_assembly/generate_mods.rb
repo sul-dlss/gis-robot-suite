@@ -10,6 +10,69 @@ module Robots
           super('gisAssemblyWF', 'generate-mods', check_queued_status: true) # init LyberCore::Robot
         end
 
+        # `perform` is the main entry point for the robot. This is where
+        # all of the robot's work is done.
+        #
+        # @param [String] druid -- the Druid identifier for the object to process
+        def perform(druid)
+          druid = druid.delete_prefix('druid:')
+          LyberCore::Log.debug "generate-mods working on #{druid}"
+
+          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+
+          # short-circuit if already have MODS file
+          desc_metadata = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          if File.size?(desc_metadata)
+            LyberCore::Log.info "generate-mods: #{druid} found existing #{desc_metadata}"
+            return
+          end
+
+          geo_metadata_file = File.join(rootdir, 'metadata', 'geoMetadata.xml')
+          raise "generate-mods: #{druid} cannot locate #{geo_metadata_file}" unless File.size?(geo_metadata_file)
+
+          # parse geometadata as input to MODS transform
+          geo_metadata_rdf_xml = Nokogiri::XML(File.read(geo_metadata_file))
+
+          # detect fileFormat and geometryType
+          shp_file = Dir.glob("#{rootdir}/temp/*.shp").first
+          if shp_file.nil?
+            geometryType = 'Raster'
+            tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
+            if tif_file.nil?
+              metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+              if metadata_xml_file.nil?
+                raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp"
+              else
+                fileFormat = 'ArcGRID'
+              end
+            else
+              fileFormat = 'GeoTIFF'
+            end
+          else
+            geometryType = geometry_type_ogrinfo(shp_file)
+            geometryType = 'LineString' if geometryType =~ /^Line/
+            fileFormat = 'Shapefile'
+          end
+
+          # load PURL
+          purl = Settings.purl.url + "/#{druid.gsub(/^druid:/, '')}"
+
+          # clean up geo_metadata_rdf_xml to not generate transforms
+          mods_xml_file = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          File.open(mods_xml_file, 'wb') do |file_content|
+            file_content << to_mods(geo_metadata_rdf_xml,
+                                    geometryType: geometryType,
+                                    fileFormat: fileFormat,
+                                    purl: purl).to_xml(index: 2)
+          rescue ArgumentError => e
+            raise "generate-mods: #{druid} cannot process MODS: #{e}"
+          end
+
+          raise "generate-mods: #{druid} did not write MODS correctly" unless File.size?(mods_xml_file)
+        end
+
+        private
+
         # Reads the shapefile to determine geometry type
         #
         # @return [String] Point, Polygon, LineString as appropriate
@@ -98,67 +161,6 @@ module Robots
             e.content = "(#{to_coordinates_ddmmss(e.content.to_s)})"
           end
           doc
-        end
-
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "generate-mods working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          # short-circuit if already have MODS file
-          fn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          if File.size?(fn)
-            LyberCore::Log.info "generate-mods: #{druid} found existing #{fn}"
-            return
-          end
-
-          fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise "generate-mods: #{druid} cannot locate #{fn}" unless File.size?(fn)
-
-          # parse geometadata as input to MODS transform
-          geoMetadataDS = Nokogiri::XML(File.read(fn))
-
-          # detect fileFormat and geometryType
-          fn = Dir.glob("#{rootdir}/temp/*.shp").first
-          if fn.nil?
-            geometryType = 'Raster'
-            fn = Dir.glob("#{rootdir}/temp/*.tif").first
-            if fn.nil?
-              fn = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-              if fn.nil?
-                raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp"
-              else
-                fileFormat = 'ArcGRID'
-              end
-            else
-              fileFormat = 'GeoTIFF'
-            end
-          else
-            geometryType = geometry_type_ogrinfo(fn)
-            geometryType = 'LineString' if geometryType =~ /^Line/
-            fileFormat = 'Shapefile'
-          end
-
-          # load PURL
-          purl = Settings.purl.url + "/#{druid.gsub(/^druid:/, '')}"
-
-          # XXX: clean up dor-services geoMetadataDS to not generate transforms
-          modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          File.open(modsFn, 'wb') do |f|
-
-            f << to_mods(geoMetadataDS, geometryType: geometryType,
-                                        fileFormat: fileFormat,
-                                        purl: purl).to_xml(index: 2)
-          rescue ArgumentError => e
-            raise "generate-mods: #{druid} cannot process MODS: #{e}"
-
-          end
-          raise "generate-mods: #{druid} did not write MODS correctly" unless File.size?(modsFn)
         end
       end
     end

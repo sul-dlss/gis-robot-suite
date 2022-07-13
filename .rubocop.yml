@@ -85,10 +85,6 @@ Naming/FileName:
     - Capfile
     - Gemfile
 
-Naming/MethodName:
-  Exclude:
-    - lib/robots/dor_repo/gis_assembly/generate_geo_metadata.rb # to_geoMetadataDS
-
 # --- Performance ---
 
 # --- RSpec ---

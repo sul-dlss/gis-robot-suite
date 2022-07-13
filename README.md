@@ -29,7 +29,7 @@ to start all robots defined in `config/resque-pool.yml`.
 * `approve-metadata` :: Approve metadata quality and release for workflow (manual step)
 * `extract-thumbnail` :: Extract thumbnail preview from ArcCatalog metadata
 * `extract-iso19139` :: Transform ISO 19139 metadata from ArcCatalog metadata
-* `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata datastream
+* `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
 * `generate-mods` :: Convert geoMetadata into MODS
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `finish-metadata` :: Finalize the metadata preparation (validity check)
@@ -40,7 +40,7 @@ to start all robots defined in `config/resque-pool.yml`.
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
 * `finish-data` :: Finalize the data preparation (validity check)
 * `generate-content-metadata` :: Generate contentMetadata manifest
-* `load-geo-metadata` :: Accession geoMetadata datastream into DOR repository
+* `load-geo-metadata` :: Accession geoMetadata xml into SDR
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-assembly-workflow` :: Kickstart the core assembly workflow at assemblyWF (manual step)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF (manual step)
