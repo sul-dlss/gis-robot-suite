@@ -60,7 +60,6 @@ GEM
       dry-validation (~> 1.0, >= 1.0.0)
     crack (0.4.5)
       rexml
-    crass (1.0.6)
     deep_merge (1.2.2)
     deprecation (1.1.0)
       activesupport
@@ -133,17 +132,6 @@ GEM
     faraday-retry (2.0.0)
       faraday (~> 2.0)
     fastimage (2.2.6)
-    ffi (1.15.5)
-    ffi-geos (1.2.2)
-      ffi (>= 1.0.0)
-    geo_combine (0.6.0)
-      activesupport
-      json-schema
-      net-http-persistent (~> 2.0)
-      nokogiri
-      rsolr
-      sanitize
-      thor
     geoserver-publish (0.6.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
@@ -153,8 +141,6 @@ GEM
     ice_nine (0.11.2)
     iso-639 (0.2.10)
     json (2.6.2)
-    json-schema (3.0.0)
-      addressable (>= 2.8)
     jsonpath (1.1.2)
       multi_json
     lyber-core (6.1.1)
@@ -174,7 +160,6 @@ GEM
     multi_json (1.15.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
-    net-http-persistent (2.9.4)
     net-scp (4.0.0.rc1)
       net-ssh (>= 2.6.5, < 8.0.0)
     net-ssh (7.0.1)
@@ -254,9 +239,6 @@ GEM
       rubocop (~> 1.31)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    sanitize (6.0.0)
-      crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
     scanf (1.0.0)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -307,11 +289,8 @@ DEPENDENCIES
   dor-workflow-client (~> 4.0)
   druid-tools
   fastimage (~> 2.2)
-  ffi-geos (~> 1.0)
-  geo_combine
   geoserver-publish (>= 0.5.0)
   honeybadger
-  iso-639 (~> 0.2.10)
   lyber-core (~> 6.1)
   pry (~> 0.10)
   rake (~> 13.0)
