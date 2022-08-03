@@ -206,7 +206,7 @@ module Robots
           # determine raster style
           begin
             raster_style = "raster_#{GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")}"
-          rescue => e
+          rescue StandardError => e
             LyberCore::Log.info 'Raster style determination failed. Using default `raster`'
             raster_style = 'raster'
           end

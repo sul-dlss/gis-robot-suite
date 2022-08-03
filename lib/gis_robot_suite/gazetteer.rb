@@ -19,8 +19,10 @@ module GisRobotSuite
         @registry[k] = {
           geonames_placename: v[1],
           geonames_id: v[2].to_i,
+          # rubocop:disable Style/TernaryParentheses
           loc_keyword: (v[3].nil? || v[3].empty?) ? nil : v[3],
           loc_id: (v[4].nil? || v[4].empty?) ? nil : v[4]
+          # rubocop:enable Style/TernaryParentheses
         }
         if @registry[k][:geonames_placename].nil? &&
            @registry[k][:loc_keyword].nil?
