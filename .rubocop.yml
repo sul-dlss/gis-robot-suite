@@ -109,7 +109,7 @@ Style/IfUnlessModifier:
     # robots/gisDiscovery/export-opengeometadata.rb # line 72 if xml.nil? || xml.root.nil?
 
 Style/StringLiterals:
-  Enabled: false # ' vs " isn't a big deal for readability or maintainability or execution time
+  Enabled: true
 
 Style/SymbolArray:
   Exclude:

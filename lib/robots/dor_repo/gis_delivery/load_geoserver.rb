@@ -45,9 +45,9 @@ module Robots
           LyberCore::Log.debug "GeoServer options: #{Settings.geoserver[rights][:primary]}"
           connection = Geoserver::Publish::Connection.new(
             {
-              "url" => Settings.geoserver[rights][:primary][:url],
-              "user" => Settings.geoserver[rights][:primary][:user],
-              "password" => Settings.geoserver[rights][:primary][:password]
+              'url' => Settings.geoserver[rights][:primary][:url],
+              'user' => Settings.geoserver[rights][:primary][:user],
+              'password' => Settings.geoserver[rights][:primary][:password]
             }
           )
 
@@ -207,7 +207,7 @@ module Robots
           begin
             raster_style = "raster_#{GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")}"
           rescue => e
-            LyberCore::Log.info "Raster style determination failed. Using default `raster`"
+            LyberCore::Log.info 'Raster style determination failed. Using default `raster`'
             raster_style = 'raster'
           end
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"

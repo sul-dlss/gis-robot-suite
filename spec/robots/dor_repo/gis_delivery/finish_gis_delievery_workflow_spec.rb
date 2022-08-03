@@ -13,17 +13,17 @@ RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
 
   describe '#perform' do
     it 'raises an error if layer does not exist' do
-      stub_request(:get, "http://example.com/geoserver/rest/layers/fx392st8577")
+      stub_request(:get, 'http://example.com/geoserver/rest/layers/fx392st8577')
         .to_return(status: 404)
-      stub_request(:get, "http://example.com/restricted/geoserver/rest/layers/fx392st8577")
+      stub_request(:get, 'http://example.com/restricted/geoserver/rest/layers/fx392st8577')
         .to_return(status: 404)
       expect { robot.perform(druid) }.to raise_error(RuntimeError, /is missing GeoServer layer/)
     end
 
     it 'completes successfully when it exists' do
-      stub_request(:get, "http://example.com/geoserver/rest/layers/fx392st8577")
+      stub_request(:get, 'http://example.com/geoserver/rest/layers/fx392st8577')
         .to_return(status: 404)
-      stub_request(:get, "http://example.com/restricted/geoserver/rest/layers/fx392st8577")
+      stub_request(:get, 'http://example.com/restricted/geoserver/rest/layers/fx392st8577')
         .to_return(status: 200)
       expect { robot.perform(druid) }.not_to raise_error(RuntimeError, /is missing GeoServer layer/)
     end
