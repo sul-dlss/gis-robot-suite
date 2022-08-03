@@ -24,17 +24,16 @@ module Robots
             fn = Dir.glob('*/metadata.xml').first
             if fn.nil?
               fn = Dir.glob('*.tif.xml').first
-              if fn.nil?
-                raise "package-data: #{druid} cannot locate metadata in temp"
-              else # GeoTIFF
-                basename = File.basename(fn, '.tif.xml')
-                Dir.glob("#{basename}.*").each do |x|
-                  fns << x
-                  recurse_flag = true if File.directory?(x)
-                end
-                Dir.glob("#{basename}-*.xml").each do |x|
-                  fns << x
-                end
+              raise "package-data: #{druid} cannot locate metadata in temp" if fn.nil?
+
+              # GeoTIFF
+              basename = File.basename(fn, '.tif.xml')
+              Dir.glob("#{basename}.*").each do |x|
+                fns << x
+                recurse_flag = true if File.directory?(x)
+              end
+              Dir.glob("#{basename}-*.xml").each do |x|
+                fns << x
               end
             else # ArcGRID
               fns << File.basename(File.dirname(fn))

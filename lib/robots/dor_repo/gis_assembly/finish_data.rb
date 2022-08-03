@@ -19,11 +19,9 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
           %w[data.zip data_EPSG_4326.zip].each do |zipname|
             zipfn = File.join(rootdir, 'content', zipname)
-            if File.size?(zipfn)
-              LyberCore::Log.info "finish-data: #{druid} found #{zipname} #{File.size(zipfn)} bytes"
-            else
-              raise "finish-data: #{druid} is missing packaged data for #{zipname}"
-            end
+            raise "finish-data: #{druid} is missing packaged data for #{zipname}" unless File.size?(zipfn)
+
+            LyberCore::Log.info "finish-data: #{druid} found #{zipname} #{File.size(zipfn)} bytes"
           end
         end
       end

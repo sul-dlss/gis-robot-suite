@@ -273,14 +273,14 @@ module Robots
           layer_exists = layer.find(layer_name: druid)
           raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}" if layer_exists.nil?
 
-          if layer_exists.dig('layer', 'defaultStyle', 'name') != raster_style
-            layer_exists['layer']['defaultStyle'] = raster_style
-            LyberCore::Log.debug "load-geoserver: #{druid} updating #{druid} with default style #{raster_style}"
-            begin
-              layer.update(layer_name: druid, additional_payload: layer_exists)
-            rescue Geoserver::Publish::Error => e
-              raise "load-geoserver: #{druid} cannot save Layer: #{e.message}"
-            end
+          return if layer_exists.dig('layer', 'defaultStyle', 'name') == raster_style
+
+          layer_exists['layer']['defaultStyle'] = raster_style
+          LyberCore::Log.debug "load-geoserver: #{druid} updating #{druid} with default style #{raster_style}"
+          begin
+            layer.update(layer_name: druid, additional_payload: layer_exists)
+          rescue Geoserver::Publish::Error => e
+            raise "load-geoserver: #{druid} cannot save Layer: #{e.message}"
           end
         end
       end

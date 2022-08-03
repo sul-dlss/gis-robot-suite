@@ -154,14 +154,14 @@ Style/Documentation:
 
 # Offense count: 7
 # Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-Style/GuardClause:
-  Exclude:
-    - 'lib/robots/dor_repo/gis_assembly/extract_iso19139.rb'
-    - 'lib/robots/dor_repo/gis_assembly/finish_data.rb'
-    - 'lib/robots/dor_repo/gis_assembly/generate_mods.rb'
-    - 'lib/robots/dor_repo/gis_assembly/normalize_data.rb'
-    - 'lib/robots/dor_repo/gis_assembly/package_data.rb'
-    - 'lib/robots/dor_repo/gis_delivery/load_geoserver.rb'
+# Style/GuardClause:
+#   Exclude:
+#     - 'lib/robots/dor_repo/gis_assembly/extract_iso19139.rb'
+#     - 'lib/robots/dor_repo/gis_assembly/finish_data.rb'
+#     - 'lib/robots/dor_repo/gis_assembly/generate_mods.rb'
+#     - 'lib/robots/dor_repo/gis_assembly/normalize_data.rb'
+#     - 'lib/robots/dor_repo/gis_assembly/package_data.rb'
+#     - 'lib/robots/dor_repo/gis_delivery/load_geoserver.rb'
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).

@@ -63,10 +63,10 @@ module Robots
             LyberCore::Log.debug "generating #{ofn_fc}"
             system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or raise
           end
-          unless ofn_fgdc.nil?
-            LyberCore::Log.debug "generating #{ofn_fgdc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or raise
-          end
+          return if ofn_fgdc
+
+          LyberCore::Log.debug "generating #{ofn_fgdc}"
+          system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or raise
         end
       end
     end

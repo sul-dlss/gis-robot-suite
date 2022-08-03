@@ -40,11 +40,9 @@ module Robots
             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
             if tif_file.nil?
               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-              if metadata_xml_file.nil?
-                raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp"
-              else
-                fileFormat = 'ArcGRID'
-              end
+              raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+
+              fileFormat = 'ArcGRID'
             else
               fileFormat = 'GeoTIFF'
             end
