@@ -10,10 +10,10 @@ module Robots
 
         def system_with_check(cmd)
           LyberCore::Log.debug "normalize-data: running: #{cmd}"
-          _success = system cmd
-          raise "normalize-data: could not execute command successfully: #{_success}: #{cmd}" unless _success
+          success = system cmd
+          raise "normalize-data: could not execute command successfully: #{success}: #{cmd}" unless success
 
-          _success
+          success
         end
 
         def extract_data_from_zip(druid, zipfn, tmpdir)

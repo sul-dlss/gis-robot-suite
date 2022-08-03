@@ -32,11 +32,7 @@ module GisRobotSuite
       case info[:type]
       when 'Byte'
         "grayscale#{nbits > 4 ? 8 : 4}"
-      when 'Int16', 'UInt16'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      when 'Int32'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      when 'Float32', 'Float64'
+      when 'Int16', 'UInt16', 'Int32', 'Float32', 'Float64'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
         raise "Unknown 1-band raster data type: #{info[:type]}"

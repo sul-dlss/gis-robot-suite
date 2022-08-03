@@ -207,16 +207,16 @@ module Robots
           begin
             raster_style = "raster_#{GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")}"
           rescue StandardError => e
-            LyberCore::Log.info 'Raster style determination failed. Using default `raster`'
+            LyberCore::Log.info "Raster style determination failed: #{e.inspect}. Using default `raster`"
             raster_style = 'raster'
           end
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
           style = Geoserver::Publish::Style.new(connection)
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
-            _min = Regexp.last_match(1).to_f.floor
-            _max = Regexp.last_match(2).to_f.ceil
-            if _max < 2**13 # custom SLD only works with relatively narrow bands
+            min = Regexp.last_match(1).to_f.floor
+            max = Regexp.last_match(2).to_f.ceil
+            if max < 2**13 # custom SLD only works with relatively narrow bands
               # generate SLD definition
               raster_style = "raster_#{druid}"
               sldtxt = "
@@ -233,8 +233,8 @@ module Robots
             <Rule>
               <RasterSymbolizer>
                 <ColorMap>
-                  <ColorMapEntry color='#000000' quantity='#{_min}' opacity='1'/>
-                  <ColorMapEntry color='#FFFFFF' quantity='#{_max}' opacity='1'/>
+                  <ColorMapEntry color='#000000' quantity='#{min}' opacity='1'/>
+                  <ColorMapEntry color='#FFFFFF' quantity='#{max}' opacity='1'/>
                 </ColorMap>
               </RasterSymbolizer>
             </Rule>
