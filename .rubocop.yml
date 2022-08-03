@@ -19,19 +19,19 @@ Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 
 Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundClassBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
+  Enabled: true
 
 Layout/LineLength:
   Max: 183 # this isn't 1994; FIXME: would like to get this down to 120
 
 Layout/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
@@ -104,9 +104,7 @@ Style/DocumentDynamicEvalDefinition: # (new in 1.1)
   Enabled: true
 
 Style/IfUnlessModifier:
-  Enabled: false
-    # robots/gisAssembly/extract-boundingbox.rb # line 233 unless ulx <= lrx && uly >= lry
-    # robots/gisDiscovery/export-opengeometadata.rb # line 72 if xml.nil? || xml.root.nil?
+  Enabled: true
 
 Style/StringLiterals:
   Enabled: true

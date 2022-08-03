@@ -271,9 +271,7 @@ module Robots
           # fetch layer to load raster style - it's created when the coverage is created via REST API
           layer = Geoserver::Publish::Layer.new(connection)
           layer_exists = layer.find(layer_name: druid)
-          if layer_exists.nil?
-            raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}"
-          end
+          raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}" if layer_exists.nil?
 
           if layer_exists.dig('layer', 'defaultStyle', 'name') != raster_style
             layer_exists['layer']['defaultStyle'] = raster_style

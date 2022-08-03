@@ -7,7 +7,6 @@ module Robots
   module DorRepo
     module GisAssembly
       class ExtractBoundingbox < Base
-
         def initialize
           super('gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
         end
@@ -229,9 +228,12 @@ module Robots
             ulx, uly, lrx, lry = determine_extent tmpdir
 
             # Check that we have a valid bounding box
+            # rubocop:disable Style/IfUnlessModifier
+            # due to line length
             unless ulx <= lrx && uly >= lry
               raise "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
             end
+            # rubocop:enable Style/IfUnlessModifier
 
             add_geo_extension_to_mods druid, modsfn, ulx, uly, lrx, lry
             raise "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)

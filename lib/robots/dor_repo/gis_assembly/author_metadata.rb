@@ -4,7 +4,6 @@ module Robots
   module DorRepo
     module GisAssembly
       class AuthorMetadata < Base
-
         def initialize
           super('gisAssemblyWF', 'author-metadata', check_queued_status: true) # init LyberCore::Robot
         end

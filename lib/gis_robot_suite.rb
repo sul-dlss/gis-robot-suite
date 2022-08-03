@@ -90,9 +90,7 @@ module GisRobotSuite
       fn = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
-        if fn.nil? || File.size(fn) == 0
-          raise "Missing ESRI metadata files in #{dir}"
-        end
+        raise "Missing ESRI metadata files in #{dir}" if fn.nil? || File.size(fn) == 0
       end
     end
     fn
@@ -134,9 +132,7 @@ module GisRobotSuite
   def self.determine_rights(druid)
     rights = 'Restricted'
     cocina_model = Dor::Services::Client.object("druid:#{druid}").find
-    if cocina_model.access.view == 'world'
-      rights = 'Public'
-    end
+    rights = 'Public' if cocina_model.access.view == 'world'
 
     rights
   end

@@ -148,9 +148,7 @@ module Robots
 
           args = Nokogiri::XSLT.quote_params(params.to_h { |(k, v)| [k.to_s, v] }.to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
-          unless doc.root && !doc.root.children.empty?
-            raise 'generate-mods: to_mods produced incorrect xml'
-          end
+          raise 'generate-mods: to_mods produced incorrect xml' unless doc.root && !doc.root.children.empty?
 
           # cleanup projection and coords for human-readable
           doc.xpath('/mods:mods' \

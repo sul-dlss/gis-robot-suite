@@ -6,7 +6,6 @@ module Robots
   module DorRepo
     module GisAssembly
       class ExtractThumbnail < Base
-
         def initialize
           super('gisAssemblyWF', 'extract-thumbnail', check_queued_status: true) # init LyberCore::Robot
         end
