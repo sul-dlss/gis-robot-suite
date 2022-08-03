@@ -14,10 +14,10 @@ module Robots
 
         # @param [String] druid
         # @param [Hash<Symbol,Assembly::ObjectFile>] objects
-        # @param [Nokogiri::XML::DocumentFragment] geoData
+        # @param [Nokogiri::XML::DocumentFragment] geo_data_xml
         # @return [Nokogiri::XML::Document]
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-        def create_content_metadata(druid, objects, geoData)
+        def create_content_metadata(druid, objects, geo_data_xml)
           Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
             xml.contentMetadata(objectId: druid, type: 'geo') do
               seq = 1
@@ -72,11 +72,11 @@ module Robots
                       role: roletype || 'master'
                     ) do
                       if resource_type == :object
-                        if roletype == 'master' && !geoData.nil?
+                        if roletype == 'master' && !geo_data_xml.nil?
                           xml.geoData do
-                            xml.parent.add_child geoData
+                            xml.parent.add_child geo_data_xml
                           end
-                          geoData = nil # only once
+                          geo_data_xml = nil # only once
                         elsif o.filename =~ /_EPSG_(\d+)\.zip/i
                           xml.geoData srsName: "EPSG:#{Regexp.last_match(1)}"
                         end
@@ -134,9 +134,9 @@ module Robots
             'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             'mods' => 'http://www.loc.gov/mods/v3'
           }
-          geoData = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
+          geo_data_xml = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
 
-          xml = create_content_metadata druid, objects, geoData
+          xml = create_content_metadata(druid, objects, geo_data_xml)
           fn = "#{rootdir}/metadata/contentMetadata.xml"
           File.binwrite(fn, xml)
           raise "generate-content-metadata: #{druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)

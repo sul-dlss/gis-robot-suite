@@ -36,20 +36,20 @@ module Robots
           # detect fileFormat and geometryType
           shp_file = Dir.glob("#{rootdir}/temp/*.shp").first
           if shp_file.nil?
-            geometryType = 'Raster'
+            geometry_type = 'Raster'
             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
             if tif_file.nil?
               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
               raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
 
-              fileFormat = 'ArcGRID'
+              file_format = 'ArcGRID'
             else
-              fileFormat = 'GeoTIFF'
+              file_format = 'GeoTIFF'
             end
           else
-            geometryType = geometry_type_ogrinfo(shp_file)
-            geometryType = 'LineString' if geometryType =~ /^Line/
-            fileFormat = 'Shapefile'
+            geometry_type = geometry_type_ogrinfo(shp_file)
+            geometry_type = 'LineString' if geometry_type =~ /^Line/
+            file_format = 'Shapefile'
           end
 
           # load PURL
@@ -59,8 +59,8 @@ module Robots
           mods_xml_file = File.join(rootdir, 'metadata', 'descMetadata.xml')
           File.open(mods_xml_file, 'wb') do |file_content|
             file_content << to_mods(geo_metadata_rdf_xml,
-                                    geometryType: geometryType,
-                                    fileFormat: fileFormat,
+                                    geometryType: geometry_type,
+                                    fileFormat: file_format,
                                     purl: purl).to_xml(index: 2)
           rescue ArgumentError => e
             raise "generate-mods: #{druid} cannot process MODS: #{e}"
