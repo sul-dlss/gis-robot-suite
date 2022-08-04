@@ -11,22 +11,22 @@ module GisRobotSuite
 
     def initialize
       @registry = {}
-      CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |v|
-        v = v.each { |_k, v2| v2.to_s.strip }
-        k = v[0]
-        k = v[1] if k.nil? || k.empty?
-        k.strip!
-        @registry[k] = {
-          geonames_placename: v[1],
-          geonames_id: v[2].to_i,
+      CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |row|
+        row = row.each { |_k, v2| v2.to_s.strip }
+        keyword = row[0]
+        keyword = row[1] if keyword.nil? || keyword.empty?
+        keyword.strip!
+        @registry[keyword] = {
+          geonames_placename: row[1],
+          geonames_id: row[2].to_i,
           # rubocop:disable Style/TernaryParentheses
-          loc_keyword: (v[3].nil? || v[3].empty?) ? nil : v[3],
-          loc_id: (v[4].nil? || v[4].empty?) ? nil : v[4]
+          loc_keyword: (row[3].nil? || row[3].empty?) ? nil : row[3],
+          loc_id: (row[4].nil? || row[4].empty?) ? nil : row[4]
           # rubocop:enable Style/TernaryParentheses
         }
-        if @registry[k][:geonames_placename].nil? &&
-           @registry[k][:loc_keyword].nil?
-          @registry[k] = nil
+        if @registry[keyword][:geonames_placename].nil? &&
+           @registry[keyword][:loc_keyword].nil?
+          @registry[keyword] = nil
         end
       end
     end
@@ -35,24 +35,24 @@ module GisRobotSuite
       @registry.each_key.to_a.sort.each(&block)
     end
 
-    # @return [String] geonames name
-    def find_placename(k)
-      _get(k, :geonames_placename)
+    # @return <String> geonames name
+    def find_placename(keyword)
+      _get(keyword, :geonames_placename)
     end
 
-    # @return [Integer] geonames id
-    def find_id(k)
-      _get(k, :geonames_id)
+    # @return <Integer> geonames id
+    def find_id(keyword)
+      _get(keyword, :geonames_id)
     end
 
-    # @return [String] library of congress name
-    def find_loc_keyword(k)
-      _get(k, :loc_keyword)
+    # @return <String> library of congress name
+    def find_loc_keyword(keyword)
+      _get(keyword, :loc_keyword)
     end
 
-    # @return [String] library of congress valueURI
-    def find_loc_uri(k)
-      lcid = _get(k, :loc_id)
+    # @return <String> library of congress valueURI
+    def find_loc_uri(keyword)
+      lcid = _get(keyword, :loc_id)
       case lcid
       when /^lcsh:(\d+)$/, /^sh(\d+)$/
         "http://id.loc.gov/authorities/subjects/sh#{Regexp.last_match(1)}"
@@ -63,44 +63,44 @@ module GisRobotSuite
       end
     end
 
-    # @return [String] authority name
-    def find_loc_authority(k)
-      lcid = _get(k, :loc_id)
+    # @return <String> authority name
+    def find_loc_authority(keyword)
+      lcid = _get(keyword, :loc_id)
       return Regexp.last_match(1) if lcid =~ /^(lcsh|lcnaf):/
       return 'lcsh' if lcid =~ /^sh\d+$/
       return 'lcnaf' if lcid =~ /^(n|no)\d+$/
-      return 'lcsh' unless find_loc_keyword(k).nil? # default to lcsh if present
+      return 'lcsh' unless find_loc_keyword(keyword).nil? # default to lcsh if present
 
       nil
     end
 
     # @see http://www.geonames.org/ontology/documentation.html
-    # @return [String] geonames uri (includes trailing / as specified)
-    def find_placename_uri(k)
-      return nil if _get(k, :geonames_id).nil?
+    # @return <String> geonames uri (includes trailing / as specified)
+    def find_placename_uri(keyword)
+      return nil if _get(keyword, :geonames_id).nil?
 
-      "http://sws.geonames.org/#{_get(k, :geonames_id)}/"
+      "http://sws.geonames.org/#{_get(keyword, :geonames_id)}/"
     end
 
-    # @return [String] The keyword
+    # @return <String> The keyword
     def find_keyword_by_id(id)
-      @registry.each do |k, v|
-        return k if !v.nil? && v[:geonames_id] == id
+      @registry.each do |keyword, val|
+        return keyword if !val.nil? && val[:geonames_id] == id
       end
       nil
     end
 
-    def blank?(k)
-      @registry.include?(k) && @registry[k].nil?
+    def blank?(keyword)
+      @registry.include?(keyword) && @registry[keyword].nil?
     end
 
     private
 
-    def _get(k, i)
-      return nil unless @registry.include?(k.strip)
-      raise ArgumentError unless i.is_a? Symbol
+    def _get(keyword, hash_key)
+      return nil unless @registry.include?(keyword.strip)
+      raise ArgumentError unless hash_key.is_a? Symbol
 
-      @registry[k.strip].nil? ? nil : @registry[k.strip][i]
+      @registry[keyword.strip].nil? ? nil : @registry[keyword.strip][hash_key]
     end
   end
 end

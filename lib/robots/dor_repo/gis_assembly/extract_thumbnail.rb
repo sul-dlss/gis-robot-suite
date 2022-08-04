@@ -30,30 +30,32 @@ module Robots
           FileUtils.mkdir(content_dir) unless File.directory?(content_dir)
 
           # see if we have work to do
-          pfn = File.join(content_dir, 'preview.jpg')
-          if File.size?(pfn)
-            LyberCore::Log.info "extract-thumbnail: #{druid} found existing thumbnail: #{pfn}"
+          thumbnail_file = File.join(content_dir, 'preview.jpg')
+          if File.size?(thumbnail_file)
+            LyberCore::Log.info "extract-thumbnail: #{druid} found existing thumbnail: #{thumbnail_file}"
             return
           end
 
-          # @param [String] fn the metadata
-          fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
-          raise "extract-thumbnail: #{druid} is missing ESRI metadata files" if fn.nil?
+          # @param [String] esri_metadata_file the metadata
+          esri_metadata_file = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
+          raise "extract-thumbnail: #{druid} is missing ESRI metadata files" if esri_metadata_file.nil?
 
           # parse ESRI XML and extract base64 encoded thumbnail image
-          doc = Nokogiri::XML(File.read(fn))
+          doc = Nokogiri::XML(File.read(esri_metadata_file))
           doc.xpath('//Binary/Thumbnail/Data').each do |node|
             if node['EsriPropertyType'] == 'PictureX'
               image = Base64.decode64(node.text)
-              File.open(pfn, 'wb') { |f| f << image }
-              raise "extract-thumbnail: #{druid} cannot create #{pfn}" unless File.size?(pfn)
+              File.open(thumbnail_file, 'wb') { |f| f << image }
+              raise "extract-thumbnail: #{druid} cannot create #{thumbnail_file}" unless File.size?(thumbnail_file)
 
+              # rubocop:disable Lint/NonLocalExitFromIterator
               return
+              # rubocop:enable Lint/NonLocalExitFromIterator
             else
               LyberCore::Log.warn "extract-thumbnail: #{druid} has unknown EsriPropertyType: #{node['EsriPropertyType']}"
             end
           end
-          raise "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{fn}"
+          raise "extract-thumbnail: #{druid} is missing thumbnail in ESRI metadata file: #{esri_metadata_file}"
         end
       end
     end
