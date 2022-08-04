@@ -31,9 +31,7 @@ module Robots
             fn = Dir.glob(File.join(rootdir, 'temp', '*.tif')).first
             if fn.nil?
               fn = Dir.glob(File.join(rootdir, 'temp', '*', 'metadata.xml')).first
-              if fn.nil?
-                raise "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files"
-              end
+              raise "wrangle-data: #{druid} is missing Shapefile or GeoTIFF or ArcGRID data files" if fn.nil?
             end
           end
           LyberCore::Log.debug "wrangle-data: #{druid} found #{fn}"

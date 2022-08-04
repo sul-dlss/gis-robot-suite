@@ -8,7 +8,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
   before do
     allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-    stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid")
+    stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid')
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
 
@@ -20,16 +20,16 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
     describe 'loading a vector dataset' do
       let(:druid) { 'bb338jh0716' }
       let(:post_body) do
-        "{\"featureType\":{\"name\":\"bb338jh0716\",\"title\":\"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999\",\"enabled\":true,\"abstract\":\"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.\",\"keywords\":{\"string\":[\"Hydrology\",\"Watersheds\",\"Boundaries\",\"Inland Waters\",\"Sonoma County (Calif.)\",\"Mendocino County (Calif.)\",\"Russian River Watershed (Calif.)\"]},\"metadata_links\":[],\"metadata\":{\"cacheAgeMax\":86400,\"cachingEnabled\":true}}}" # rubocop:disable Layout/LineLength
+        '{"featureType":{"name":"bb338jh0716","title":"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999","enabled":true,"abstract":"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.","keywords":{"string":["Hydrology","Watersheds","Boundaries","Inland Waters","Sonoma County (Calif.)","Mendocino County (Calif.)","Russian River Watershed (Calif.)"]},"metadata_links":[],"metadata":{"cacheAgeMax":86400,"cachingEnabled":true}}}' # rubocop:disable Layout/LineLength
       end
 
       before do
-        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid")
+        stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid')
           .to_return(status: 200, body: read_fixture('geoserver_responses/postgis_druid.json'), headers: {})
       end
 
       it 'runs without error' do
-        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716")
+        stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716')
           .to_return(status: 404)
         stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes')
                        .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
@@ -39,7 +39,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
       end
 
       it 'already existing, runs without error' do
-        stub_request(:get, "http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716")
+        stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716')
           .to_return(status: 200, body: {}.to_json)
         stubbed_post = stub_request(:put, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716')
                        .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
@@ -52,13 +52,13 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
     describe 'loading a raster dataset' do
       let(:druid) { 'dg548ft1892' }
       let(:store_post_body) do
-        "{\"coverageStore\":{\"name\":\"dg548ft1892\",\"url\":\"file:/geotiff/dg548ft1892.tif\",\"enabled\":true,\"workspace\":{\"name\":\"druid\"},\"type\":\"GeoTIFF\",\"_default\":false,\"description\":\"1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998\"}}" # rubocop:disable Layout/LineLength
+        '{"coverageStore":{"name":"dg548ft1892","url":"file:/geotiff/dg548ft1892.tif","enabled":true,"workspace":{"name":"druid"},"type":"GeoTIFF","_default":false,"description":"1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998"}}' # rubocop:disable Layout/LineLength
       end
       let(:coverage_post_body) do
         "{\"coverage\":{\"enabled\":true,\"name\":\"dg548ft1892\",\"title\":\"1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998\",\"abstract\":\"Eez1000 is a 1000 meter resolution statewide bathymetric dataset that generally covers the Exclusive Economic Zone (EEZ), an area extending 200 nautical miles from all United States possessions and trust territories. The data was adapted from isobath values ranging from 200 meters to 4800 meters below sea level; therefore nearshore depictions ARE NOT ACCURATE and \\\"flatten out\\\" between 200 meter depths and the coastline. The data is intended only for general portrayals of offshore features and depths. The Department of Fish and Game (DFG), Technical Services Branch (TSB) GIS Unit received the source data in the form of a line contour coverage (known as DFG's eezbath) from the United States Geological Survey (USGS). The contour data was converted to a TIN (triangulated irregular network) using ArcView 3D Analyst and then converted to a grid. The contour data was previously reprojected by TSB to Albers conic equal-area using standard Teale Data Center parameters. Some minor aesthetic editing was performed on peripheral areas using the ARC/INFO Grid EXPAND function. The image version was created using the ARC/INFO GRIDIMAGE function. Please see the attached metadata file \\\"eezbatcall.doc\\\" or the DFG coverage metadata \\\"eezbath.txt\\\" for further source data information.\\nThis layer can be used for watershed analysis and planning in the Russian River region of California.\",\"keywords\":{\"string\":[\"Hydrography\",\"Watersheds\",\"Inland Waters\",\"Sonoma County (Calif.)\",\"Mendocino County (Calif.)\",\"Russian River Watershed (Calif.)\"]},\"metadata_links\":[],\"metadata\":{\"cacheAgeMax\":86400,\"cachingEnabled\":true}}}" # rubocop:disable Layout/LineLength
       end
       let(:layer_put_body) do
-        "{\"layer\":{\"name\":\"dg548ft1892\",\"path\":\"\",\"type\":\"RASTER\",\"defaultStyle\":\"raster\",\"resource\":{\"@class\":\"coverage\",\"name\":\"druid:dg548ft1892\",\"href\":\"http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.json\"},\"queryable\":false,\"opaque\":false}}" # rubocop:disable Layout/LineLength
+        '{"layer":{"name":"dg548ft1892","path":"","type":"RASTER","defaultStyle":"raster","resource":{"@class":"coverage","name":"druid:dg548ft1892","href":"http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.json"},"queryable":false,"opaque":false}}' # rubocop:disable Layout/LineLength
       end
 
       before do

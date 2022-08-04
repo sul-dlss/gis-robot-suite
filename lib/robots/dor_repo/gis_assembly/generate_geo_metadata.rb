@@ -27,15 +27,16 @@ module Robots
           end
 
           iso19139_xml_file = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
-          if iso19139_xml_file.nil?
-            raise "generate-geo-metadata: #{druid} is missing ISO 19139 file"
-          end
+          raise "generate-geo-metadata: #{druid} is missing ISO 19139 file" if iso19139_xml_file.nil?
 
           LyberCore::Log.debug "generate-geo-metadata processing #{iso19139_xml_file}"
           iso19139_ng_xml = Nokogiri::XML(File.read(iso19139_xml_file))
+          # rubocop:disable Style/IfUnlessModifier
+          # due to line length
           if iso19139_ng_xml.nil? || iso19139_ng_xml.root.nil?
             raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{iso19139_xml_file}"
           end
+          # rubocop:enable Style/IfUnlessModifier
 
           iso19110_xml_file = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
           unless iso19110_xml_file.nil?

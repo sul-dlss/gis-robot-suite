@@ -36,22 +36,20 @@ module Robots
           # detect fileFormat and geometryType
           shp_file = Dir.glob("#{rootdir}/temp/*.shp").first
           if shp_file.nil?
-            geometryType = 'Raster'
+            geometry_type = 'Raster'
             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
             if tif_file.nil?
               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-              if metadata_xml_file.nil?
-                raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp"
-              else
-                fileFormat = 'ArcGRID'
-              end
+              raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+
+              file_format = 'ArcGRID'
             else
-              fileFormat = 'GeoTIFF'
+              file_format = 'GeoTIFF'
             end
           else
-            geometryType = geometry_type_ogrinfo(shp_file)
-            geometryType = 'LineString' if geometryType =~ /^Line/
-            fileFormat = 'Shapefile'
+            geometry_type = geometry_type_ogrinfo(shp_file)
+            geometry_type = 'LineString' if geometry_type =~ /^Line/
+            file_format = 'Shapefile'
           end
 
           # load PURL
@@ -61,8 +59,8 @@ module Robots
           mods_xml_file = File.join(rootdir, 'metadata', 'descMetadata.xml')
           File.open(mods_xml_file, 'wb') do |file_content|
             file_content << to_mods(geo_metadata_rdf_xml,
-                                    geometryType: geometryType,
-                                    fileFormat: fileFormat,
+                                    geometryType: geometry_type,
+                                    fileFormat: file_format,
                                     purl: purl).to_xml(index: 2)
           rescue ArgumentError => e
             raise "generate-mods: #{druid} cannot process MODS: #{e}"
@@ -77,13 +75,12 @@ module Robots
         #
         # @return [String] Point, Polygon, LineString as appropriate
         def geometry_type_ogrinfo(shp_filename)
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_filename}'") do |f|
-            f.readlines.each do |line|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_filename}'") do |file|
+            file.readlines.each do |line|
               next unless line =~ /^Geometry:\s+(.*)\s*$/
 
               LyberCore::Log.debug "generate-mods: parsing ogrinfo geometry output: #{line}"
-              s = Regexp.last_match(1).gsub('3D', '').gsub('Multi', '').strip
-              return s
+              return Regexp.last_match(1).gsub('3D', '').gsub('Multi', '').strip
             end
           end
         end
@@ -96,28 +93,28 @@ module Robots
         QSEC = 'ʺ'
         QMIN = 'ʹ'
         QDEG = "\u00B0"
-        def dd2ddmmss_abs(f)
-          dd = f.to_f.abs
-          d = dd.floor
-          mm = ((dd - d) * 60)
-          m = mm.floor
-          s = ((mm - mm.floor) * 60).round
-          if s >= 60
-            m += 1
-            s = 0
+        def dd2ddmmss_abs(orig_val)
+          orig_val_abs_float = orig_val.to_f.abs
+          degrees = orig_val_abs_float.floor
+          minutes_float = ((orig_val_abs_float - degrees) * 60)
+          minutes = minutes_float.floor
+          seconds = ((minutes_float - minutes) * 60).round
+          if seconds >= 60
+            minutes += 1
+            seconds = 0
           end
-          if m >= 60
-            d += 1
-            m = 0
+          if minutes >= 60
+            degrees += 1
+            minutes = 0
           end
-          "#{d}#{QDEG}" + (m > 0 ? "#{m}#{QMIN}" : '') + (s > 0 ? "#{s}#{QSEC}" : '')
+          "#{degrees}#{QDEG}" + (minutes > 0 ? "#{minutes}#{QMIN}" : '') + (seconds > 0 ? "#{seconds}#{QSEC}" : '')
         end
 
         # Convert to MARC 255 DD into DDMMSS
         # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
-        def to_coordinates_ddmmss(s)
-          w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
+        def to_coordinates_ddmmss(orig_val)
+          w, e, n, s = orig_val.to_s.scanf('%f -- %f/%f -- %f')
           raise ArgumentError, "Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
           raise ArgumentError, "Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
 
@@ -148,9 +145,7 @@ module Robots
 
           args = Nokogiri::XSLT.quote_params(params.to_h { |(k, v)| [k.to_s, v] }.to_a.flatten)
           doc = XSLT_GEOMODS.transform(metadata.document, args)
-          unless doc.root && !doc.root.children.empty?
-            raise 'generate-mods: to_mods produced incorrect xml'
-          end
+          raise 'generate-mods: to_mods produced incorrect xml' unless doc.root && !doc.root.children.empty?
 
           # cleanup projection and coords for human-readable
           doc.xpath('/mods:mods' \

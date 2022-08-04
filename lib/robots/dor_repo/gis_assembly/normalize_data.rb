@@ -10,10 +10,10 @@ module Robots
 
         def system_with_check(cmd)
           LyberCore::Log.debug "normalize-data: running: #{cmd}"
-          _success = system cmd
-          raise "normalize-data: could not execute command successfully: #{_success}: #{cmd}" unless _success
+          success = system cmd
+          raise "normalize-data: could not execute command successfully: #{success}: #{cmd}" unless success
 
-          _success
+          success
         end
 
         def extract_data_from_zip(druid, zipfn, tmpdir)
@@ -62,12 +62,12 @@ module Robots
               break
             end
           end
-          if uses_palette
-            LyberCore::Log.info "normalize-data: expanding color palette into rgb for #{tifffn}"
-            tmpfn = "#{tmpdir}/raw8bit.tif"
-            system_with_check "mv #{tifffn} #{tmpfn}"
-            system_with_check "#{Settings.gdal_path}gdal_translate -expand rgb #{tmpfn} #{tifffn} -co 'COMPRESS=LZW'"
-          end
+          return unless uses_palette
+
+          LyberCore::Log.info "normalize-data: expanding color palette into rgb for #{tifffn}"
+          tmpfn = "#{tmpdir}/raw8bit.tif"
+          system_with_check "mv #{tifffn} #{tmpfn}"
+          system_with_check "#{Settings.gdal_path}gdal_translate -expand rgb #{tmpfn} #{tifffn} -co 'COMPRESS=LZW'"
         end
 
         def compute_statistics(tifffn)
@@ -259,17 +259,15 @@ module Robots
             proj.gsub!('ESRI', 'EPSG')
             LyberCore::Log.debug "Projection = #{proj}"
             filetype = format.split(/format=/)[1]
-            if filetype.nil?
-              raise "normalize-data: #{druid} cannot locate filetype from MODS format: #{format}"
+            raise "normalize-data: #{druid} cannot locate filetype from MODS format: #{format}" if filetype.nil?
+
+            case filetype
+            when 'GeoTIFF'
+              reproject_geotiff druid, fn, proj, flags
+            when 'ArcGRID'
+              reproject_arcgrid druid, fn, proj, flags
             else
-              case filetype
-              when 'GeoTIFF'
-                reproject_geotiff druid, fn, proj, flags
-              when 'ArcGRID'
-                reproject_arcgrid druid, fn, proj, flags
-              else
-                raise "normalize-data: #{druid} has unsupported Raster file format: #{format}"
-              end
+              raise "normalize-data: #{druid} has unsupported Raster file format: #{format}"
             end
           else
             raise "normalize-data: #{druid} has unsupported file format: #{format}"

@@ -17,11 +17,11 @@ module Robots
           LyberCore::Log.debug "assign-placenames working on #{druid}"
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-          modsFn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "assign-placenames: #{druid} is missing MODS metadata" unless File.size?(modsFn)
+          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise "assign-placenames: #{druid} is missing MODS metadata" unless File.size?(mods_filename)
 
-          resolve_placenames(druid, modsFn)
-          raise "assign-placenames: #{druid} corrupted MODS metadata" unless File.size?(modsFn)
+          resolve_placenames(druid, mods_filename)
+          raise "assign-placenames: #{druid} corrupted MODS metadata" unless File.size?(mods_filename)
         end
 
         #
@@ -31,10 +31,10 @@ module Robots
         #   * Adds correct rdf:resource to geo extension
         #   * Adds a LCSH or LCNAF keyword if needed
         #
-        def resolve_placenames(druid, modsFn)
-          LyberCore::Log.debug "assign-placenames: #{druid} is processing #{modsFn}"
+        def resolve_placenames(druid, mods_filename)
+          LyberCore::Log.debug "assign-placenames: #{druid} is processing #{mods_filename}"
           g = GisRobotSuite::Gazetteer.new
-          mods = Nokogiri::XML(File.open(modsFn, 'rb'))
+          mods = Nokogiri::XML(File.open(mods_filename, 'rb'))
           r = mods.xpath('//mods:geographic', 'mods' => 'http://www.loc.gov/mods/v3')
           r.each do |i|
             k = i.content
@@ -78,7 +78,7 @@ module Robots
           end
 
           # Save XML tree
-          File.open(modsFn, 'wb') do |f|
+          File.open(mods_filename, 'wb') do |f|
             mods.write_to(f, encoding: 'UTF-8', indent: 2)
           end
         end

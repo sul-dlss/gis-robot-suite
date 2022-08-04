@@ -81,7 +81,7 @@ module Robots
             # first try decoding with UTF-8 and if that fails use LATIN1
             begin
               run_shp2pgsql(projection, 'UTF-8', shpfn, schema, druid, sqlfn, errfn)
-            rescue RuntimeError => e
+            rescue RuntimeError
               run_shp2pgsql(projection, 'LATIN1', shpfn, schema, druid, sqlfn, errfn)
             end
 

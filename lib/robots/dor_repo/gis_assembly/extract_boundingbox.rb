@@ -7,7 +7,6 @@ module Robots
   module DorRepo
     module GisAssembly
       class ExtractBoundingbox < Base
-
         def initialize
           super('gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
         end
@@ -31,8 +30,8 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def extent_shapefile(shpfn)
           LyberCore::Log.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |f|
-            f.readlines.each do |line|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |file|
+            file.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
 
@@ -51,12 +50,12 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def extent_geotiff(tiffn)
           LyberCore::Log.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
-          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiffn}'") do |f|
+          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiffn}'") do |file|
             ulx = 0
             uly = 0
             lrx = 0
             lry = 0
-            f.readlines.each do |line|
+            file.readlines.each do |line|
               # Corner Coordinates:
               # Upper Left  (-122.2846400,  35.9770286) (122d17' 4.70"W, 35d58'37.30"N)
               # Lower Left  (-122.2846400,  35.5581835) (122d17' 4.70"W, 35d33'29.46"N)
@@ -82,28 +81,28 @@ module Robots
         QSEC = 'ʺ'
         QMIN = 'ʹ'
         QDEG = "\u00B0"
-        def dd2ddmmss_abs(f)
-          dd = f.to_f.abs
-          d = dd.floor
-          mm = ((dd - d) * 60)
-          m = mm.floor
-          s = ((mm - mm.floor) * 60).round
-          if s >= 60
-            m += 1
-            s = 0
+        def dd2ddmmss_abs(orig_val)
+          orig_val_abs_float = orig_val.to_f.abs
+          degrees = orig_val_abs_float.floor
+          minutes_float = ((orig_val_abs_float - degrees) * 60)
+          minutes = minutes_float.floor
+          seconds = ((minutes_float - minutes) * 60).round
+          if seconds >= 60
+            minutes += 1
+            seconds = 0
           end
-          if m >= 60
-            d += 1
-            m = 0
+          if minutes >= 60
+            degrees += 1
+            minutes = 0
           end
-          "#{d}#{QDEG}" + (m > 0 ? "#{m}#{QMIN}" : '') + (s > 0 ? "#{s}#{QSEC}" : '')
+          "#{degrees}#{QDEG}" + (minutes > 0 ? "#{minutes}#{QMIN}" : '') + (seconds > 0 ? "#{seconds}#{QSEC}" : '')
         end
 
         # Convert to MARC 255 DD into DDMMSS
         # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
         # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
-        def to_coordinates_ddmmss(s)
-          w, e, n, s = s.to_s.scanf('%f -- %f/%f -- %f')
+        def to_coordinates_ddmmss(orig_val)
+          w, e, n, s = orig_val.to_s.scanf('%f -- %f/%f -- %f')
           raise ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
           raise ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
 
@@ -115,9 +114,9 @@ module Robots
         end
 
         # adds the geo extension to the MODS record
-        def add_geo_extension_to_mods(druid, modsfn, ulx, uly, lrx, lry)
-          LyberCore::Log.debug "extract-boundingbox: #{druid} reading #{modsfn}"
-          doc = Nokogiri::XML(File.binread(modsfn))
+        def add_geo_extension_to_mods(druid, mods_filename, ulx, uly, lrx, lry)
+          LyberCore::Log.debug "extract-boundingbox: #{druid} reading #{mods_filename}"
+          doc = Nokogiri::XML(File.binread(mods_filename))
 
           # Update geo extension
           LyberCore::Log.debug "extract-boundingbox: #{druid} updating geo extension..."
@@ -181,9 +180,9 @@ module Robots
           end
 
           # Save
-          LyberCore::Log.debug "extract-boundingbox: #{druid} saving updated MODS to #{modsfn}"
-          File.open(modsfn, 'wb') do |f|
-            doc.write_xml_to f, indent: 2, encoding: 'UTF-8'
+          LyberCore::Log.debug "extract-boundingbox: #{druid} saving updated MODS to #{mods_filename}"
+          File.open(mods_filename, 'wb') do |line|
+            doc.write_xml_to line, indent: 2, encoding: 'UTF-8'
           end
         end
 
@@ -215,8 +214,8 @@ module Robots
 
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
-          modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "extract-boundingbox: #{druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
+          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise "extract-boundingbox: #{druid} cannot locate MODS: #{mods_filename}" unless File.size?(mods_filename)
 
           projection = '4326' # always use EPSG:4326 derivative
           zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
@@ -229,12 +228,15 @@ module Robots
             ulx, uly, lrx, lry = determine_extent tmpdir
 
             # Check that we have a valid bounding box
+            # rubocop:disable Style/IfUnlessModifier
+            # due to line length
             unless ulx <= lrx && uly >= lry
               raise "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
             end
+            # rubocop:enable Style/IfUnlessModifier
 
-            add_geo_extension_to_mods druid, modsfn, ulx, uly, lrx, lry
-            raise "extract-boundingbox: #{druid} corrupted MODS: #{modsfn}" unless File.size?(modsfn)
+            add_geo_extension_to_mods druid, mods_filename, ulx, uly, lrx, lry
+            raise "extract-boundingbox: #{druid} corrupted MODS: #{mods_filename}" unless File.size?(mods_filename)
           ensure
             LyberCore::Log.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir

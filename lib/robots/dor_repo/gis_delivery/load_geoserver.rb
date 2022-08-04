@@ -45,9 +45,9 @@ module Robots
           LyberCore::Log.debug "GeoServer options: #{Settings.geoserver[rights][:primary]}"
           connection = Geoserver::Publish::Connection.new(
             {
-              "url" => Settings.geoserver[rights][:primary][:url],
-              "user" => Settings.geoserver[rights][:primary][:user],
-              "password" => Settings.geoserver[rights][:primary][:password]
+              'url' => Settings.geoserver[rights][:primary][:url],
+              'user' => Settings.geoserver[rights][:primary][:user],
+              'password' => Settings.geoserver[rights][:primary][:password]
             }
           )
 
@@ -206,17 +206,17 @@ module Robots
           # determine raster style
           begin
             raster_style = "raster_#{GisRobotSuite.determine_raster_style("#{Settings.geohydra.geotiff.dir}/#{druid}.tif")}"
-          rescue => e
-            LyberCore::Log.info "Raster style determination failed. Using default `raster`"
+          rescue StandardError => e
+            LyberCore::Log.info "Raster style determination failed: #{e.inspect}. Using default `raster`"
             raster_style = 'raster'
           end
           LyberCore::Log.debug "load-geoserver: #{druid} determined raster style as '#{raster_style}'"
           style = Geoserver::Publish::Style.new(connection)
           # need to create a style if it's a min/max style
           if raster_style =~ /^raster_grayscale_(.+)_(.+)$/
-            _min = Regexp.last_match(1).to_f.floor
-            _max = Regexp.last_match(2).to_f.ceil
-            if _max < 2**13 # custom SLD only works with relatively narrow bands
+            min = Regexp.last_match(1).to_f.floor
+            max = Regexp.last_match(2).to_f.ceil
+            if max < 2**13 # custom SLD only works with relatively narrow bands
               # generate SLD definition
               raster_style = "raster_#{druid}"
               sldtxt = "
@@ -233,8 +233,8 @@ module Robots
             <Rule>
               <RasterSymbolizer>
                 <ColorMap>
-                  <ColorMapEntry color='#000000' quantity='#{_min}' opacity='1'/>
-                  <ColorMapEntry color='#FFFFFF' quantity='#{_max}' opacity='1'/>
+                  <ColorMapEntry color='#000000' quantity='#{min}' opacity='1'/>
+                  <ColorMapEntry color='#FFFFFF' quantity='#{max}' opacity='1'/>
                 </ColorMap>
               </RasterSymbolizer>
             </Rule>
@@ -271,18 +271,16 @@ module Robots
           # fetch layer to load raster style - it's created when the coverage is created via REST API
           layer = Geoserver::Publish::Layer.new(connection)
           layer_exists = layer.find(layer_name: druid)
-          if layer_exists.nil?
-            raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}"
-          end
+          raise "load-geoserver: Layer #{druid} is missing for coverage #{workspace_name}/#{druid}/#{druid}" if layer_exists.nil?
 
-          if layer_exists.dig('layer', 'defaultStyle', 'name') != raster_style
-            layer_exists['layer']['defaultStyle'] = raster_style
-            LyberCore::Log.debug "load-geoserver: #{druid} updating #{druid} with default style #{raster_style}"
-            begin
-              layer.update(layer_name: druid, additional_payload: layer_exists)
-            rescue Geoserver::Publish::Error => e
-              raise "load-geoserver: #{druid} cannot save Layer: #{e.message}"
-            end
+          return if layer_exists.dig('layer', 'defaultStyle', 'name') == raster_style
+
+          layer_exists['layer']['defaultStyle'] = raster_style
+          LyberCore::Log.debug "load-geoserver: #{druid} updating #{druid} with default style #{raster_style}"
+          begin
+            layer.update(layer_name: druid, additional_payload: layer_exists)
+          rescue Geoserver::Publish::Error => e
+            raise "load-geoserver: #{druid} cannot save Layer: #{e.message}"
           end
         end
       end

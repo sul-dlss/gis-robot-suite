@@ -24,9 +24,9 @@ module Robots
             connection = Geoserver::Publish::Connection.new(
               {
                 # Use the GeoWebCache URI
-                "url" => setting[:url]&.gsub('geoserver/rest', 'geoserver/gwc/rest'),
-                "user" => setting[:user],
-                "password" => setting[:password]
+                'url' => setting[:url]&.gsub('geoserver/rest', 'geoserver/gwc/rest'),
+                'user' => setting[:user],
+                'password' => setting[:password]
               }
             )
             begin

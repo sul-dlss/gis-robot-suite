@@ -19,21 +19,21 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
 
           # See if generation is needed
-          fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          if File.size?(fn)
-            LyberCore::Log.info "extract-iso19139: #{druid} found #{fn}"
+          geo_metadata_filename = File.join(rootdir, 'metadata', 'geoMetadata.xml')
+          if File.size?(geo_metadata_filename)
+            LyberCore::Log.info "extract-iso19139: #{druid} found #{geo_metadata_filename}"
             return
           end
 
           begin
-            fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
-            if fn =~ /^(.*).(shp|tif).xml$/ || fn =~ %r{^(.*/metadata).xml$}
-              ofn = "#{Regexp.last_match(1)}-iso19139.xml"
+            esri_filename = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
+            if esri_filename =~ /^(.*).(shp|tif).xml$/ || esri_filename =~ %r{^(.*/metadata).xml$}
+              output_file = "#{Regexp.last_match(1)}-iso19139.xml"
               ofn_fc = "#{Regexp.last_match(1)}-iso19110.xml"
               ofn_fgdc = "#{Regexp.last_match(1)}-fgdc.xml"
             end
-            LyberCore::Log.debug "extract-iso19139 working on #{fn}"
-            arcgis_to_iso19139 fn, ofn, ofn_fc, ofn_fgdc
+            LyberCore::Log.debug "extract-iso19139 working on #{esri_filename}"
+            arcgis_to_iso19139(esri_filename, output_file, ofn_fc, ofn_fgdc)
           rescue RuntimeError => e
             LyberCore::Log.error "extract-iso19139: #{druid} is missing ESRI metadata files"
             raise e
@@ -53,20 +53,20 @@ module Robots
         XMLLINT = 'xmllint --format --xinclude --nsclean'
 
         # Converts an ESRI ArcCatalog metadata.xml into ISO 19139
-        # @param [String] fn Input file
-        # @param [String] ofn Output file
+        # @param [String] input_file Input file
+        # @param [String] output_file Output file
         # @param [String] ofn_fc Output file for the Feature Catalog (optional)
-        def arcgis_to_iso19139(fn, ofn, ofn_fc = nil, ofn_fgdc = nil)
-          LyberCore::Log.debug "generating #{ofn}"
-          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -") or raise
+        def arcgis_to_iso19139(input_file, output_file, ofn_fc = nil, ofn_fgdc = nil)
+          LyberCore::Log.debug "generating #{output_file}"
+          system("#{XSLTPROC} #{XSLT[:arcgis]} '#{input_file}' | #{XMLLINT} -o '#{output_file}' -") or raise
           unless ofn_fc.nil?
             LyberCore::Log.debug "generating #{ofn_fc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -") or raise
+            system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{input_file}' | #{XMLLINT} -o '#{ofn_fc}' -") or raise
           end
-          unless ofn_fgdc.nil?
-            LyberCore::Log.debug "generating #{ofn_fgdc}"
-            system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or raise
-          end
+          return if ofn_fgdc
+
+          LyberCore::Log.debug "generating #{ofn_fgdc}"
+          system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{input_file}' | #{XMLLINT} -o '#{ofn_fgdc}' -") or raise
         end
       end
     end

@@ -21,9 +21,9 @@ module Robots
           available_in_geoserver = Settings.geoserver.map do |_key, setting|
             connection = Geoserver::Publish::Connection.new(
               {
-                "url" => setting[:primary][:url],
-                "user" => setting[:primary][:user],
-                "password" => setting[:primary][:password]
+                'url' => setting[:primary][:url],
+                'user' => setting[:primary][:user],
+                'password' => setting[:primary][:password]
               }
             )
             Geoserver::Publish::Layer.new(connection).find(layer_name: druid)

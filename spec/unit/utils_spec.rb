@@ -36,7 +36,7 @@ RSpec.describe 'utilities' do
                              'type' => Cocina::Models::ObjectType.object,
                              'description' => {
                                'title' => [{ 'value' => 'GIS object' }],
-                               'purl' => "https://purl.stanford.edu/fx392st8577"
+                               'purl' => 'https://purl.stanford.edu/fx392st8577'
                              },
                              'access' => {
                                'view' => access,

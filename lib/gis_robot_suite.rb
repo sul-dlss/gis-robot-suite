@@ -32,11 +32,7 @@ module GisRobotSuite
       case info[:type]
       when 'Byte'
         "grayscale#{nbits > 4 ? 8 : 4}"
-      when 'Int16', 'UInt16'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      when 'Int32'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      when 'Float32', 'Float64'
+      when 'Int16', 'UInt16', 'Int32', 'Float32', 'Float64'
         "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
       else
         raise "Unknown 1-band raster data type: #{info[:type]}"
@@ -90,9 +86,7 @@ module GisRobotSuite
       fn = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
       if fn.nil? || File.size(fn) == 0
         fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
-        if fn.nil? || File.size(fn) == 0
-          raise "Missing ESRI metadata files in #{dir}"
-        end
+        raise "Missing ESRI metadata files in #{dir}" if fn.nil? || File.size(fn) == 0
       end
     end
     fn
@@ -134,9 +128,7 @@ module GisRobotSuite
   def self.determine_rights(druid)
     rights = 'Restricted'
     cocina_model = Dor::Services::Client.object("druid:#{druid}").find
-    if cocina_model.access.view == 'world'
-      rights = 'Public'
-    end
+    rights = 'Public' if cocina_model.access.view == 'world'
 
     rights
   end
