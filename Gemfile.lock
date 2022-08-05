@@ -77,15 +77,14 @@ GEM
       faraday (~> 2.0)
       faraday-retry
       zeitwerk (~> 2.1)
-    dor-workflow-client (4.0.0)
+    dor-workflow-client (5.0.0)
       activesupport (>= 3.2.1, < 8)
       deprecation (>= 0.99.0)
       faraday (~> 2.0)
-      faraday-retry
+      faraday-retry (~> 1.0)
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
-    druid-tools (2.2.1)
-      deprecation
+    druid-tools (3.0.0)
     dry-configurable (0.15.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.6)
@@ -129,8 +128,7 @@ GEM
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.1.0)
-    faraday-retry (2.0.0)
-      faraday (~> 2.0)
+    faraday-retry (1.0.3)
     fastimage (2.2.6)
     geoserver-publish (0.6.0)
       faraday (~> 2.2)
@@ -139,7 +137,7 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
-    iso-639 (0.2.10)
+    iso-639 (0.3.5)
     json (2.6.2)
     jsonpath (1.1.2)
       multi_json
@@ -149,7 +147,6 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_exiftool (2.10.2)
-    mini_portile2 (2.8.0)
     minitest (5.16.2)
     mods (3.0.3)
       edtf (~> 3.0)
@@ -160,11 +157,10 @@ GEM
     multi_json (1.15.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
-    net-scp (4.0.0.rc1)
-      net-ssh (>= 2.6.5, < 8.0.0)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
     net-ssh (7.0.1)
-    nokogiri (1.13.8)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.13.8-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.13.8-x86_64-linux)
       racc (~> 1.4)
@@ -223,7 +219,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.2.9)
       rexml
-    rubocop (1.32.0)
+    rubocop (1.33.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
@@ -255,7 +251,7 @@ GEM
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stanford-mods (3.2.0)
+    stanford-mods (3.3.1)
       activesupport
       mods (~> 3.0, >= 3.0.3)
     super_diff (0.9.0)
@@ -267,14 +263,14 @@ GEM
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.2.0)
-    webmock (3.14.0)
+    webmock (3.17.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     zeitwerk (2.6.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
@@ -286,7 +282,7 @@ DEPENDENCIES
   config (~> 3.1)
   dlss-capistrano
   dor-services-client (~> 12.0)
-  dor-workflow-client (~> 4.0)
+  dor-workflow-client (~> 5.0)
   druid-tools
   fastimage (~> 2.2)
   geoserver-publish (>= 0.5.0)
