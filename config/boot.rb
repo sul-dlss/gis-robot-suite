@@ -62,7 +62,7 @@ GisRobotSuite.connect_dor_services_app
 if defined? REDIS_TIMEOUT
   _server, _namespace = REDIS_URL.split('/', 2)
   _host, _port, _db = _server.split(':')
-  _redis = Redis.new(host: _host, port: _port, thread_safe: true, db: _db, timeout: REDIS_TIMEOUT.to_f)
+  _redis = Redis.new(host: _host, port: _port, db: _db, timeout: REDIS_TIMEOUT.to_f)
   Resque.redis = Redis::Namespace.new(_namespace, redis: _redis)
 else
   Resque.redis = REDIS_URL

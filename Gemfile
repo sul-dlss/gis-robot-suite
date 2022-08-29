@@ -20,6 +20,7 @@ gem 'slop', '~> 3.6' # for bin/run_robot
 gem 'honeybadger'
 gem 'resque'
 gem 'resque-pool'
+gem 'redis', '~> 4.0' # redis 5.x has breaking changes with resque, see https://github.com/resque/resque/issues/1821
 gem 'scanf'
 gem 'zeitwerk', '~> 2.1'
 
