@@ -33,9 +33,6 @@ GEM
       capistrano (~> 3.1)
     capistrano-one_time_key (0.1.0)
       capistrano (~> 3.0)
-    capistrano-rvm (0.1.2)
-      capistrano (~> 3.0)
-      sshkit (~> 1.2)
     capistrano-shared_configs (0.2.2)
     cocina-models (0.84.4)
       activesupport
@@ -280,7 +277,6 @@ DEPENDENCIES
   assembly-objectfile
   capistrano
   capistrano-bundler
-  capistrano-rvm
   capistrano-shared_configs
   config (~> 3.1)
   dlss-capistrano
