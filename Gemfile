@@ -38,7 +38,6 @@ end
 
 group :deployment do
   gem 'capistrano'
-  gem 'capistrano-rvm'
   gem 'capistrano-bundler'
   gem 'dlss-capistrano', require: false
   gem 'capistrano-shared_configs'
