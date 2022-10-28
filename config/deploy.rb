@@ -19,7 +19,8 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 # set :log_level, :debug
 
 # Default value for :pty is false
-# set :pty, true
+# true for ubuntu to perform resque:pool:hot_swap
+set :pty, true
 
 # Default value for :linked_files is []
 set :linked_files, %w[config/honeybadger.yml tmp/resque-pool.lock]
