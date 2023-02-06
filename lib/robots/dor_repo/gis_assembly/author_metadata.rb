@@ -5,27 +5,22 @@ module Robots
     module GisAssembly
       class AuthorMetadata < Base
         def initialize
-          super('gisAssemblyWF', 'author-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'author-metadata')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "author-metadata working on #{druid}"
+        def perform_work
+          logger.debug "author-metadata working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # Search for geoMetadata or ESRI metadata
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           unless File.size?(fn)
             fn = GisRobotSuite.locate_esri_metadata "#{rootdir}/temp"
-            raise "author-metadata: #{druid} is missing ESRI metadata files" if fn.nil?
+            raise "author-metadata: #{bare_druid} is missing ESRI metadata files" if fn.nil?
           end
 
-          LyberCore::Log.debug "author-metadata found #{fn}"
+          logger.debug "author-metadata found #{fn}"
         end
       end
     end

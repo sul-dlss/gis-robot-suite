@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-server 'kurma-robots-prod-01.stanford.edu', user: 'lyberadmin', roles: %w[web app db]
+server 'kurma-robots-prod-01.stanford.edu', user: 'lyberadmin', roles: %w[web app db worker]
 
 Capistrano::OneTimeKey.generate_one_time_key!
 

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Make sure specs run with the definitions from local.rb
-ENV['ROBOT_ENVIRONMENT'] ||= 'test'
-
 require 'simplecov'
 require 'webmock/rspec'
 
@@ -13,10 +10,12 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
-require_relative '../config/boot'
+ENV['ROBOT_ENVIRONMENT'] = 'test'
+require File.expand_path("#{__dir__}/../config/boot")
 
 require 'pry'
 require 'rspec'
+include LyberCore::Rspec # rubocop:disable Style/MixinUsage
 
 def read_fixture(fname)
   File.read(File.join(fixture_dir, fname))

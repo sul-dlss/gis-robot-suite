@@ -7,17 +7,12 @@ module Robots
     module GisAssembly
       class FinishGisAssemblyWorkflow < Base
         def initialize
-          super('gisAssemblyWF', 'finish-gis-assembly-workflow', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'finish-gis-assembly-workflow')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "finish-gis-assembly-workflow working on #{druid}"
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+        def perform_work
+          logger.debug "finish-gis-assembly-workflow working on #{bare_druid}"
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # first ensure all files are ready
           %w[
@@ -29,21 +24,22 @@ module Robots
             metadata/geoMetadata.xml
           ].each do |f|
             fn = File.join(rootdir, f)
-            raise "finish-gis-assembly-workflow: #{druid} is missing required file: #{fn}" unless File.size?(fn)
+            raise "finish-gis-assembly-workflow: #{bare_druid} is missing required file: #{fn}" unless File.size?(fn)
           end
 
           # delete all staged files in temp/
           tmpdir = "#{rootdir}/temp"
           if File.directory?(tmpdir)
-            LyberCore::Log.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
+            logger.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
             FileUtils.rm_r(tmpdir)
           end
 
           # load workspace with identical copy of stage
-          destdir = GisRobotSuite.locate_druid_path druid, type: :workspace
+          destdir = GisRobotSuite.locate_druid_path bare_druid, type: :workspace
           FileUtils.mkdir_p(destdir) unless File.directory?(destdir)
-          LyberCore::Log.info "finish-gis-assembly-workflow: #{druid} migrating object to #{destdir}"
-          system("rsync -av --delete #{rootdir}/ #{destdir}/")
+          logger.info "finish-gis-assembly-workflow: #{bare_druid} migrating object to #{destdir} from #{rootdir}"
+          FileUtils.cp_r("#{rootdir}/.", destdir)
+          FileUtils.rm_f(rootdir)
         end
       end
     end

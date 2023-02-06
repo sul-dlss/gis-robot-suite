@@ -5,14 +5,10 @@ module Robots
     module GisAssembly
       class ApproveData < Base
         def initialize
-          super('gisAssemblyWF', 'approve-data', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'approve-data')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] _druid -- the Druid identifier for the object to process
-        def perform(_druid)
+        def perform_work
           raise 'not implemented'
         end
       end

@@ -2,12 +2,7 @@
 
 module Robots
   module DorRepo
-    class Base
-      include LyberCore::Robot
-
-      def workflow_service
-        @workflow_service ||= WorkflowClientFactory.build
-      end
+    class Base < LyberCore::Robot
     end
   end
 end

@@ -1,0 +1,5 @@
+---
+:concurrency: 5
+:queues:
+  - gisAssemblyWF_default
+  - gisDeliveryWF_default

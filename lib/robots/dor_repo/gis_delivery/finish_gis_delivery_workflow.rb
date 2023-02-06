@@ -5,16 +5,11 @@ module Robots
     module GisDelivery
       class FinishGisDeliveryWorkflow < Base
         def initialize
-          super('gisDeliveryWF', 'finish-gis-delivery-workflow', check_queued_status: true) # init LyberCore::Robot
+          super('gisDeliveryWF', 'finish-gis-delivery-workflow')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "finish-gis-delivery-workflow working on #{druid}"
+        def perform_work
+          logger.debug "finish-gis-delivery-workflow working on #{bare_druid}"
 
           # Connect to both the public and restricted GeoServers to verify layer
           # exists
@@ -26,9 +21,9 @@ module Robots
                 'password' => setting[:primary][:password]
               }
             )
-            Geoserver::Publish::Layer.new(connection).find(layer_name: druid)
+            Geoserver::Publish::Layer.new(connection).find(layer_name: bare_druid)
           end
-          raise "finish-gis-delivery-workflow: #{druid} is missing GeoServer layer" unless available_in_geoserver.any?
+          raise "finish-gis-delivery-workflow: #{bare_druid} is missing GeoServer layer" unless available_in_geoserver.any?
         end
       end
     end

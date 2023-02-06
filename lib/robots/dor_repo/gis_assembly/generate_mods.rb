@@ -7,28 +7,23 @@ module Robots
     module GisAssembly
       class GenerateMods < Base
         def initialize
-          super('gisAssemblyWF', 'generate-mods', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'generate-mods')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "generate-mods working on #{druid}"
+        def perform_work
+          logger.debug "generate-mods working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # short-circuit if already have MODS file
           desc_metadata = File.join(rootdir, 'metadata', 'descMetadata.xml')
           if File.size?(desc_metadata)
-            LyberCore::Log.info "generate-mods: #{druid} found existing #{desc_metadata}"
+            logger.info "generate-mods: #{bare_druid} found existing #{desc_metadata}"
             return
           end
 
           geo_metadata_file = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise "generate-mods: #{druid} cannot locate #{geo_metadata_file}" unless File.size?(geo_metadata_file)
+          raise "generate-mods: #{bare_druid} cannot locate #{geo_metadata_file}" unless File.size?(geo_metadata_file)
 
           # parse geometadata as input to MODS transform
           geo_metadata_rdf_xml = Nokogiri::XML(File.read(geo_metadata_file))
@@ -40,7 +35,7 @@ module Robots
             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
             if tif_file.nil?
               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-              raise "generate-mods: #{druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+              raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
 
               file_format = 'ArcGRID'
             else
@@ -53,7 +48,7 @@ module Robots
           end
 
           # load PURL
-          purl = Settings.purl.url + "/#{druid.gsub(/^druid:/, '')}"
+          purl = Settings.purl.url + "/#{bare_druid}"
 
           # clean up geo_metadata_rdf_xml to not generate transforms
           mods_xml_file = File.join(rootdir, 'metadata', 'descMetadata.xml')
@@ -63,10 +58,10 @@ module Robots
                                     fileFormat: file_format,
                                     purl: purl).to_xml(index: 2)
           rescue ArgumentError => e
-            raise "generate-mods: #{druid} cannot process MODS: #{e}"
+            raise "generate-mods: #{bare_druid} cannot process MODS: #{e}"
           end
 
-          raise "generate-mods: #{druid} did not write MODS correctly" unless File.size?(mods_xml_file)
+          raise "generate-mods: #{bare_druid} did not write MODS correctly" unless File.size?(mods_xml_file)
         end
 
         private
@@ -79,7 +74,7 @@ module Robots
             file.readlines.each do |line|
               next unless line =~ /^Geometry:\s+(.*)\s*$/
 
-              LyberCore::Log.debug "generate-mods: parsing ogrinfo geometry output: #{line}"
+              logger.debug "generate-mods: parsing ogrinfo geometry output: #{line}"
               return Regexp.last_match(1).gsub('3D', '').gsub('Multi', '').strip
             end
           end

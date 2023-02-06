@@ -5,48 +5,43 @@ module Robots
     module GisAssembly
       class GenerateGeoMetadata < Base
         def initialize
-          super('gisAssemblyWF', 'generate-geo-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'generate-geo-metadata')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "generate-geo-metadata working on #{druid}"
+        def perform_work
+          logger.debug "generate-geo-metadata working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # short-circuit if work is already done
           metadatadir = "#{rootdir}/metadata"
           ofn = "#{metadatadir}/geoMetadata.xml"
           if File.size?(ofn)
-            LyberCore::Log.info "generate-geo-metadata: #{druid} already has geoMetadata: #{ofn}"
+            logger.info "generate-geo-metadata: #{bare_druid} already has geoMetadata: #{ofn}"
             return
           end
 
           iso19139_xml_file = Dir.glob("#{rootdir}/temp/**/*-iso19139.xml").first
-          raise "generate-geo-metadata: #{druid} is missing ISO 19139 file" if iso19139_xml_file.nil?
+          raise "generate-geo-metadata: #{bare_druid} is missing ISO 19139 file" if iso19139_xml_file.nil?
 
-          LyberCore::Log.debug "generate-geo-metadata processing #{iso19139_xml_file}"
+          logger.debug "generate-geo-metadata processing #{iso19139_xml_file}"
           iso19139_ng_xml = Nokogiri::XML(File.read(iso19139_xml_file))
           # rubocop:disable Style/IfUnlessModifier
           # due to line length
           if iso19139_ng_xml.nil? || iso19139_ng_xml.root.nil?
-            raise ArgumentError, "generate-geo-metadata: #{druid} cannot parse ISO 19139 in #{iso19139_xml_file}"
+            raise ArgumentError, "generate-geo-metadata: #{bare_druid} cannot parse ISO 19139 in #{iso19139_xml_file}"
           end
           # rubocop:enable Style/IfUnlessModifier
 
           iso19110_xml_file = Dir.glob("#{rootdir}/temp/*-iso19110.xml").first
           unless iso19110_xml_file.nil?
-            LyberCore::Log.debug "generate-geo-metadata processing #{iso19110_xml_file}"
+            logger.debug "generate-geo-metadata processing #{iso19110_xml_file}"
             iso19110_ng_xml = Nokogiri::XML(File.read(iso19110_xml_file))
           end
 
           # create geoMetadata RDF XML file
           FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
-          xml = geo_metadata_rdf_xml(iso19139_ng_xml, iso19110_ng_xml, Settings.purl.url + "/#{druid}")
+          xml = geo_metadata_rdf_xml(iso19139_ng_xml, iso19110_ng_xml, Settings.purl.url + "/#{bare_druid}")
           File.open(ofn, 'wb') { |f| f << xml.to_xml(indent: 2) }
         end
 

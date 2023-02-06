@@ -7,7 +7,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
 
   before do
-    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
+    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid')
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
@@ -34,7 +34,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
         stubbed_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes')
                        .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
                        .to_return(status: 201)
-        robot.perform(druid)
+        test_perform(robot, druid)
         expect(stubbed_post).to have_been_requested
       end
 
@@ -44,7 +44,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
         stubbed_post = stub_request(:put, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid/featuretypes/bb338jh0716')
                        .with(headers: { 'Content-Type' => 'application/json' }, body: post_body)
                        .to_return(status: 201)
-        robot.perform(druid)
+        test_perform(robot, druid)
         expect(stubbed_post).to have_been_requested
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
         stubbed_layer_put = stub_request(:put, 'http://example.com/geoserver/rest/layers/dg548ft1892')
                             .with(headers: { 'Content-Type' => 'application/json' }, body: layer_put_body)
                             .to_return(status: 201)
-        robot.perform(druid)
+        test_perform(robot, druid)
         expect(stubbed_store_post).to have_been_requested
         expect(stubbed_coverage_post).to have_been_requested
         expect(stubbed_layer_put).to have_been_requested

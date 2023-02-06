@@ -8,7 +8,7 @@ gem 'dor-services-client', '~> 12.0'
 gem 'dor-workflow-client', '~> 5.0'
 gem 'druid-tools'
 gem 'geoserver-publish', '>= 0.5.0' # samvera labs
-gem 'lyber-core', '~> 6.1'
+gem 'lyber-core', '~> 7.0'
 gem 'stanford-mods' # for GisDelivery::LoadGeoserver
 
 gem 'config', '~> 3.1'
@@ -18,11 +18,13 @@ gem 'rake', '~> 13.0'
 gem 'rsolr'
 gem 'slop', '~> 3.6' # for bin/run_robot
 gem 'honeybadger'
-gem 'resque'
-gem 'resque-pool'
-gem 'redis', '~> 4.0' # redis 5.x has breaking changes with resque, see https://github.com/resque/resque/issues/1821
 gem 'scanf'
+gem 'sidekiq', '~> 6.4'
 gem 'zeitwerk', '~> 2.1'
+
+source 'https://gems.contribsys.com/' do
+  gem 'sidekiq-pro'
+end
 
 group :development do
   gem 'rspec'

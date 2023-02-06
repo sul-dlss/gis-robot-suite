@@ -6,7 +6,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
 
   before do
-    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
+    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
   end
 
   it 'converts DD to DDMMSS' do

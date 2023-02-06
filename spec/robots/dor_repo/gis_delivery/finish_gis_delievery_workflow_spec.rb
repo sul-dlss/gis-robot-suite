@@ -8,7 +8,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
   let(:druid) { 'fx392st8577' }
 
   before do
-    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
+    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
   end
 
   describe '#perform' do
@@ -17,7 +17,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
         .to_return(status: 404)
       stub_request(:get, 'http://example.com/restricted/geoserver/rest/layers/fx392st8577')
         .to_return(status: 404)
-      expect { robot.perform(druid) }.to raise_error(RuntimeError, /is missing GeoServer layer/)
+      expect { test_perform(robot, druid) }.to raise_error(RuntimeError, /is missing GeoServer layer/)
     end
 
     it 'completes successfully when it exists' do
@@ -25,7 +25,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
         .to_return(status: 404)
       stub_request(:get, 'http://example.com/restricted/geoserver/rest/layers/fx392st8577')
         .to_return(status: 200)
-      expect { robot.perform(druid) }.not_to raise_error(RuntimeError, /is missing GeoServer layer/)
+      expect { test_perform(robot, druid) }.not_to raise_error(RuntimeError, /is missing GeoServer layer/)
     end
   end
 end

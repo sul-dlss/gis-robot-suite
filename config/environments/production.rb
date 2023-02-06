@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-REDIS_URL = Settings.redis.url
-
 # These are necessary for the gisDelivery/load-vector step which uses psql and shp2pgsql
 ENV['PGDATABASE'] ||= Settings.db.database
 ENV['PGHOST'] ||= Settings.db.host

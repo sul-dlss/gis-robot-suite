@@ -8,7 +8,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::ResetGeowebcache do
   let(:druid) { 'druid:fx392st8577' }
 
   before do
-    allow(WorkflowClientFactory).to receive(:build).and_return(workflow_client)
+    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     allow(GisRobotSuite).to receive(:determine_rights).and_return 'Public'
   end
 
@@ -20,7 +20,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::ResetGeowebcache do
       stub_request(:post, 'http://example-2.com/geoserver/gwc/rest/masstruncate')
         .with(body: '<truncateLayer><layerName>druid:fx392st8577</layerName></truncateLayer>')
         .to_return(status: 200)
-      expect(robot.perform(druid)).to eq [true, true]
+      expect(test_perform(robot, druid)).to eq [true, true]
     end
   end
 end

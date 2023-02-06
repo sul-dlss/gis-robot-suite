@@ -5,47 +5,41 @@ module Robots
     module GisAssembly
       class LoadGeoMetadata < Base
         def initialize
-          super('gisAssemblyWF', 'load-geo-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'load-geo-metadata')
         end
 
-        TAG_GIS = 'Dataset : GIS'
-        def tag(druid)
-          current_tags = tags_client(druid).list
-          return if current_tags.include?(TAG_GIS)
+        def perform_work
+          bare_druid = druid.delete_prefix('druid:')
+          logger.debug "load-geo-metadata: #{druid} working"
 
-          tags_client(druid).create(tags: [TAG_GIS])
-        end
-
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid_without_namespace = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "load-geo-metadata: #{druid} working"
-
-          rootdir = GisRobotSuite.locate_druid_path druid_without_namespace, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # Locate geoMetadata xml file
           fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
-          raise "load-geo-metadata: #{druid_without_namespace} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
+          raise "load-geo-metadata: #{bare_druid} cannot locate geoMetadata: #{fn}" unless File.size?(fn)
 
-          client = Dor::Services::Client.object(druid)
-          cocina = client.find
-          updated = cocina.new(
+          updated = cocina_object.new(
             type: Cocina::Models::ObjectType.geo,
             geographic: { iso19139: File.read(fn) }
           )
           # Load geoMetadata into DOR
-          client.update(params: updated)
+          object_client.update(params: updated)
 
-          tag druid
+          tag
         end
 
         private
 
-        def tags_client(pid)
-          Dor::Services::Client.object(pid).administrative_tags
+        TAG_GIS = 'Dataset : GIS'
+        def tag
+          current_tags = tags_client.list
+          return if current_tags.include?(TAG_GIS)
+
+          tags_client.create(tags: [TAG_GIS])
+        end
+
+        def tags_client
+          object_client.administrative_tags
         end
       end
     end

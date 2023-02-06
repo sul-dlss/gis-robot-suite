@@ -5,14 +5,30 @@ module Robots
     module GisAssembly
       class PackageData < Base
         def initialize
-          super('gisAssemblyWF', 'package-data', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'package-data')
         end
 
+        def perform_work
+          logger.debug "package-data working on #{bare_druid}"
+
+          rootdir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+
+          data_zip_filename = "#{rootdir}/content/data.zip"
+          if File.size?(data_zip_filename)
+            logger.info "package-data: #{bare_druid} found existing packaged data: #{File.basename(data_zip_filename)}"
+            return
+          end
+
+          generate_data_zip(rootdir)
+        end
+
+        private
+
         # Create data.zip for all digital work files
-        def generate_data_zip(druid, rootdir)
+        def generate_data_zip(rootdir)
           tmpdir = File.join(rootdir, 'temp')
-          LyberCore::Log.debug "Changing to #{tmpdir}"
-          raise "package-data: #{druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
+          logger.debug "Changing to #{tmpdir}"
+          raise "package-data: #{bare_druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
 
           Dir.chdir(tmpdir)
           File.umask(002)
@@ -24,7 +40,7 @@ module Robots
             fn = Dir.glob('*/metadata.xml').first
             if fn.nil?
               fn = Dir.glob('*.tif.xml').first
-              raise "package-data: #{druid} cannot locate metadata in temp" if fn.nil?
+              raise "package-data: #{bare_druid} cannot locate metadata in temp" if fn.nil?
 
               # GeoTIFF
               basename = File.basename(fn, '.tif.xml')
@@ -54,27 +70,8 @@ module Robots
           FileUtils.mkdir_p(File.dirname(zipfn)) unless File.directory?(File.dirname(zipfn))
           FileUtils.rm_f(zipfn) if File.size?(zipfn)
 
-          LyberCore::Log.debug "Compressing #{druid} into #{zipfn}"
-          system "zip -v#{recurse_flag ? 'r' : ''} '#{zipfn}' #{fns.join(' ')}"
-        end
-
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "package-data working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          datafn = "#{rootdir}/content/data.zip"
-          if File.size?(datafn)
-            LyberCore::Log.info "package-data: #{druid} found existing packaged data: #{File.basename(datafn)}"
-            return
-          end
-
-          generate_data_zip druid, rootdir
+          logger.debug "Compressing #{bare_druid} into #{zipfn}"
+          system("zip -v#{recurse_flag ? 'r' : ''} '#{zipfn}' #{fns.join(' ')}")
         end
       end
     end
