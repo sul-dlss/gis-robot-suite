@@ -16,11 +16,6 @@ These robots require several dependencies needed to perform its tasks. These are
 
 # Documentation
 
-Check the [Wiki](https://github.com/sul-dlss/robot-master/wiki) in the robot-master repo.
-
-To run, use the `lyber-core` infrastructure, which uses resque-pool
-to start all robots defined in `config/resque-pool.yml`.
-
 `gisAssemblyWF`
 ---------------
 
