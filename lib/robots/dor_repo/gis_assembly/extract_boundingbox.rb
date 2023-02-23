@@ -8,20 +8,54 @@ module Robots
     module GisAssembly
       class ExtractBoundingbox < Base
         def initialize
-          super('gisAssemblyWF', 'extract-boundingbox', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'extract-boundingbox')
         end
+
+        def perform_work
+          logger.debug "extract-boundingbox working on #{bare_druid}"
+
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
+
+          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
+          raise "extract-boundingbox: #{bare_druid} cannot locate MODS: #{mods_filename}" unless File.size?(mods_filename)
+
+          projection = '4326' # always use EPSG:4326 derivative
+          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
+          raise "extract-boundingbox: #{bare_druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+
+          tmpdir = extract_data_from_zip(zipfn, Settings.geohydra.tmpdir)
+          raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
+
+          begin
+            ulx, uly, lrx, lry = determine_extent(tmpdir)
+
+            # Check that we have a valid bounding box
+            # rubocop:disable Style/IfUnlessModifier
+            # due to line length
+            unless ulx <= lrx && uly >= lry
+              raise "extract-boundingbox: #{bare_druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
+            end
+            # rubocop:enable Style/IfUnlessModifier
+
+            add_geo_extension_to_mods(mods_filename, ulx, uly, lrx, lry)
+            raise "extract-boundingbox: #{bare_druid} corrupted MODS: #{mods_filename}" unless File.size?(mods_filename)
+          ensure
+            logger.debug "Cleaning: #{tmpdir}"
+            FileUtils.rm_rf tmpdir
+          end
+        end
+
+        private
 
         # unpacks a ZIP file into the given tmpdir
         # @return [String] tmpdir the folder in which to extract files
-        def extract_data_from_zip(druid, zipfn, tmpdir)
-          LyberCore::Log.info "extract-boundingbox: #{druid} is extracting data: #{zipfn}"
+        def extract_data_from_zip(zipfn, tmpdir)
+          logger.info "extract-boundingbox: #{bare_druid} is extracting data: #{zipfn}"
 
-          tmpdir = File.join(tmpdir, "extractboundingbox_#{druid}")
-          FileUtils.rm_rf tmpdir if File.directory? tmpdir
-          FileUtils.mkdir_p tmpdir
-          Dir.chdir(tmpdir) do
-            system("unzip '#{zipfn}'")
-          end
+          tmpdir = File.join(tmpdir, "extractboundingbox_#{bare_druid}")
+          FileUtils.rm_rf(tmpdir) if File.directory? tmpdir
+          FileUtils.mkdir_p(tmpdir)
+          system("unzip -o '#{zipfn}' -d '#{tmpdir}'", exception: true)
           tmpdir
         end
 
@@ -29,7 +63,7 @@ module Robots
         #
         # @return [Array#Float] ulx uly lrx lry
         def extent_shapefile(shpfn)
-          LyberCore::Log.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
+          logger.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
           IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |file|
             file.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
@@ -49,7 +83,7 @@ module Robots
         #
         # @return [Array#Float] ulx uly lrx lry
         def extent_geotiff(tiffn)
-          LyberCore::Log.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
+          logger.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
           IO.popen("#{Settings.gdal_path}gdalinfo '#{tiffn}'") do |file|
             ulx = 0
             uly = 0
@@ -114,59 +148,59 @@ module Robots
         end
 
         # adds the geo extension to the MODS record
-        def add_geo_extension_to_mods(druid, mods_filename, ulx, uly, lrx, lry)
-          LyberCore::Log.debug "extract-boundingbox: #{druid} reading #{mods_filename}"
+        def add_geo_extension_to_mods(mods_filename, ulx, uly, lrx, lry)
+          logger.debug "extract-boundingbox: #{bare_druid} reading #{mods_filename}"
           doc = Nokogiri::XML(File.binread(mods_filename))
 
           # Update geo extension
-          LyberCore::Log.debug "extract-boundingbox: #{druid} updating geo extension..."
+          logger.debug "extract-boundingbox: #{bare_druid} updating geo extension..."
           doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
                     'xmlns:mods' => 'http://www.loc.gov/mods/v3',
                     'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
                     'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |node|
             node['gml:srsName'] = 'EPSG:4326'
             node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
-              LyberCore::Log.debug "extract-boundingbox: #{druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
+              logger.debug "extract-boundingbox: #{bare_druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
               x.content = [lrx, uly].join(' ') # NE
             end
             node.xpath('gml:lowerCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
-              LyberCore::Log.debug "extract-boundingbox: #{druid} replacing lowerCorner #{x.content} with #{ulx} #{lry}"
+              logger.debug "extract-boundingbox: #{bare_druid} replacing lowerCorner #{x.content} with #{ulx} #{lry}"
               x.content = [ulx, lry].join(' ') # SW
             end
           end
 
           # Check to see whether the current native projection is WGS84
           cartos = doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
-          raise "extract-boundingbox: #{druid} is missing subject/cartographics!" if cartos.nil?
+          raise "extract-boundingbox: #{bare_druid} is missing subject/cartographics!" if cartos.nil?
 
-          LyberCore::Log.debug "extract-boundingbox: #{druid} has #{cartos.size} subject/cartographics elements"
-          raise "extract-boundingbox: #{druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
+          logger.debug "extract-boundingbox: #{bare_druid} has #{cartos.size} subject/cartographics elements"
+          raise "extract-boundingbox: #{bare_druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
 
           carto = cartos.first
           proj = carto.xpath('mods:projection', 'xmlns:mods' => 'http://www.loc.gov/mods/v3').first
 
           if proj.content =~ /EPSG:+4326\s*$/
-            LyberCore::Log.debug "extract-boundingbox: #{druid} has native WGS84 projection: #{proj.content}"
+            logger.debug "extract-boundingbox: #{bare_druid} has native WGS84 projection: #{proj.content}"
             subj = carto.parent
             subj['authority'] = 'EPSG'
             subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
             subj['displayLabel'] = 'WGS84'
           else
-            LyberCore::Log.debug "extract-boundingbox: #{druid} has non-native WGS84 projection: #{proj.content}"
+            logger.debug "extract-boundingbox: #{bare_druid} has non-native WGS84 projection: #{proj.content}"
 
             # Add subject/cartographics for WGS84 projection
-            subj = Nokogiri::XML::Node.new 'subject', doc
-            carto = Nokogiri::XML::Node.new 'cartographics', doc
-            scale = Nokogiri::XML::Node.new 'scale', doc
-            projection = Nokogiri::XML::Node.new 'projection', doc
-            coordinates = Nokogiri::XML::Node.new 'coordinates', doc
+            subj = Nokogiri::XML::Node.new('subject', doc)
+            carto = Nokogiri::XML::Node.new('cartographics', doc)
+            scale = Nokogiri::XML::Node.new('scale', doc)
+            projection = Nokogiri::XML::Node.new('projection', doc)
+            coordinates = Nokogiri::XML::Node.new('coordinates', doc)
 
             subj['authority'] = 'EPSG'
             subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
             subj['displayLabel'] = 'WGS84'
             scale.content = 'Scale not given.'
             projection.content = 'EPSG::4326'
-            coordinates.content = to_coordinates_ddmmss "#{ulx} -- #{lrx}/#{uly} -- #{lry}"
+            coordinates.content = to_coordinates_ddmmss("#{ulx} -- #{lrx}/#{uly} -- #{lry}")
 
             carto << scale << projection << coordinates
             subj << carto
@@ -180,9 +214,9 @@ module Robots
           end
 
           # Save
-          LyberCore::Log.debug "extract-boundingbox: #{druid} saving updated MODS to #{mods_filename}"
+          logger.debug "extract-boundingbox: #{bare_druid} saving updated MODS to #{mods_filename}"
           File.open(mods_filename, 'wb') do |line|
-            doc.write_xml_to line, indent: 2, encoding: 'UTF-8'
+            doc.write_xml_to(line, indent: 2, encoding: 'UTF-8')
           end
         end
 
@@ -199,47 +233,8 @@ module Robots
             else
               ulx, uly, lrx, lry = extent_shapefile shpfn
             end
-            LyberCore::Log.debug [ulx, uly, lrx, lry].join(' -- ')
+            logger.debug [ulx, uly, lrx, lry].join(' -- ')
             return [ulx, uly, lrx, lry]
-          end
-        end
-
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "extract-boundingbox working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "extract-boundingbox: #{druid} cannot locate MODS: #{mods_filename}" unless File.size?(mods_filename)
-
-          projection = '4326' # always use EPSG:4326 derivative
-          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          raise "extract-boundingbox: #{druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
-
-          tmpdir = extract_data_from_zip druid, zipfn, Settings.geohydra.tmpdir
-          raise "extract-boundingbox: #{druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
-
-          begin
-            ulx, uly, lrx, lry = determine_extent tmpdir
-
-            # Check that we have a valid bounding box
-            # rubocop:disable Style/IfUnlessModifier
-            # due to line length
-            unless ulx <= lrx && uly >= lry
-              raise "extract-boundingbox: #{druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
-            end
-            # rubocop:enable Style/IfUnlessModifier
-
-            add_geo_extension_to_mods druid, mods_filename, ulx, uly, lrx, lry
-            raise "extract-boundingbox: #{druid} corrupted MODS: #{mods_filename}" unless File.size?(mods_filename)
-          ensure
-            LyberCore::Log.debug "Cleaning: #{tmpdir}"
-            FileUtils.rm_rf tmpdir
           end
         end
       end

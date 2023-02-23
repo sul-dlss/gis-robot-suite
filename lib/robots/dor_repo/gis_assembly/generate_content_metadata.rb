@@ -9,17 +9,53 @@ module Robots
     module GisAssembly
       class GenerateContentMetadata < Base
         def initialize
-          super('gisAssemblyWF', 'generate-content-metadata', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'generate-content-metadata')
         end
 
-        # @param [String] druid
+        def perform_work
+          logger.debug "generate-content-metadata working on #{bare_druid}"
+
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
+
+          objects = {
+            Data: [],
+            Preview: [],
+            Metadata: []
+          }
+
+          # Process files
+          objects.each_key do |k|
+            Dir.glob("#{rootdir}/content/#{PATTERNS[k]}").each do |fn|
+              objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
+            end
+          end
+
+          # extract the MODS extension cleanly
+          modsfn = "#{rootdir}/metadata/descMetadata.xml"
+          raise "generate-content-metadata: #{bare_druid} is missing MODS metadata" unless File.size?(modsfn)
+
+          doc = Nokogiri::XML(File.read(modsfn))
+          ns = {
+            'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'mods' => 'http://www.loc.gov/mods/v3'
+          }
+          geo_data_xml = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
+
+          xml = create_content_metadata(objects, geo_data_xml)
+          fn = "#{rootdir}/metadata/contentMetadata.xml"
+          File.binwrite(fn, xml)
+          raise "generate-content-metadata: #{bare_druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)
+        end
+
+        private
+
         # @param [Hash<Symbol,Assembly::ObjectFile>] objects
         # @param [Nokogiri::XML::DocumentFragment] geo_data_xml
         # @return [Nokogiri::XML::Document]
         # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-        def create_content_metadata(druid, objects, geo_data_xml)
+        def create_content_metadata(objects, geo_data_xml)
           Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-            xml.contentMetadata(objectId: druid, type: 'geo') do
+            xml.contentMetadata(objectId: bare_druid, type: 'geo') do
               seq = 1
               objects.each do |k, v|
                 next if v.nil? || v.empty?
@@ -33,7 +69,7 @@ module Robots
                                   :attachment
                                 end
                 xml.resource(
-                  id: "#{druid}_#{seq}",
+                  id: "#{bare_druid}_#{seq}",
                   sequence: seq,
                   type: resource_type
                 ) do
@@ -101,46 +137,6 @@ module Robots
           Preview: '*.{png,jpg,gif,jp2}',
           Metadata: '*.{xml,txt,pdf}'
         }.freeze
-
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "generate-content-metadata working on #{druid}"
-
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
-
-          objects = {
-            Data: [],
-            Preview: [],
-            Metadata: []
-          }
-
-          # Process files
-          objects.each_key do |k|
-            Dir.glob("#{rootdir}/content/#{PATTERNS[k]}").each do |fn|
-              objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
-            end
-          end
-
-          # extract the MODS extension cleanly
-          modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          raise "generate-content-metadata: #{druid} is missing MODS metadata" unless File.size?(modsfn)
-
-          doc = Nokogiri::XML(File.read(modsfn))
-          ns = {
-            'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-            'mods' => 'http://www.loc.gov/mods/v3'
-          }
-          geo_data_xml = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
-
-          xml = create_content_metadata(druid, objects, geo_data_xml)
-          fn = "#{rootdir}/metadata/contentMetadata.xml"
-          File.binwrite(fn, xml)
-          raise "generate-content-metadata: #{druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)
-        end
       end
     end
   end

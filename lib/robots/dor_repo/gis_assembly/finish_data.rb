@@ -5,23 +5,18 @@ module Robots
     module GisAssembly
       class FinishData < Base
         def initialize
-          super('gisAssemblyWF', 'finish-data', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'finish-data')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "finish-data working on #{druid}"
+        def perform_work
+          logger.debug "finish-data working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path druid, type: :stage
+          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
           %w[data.zip data_EPSG_4326.zip].each do |zipname|
             zipfn = File.join(rootdir, 'content', zipname)
-            raise "finish-data: #{druid} is missing packaged data for #{zipname}" unless File.size?(zipfn)
+            raise "finish-data: #{bare_druid} is missing packaged data for #{zipname}" unless File.size?(zipfn)
 
-            LyberCore::Log.info "finish-data: #{druid} found #{zipname} #{File.size(zipfn)} bytes"
+            logger.info "finish-data: #{bare_druid} found #{zipname} #{File.size(zipfn)} bytes"
           end
         end
       end

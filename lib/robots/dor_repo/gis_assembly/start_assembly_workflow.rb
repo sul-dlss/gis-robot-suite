@@ -5,19 +5,13 @@ module Robots
     module GisAssembly
       class StartAssemblyWorkflow < Base
         def initialize
-          super('gisAssemblyWF', 'start-assembly-workflow', check_queued_status: true) # init LyberCore::Robot
+          super('gisAssemblyWF', 'start-assembly-workflow')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          druid = druid.delete_prefix('druid:')
-          LyberCore::Log.debug "start-assembly-workflow working on #{druid}"
-          object_client = Dor::Services::Client.object(druid)
+        def perform_work
+          logger.debug "start-assembly-workflow working on #{bare_druid}"
           current_version = object_client.version.current
-          workflow_service.create_workflow_by_name("druid:#{druid}", 'assemblyWF', version: current_version)
+          workflow_service.create_workflow_by_name(druid, 'assemblyWF', version: current_version)
         end
       end
     end

@@ -5,17 +5,13 @@ module Robots
     module GisDelivery
       class ResetGeowebcache < Base
         def initialize
-          super('gisDeliveryWF', 'reset-geowebcache', check_queued_status: true) # init LyberCore::Robot
+          super('gisDeliveryWF', 'reset-geowebcache')
         end
 
-        # `perform` is the main entry point for the robot. This is where
-        # all of the robot's work is done.
-        #
-        # @param [String] druid -- the Druid identifier for the object to process
-        def perform(druid)
-          LyberCore::Log.debug "reset-geowebcache working on #{druid}"
+        def perform_work
+          logger.debug "reset-geowebcache working on #{druid}"
 
-          rights = GisRobotSuite.determine_rights(druid.delete_prefix('druid:')).downcase
+          rights = GisRobotSuite.determine_rights(bare_druid).downcase
           ##
           # Truncate the cache for the layer in every place
           Settings.geoserver[rights].map do |_key, setting|
@@ -32,7 +28,7 @@ module Robots
             begin
               Geoserver::Publish::Geowebcache.new(connection).masstruncate(layer_name: druid)
             rescue Geoserver::Publish::Error => e
-              LyberCore::Log.warn(e.message)
+              logger.warn(e.message)
             end
           end
         end
