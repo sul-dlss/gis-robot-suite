@@ -7,7 +7,7 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.4.2)
+    activesupport (7.0.4.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -140,7 +140,7 @@ GEM
     geoserver-publish (0.6.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
-    honeybadger (5.2.0)
+    honeybadger (5.2.1)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -195,7 +195,7 @@ GEM
       method_source (~> 1.0)
     public_suffix (5.0.1)
     racc (1.6.2)
-    rack (2.2.6.3)
+    rack (2.2.6.4)
     rainbow (3.1.1)
     rake (13.0.6)
     redis (4.8.1)
