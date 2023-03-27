@@ -8,7 +8,7 @@ gem 'dor-services-client', '~> 12.0'
 gem 'dor-workflow-client', '~> 5.0'
 gem 'druid-tools'
 gem 'geoserver-publish', '>= 0.5.0' # samvera labs
-gem 'lyber-core', '~> 7.0'
+gem 'lyber-core', '~> 7.1'
 gem 'stanford-mods' # for GisDelivery::LoadGeoserver
 
 gem 'config', '~> 3.1'
@@ -19,7 +19,7 @@ gem 'rsolr'
 gem 'slop', '~> 3.6' # for bin/run_robot
 gem 'honeybadger'
 gem 'scanf'
-gem 'sidekiq', '~> 6.4'
+gem 'sidekiq', '~> 7.0'
 gem 'zeitwerk', '~> 2.1'
 
 source 'https://gems.contribsys.com/' do
