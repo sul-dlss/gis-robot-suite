@@ -141,7 +141,7 @@ GEM
       faraday (~> 2.2)
     hashdiff (1.0.1)
     honeybadger (5.2.1)
-    i18n (1.12.0)
+    i18n (1.13.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     iso-639 (0.3.6)
@@ -162,7 +162,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2023.0218.1)
     mini_exiftool (2.10.2)
-    mini_portile2 (2.8.1)
+    mini_portile2 (2.8.2)
     minitest (5.18.0)
     mods (3.0.3)
       edtf (~> 3.0)
@@ -186,7 +186,7 @@ GEM
     openapi_parser (0.15.0)
     optimist (3.0.1)
     parallel (1.23.0)
-    parser (3.2.2.0)
+    parser (3.2.2.1)
       ast (~> 2.4.1)
     patience_diff (1.2.0)
       optimist (~> 3.0)
@@ -272,7 +272,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    zeitwerk (2.6.7)
+    zeitwerk (2.6.8)
 
 PLATFORMS
   ruby
