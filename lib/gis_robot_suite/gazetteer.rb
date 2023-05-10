@@ -31,8 +31,8 @@ module GisRobotSuite
       end
     end
 
-    def each(&block)
-      @registry.each_key.to_a.sort.each(&block)
+    def each(&)
+      @registry.each_key.to_a.sort.each(&)
     end
 
     # @return <String> geonames name

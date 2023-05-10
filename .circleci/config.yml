@@ -7,6 +7,12 @@ workflows:
       - ruby-rails/lint:
           name: lint
           context: dlss
+          executor:
+            name: ruby-rails/ruby
+            ruby-tag: '3.2.2'
       - ruby-rails/test-gem:
           name: test
           context: dlss
+          executor:
+            name: ruby-rails/ruby
+            ruby-tag: '3.2.2'
