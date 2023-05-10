@@ -50,7 +50,7 @@ module Robots
           ws = Geoserver::Publish::Workspace.new(connection)
           workspace_name = 'druid'
 
-          raise "load-geoserver: #{bare_druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name: workspace_name)
+          raise "load-geoserver: #{bare_druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name:)
 
           logger.debug "Workspace: #{workspace_name} ready"
 
@@ -86,10 +86,10 @@ module Robots
 
           logger.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
           ds = Geoserver::Publish::DataStore.new(connection)
-          raise "load-geoserver: #{bare_druid}: Datastore #{dsname} not found" unless ds.find(workspace_name: workspace_name, data_store_name: dsname)
+          raise "load-geoserver: #{bare_druid}: Datastore #{dsname} not found" unless ds.find(workspace_name:, data_store_name: dsname)
 
           feature_type_exists = Geoserver::Publish::FeatureType.new(connection).find(
-            workspace_name: workspace_name,
+            workspace_name:,
             data_store_name: dsname,
             feature_type_name: bare_druid
           )
@@ -117,7 +117,7 @@ module Robots
           begin
             Geoserver::Publish::FeatureType.new(connection).send(
               resource_action,
-              workspace_name: workspace_name,
+              workspace_name:,
               data_store_name: dsname,
               feature_type_name: bare_druid,
               title: layer['title'],
@@ -139,13 +139,13 @@ module Robots
           coverage_store = Geoserver::Publish::CoverageStore.new(connection)
           coverage_store_exists = coverage_store.find(
             coverage_store_name: bare_druid,
-            workspace_name: workspace_name
+            workspace_name:
           )
           if coverage_store_exists.nil?
             logger.debug "Creating CoverageStore: #{workspace_name}/#{bare_druid}"
             begin
               coverage_store.create(
-                workspace_name: workspace_name,
+                workspace_name:,
                 coverage_store_name: bare_druid,
                 url: "file:#{Settings.geohydra.geotiff.dir}/#{bare_druid}.tif",
                 type: 'GeoTIFF',
@@ -166,7 +166,7 @@ module Robots
           coverage_exists = coverage.find(
             coverage_name: bare_druid,
             coverage_store_name: bare_druid,
-            workspace_name: workspace_name
+            workspace_name:
           )
 
           if coverage_exists.nil?
@@ -187,7 +187,7 @@ module Robots
           )
           begin
             coverage.create(
-              workspace_name: workspace_name,
+              workspace_name:,
               coverage_store_name: bare_druid,
               coverage_name: bare_druid,
               title: layer['title'],

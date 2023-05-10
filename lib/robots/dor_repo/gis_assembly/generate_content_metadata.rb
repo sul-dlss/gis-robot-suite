@@ -103,7 +103,7 @@ module Robots
 
                     xml.file o.file_attributes.merge(
                       id: o.filename,
-                      mimetype: mimetype,
+                      mimetype:,
                       size: o.filesize,
                       role: roletype || 'master'
                     ) do

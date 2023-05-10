@@ -56,7 +56,7 @@ module Robots
             file_content << to_mods(geo_metadata_rdf_xml,
                                     geometryType: geometry_type,
                                     fileFormat: file_format,
-                                    purl: purl).to_xml(index: 2)
+                                    purl:).to_xml(index: 2)
           rescue ArgumentError => e
             raise "generate-mods: #{bare_druid} cannot process MODS: #{e}"
           end
