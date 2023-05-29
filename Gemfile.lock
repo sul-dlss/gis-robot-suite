@@ -1,13 +1,13 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.1.1)
+    sidekiq-pro (7.1.2)
       sidekiq (>= 7.1.0, < 8)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.4.3)
+    activesupport (7.0.5)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -26,7 +26,7 @@ GEM
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
-    capistrano (3.17.2)
+    capistrano (3.17.3)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -130,13 +130,13 @@ GEM
       activesupport (>= 3.0, < 8.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    faraday (2.7.4)
+    faraday (2.7.5)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     faraday-retry (2.1.0)
       faraday (~> 2.0)
-    fastimage (2.2.6)
+    fastimage (2.2.7)
     geoserver-publish (0.6.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
@@ -173,10 +173,10 @@ GEM
     net-scp (4.0.0)
       net-ssh (>= 2.6.5, < 8.0.0)
     net-ssh (7.1.0)
-    nokogiri (1.15.1)
+    nokogiri (1.15.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.1-x86_64-linux)
+    nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
     nom-xml (1.2.0)
       i18n
@@ -245,7 +245,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     scanf (1.0.0)
-    sidekiq (7.1.0)
+    sidekiq (7.1.1)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
