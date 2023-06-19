@@ -81,15 +81,15 @@ module GisRobotSuite
   end
 
   def self.locate_esri_metadata(dir, _opts = {})
-    fn = Dir.glob("#{dir}/*.shp.xml").first # Shapefile
-    if fn.nil? || File.size(fn) == 0
-      fn = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
-      if fn.nil? || File.size(fn) == 0
-        fn = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
-        raise "Missing ESRI metadata files in #{dir}" if fn.nil? || File.size(fn) == 0
+    filename = Dir.glob("#{dir}/*.shp.xml").first # Shapefile
+    if filename.nil? || File.empty?(filename)
+      filename = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
+      if filename.nil? || File.empty?(filename)
+        filename = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
+        raise "Missing ESRI metadata files in #{dir}" if filename.nil? || File.empty?(filename)
       end
     end
-    fn
+    filename
   end
 
   def self.determine_file_format_from_mods(modsfn)
