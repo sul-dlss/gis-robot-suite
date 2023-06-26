@@ -130,7 +130,7 @@ GEM
       activesupport (>= 3.0, < 8.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    faraday (2.7.6)
+    faraday (2.7.7)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -148,6 +148,7 @@ GEM
     json (2.6.3)
     jsonpath (1.1.3)
       multi_json
+    language_server-protocol (3.17.0.3)
     lyber-core (7.1.0)
       activesupport
       config
@@ -223,8 +224,9 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.2.9)
       rexml
-    rubocop (1.52.1)
+    rubocop (1.53.0)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
       parser (>= 3.2.2.3)
       rainbow (>= 2.2.2, < 4.0)
