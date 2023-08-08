@@ -1,5 +1,7 @@
 ---
-:concurrency: 5
+# The concurrency is set to 1 since Dir.chdir is used, which is not thread safe.
+# See https://bugs.ruby-lang.org/issues/15661
+:concurrency: 1
 :queues:
   - gisAssemblyWF_default
   - gisDeliveryWF_default
