@@ -98,9 +98,9 @@ module Robots
               # Center      (-122.0970582,  35.7676061) (122d 5'49.41"W, 35d46' 3.38"N)
               case line
               when /^Upper Left\s+\((.*)\)\s+\(/
-                ulx, uly = Regexp.last_match(1).split(/,/)
+                ulx, uly = Regexp.last_match(1).split(',')
               when /^Lower Right\s+\((.*)\)\s+\(/
-                lrx, lry = Regexp.last_match(1).split(/,/)
+                lrx, lry = Regexp.last_match(1).split(',')
               end
             end
             return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
