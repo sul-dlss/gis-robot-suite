@@ -41,7 +41,7 @@ module Robots
             projection = GisRobotSuite.determine_projection_from_mods mods_filename
             projection.gsub!('ESRI', 'EPSG')
             logger.debug "Projection = #{projection}"
-            filetype = format.split(/format=/)[1]
+            filetype = format.split('format=')[1]
             raise "normalize-data: #{bare_druid} cannot locate filetype from MODS format: #{format}" if filetype.nil?
 
             case filetype

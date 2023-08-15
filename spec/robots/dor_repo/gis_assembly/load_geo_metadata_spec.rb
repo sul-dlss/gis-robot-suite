@@ -42,10 +42,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::LoadGeoMetadata do
     end
 
     before do
-      allow(File).to receive(:size?).and_return(100)
+      allow(File).to receive_messages(size?: 100, read: xml, mtime: Time.now)
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(File).to receive(:read).and_return(xml)
-      allow(File).to receive(:mtime).and_return(Time.now)
     end
 
     it 'tags the object' do

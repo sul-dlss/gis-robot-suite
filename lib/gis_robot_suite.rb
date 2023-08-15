@@ -54,11 +54,11 @@ module GisRobotSuite
   end
 
   def self.vector?(mimetype)
-    %w[application/x-esri-shapefile].include? mimetype.split(/;/).first.strip
+    %w[application/x-esri-shapefile].include? mimetype.split(';').first.strip
   end
 
   def self.raster?(mimetype)
-    %w[image/tiff application/x-ogc-aig].include? mimetype.split(/;/).first.strip
+    %w[image/tiff application/x-ogc-aig].include? mimetype.split(';').first.strip
   end
 
   def self.locate_druid_path(druid, opts = {})
