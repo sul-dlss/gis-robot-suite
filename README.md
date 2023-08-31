@@ -9,7 +9,7 @@ GIS-Robot-Suite
 Robot code for accessioning and delivery of GIS resources.
 
 # Dependencies
-These robots require several dependencies needed to perform its tasks. These are often shelled out to using `system` calls.
+These robots require several dependencies needed to perform the GIS workflow steps. These are often shelled out to using `system` calls.
 
  - [GDAL](https://gdal.org/) Needed for several geospatial tasks. Also needed on servers are the utils and clients
  - rsync also used as part of the robot process and is needed
@@ -85,3 +85,26 @@ look like this in the workspace:
         data_ESRI_4326.zip
         preview.jpg
         some-other-file.ext (optionally)
+
+# Reset Process (for QA/Stage)
+
+## Requirements
+
+None 🙂
+
+* gis-robot-suite's only data store is the shared robots Redis.  Nothing needs to be done with this, since all robots will be quieted and the queues cleared as part of the larger reset process.
+* Nothing special needs to be kept in terms of APOs, other than what the integration tests use (saving and reseeding that is already tracked elsewhere in the overall SDR reset process).  Same for agreements and collections.
+* Earthworks: we expect/hope that the unpublish step of the overall SDR reset plan will take care of removing old Earthworks data, but we are not sure whether Earthworks responds to unpublish, so that is yet to be tested on our first QA/stage SDR reset attempt (planned for Sept 2023).
+* We have checked with the main user of gis-robot-suite, and have confirmed that there is no test data that needs to be kept in stage or QA across resets.
+* While gis-robot-suite connects to a geoserver database, that is maintained as part of the Access portfolio, and resetting it is outside the scope of an Infrastructure portfolio SDR reset.
+
+## Steps
+
+1. Delete all content under the directories pointed to by the following shared_configs settings for the given env (note: double-check the actual settings values, the examples are valid for stage and QA as of Aug 2023):
+  - `Settings.geohydra.stage` (e.g. `'/var/geomdtk/current/stage'`)
+  - `Settings.geohydra.workspace` (e.g. `'/var/geomdtk/current/workspace'`)
+  - `Settings.geohydra.tmpdir` (e.g. `'/var/geomdtk/current/tmp'`)
+  - `Settings.geohydra.geotiff.dir` (e.g. `'/var/geoserver/local/raster/geotiff'`)
+  - `Settings.geohydra.opengeometadata.dir` (e.g. `'/var/geomdtk/current/export/opengeometadata/edu.stanford.purl'`)
+
+Done.
