@@ -100,11 +100,11 @@ None 🙂
 
 ## Steps
 
-1. Delete all content under the directories pointed to by the following shared_configs settings for the given env:
-  - `Settings.geohydra.stage`
-  - `Settings.geohydra.workspace`
-  - `Settings.geohydra.tmpdir`
-  - `Settings.geohydra.geotiff.dir`
-  - `Settings.geohydra.opengeometadata.dir`
+1. Delete all content under the directories pointed to by the following shared_configs settings for the given env (note: double-check the actual settings values, the examples are valid for stage and QA as of Aug 2023):
+  - `Settings.geohydra.stage` (e.g. `'/var/geomdtk/current/stage'`)
+  - `Settings.geohydra.workspace` (e.g. `'/var/geomdtk/current/workspace'`)
+  - `Settings.geohydra.tmpdir` (e.g. `'/var/geomdtk/current/tmp'`)
+  - `Settings.geohydra.geotiff.dir` (e.g. `'/var/geoserver/local/raster/geotiff'`)
+  - `Settings.geohydra.opengeometadata.dir` (e.g. `'/var/geomdtk/current/export/opengeometadata/edu.stanford.purl'`)
 
 Done.
