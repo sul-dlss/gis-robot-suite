@@ -41,7 +41,7 @@ GEM
     capistrano-one_time_key (0.1.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.91.0)
+    cocina-models (0.91.1)
       activesupport
       deprecation
       dry-struct (~> 1.0)
