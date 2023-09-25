@@ -77,7 +77,7 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NamedSubject:
   Exclude:
     - 'spec/robots/dor_repo/gis_assembly/generate_mods_spec.rb'
-    - 'spec/unit/gazetteer_spec.rb'
+    - 'spec/gis_robot_suite/gazetteer_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
