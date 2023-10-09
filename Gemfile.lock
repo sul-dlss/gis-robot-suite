@@ -1,16 +1,21 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.1.4)
-      sidekiq (>= 7.1.0, < 8)
+    sidekiq-pro (7.1.5)
+      sidekiq (>= 7.1.5, < 8)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.8)
+    activesupport (7.1.0)
+      base64
+      bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
+      mutex_m
       tzinfo (~> 2.0)
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
@@ -23,6 +28,7 @@ GEM
     ast (2.4.2)
     attr_extras (7.1.0)
     base64 (0.1.1)
+    bigdecimal (3.1.4)
     builder (3.2.4)
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
@@ -89,6 +95,8 @@ GEM
       faraday-retry (~> 2.0)
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
+    drb (2.1.1)
+      ruby2_keywords
     druid-tools (3.0.0)
     dry-configurable (1.1.0)
       dry-core (~> 1.0, < 2)
@@ -139,7 +147,7 @@ GEM
     faraday-retry (2.2.0)
       faraday (~> 2.0)
     fastimage (2.2.7)
-    geoserver-publish (0.6.0)
+    geoserver-publish (0.7.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
     honeybadger (5.2.1)
@@ -163,8 +171,8 @@ GEM
     method_source (1.0.0)
     mime-types (3.5.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2023.0808)
-    mini_exiftool (2.10.2)
+    mime-types-data (3.2023.1003)
+    mini_exiftool (2.10.4)
     mini_portile2 (2.8.4)
     minitest (5.20.0)
     mods (3.0.3)
@@ -173,6 +181,7 @@ GEM
       nokogiri (>= 1.6.6)
       nom-xml (~> 1.0)
     multi_json (1.15.0)
+    mutex_m (0.1.2)
     net-scp (4.0.0)
       net-ssh (>= 2.6.5, < 8.0.0)
     net-ssh (7.2.0)
@@ -189,7 +198,7 @@ GEM
     openapi_parser (1.0.0)
     optimist (3.1.0)
     parallel (1.23.0)
-    parser (3.2.2.3)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     patience_diff (1.2.0)
@@ -251,7 +260,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     scanf (1.0.0)
-    sidekiq (7.1.4)
+    sidekiq (7.1.5)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
