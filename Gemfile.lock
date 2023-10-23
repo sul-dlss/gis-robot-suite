@@ -1,7 +1,7 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.1.5)
+    sidekiq-pro (7.1.6)
       sidekiq (>= 7.1.5, < 8)
 
 GEM
@@ -33,7 +33,7 @@ GEM
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
-    capistrano (3.17.3)
+    capistrano (3.18.0)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -47,7 +47,7 @@ GEM
     capistrano-one_time_key (0.1.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.91.2)
+    cocina-models (0.91.4)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -81,7 +81,7 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (13.0.1)
+    dor-services-client (13.1.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.91.0)
       deprecation
@@ -173,7 +173,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2023.1003)
     mini_exiftool (2.10.4)
-    mini_portile2 (2.8.4)
+    mini_portile2 (2.8.5)
     minitest (5.20.0)
     mods (3.0.3)
       edtf (~> 3.0)
@@ -211,7 +211,7 @@ GEM
     rack (3.0.8)
     rainbow (3.1.1)
     rake (13.0.6)
-    redis-client (0.17.0)
+    redis-client (0.17.1)
       connection_pool
     regexp_parser (2.8.2)
     rexml (3.2.6)
@@ -282,7 +282,7 @@ GEM
       attr_extras (>= 6.2.4)
       diff-lcs
       patience_diff
-    thor (1.2.2)
+    thor (1.3.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
