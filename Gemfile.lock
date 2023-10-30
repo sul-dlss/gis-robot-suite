@@ -81,7 +81,7 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (13.1.0)
+    dor-services-client (13.1.1)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.91.0)
       deprecation
@@ -150,7 +150,7 @@ GEM
     geoserver-publish (0.7.0)
       faraday (~> 2.2)
     hashdiff (1.0.1)
-    honeybadger (5.2.1)
+    honeybadger (5.3.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -175,7 +175,7 @@ GEM
     mini_exiftool (2.10.4)
     mini_portile2 (2.8.5)
     minitest (5.20.0)
-    mods (3.0.3)
+    mods (3.0.4)
       edtf (~> 3.0)
       iso-639
       nokogiri (>= 1.6.6)
@@ -210,8 +210,8 @@ GEM
     racc (1.7.1)
     rack (3.0.8)
     rainbow (3.1.1)
-    rake (13.0.6)
-    redis-client (0.17.1)
+    rake (13.1.0)
+    redis-client (0.18.0)
       connection_pool
     regexp_parser (2.8.2)
     rexml (3.2.6)
@@ -235,8 +235,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.3.0)
       rexml
-    rubocop (1.57.1)
-      base64 (~> 0.1.1)
+    rubocop (1.57.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -247,14 +246,14 @@ GEM
       rubocop-ast (>= 1.28.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.29.0)
+    rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
     rubocop-capybara (2.19.0)
       rubocop (~> 1.41)
     rubocop-factory_bot (2.24.0)
       rubocop (~> 1.33)
-    rubocop-rspec (2.24.1)
-      rubocop (~> 1.33)
+    rubocop-rspec (2.25.0)
+      rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
@@ -275,9 +274,9 @@ GEM
     sshkit (1.21.5)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stanford-mods (3.3.6)
+    stanford-mods (3.3.7)
       activesupport
-      mods (~> 3.0, >= 3.0.3)
+      mods (~> 3.0, >= 3.0.4)
     super_diff (0.10.0)
       attr_extras (>= 6.2.4)
       diff-lcs
