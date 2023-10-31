@@ -26,6 +26,8 @@ module Robots
           tmpdir = extract_data_from_zip(zipfn, Settings.geohydra.tmpdir)
           raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
+          logger.info "extract-boundingbox: #{bare_druid} tmpdir status for #{tmpdir} is #{File.directory?(tmpdir)}"
+
           begin
             ulx, uly, lrx, lry = determine_extent(tmpdir)
 
@@ -225,6 +227,8 @@ module Robots
         # @param [String] datadir directory that holds data files
         # @return [Array] ulx uly lrx lry for the bounding box
         def determine_extent(datadir)
+          logger.info "extract-boundingbox: #{bare_druid} determine_extent datadir: #{datadir} status is #{File.directory?(datadir)}"
+
           Dir.chdir(datadir) do
             shpfn = Dir.glob('*.shp').first
             if shpfn.nil?
