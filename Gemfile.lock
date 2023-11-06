@@ -1,8 +1,8 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.1.6)
-      sidekiq (>= 7.1.5, < 8)
+    sidekiq-pro (7.2.0)
+      sidekiq (>= 7.2.0, < 8)
 
 GEM
   remote: https://rubygems.org/
@@ -208,7 +208,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.3)
-    racc (1.7.2)
+    racc (1.7.3)
     rack (3.0.8)
     rainbow (3.1.1)
     rake (13.1.0)
@@ -260,7 +260,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     scanf (1.0.0)
-    sidekiq (7.1.6)
+    sidekiq (7.2.0)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
