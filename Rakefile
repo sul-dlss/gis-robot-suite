@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rake'
-require 'resque/pool/tasks'
 
 # Import external rake tasks
 Dir.glob('lib/tasks/*.rake').each { |r| import r }
@@ -15,8 +14,6 @@ desc 'Load complete environment into rake process'
 task :environment do
   require_relative 'config/boot'
 end
-
-task 'resque:setup' => :environment
 
 begin
   require 'rspec/core/rake_task'
