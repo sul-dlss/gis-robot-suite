@@ -29,7 +29,6 @@ GEM
     attr_extras (7.1.0)
     base64 (0.2.0)
     bigdecimal (3.1.5)
-    builder (3.2.4)
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
@@ -217,9 +216,6 @@ GEM
       connection_pool
     regexp_parser (2.8.3)
     rexml (3.2.6)
-    rsolr (2.5.0)
-      builder (>= 2.1.2)
-      faraday (>= 0.9, < 3, != 2.0.0)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
       rspec-expectations (~> 3.12.0)
@@ -314,7 +310,6 @@ DEPENDENCIES
   lyber-core (~> 7.1)
   pry (~> 0.10)
   rake (~> 13.0)
-  rsolr
   rspec
   rspec_junit_formatter
   rubocop
