@@ -19,9 +19,7 @@ These robots require several dependencies needed to perform the GIS workflow ste
 `gisAssemblyWF`
 ---------------
 
-* `register-druid` :: Ensure proper registration of druid, source ID, and label
 * `author-metadata` :: Author metadata using ArcCatalog
-* `approve-metadata` :: Approve metadata quality and release for workflow (manual step)
 * `extract-thumbnail` :: Extract thumbnail preview from ArcCatalog metadata
 * `extract-iso19139` :: Transform ISO 19139 metadata from ArcCatalog metadata
 * `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
@@ -29,7 +27,6 @@ These robots require several dependencies needed to perform the GIS workflow ste
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `finish-metadata` :: Finalize the metadata preparation (validity check)
 * `wrangle-data` :: Wrangle the data into the digital work (manual step)
-* `approve-data` :: Approve data quality for digital work and release for workflow (manual step)
 * `package-data` :: Package the digital work
 * `normalize-data` :: Reproject the data into common SRS projection and/or file format
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
@@ -37,8 +34,6 @@ These robots require several dependencies needed to perform the GIS workflow ste
 * `generate-content-metadata` :: Generate contentMetadata manifest
 * `load-geo-metadata` :: Accession geoMetadata xml into SDR
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
-* `start-assembly-workflow` :: Kickstart the core assembly workflow at assemblyWF (manual step)
-* `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF (manual step)
 
 `gisDeliveryWF`
 ---------------
@@ -47,7 +42,6 @@ These robots require several dependencies needed to perform the GIS workflow ste
 * `load-raster` :: Load raster into GeoTIFF data store
 * `load-geoserver` :: Load layers into GeoServer
 * `reset-geowebcache` :: Reset GeoWebCache for the layer
-* `finish-gis-delivery-workflow` :: Finalize delivery workflow for the object (validity check)
 
 Data Wrangling
 ==============
