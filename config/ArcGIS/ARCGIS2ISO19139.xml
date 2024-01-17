@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<translator name="ARCGIS to ISO19139" xslt="Transforms\ArcGIS2ISO19139.xsl" logLevel="error" stopOnErrors="no">
+	<!-- empty -->
+</translator>

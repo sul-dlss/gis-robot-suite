@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<translator name="ESRI_ISO to ISO 19139" xslt="Transforms\ESRI-ISO2em.xsl" logLevel="error" stopOnErrors="no">
+	<import href="Rules\default_model.txt"/>
+	<import href="Rules\ESRI-ISO_model.txt"/>
+	<import href="Rules\ESRI-ISO_CodelistCatalog.xml" type="CodelistCatalogue" base="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml"/>
+	<import href="Rules\ESRI-ISO_CodelistCatalog_Countries.xml" type="CodelistCatalogue" base="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml"/>
+	<import href="Rules\ESRI-ISO_CodelistCatalog_Languages.xml" type="CodelistCatalogue" base="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml"/>
+	<import href="Rules\ESRI-ISO_CodelistCatalog_UCUM.xml" type="CodelistCatalogue" base="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml"/>
+	<validate href="Rules\ISO19139_min_schema.txt"/> 
+	<validate href="Rules\ESRI-ISO_schema.txt"/>
+	<template href="Templates\ISO19139_template.xml#MD_Metadata"/>
+</translator>

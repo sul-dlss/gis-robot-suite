@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NAP_CodelistCatalogue 
+  xmlns="http://www.isotc211.org/2005/gmx" 
+  xmlns:gco="http://www.isotc211.org/2005/gco" 
+  xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink ../../xlink/xlinks.xsd">
+	<!--=====Catalogue description=====-->
+	<name>
+		<gco:CharacterString>napCodeLists</gco:CharacterString>
+	</name>
+	<scope>
+		<gco:CharacterString>Codelists for description of metadata documents compliant with the North American Geospatial Metadata Profile of ISO 19115</gco:CharacterString>
+	</scope>
+	<fieldOfApplication>
+		<gco:CharacterString>GMX (and imported) namespace</gco:CharacterString>
+	</fieldOfApplication>
+	<versionNumber>
+		<gco:CharacterString>1.0</gco:CharacterString>
+	</versionNumber>
+	<versionDate>
+		<gco:Date>2009-10-28</gco:Date>
+	</versionDate>
+	<!--============================================================================-->
+	<!--============================================================================-->
+	<!--============================= Codelists =======================================-->
+	<!--=== CI_DateTypeCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="CI_DateTypeCode">
+			<gml:description>identification of when a given event occurred</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">CI_DateTypeCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_DateTypeCode_notAvailable">
+					<gml:description>date identifies when the resource became unavailable</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">notAvailable</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">004</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_DateTypeCode_inForce">
+					<gml:description>date identifies when the resource became in force</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">inForce</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">005</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_DateTypeCode_adopted">
+					<gml:description>date identifies when the resource was adopted</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">adopted</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_DateTypeCode_deprecated">
+					<gml:description>date identifies when the resource was disapproved</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">deprecated</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_DateTypeCode_superseded">
+					<gml:description>date identifies when the resource was replaced by another resource</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">superseded</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">008</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== CI_OnLineFunctionCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="CI_OnLineFunctionCode">
+			<gml:description>function performed by the resource</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">CI_OnLineFunctionCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_upload">
+					<gml:description>online instructions for transferring data or file from a local storage device or system to another (e.g. mainframe or remote computer) via network</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">upload</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_webService">
+					<gml:description>online instructions for the connection to a Web service (e.g. Web Services Description language file) providing an on-line geographic service other than a Web map service</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">webService</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_emailService">
+					<gml:description>online instructions for the connection to an email service providing geographic services from emails</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">emailService</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">008</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_browsing">
+					<gml:description>online interface for exploring and seeking information about the resource from a Web browser</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">browsing</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">009</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_fileAccess">
+					<gml:description>direct retrieval of a file from a remote system, typically through the user of http or ftp protocol (or their secure variants)</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">fileAccess</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">010</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_OnLineFunctionCode_webMapService">
+					<gml:description>online instructions for the connection to a Web-based map request service, which may return custom georeferenced map images, streamed features, raster data, or surface data to a mapping client</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">webMapService</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">011</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== CI_PresentationFormCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="CI_PresentationFormCode">
+			<gml:description>mode in which the data is represented</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">CI_PresentationFormCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_audioDigital">
+					<gml:description>digital audio recording</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">audioDigital</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">015</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_audioHardcopy">
+					<gml:description>audio recording delivered by analog media, such as magnetic tape</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">audioHardcopy</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">016</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_multimediaDigital">
+					<gml:description>information representation using simultaneously various digital modes for text, sound, image</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">multimediaDigital</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">017</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_multimediaHardcopy">
+					<gml:description>information representation using simultaneously various analog modes for text, sound, image</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">multimediaHardcopy</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">018</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_diagramDigital">
+					<gml:description>information represented graphically by charts such as pie chart, bar chart, and other type of diagrams recorded in digital format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">diagramDigital</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">019</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_PresentationFormCode_diagramHardcopy">
+					<gml:description>information represented graphically by charts such as pie chart, bar chart, and other type of diagrams printed on paper, photographic material, or other media</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">diagramHardcopy</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">020</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== CI_RoleCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="CI_RoleCode">
+			<gml:description>function performed by the responsible party</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">CI_RoleCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_RoleCode_collaborator">
+					<gml:description>party who contributed to the resource other htan the principal investigator</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">collaborator</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">012</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_RoleCode_editor">
+					<gml:description>party who reviewed or modified the resource to improve the content</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">editor</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">013</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_RoleCode_mediator">
+					<gml:description>a class of entity that mediates access to the resource and for whom the resource is intended or useful</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">mediator</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">014</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CI_RoleCode_rightsHolder">
+					<gml:description>a person or organization owning or managing rights over the resource</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">rightsHolder</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">015</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== DS_AssociationTypeCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="DS_AssociationTypeCode">
+			<gml:description>justification for the correlation of two datasets</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">DS_AssociationTypeCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="DS_AssociationTypeCode_isComposedOf">
+					<gml:description>reference to datasets that are parts of this data set</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">isComposedOf</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_CellGeometryCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_CellGeometryCode">
+			<gml:description>code indicating whether grid data is point or area</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_CellGeometryCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_CellGeometryCode_voxel">
+					<gml:description>each cell represents a volume</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">voxel</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">003</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_ClassificationCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_ClassificationCode">
+			<gml:description>name of the handling restrictions on the dataset</gml:description>
+			<gml:identifier codeSpace="ISO19115/NAP1.1">MD_ClassificationCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_ClassificationCode_sensitive">
+					<gml:description>highly classified information or involving discretionary authority over important policy matters</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">sensitive</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_ClassificationCode_forOfficialUseOnly">
+					<gml:description>for organization internal specific use</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">forOfficialUseOnly</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_KeywordTypeCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_KeywordTypeCode">
+			<gml:description>methods used to group similar keywords</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_KeywordTypeCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_KeywordTypeCode_product">
+					<gml:description>keyword identifies a type of product</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">product</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_KeywordTypeCode_subTopicCategory">
+					<gml:description>refinement of a topic category for the purpose of geographic data classification</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">subTopicCategory</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_MaintenanceFrequencyCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_MaintenanceFrequencyCode">
+			<gml:description>frequency with which modifications and deletions are made to the data after it is first produced</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_MaintenanceFrequencyCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MaintenanceFrequencyCode_semimonthly">
+					<gml:description>data is updated twice a month</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">semimonthly</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">013</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_MediumFormatCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_MediumFormatCode">
+			<gml:description>method used to write to the medium</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_MediumFormatCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumFormatCode_UDF">
+					<gml:description>Universal Disk Format file system for storing files on optical media</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">UDF</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_MediumNameCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_MediumNameCode">
+			<gml:description>name of the medium</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_MediumNameCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyDiazoPolyester08">
+					<gml:description>diazo on 0.08mm polyester</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyDiazoPolyester08</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">019</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyCardMicrofilm">
+					<gml:description>microfilm card</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyCardMicrofilm</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">020</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyMicrofilm240">
+					<gml:description>microfilm 240mm</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyMicrofilm240</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">021</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyMicrofilm35">
+					<gml:description>microfilm 35mm</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyMicrofilm35</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">022</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyMicrofilm70">
+					<gml:description>microfilm 70mm</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyMicrofilm70</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">023</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyMicrofilmGeneral">
+					<gml:description>microfilm general</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyMicrofilmGeneral</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">024</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyMicrofilmMicrofiche">
+					<gml:description>microfiche</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyMicrofilmMicrofiche</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">025</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyNegativePhoto">
+					<gml:description>negative photography</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyNegativePhoto</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">026</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyPaper">
+					<gml:description>printing on paper</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyPaper</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">027</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyDiazo">
+					<gml:description>diazo printing on paper</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyDiazo</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">028</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyPhoto">
+					<gml:description>printing on photographic paper</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyPhoto</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">029</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardcopyTracedPaper">
+					<gml:description>drawing on paper</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardcopyTracedPaper</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">030</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_hardDisk">
+					<gml:description>mass storage temporarily plugged to a computer for massive data transmission</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">hardDisk</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">031</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_MediumNameCode_USBFlashDrive">
+					<gml:description>flash memory data storage devices integrated with a SUB (universal serial bus) interface</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">USBFlashDrive</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">032</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_ProgressCode===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_ProgressCode">
+			<gml:description>status of the dataset or progress of a review</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_ProgressCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_ProgressCode_proposed">
+					<gml:description>data about which parties have demonstrated interests but funding is not secured and partnerships are sought</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">proposed</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">008</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_RestrictionCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_RestrictionCode">
+			<gml:description>limitation(s) placed upon the access or use of the data</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_RestrictionCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_licenseUnrestricted">
+					<gml:description>formal permission not limited to use the resource</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">licenseUnrestricted</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">009</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_licenseEndUser">
+					<gml:description>formal permission to a person or an entity to use the resource and that may differ from the person that orders or purchases it</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">licenseEndUser</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">010</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_licenseDistributor">
+					<gml:description>formal permission to a person or an entity to commercialize or distribute the resource</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">licenseDistributor</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">011</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_privacy">
+					<gml:description>set of phenomena, either physical or metnal, that are private</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">privacy</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">012</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_statutory">
+					<gml:description>prescribed by law</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">statutory</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">013</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_confidential">
+					<gml:description>secret and reserved to a limited number of people that shall not make the content known</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">confidential</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">014</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_RestrictionCode_sensitivity">
+					<gml:description>data of which divulgation, alteration, lost or destruction may prevent or expose to risks a service or an organization and as such becomes particularly vulnerable concerned with highly classified government information or involving discretionary authority over important policy matters</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">sensitivity</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">015</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== MD_FileFormatCode ===-->
+	<codelistItem>
+		<CodeListDictionary gml:id="MD_FileFormatCode">
+			<gml:description>code identifying a file format</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">MD_FileFormatCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_bil">
+					<gml:description>BIL (band interleaved by line) format line data are arranged in the order of band number and repeated with respect to line number</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">bil</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">001</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_bmp">
+					<gml:description>bit mapped picture/BitMap</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">bmp</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">002</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_bsq">
+					<gml:description>BSQ format (band sequential) image data (pixel number and line number) of each band are separately arranged</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">bsq</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">003</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_bzip2">
+					<gml:description>bzip2 compressing format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">bzip2</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">004</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_cdr">
+					<gml:description>corel file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">cdr</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">005</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_cgm">
+					<gml:description>Computer Graphics Metafile format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">cgm</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">006</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_cover">
+					<gml:description>Arc/Info coverage format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">cover</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">007</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_csv">
+					<gml:description>comma separated value</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">csv</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">008</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_dbf">
+					<gml:description>dBase file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">dbf</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">009</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_dgn">
+					<gml:description>Microstation graphic file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">dgn</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">010</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_doc">
+					<gml:description>Microsoft Word file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">doc</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">011</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_dwg">
+					<gml:description>AutoCAD drawing format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">dwg</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">012</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_dxf">
+					<gml:description>AutoCAD data exchange format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">dxf</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">013</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_e00">
+					<gml:description>Arc/INFO data exchange format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">e00</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">014</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_ecw">
+					<gml:description>ERMapper compressed format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">ecw</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">015</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_eps">
+					<gml:description>encapsulated postscript file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">eps</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">016</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_ers">
+					<gml:description>ERMapper file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">ers</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">017</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_gdb">
+					<gml:description>ArcGIS geodatabase file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">gdb</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">018</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_geotiff">
+					<gml:description>georeference tagged interchange file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">geotiff</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">019</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_gif">
+					<gml:description>graphic interchange format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">gif</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">020</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_gml">
+					<gml:description>geography markup language</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">gml</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">021</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_grid">
+					<gml:description>regular data grids are rectangular, not sparse, matrices that contain column and row</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">grid</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">022</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_gzip">
+					<gml:description>GNU zip compression utility designed to be a replacement for compress</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">gzip</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">023</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_html">
+					<gml:description>hypertext markup language</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">html</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">024</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_jpg">
+					<gml:description>joint photographic experts group format (JPG)</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">jpg</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">025</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_mdb">
+					<gml:description>microsoft access database file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">mdb</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">026</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_mif">
+					<gml:description>MapInfo interchange format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">mif</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">027</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_pbm">
+					<gml:description>portable bitmap format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">pbm</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">028</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_pdf">
+					<gml:description>portable document format (adobe)</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">pdf</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">029</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_png">
+					<gml:description>portable network graphics bitmap</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">png</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">030</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_ps">
+					<gml:description>postscript format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">ps</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">031</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_rtf">
+					<gml:description>rich text format file</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">rtf</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">032</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_sdc">
+					<gml:description>smart data compression format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">sdc</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">033</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_shp">
+					<gml:description>ArcView shape file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">shp</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">034</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_sid">
+					<gml:description>multi-resolution seamless image database file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">sid</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">035</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_svg">
+					<gml:description>scalable vector graphic file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">svg</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">036</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_tab">
+					<gml:description>MapInfo file format (tab file)</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">tab</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">037</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_tar">
+					<gml:description>tape archive file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">tar</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">038</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_tiff">
+					<gml:description>tag image file format (TIFF) bitmap</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">tiff</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">039</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_txt">
+					<gml:description>text file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">txt</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">040</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_wpd">
+					<gml:description>wordperfect file format from corel</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">wpd</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">041</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_xhtml">
+					<gml:description>Extensible HyperText Markup Language</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">xhtml</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">042</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_xls">
+					<gml:description>Microsoft Excel file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">xls</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">043</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_xml">
+					<gml:description>extensible markup language</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">xml</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">044</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_xwd">
+					<gml:description>dump X Window file format</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">xwd</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">045</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="MD_FileFormatCode_zip">
+					<gml:description>archive file format (zip)</gml:description>
+					<gml:identifier codeSpace="ISOTC211/19115">zip</gml:identifier>
+					<gml:name codeSpace="esriDomainCode">045</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+	<!--=== EOF ===-->
+</NAP_CodelistCatalogue>

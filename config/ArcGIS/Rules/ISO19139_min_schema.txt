@@ -1,0 +1,222 @@
+#nsdecl em http://www.esri.com/metadata/translator/instance/
+#nsdecl es http://www.esri.com/metadata/translator/schema/
+#nsdecl v http://www.esri.com/metadata/translator/var/
+#nsdecl ec http://www.esri.com/metadata/translator/ctrl/
+#nsdecl gmx http://www.isotc211.org/2005/gmx
+#nsdecl gmxRes http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#
+
+
+# ISO 19115 MINIMUM RULES
+
+# this schema contains the rules for presence of the minimum mandatory and conditional elements and their data types
+#   rules to test the mandatory and conditional elements in optional classes and their data types are handled in other schemas
+
+
+#################################################################
+# MD_Metadata
+#   mandatory: contact (CI_ResponsibleParty), dateStamp
+#   conditional: language, characterSet, hierarchyLevel, hierarchyLevelName, parentIdentifier
+#     conditions:
+#       language - documented if not defined by encoding standard
+#       characterSet - documented if ISO 10646-1 not used and not defined by encoding standard
+#       hierarchyLevel - documented if != dataset
+#       hierarchyLevelName - documented if != dataset
+#       parentIdentifier - documented if hierarchy of a higher level exists
+#     default values: characterSet "utf8", hierarchyLevel "dataset"
+#   optional: fileIdentifier, metadataStandardName, metadataStandardVersion, dataSetURI, locale (PT_Locale)
+#   - may be only a maximum of one of all elements except hierarchyLevel, hierarchyLevelName, contact, locale
+#
+#   mandatory relationships: identificationInfo (MD_Identification)
+#   optional relationships: metadataConstraints (MD_Constraints), spatialRepresentationInfo (MD_SpatialRepresentation), 
+#      referenceSystemInfo (MD_ReferenceSystem), dataQualityInfo (DQ_DataQuality), distributionInfo (MD_Distribution),
+#      metadataMaintenance (MD_MaintenanceInformation), contentInfo (MD_ContentInformation),
+#      portrayalCatalogueInfo (MD_PortrayalCatalogueReference), applicationSchemaInfo (MD_ApplicationSchemaInformation),
+#      metadataExtensionInfo (MD_MetadataExtensionInformation)
+#   - note cardinality restriction that there may be only one instance of:
+#       metadataMaintenance, distributionInfo
+#################################################################
+
+#################################################################
+# CI_ResponsibleParty
+#   mandatory: role
+#   conditional: individualName, organisationName, positionName
+#     count (individualName + organisationName + positionName) >0
+#   optional: contactInfo (CI_Contact)
+#   - may be no more than one each of any element
+#
+# for mandatory MD_Metadata contact - em:contact 
+#   note MD_MaintenanceInformation contact has same element in translator model
+#   this test has to be written explicitly to avoid problems
+#################################################################
+
+# the metadata was retrieved
+em:Metadata(v:_)
+em:Resource(v:_)
+
+# metadata contact, with mandatory and conditional contact rules
+em:Metadata(v:a) --> em:contact(v:a, v:b), em:CI_ResponsibleParty(v:b)
+
+# metadata date
+em:Metadata(v:a) --> em:dateStamp(v:a, v:b), es:date(v:b)
+
+# metadata language - mandatory if not documented by the encoding standard
+#   - default XML encoding is Unicode, which can support any language, so not sure how this rule can be asserted
+#   - if language not provided, default language specified in ESRI-ISO model will be used
+em:Resource(v:a) --> em:language(v:a, v:b), es:nonEmptyString(v:b) ; em:defaultLanguage(v:_)
+
+# metadata characterSet - mandatory if ISO 10646-1 (Unicode) not used and not defined by the encoding standard
+#   - XML rules are UTF-8 and UTF-16 are default encodings, parsers detect which and use the appropriate ones
+#   - if another encoding is used and it isn't specified in the XML declaration, data will be handled incorrectly regardless of the characterSet value
+#   - 19115 specifies utf8 as the default characterSet encoding, provide this value if one doesn't exist
+#   - should check XML document's encoding first, and only provide default utf8 code if appropriate - can't do this
+#em:Resource(v:a) --> em:characterSet(v:a, v:_)
+
+# metadata hierararchyLevel - must be documented if hierarchyLevel is not "dataset"
+#   - no way for translator to know if resource is a dataset if the information is not provided
+#   - 19115 defines "dataset" as the default value for hierarchyLevel
+#   - test the metadata with the assumption that the metadata is at the "dataset" level if hierarchyLevel is not provided
+#   - include default dataset value if no hierarchyLevel is present to explicitly declare how translator is handling the resource
+em:Resource(v:a) --> em:hierarchyLevel(v:a, v:b), em:lookupCodeName(v:b, gmxRes:MD_ScopeCode) ; es:not(em:hierarchyLevel(v:a, v:_)), em:defaultHierarchyLevel(v:_)
+
+# check that hierarchy level is "service" when service identification information is provided
+#   - this requirement isn't specified anywhere, but it is a logical test to add
+#   - if specified other validation rules relying on hierarchyLevel information will operate correctly
+#em:Resource(v:a) --> es:not(em:serviceIdentificationInfo(v:a, v:_)) ; em:hierarchyLevel(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_ScopeCode, "service")
+em:Resource(v:a) --> es:not(em:ServiceInfo(v:a)) ; em:hierarchyLevel(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_ScopeCode, "service") ; es:not(em:hierarchyLevel(v:a, v:_)), em:svDefaultHierarchyLevel(v:_)
+
+# metadata hierarchyLevelName - must be documented if hierarchyLevel is not "dataset"
+#   - resource can either be a dataset or not, and if not a hierarchyLevelName must be present 
+#em:Resource(v:a) --> em:DatasetOrService(v:a) ; em:hierarchyLevelName(v:a, v:b), es:nonEmptyString(v:b) 
+em:Resource(v:a) --> em:Dataset(v:a) ; em:ServiceInfo(v:a) ; em:hierarchyLevelName(v:a, v:b), es:nonEmptyString(v:b) 
+
+# metadata parentIdentifier - can't check if hierarchy of a higher level exists
+#   - could assume a higher level exists if the metadata is lower than dataset level, but would not catch levels above dataset that exist
+
+# mandatory identificationInfo relationship to describe the resource 
+em:Resource(v:a) --> em:identificationInfo(v:a, v:_) ; em:serviceIdentificationInfo(v:a, v:_)
+
+
+
+#################################################################
+# MD_Identification
+#   mandatory: citation (CI_Citation), abstract
+#   optional: purpose, credit, status, pointOfContact (CI_ResponsibleParty)
+#   - may be only one each of citation, abstract, and purpose
+#
+#   optional relationships: aggregationInfo (MD_AggregateInformation), graphicoverview (MD_BrowseGraphic), 
+#      resourceSpecificUsage (MD_Usage), resourceFormat (MD_Format), resourceConstraints (MD_Constraints), 
+#      descriptiveKeywords (MD_Keywords), resourceMaintenance (MD_MaintenanceInformation)
+#
+# roles with the data type MD_Identification
+#   MD_Metadata identificationInfo (MD_DataIdentification subclass)
+#   MD_Metadata serviceIdentificationInfo (SV_ServiceIdentification subclass)
+#################################################################
+
+#################################################################
+# CI_Citation
+#   mandatory: title, date (CI_Date)
+#   optional: alternateTitle, edition, editionDate, identifier (MD_Identifier), 
+#     citedResponsibleParty (CI_ResponsibleParty), presentationForm, series (CI_Series), 
+#     otherCitationDetails, collectiveTitle, ISBN, ISSN
+#   - may be no more than one each of title, edition, editionDate, series, othercitationDetails,
+#       collectiveTitle, ISBN, ISSN
+#
+# for mandatory MD_Identification citation - em:citation
+#################################################################
+
+#################################################################
+# CI_Date (em:date in ISO19139 translator)
+#   mandatory: date, dateType 
+#   - may be no more than one each of any element
+#   - 3 date types are represented as different elements in translator model for 
+#      CI_Citation instead of separate
+#   - test these as part of CI_Citation instead testing CI_Date separately
+#
+# elements with the data type CI_Date
+#   CI_Citation date 
+#################################################################
+
+# resource citation, with mandatory and conditional citation rules
+em:identificationInfo(v:_, v:a) --> em:citation(v:a, v:b), em:CI_Citation(v:b)
+em:serviceIdentificationInfo(v:_, v:a) --> em:citation(v:a, v:b), em:CI_Citation(v:b)
+
+# resource abstract
+em:identificationInfo(v:_, v:a) --> em:abstract(v:a, v:b), es:nonEmptyString(v:b)
+em:serviceIdentificationInfo(v:_, v:a) --> em:abstract(v:a, v:b), es:nonEmptyString(v:b)
+
+
+#################################################################
+# MD_DataIdentification
+#   mandatory: language
+#   conditional: characterSet, topicCategory, extent (EX_Extent)
+#     characterSet - documented if ISO 10646-1 not used 
+#     topicCategory - required if MD_Metadata.hierarchyLevel = dataset or series
+#     extent - if MD_Metadata.hierarchyLevel = dataset, count of extent.geographicElement.EX_GeographicBoundingBox + count of extent.geographicElement.EX_GeographicDescription >= 1 
+#   optional: spatialRepresentationType, spatialResolution (MD_Resolution), environmentDescription, supplementalInformation
+#################################################################
+
+# dataset language is mandatory - if a language hasn't been defined, use the default language defined in model (en)
+em:identificationInfo(v:_, v:a) --> em:language(v:a, v:b), es:nonEmptyString(v:b) ; em:defaultLanguage(v:_)
+
+# dataset characterSet - mandatory if ISO 10646-1 (unicode) not used 
+#   - handle this the same as for MD_Metadata characterSet
+#em:identificationInfo(v:_, v:a) --> em:characterSet(v:b, v:_)
+
+# dataset extent - must be documented if hierarchyLevel is "dataset"
+#   em:Dataset test ensures this rule not tested for services
+em:Resource(v:a) --> es:not(em:Dataset(v:a)) ; em:identificationInfo(v:a, v:b), em:extent(v:b, v:c), em:boundingBox(v:c, v:d), em:EX_GeographicBoundingBox(v:d) ; em:identificationInfo(v:a, v:b), em:extent (v:b, v:c), em:geographicDescription(v:c, v:e), em:EX_GeographicDescription (v:e) ; em:identificationInfo(v:a, v:b), em:geoBox(v:b, v:c), em:EX_GeographicBoundingBox(v:c)
+
+# dataset topicCategory - mandatory if hierarchyLevel = "dataset"
+#   em:Dataset test ensures this rule not tested for services
+em:Resource(v:a) --> es:not(em:Dataset(v:a)) ; em:identificationInfo(v:a, v:b), em:topicCategory(v:b, v:c), em:lookupCodeName(v:c, gmxRes:MD_TopicCategoryCode)
+
+
+#################################################################
+# SV_ServiceIdentification
+#   mandatory: serviceType, couplingType, containsOperations (SV_OperationMetadata)
+#   conditional: operatesOn (MD_DataIdentification), coupledResource (SV_CoupledResource)
+#     operatesOn - if couplingType = mixed or tight, the tightly-coupled resource must be documented 
+#       [see table C.6, Data dictionary for SV_CouplingType]
+#     coupledResource - if couplingType = mixed or tight, at least one operation must be associated with the tightly coupled resource and that association must be documented
+#       [see coupledResource description in table C.1, Data dictionary for SV_ServiceIdentification, and description of identifier 
+#       in table C.5, Data dictionary for SV_CoupledResource]
+#   optional: serviceTypeVersion, accessProperties (MD_StandardOrderProcess), extent (EX_Extent)
+#################################################################
+
+#################################################################
+# SV_CoupledResource
+#   mandatory: identifier, operationName
+#################################################################
+
+# service serviceType is mandatory
+em:serviceIdentificationInfo(v:_, v:a) --> em:serviceType(v:a, v:b), es:nonEmptyString(v:b)
+
+# service couplingType is mandatory
+em:serviceIdentificationInfo(v:_, v:a) --> em:couplingType(v:a, v:b), em:lookupCodeName(v:b, gmxRes:SV_CouplingType)
+
+# service containsOperations is mandatory
+em:serviceIdentificationInfo(v:_, v:a) --> em:containsOperations(v:a, v:_)
+
+# service operatesOn - mandatory if service is tightly coupled to a resource (either mixed or tight couplingType)
+#   rules for MD_DataIdentification defined in model for use here without conditional extent and topic category requirement, since no way to know if tightly coupled resource is a "dataset" or not
+#   MD_DataIdentification conditions refer to metadata hierarchy level, which will be used to describe the service in this case, and therefore should not be "dataset", therefore conditional elements won't apply
+#   there is no guarantee the service is tightly coupled to a geographic dataset, therefore can't require the conditional elements
+#   it is the responsibility of the service metadata author to provide extent and topic category information for the tightly-coupled resource if these are appropriate for the resource
+em:serviceIdentificationInfo(v:_, v:a) --> es:not(em:SvTightlyCoupled(v:a)) ; em:operatesOn(v:a, v:b), em:MD_DataIdentForServiceMD(v:b)
+
+# service coupledResource - mandatory if service is tightly coupled to a resource (either mixed or tight couplingType)
+#   tested all on one line to ensure minimum schema only tests mandatory occurrances of this element
+em:serviceIdentificationInfo(v:_, v:a) --> es:not(em:SvTightlyCoupled(v:a)) ; em:coupledResource(v:a, v:b), em:operationName(v:b, v:c), es:nonEmptyString(v:c), em:resourceIdentifier(v:b, v:d), es:nonEmptyString(v:d) 
+
+
+#################################################################
+# SV_OperationMetadata
+#   mandatory: operationName, DCP, connectPoint (CI_OnlineResource)
+#   optional: operationDescription, invocationName, parameters (SV_Parameter)
+#################################################################
+
+# service operation requires the operation name, DCP code, and connection point URL
+em:containsOperations(v:_, v:a) --> em:operationName(v:a, v:b), es:nonEmptyString(v:b)
+em:containsOperations(v:_, v:a) --> em:DCP(v:a, v:b), em:lookupCodeName(v:b, gmxRes:DCPList)
+em:containsOperations(v:_, v:a) --> em:connectPoint(v:a, v:b), em:linkage(v:b, v:c), es:nonEmptyString(v:c)
+

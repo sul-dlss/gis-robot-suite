@@ -1,0 +1,2238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CT_CodelistCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink ../../xlink/xlinks.xsd">
+	<name>
+		<gco:CharacterString>esriisoCodeLists</gco:CharacterString>
+	</name>
+	<scope>
+		<gco:CharacterString>Codelists for description of metadata datasets compliant with ISO/TC 211 19115:2003 and 19139</gco:CharacterString>
+	</scope>
+	<fieldOfApplication>
+		<gco:CharacterString>GMX (and imported) namespace</gco:CharacterString>
+	</fieldOfApplication>
+	<versionNumber>
+		<gco:CharacterString>1.0</gco:CharacterString>
+	</versionNumber>
+	<versionDate>
+		<gco:Date>2009-06-05</gco:Date>
+	</versionDate>
+	<codelistItem>
+		<CodeListDictionary gml:id="CountryCode">
+			<gml:description>Countries identified by ISO 3166-1</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">CountryCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AF">
+					<gml:identifier codeSpace="ISO3166-alpha2">AF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AFG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">004</gml:name>
+					<gml:name codeSpace="ISO3166-English">AFGHANISTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">AFGHANISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AX">
+					<gml:identifier codeSpace="ISO3166-alpha2">AX</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ALA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">248</gml:name>
+					<gml:name codeSpace="ISO3166-English">ÅLAND ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÅLAND, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AL">
+					<gml:identifier codeSpace="ISO3166-alpha2">AL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ALB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">008</gml:name>
+					<gml:name codeSpace="ISO3166-English">ALBANIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ALBANIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">DZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DZA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">012</gml:name>
+					<gml:name codeSpace="ISO3166-English">ALGERIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ALGÉRIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AS">
+					<gml:identifier codeSpace="ISO3166-alpha2">AS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ASM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">016</gml:name>
+					<gml:name codeSpace="ISO3166-English">AMERICAN SAMOA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAMOA AMÉRICAINES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AD">
+					<gml:identifier codeSpace="ISO3166-alpha2">AD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AND</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">020</gml:name>
+					<gml:name codeSpace="ISO3166-English">ANDORRA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANDORRE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AO">
+					<gml:identifier codeSpace="ISO3166-alpha2">AO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AGO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">024</gml:name>
+					<gml:name codeSpace="ISO3166-English">ANGOLA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANGOLA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AI">
+					<gml:identifier codeSpace="ISO3166-alpha2">AI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AIA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">660</gml:name>
+					<gml:name codeSpace="ISO3166-English">ANGUILLA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANGUILLA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AQ">
+					<gml:identifier codeSpace="ISO3166-alpha2">AQ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ATA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">010</gml:name>
+					<gml:name codeSpace="ISO3166-English">ANTARCTICA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANTARCTIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AG">
+					<gml:identifier codeSpace="ISO3166-alpha2">AG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ATG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">028</gml:name>
+					<gml:name codeSpace="ISO3166-English">ANTIGUA AND BARBUDA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANTIGUA-ET-BARBUDA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AR">
+					<gml:identifier codeSpace="ISO3166-alpha2">AR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ARG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">032</gml:name>
+					<gml:name codeSpace="ISO3166-English">ARGENTINA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ARGENTINE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AM">
+					<gml:identifier codeSpace="ISO3166-alpha2">AM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ARM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">051</gml:name>
+					<gml:name codeSpace="ISO3166-English">ARMENIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ARMÉNIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AW">
+					<gml:identifier codeSpace="ISO3166-alpha2">AW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ABW</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">533</gml:name>
+					<gml:name codeSpace="ISO3166-English">ARUBA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ARUBA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AU">
+					<gml:identifier codeSpace="ISO3166-alpha2">AU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AUS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">036</gml:name>
+					<gml:name codeSpace="ISO3166-English">AUSTRALIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">AUSTRALIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AT">
+					<gml:identifier codeSpace="ISO3166-alpha2">AT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AUT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">040</gml:name>
+					<gml:name codeSpace="ISO3166-English">AUSTRIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">AUTRICHE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">AZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">AZE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">031</gml:name>
+					<gml:name codeSpace="ISO3166-English">AZERBAIJAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">AZERBAÏDJAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BS">
+					<gml:identifier codeSpace="ISO3166-alpha2">BS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BHS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">044</gml:name>
+					<gml:name codeSpace="ISO3166-English">BAHAMAS</gml:name>
+					<gml:name codeSpace="ISO3166-French">BAHAMAS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BH">
+					<gml:identifier codeSpace="ISO3166-alpha2">BH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BHR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">048</gml:name>
+					<gml:name codeSpace="ISO3166-English">BAHRAIN</gml:name>
+					<gml:name codeSpace="ISO3166-French">BAHREÏN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BD">
+					<gml:identifier codeSpace="ISO3166-alpha2">BD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BGD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">050</gml:name>
+					<gml:name codeSpace="ISO3166-English">BANGLADESH</gml:name>
+					<gml:name codeSpace="ISO3166-French">BANGLADESH</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BB">
+					<gml:identifier codeSpace="ISO3166-alpha2">BB</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BRB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">052</gml:name>
+					<gml:name codeSpace="ISO3166-English">BARBADOS</gml:name>
+					<gml:name codeSpace="ISO3166-French">BARBADE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BY">
+					<gml:identifier codeSpace="ISO3166-alpha2">BY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BLR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">112</gml:name>
+					<gml:name codeSpace="ISO3166-English">BELARUS</gml:name>
+					<gml:name codeSpace="ISO3166-French">BÉLARUS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BE">
+					<gml:identifier codeSpace="ISO3166-alpha2">BE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BEL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">056</gml:name>
+					<gml:name codeSpace="ISO3166-English">BELGIUM</gml:name>
+					<gml:name codeSpace="ISO3166-French">BELGIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">BZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BLZ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">084</gml:name>
+					<gml:name codeSpace="ISO3166-English">BELIZE</gml:name>
+					<gml:name codeSpace="ISO3166-French">BELIZE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BJ">
+					<gml:identifier codeSpace="ISO3166-alpha2">BJ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BEN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">204</gml:name>
+					<gml:name codeSpace="ISO3166-English">BENIN</gml:name>
+					<gml:name codeSpace="ISO3166-French">BÉNIN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BM">
+					<gml:identifier codeSpace="ISO3166-alpha2">BM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BMU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">060</gml:name>
+					<gml:name codeSpace="ISO3166-English">BERMUDA</gml:name>
+					<gml:name codeSpace="ISO3166-French">BERMUDES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BT">
+					<gml:identifier codeSpace="ISO3166-alpha2">BT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BTN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">064</gml:name>
+					<gml:name codeSpace="ISO3166-English">BHUTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">BHOUTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BO">
+					<gml:identifier codeSpace="ISO3166-alpha2">BO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BOL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">068</gml:name>
+					<gml:name codeSpace="ISO3166-English">BOLIVIA, PLURINATIONAL STATE OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">BOLIVIE, l'ÉTAT PLURINATIONAL DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BA">
+					<gml:identifier codeSpace="ISO3166-alpha2">BA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BIH</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">070</gml:name>
+					<gml:name codeSpace="ISO3166-English">BOSNIA AND HERZEGOVINA</gml:name>
+					<gml:name codeSpace="ISO3166-French">BOSNIE-HERZÉGOVINE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BW">
+					<gml:identifier codeSpace="ISO3166-alpha2">BW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BWA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">072</gml:name>
+					<gml:name codeSpace="ISO3166-English">BOTSWANA</gml:name>
+					<gml:name codeSpace="ISO3166-French">BOTSWANA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BV">
+					<gml:identifier codeSpace="ISO3166-alpha2">BV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BVT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">074</gml:name>
+					<gml:name codeSpace="ISO3166-English">BOUVET ISLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">BOUVET, ÎLE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BR">
+					<gml:identifier codeSpace="ISO3166-alpha2">BR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BRA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">076</gml:name>
+					<gml:name codeSpace="ISO3166-English">BRAZIL</gml:name>
+					<gml:name codeSpace="ISO3166-French">BRÉSIL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IO">
+					<gml:identifier codeSpace="ISO3166-alpha2">IO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IOT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">086</gml:name>
+					<gml:name codeSpace="ISO3166-English">BRITISH INDIAN OCEAN TERRITORY</gml:name>
+					<gml:name codeSpace="ISO3166-French">OCÉAN INDIEN, TERRITOIRE BRITANNIQUE DE L'</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BN">
+					<gml:identifier codeSpace="ISO3166-alpha2">BN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BRN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">096</gml:name>
+					<gml:name codeSpace="ISO3166-English">BRUNEI DARUSSALAM</gml:name>
+					<gml:name codeSpace="ISO3166-French">BRUNÉI DARUSSALAM</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BG">
+					<gml:identifier codeSpace="ISO3166-alpha2">BG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BGR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">100</gml:name>
+					<gml:name codeSpace="ISO3166-English">BULGARIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">BULGARIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BF">
+					<gml:identifier codeSpace="ISO3166-alpha2">BF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BFA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">854</gml:name>
+					<gml:name codeSpace="ISO3166-English">BURKINA FASO</gml:name>
+					<gml:name codeSpace="ISO3166-French">BURKINA FASO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BI">
+					<gml:identifier codeSpace="ISO3166-alpha2">BI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BDI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">108</gml:name>
+					<gml:name codeSpace="ISO3166-English">BURUNDI</gml:name>
+					<gml:name codeSpace="ISO3166-French">BURUNDI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KH">
+					<gml:identifier codeSpace="ISO3166-alpha2">KH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KHM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">116</gml:name>
+					<gml:name codeSpace="ISO3166-English">CAMBODIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">CAMBODGE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CM">
+					<gml:identifier codeSpace="ISO3166-alpha2">CM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CMR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">120</gml:name>
+					<gml:name codeSpace="ISO3166-English">CAMEROON</gml:name>
+					<gml:name codeSpace="ISO3166-French">CAMEROUN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CA">
+					<gml:identifier codeSpace="ISO3166-alpha2">CA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CAN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">124</gml:name>
+					<gml:name codeSpace="ISO3166-English">CANADA</gml:name>
+					<gml:name codeSpace="ISO3166-French">CANADA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CV">
+					<gml:identifier codeSpace="ISO3166-alpha2">CV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CPV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">132</gml:name>
+					<gml:name codeSpace="ISO3166-English">CAPE VERDE</gml:name>
+					<gml:name codeSpace="ISO3166-French">CAP-VERT</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KY">
+					<gml:identifier codeSpace="ISO3166-alpha2">KY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CYM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">136</gml:name>
+					<gml:name codeSpace="ISO3166-English">CAYMAN ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">CAÏMANES, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CF">
+					<gml:identifier codeSpace="ISO3166-alpha2">CF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CAF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">140</gml:name>
+					<gml:name codeSpace="ISO3166-English">CENTRAL AFRICAN REPUBLIC</gml:name>
+					<gml:name codeSpace="ISO3166-French">CENTRAFRICAINE, RÉPUBLIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TD">
+					<gml:identifier codeSpace="ISO3166-alpha2">TD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TCD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">148</gml:name>
+					<gml:name codeSpace="ISO3166-English">CHAD</gml:name>
+					<gml:name codeSpace="ISO3166-French">TCHAD</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CL">
+					<gml:identifier codeSpace="ISO3166-alpha2">CL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CHL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">152</gml:name>
+					<gml:name codeSpace="ISO3166-English">CHILE</gml:name>
+					<gml:name codeSpace="ISO3166-French">CHILI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CN">
+					<gml:identifier codeSpace="ISO3166-alpha2">CN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CHN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">156</gml:name>
+					<gml:name codeSpace="ISO3166-English">CHINA</gml:name>
+					<gml:name codeSpace="ISO3166-French">CHINE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CX">
+					<gml:identifier codeSpace="ISO3166-alpha2">CX</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CXR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">162</gml:name>
+					<gml:name codeSpace="ISO3166-English">CHRISTMAS ISLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">CHRISTMAS, ÎLE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CC">
+					<gml:identifier codeSpace="ISO3166-alpha2">CC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CCK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">166</gml:name>
+					<gml:name codeSpace="ISO3166-English">COCOS (KEELING) ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">COCOS (KEELING), ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CO">
+					<gml:identifier codeSpace="ISO3166-alpha2">CO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">COL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">170</gml:name>
+					<gml:name codeSpace="ISO3166-English">COLOMBIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">COLOMBIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KM">
+					<gml:identifier codeSpace="ISO3166-alpha2">KM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">COM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">174</gml:name>
+					<gml:name codeSpace="ISO3166-English">COMOROS</gml:name>
+					<gml:name codeSpace="ISO3166-French">COMORES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CG">
+					<gml:identifier codeSpace="ISO3166-alpha2">CG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">COG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">178</gml:name>
+					<gml:name codeSpace="ISO3166-English">CONGO</gml:name>
+					<gml:name codeSpace="ISO3166-French">CONGO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CD">
+					<gml:identifier codeSpace="ISO3166-alpha2">CD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">COD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">180</gml:name>
+					<gml:name codeSpace="ISO3166-English">CONGO, THE DEMOCRATIC REPUBLIC OF THE</gml:name>
+					<gml:name codeSpace="ISO3166-French">CONGO, LA RÉPUBLIQUE DÉMOCRATIQUE DU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CK">
+					<gml:identifier codeSpace="ISO3166-alpha2">CK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">COK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">184</gml:name>
+					<gml:name codeSpace="ISO3166-English">COOK ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">COOK, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CR">
+					<gml:identifier codeSpace="ISO3166-alpha2">CR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CRI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">188</gml:name>
+					<gml:name codeSpace="ISO3166-English">COSTA RICA</gml:name>
+					<gml:name codeSpace="ISO3166-French">COSTA RICA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CI">
+					<gml:identifier codeSpace="ISO3166-alpha2">CI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CIV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">384</gml:name>
+					<gml:name codeSpace="ISO3166-English">CÔTE D'IVOIRE</gml:name>
+					<gml:name codeSpace="ISO3166-French">CÔTE D'IVOIRE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HR">
+					<gml:identifier codeSpace="ISO3166-alpha2">HR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HRV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">191</gml:name>
+					<gml:name codeSpace="ISO3166-English">CROATIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">CROATIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CU">
+					<gml:identifier codeSpace="ISO3166-alpha2">CU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CUB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">192</gml:name>
+					<gml:name codeSpace="ISO3166-English">CUBA</gml:name>
+					<gml:name codeSpace="ISO3166-French">CUBA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CY">
+					<gml:identifier codeSpace="ISO3166-alpha2">CY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CYP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">196</gml:name>
+					<gml:name codeSpace="ISO3166-English">CYPRUS</gml:name>
+					<gml:name codeSpace="ISO3166-French">CHYPRE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">CZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CZE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">203</gml:name>
+					<gml:name codeSpace="ISO3166-English">CZECH REPUBLIC</gml:name>
+					<gml:name codeSpace="ISO3166-French">TCHÈQUE, RÉPUBLIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DK">
+					<gml:identifier codeSpace="ISO3166-alpha2">DK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DNK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">208</gml:name>
+					<gml:name codeSpace="ISO3166-English">DENMARK</gml:name>
+					<gml:name codeSpace="ISO3166-French">DANEMARK</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DJ">
+					<gml:identifier codeSpace="ISO3166-alpha2">DJ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DJI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">262</gml:name>
+					<gml:name codeSpace="ISO3166-English">DJIBOUTI</gml:name>
+					<gml:name codeSpace="ISO3166-French">DJIBOUTI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DM">
+					<gml:identifier codeSpace="ISO3166-alpha2">DM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DMA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">212</gml:name>
+					<gml:name codeSpace="ISO3166-English">DOMINICA</gml:name>
+					<gml:name codeSpace="ISO3166-French">DOMINIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DO">
+					<gml:identifier codeSpace="ISO3166-alpha2">DO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DOM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">214</gml:name>
+					<gml:name codeSpace="ISO3166-English">DOMINICAN REPUBLIC</gml:name>
+					<gml:name codeSpace="ISO3166-French">DOMINICAINE, RÉPUBLIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_EC">
+					<gml:identifier codeSpace="ISO3166-alpha2">EC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ECU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">218</gml:name>
+					<gml:name codeSpace="ISO3166-English">ECUADOR</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉQUATEUR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_EG">
+					<gml:identifier codeSpace="ISO3166-alpha2">EG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">EGY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">818</gml:name>
+					<gml:name codeSpace="ISO3166-English">EGYPT</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉGYPTE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SV">
+					<gml:identifier codeSpace="ISO3166-alpha2">SV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SLV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">222</gml:name>
+					<gml:name codeSpace="ISO3166-English">EL SALVADOR</gml:name>
+					<gml:name codeSpace="ISO3166-French">EL SALVADOR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GQ">
+					<gml:identifier codeSpace="ISO3166-alpha2">GQ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GNQ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">226</gml:name>
+					<gml:name codeSpace="ISO3166-English">EQUATORIAL GUINEA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUINÉE ÉQUATORIALE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ER">
+					<gml:identifier codeSpace="ISO3166-alpha2">ER</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ERI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">232</gml:name>
+					<gml:name codeSpace="ISO3166-English">ERITREA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉRYTHRÉE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_EE">
+					<gml:identifier codeSpace="ISO3166-alpha2">EE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">EST</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">233</gml:name>
+					<gml:name codeSpace="ISO3166-English">ESTONIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ESTONIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ET">
+					<gml:identifier codeSpace="ISO3166-alpha2">ET</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ETH</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">231</gml:name>
+					<gml:name codeSpace="ISO3166-English">ETHIOPIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉTHIOPIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FK">
+					<gml:identifier codeSpace="ISO3166-alpha2">FK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FLK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">238</gml:name>
+					<gml:name codeSpace="ISO3166-English">FALKLAND ISLANDS (MALVINAS)</gml:name>
+					<gml:name codeSpace="ISO3166-French">FALKLAND, ÎLES (MALVINAS)</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FO">
+					<gml:identifier codeSpace="ISO3166-alpha2">FO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FRO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">234</gml:name>
+					<gml:name codeSpace="ISO3166-English">FAROE ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">FÉROÉ, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FJ">
+					<gml:identifier codeSpace="ISO3166-alpha2">FJ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FJI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">242</gml:name>
+					<gml:name codeSpace="ISO3166-English">FIJI</gml:name>
+					<gml:name codeSpace="ISO3166-French">FIDJI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FI">
+					<gml:identifier codeSpace="ISO3166-alpha2">FI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FIN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">246</gml:name>
+					<gml:name codeSpace="ISO3166-English">FINLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">FINLANDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FR">
+					<gml:identifier codeSpace="ISO3166-alpha2">FR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FRA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">250</gml:name>
+					<gml:name codeSpace="ISO3166-English">FRANCE</gml:name>
+					<gml:name codeSpace="ISO3166-French">FRANCE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GF">
+					<gml:identifier codeSpace="ISO3166-alpha2">GF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GUF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">254</gml:name>
+					<gml:name codeSpace="ISO3166-English">FRENCH GUIANA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUYANE FRANÇAISE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PF">
+					<gml:identifier codeSpace="ISO3166-alpha2">PF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PYF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">258</gml:name>
+					<gml:name codeSpace="ISO3166-English">FRENCH POLYNESIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">POLYNÉSIE FRANÇAISE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TF">
+					<gml:identifier codeSpace="ISO3166-alpha2">TF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ATF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">260</gml:name>
+					<gml:name codeSpace="ISO3166-English">FRENCH SOUTHERN TERRITORIES</gml:name>
+					<gml:name codeSpace="ISO3166-French">TERRES AUSTRALES FRANÇAISES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GA">
+					<gml:identifier codeSpace="ISO3166-alpha2">GA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GAB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">266</gml:name>
+					<gml:name codeSpace="ISO3166-English">GABON</gml:name>
+					<gml:name codeSpace="ISO3166-French">GABON</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GM">
+					<gml:identifier codeSpace="ISO3166-alpha2">GM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GMB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">270</gml:name>
+					<gml:name codeSpace="ISO3166-English">GAMBIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GAMBIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GE">
+					<gml:identifier codeSpace="ISO3166-alpha2">GE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GEO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">268</gml:name>
+					<gml:name codeSpace="ISO3166-English">GEORGIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GÉORGIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_DE">
+					<gml:identifier codeSpace="ISO3166-alpha2">DE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">DEU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">276</gml:name>
+					<gml:name codeSpace="ISO3166-English">GERMANY</gml:name>
+					<gml:name codeSpace="ISO3166-French">ALLEMAGNE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GH">
+					<gml:identifier codeSpace="ISO3166-alpha2">GH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GHA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">288</gml:name>
+					<gml:name codeSpace="ISO3166-English">GHANA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GHANA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GI">
+					<gml:identifier codeSpace="ISO3166-alpha2">GI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GIB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">292</gml:name>
+					<gml:name codeSpace="ISO3166-English">GIBRALTAR</gml:name>
+					<gml:name codeSpace="ISO3166-French">GIBRALTAR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GR">
+					<gml:identifier codeSpace="ISO3166-alpha2">GR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GRC</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">300</gml:name>
+					<gml:name codeSpace="ISO3166-English">GREECE</gml:name>
+					<gml:name codeSpace="ISO3166-French">GRÈCE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GL">
+					<gml:identifier codeSpace="ISO3166-alpha2">GL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GRL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">304</gml:name>
+					<gml:name codeSpace="ISO3166-English">GREENLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">GROENLAND</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GD">
+					<gml:identifier codeSpace="ISO3166-alpha2">GD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GRD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">308</gml:name>
+					<gml:name codeSpace="ISO3166-English">GRENADA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GRENADE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GP">
+					<gml:identifier codeSpace="ISO3166-alpha2">GP</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GLP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">312</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUADELOUPE</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUADELOUPE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GU">
+					<gml:identifier codeSpace="ISO3166-alpha2">GU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GUM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">316</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUAM</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUAM</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GT">
+					<gml:identifier codeSpace="ISO3166-alpha2">GT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GTM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">320</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUATEMALA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUATEMALA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GG">
+					<gml:identifier codeSpace="ISO3166-alpha2">GG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GGY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">831</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUERNSEY</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUERNESEY</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GN">
+					<gml:identifier codeSpace="ISO3166-alpha2">GN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GIN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">324</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUINEA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUINÉE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GW">
+					<gml:identifier codeSpace="ISO3166-alpha2">GW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GNB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">624</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUINEA-BISSAU</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUINÉE-BISSAU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GY">
+					<gml:identifier codeSpace="ISO3166-alpha2">GY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GUY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">328</gml:name>
+					<gml:name codeSpace="ISO3166-English">GUYANA</gml:name>
+					<gml:name codeSpace="ISO3166-French">GUYANA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HT">
+					<gml:identifier codeSpace="ISO3166-alpha2">HT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HTI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">332</gml:name>
+					<gml:name codeSpace="ISO3166-English">HAITI</gml:name>
+					<gml:name codeSpace="ISO3166-French">HAÏTI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HM">
+					<gml:identifier codeSpace="ISO3166-alpha2">HM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HMD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">334</gml:name>
+					<gml:name codeSpace="ISO3166-English">HEARD ISLAND AND MCDONALD ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">HEARD, ÎLE ET MCDONALD, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VA">
+					<gml:identifier codeSpace="ISO3166-alpha2">VA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VAT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">336</gml:name>
+					<gml:name codeSpace="ISO3166-English">HOLY SEE (VATICAN CITY STATE)</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-SIÈGE (ÉTAT DE LA CITÉ DU VATICAN)</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HN">
+					<gml:identifier codeSpace="ISO3166-alpha2">HN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HND</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">340</gml:name>
+					<gml:name codeSpace="ISO3166-English">HONDURAS</gml:name>
+					<gml:name codeSpace="ISO3166-French">HONDURAS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HK">
+					<gml:identifier codeSpace="ISO3166-alpha2">HK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HKG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">344</gml:name>
+					<gml:name codeSpace="ISO3166-English">HONG KONG</gml:name>
+					<gml:name codeSpace="ISO3166-French">HONG-KONG</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_HU">
+					<gml:identifier codeSpace="ISO3166-alpha2">HU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">HUN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">348</gml:name>
+					<gml:name codeSpace="ISO3166-English">HUNGARY</gml:name>
+					<gml:name codeSpace="ISO3166-French">HONGRIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IS">
+					<gml:identifier codeSpace="ISO3166-alpha2">IS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ISL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">352</gml:name>
+					<gml:name codeSpace="ISO3166-English">ICELAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">ISLANDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IN">
+					<gml:identifier codeSpace="ISO3166-alpha2">IN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IND</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">356</gml:name>
+					<gml:name codeSpace="ISO3166-English">INDIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">INDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ID">
+					<gml:identifier codeSpace="ISO3166-alpha2">ID</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IDN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">360</gml:name>
+					<gml:name codeSpace="ISO3166-English">INDONESIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">INDONÉSIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IR">
+					<gml:identifier codeSpace="ISO3166-alpha2">IR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IRN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">364</gml:name>
+					<gml:name codeSpace="ISO3166-English">IRAN, ISLAMIC REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">IRAN, RÉPUBLIQUE ISLAMIQUE D'</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IQ">
+					<gml:identifier codeSpace="ISO3166-alpha2">IQ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IRQ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">368</gml:name>
+					<gml:name codeSpace="ISO3166-English">IRAQ</gml:name>
+					<gml:name codeSpace="ISO3166-French">IRAQ</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IE">
+					<gml:identifier codeSpace="ISO3166-alpha2">IE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IRL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">372</gml:name>
+					<gml:name codeSpace="ISO3166-English">IRELAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">IRLANDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IM">
+					<gml:identifier codeSpace="ISO3166-alpha2">IM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">IMN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">833</gml:name>
+					<gml:name codeSpace="ISO3166-English">ISLE OF MAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÎLE DE MAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IL">
+					<gml:identifier codeSpace="ISO3166-alpha2">IL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ISR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">376</gml:name>
+					<gml:name codeSpace="ISO3166-English">ISRAEL</gml:name>
+					<gml:name codeSpace="ISO3166-French">ISRAËL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_IT">
+					<gml:identifier codeSpace="ISO3166-alpha2">IT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ITA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">380</gml:name>
+					<gml:name codeSpace="ISO3166-English">ITALY</gml:name>
+					<gml:name codeSpace="ISO3166-French">ITALIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_JM">
+					<gml:identifier codeSpace="ISO3166-alpha2">JM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">JAM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">388</gml:name>
+					<gml:name codeSpace="ISO3166-English">JAMAICA</gml:name>
+					<gml:name codeSpace="ISO3166-French">JAMAÏQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_JP">
+					<gml:identifier codeSpace="ISO3166-alpha2">JP</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">JPN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">392</gml:name>
+					<gml:name codeSpace="ISO3166-English">JAPAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">JAPON</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_JE">
+					<gml:identifier codeSpace="ISO3166-alpha2">JE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">JEY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">832</gml:name>
+					<gml:name codeSpace="ISO3166-English">JERSEY</gml:name>
+					<gml:name codeSpace="ISO3166-French">JERSEY</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_JO">
+					<gml:identifier codeSpace="ISO3166-alpha2">JO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">JOR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">400</gml:name>
+					<gml:name codeSpace="ISO3166-English">JORDAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">JORDANIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">KZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KAZ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">398</gml:name>
+					<gml:name codeSpace="ISO3166-English">KAZAKHSTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">KAZAKHSTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KE">
+					<gml:identifier codeSpace="ISO3166-alpha2">KE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KEN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">404</gml:name>
+					<gml:name codeSpace="ISO3166-English">KENYA</gml:name>
+					<gml:name codeSpace="ISO3166-French">KENYA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KI">
+					<gml:identifier codeSpace="ISO3166-alpha2">KI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KIR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">296</gml:name>
+					<gml:name codeSpace="ISO3166-English">KIRIBATI</gml:name>
+					<gml:name codeSpace="ISO3166-French">KIRIBATI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KP">
+					<gml:identifier codeSpace="ISO3166-alpha2">KP</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PRK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">408</gml:name>
+					<gml:name codeSpace="ISO3166-English">KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">CORÉE, RÉPUBLIQUE POPULAIRE DÉMOCRATIQUE DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KR">
+					<gml:identifier codeSpace="ISO3166-alpha2">KR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KOR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">410</gml:name>
+					<gml:name codeSpace="ISO3166-English">KOREA, REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">CORÉE, RÉPUBLIQUE DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KW">
+					<gml:identifier codeSpace="ISO3166-alpha2">KW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KWT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">414</gml:name>
+					<gml:name codeSpace="ISO3166-English">KUWAIT</gml:name>
+					<gml:name codeSpace="ISO3166-French">KOWEÏT</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KG">
+					<gml:identifier codeSpace="ISO3166-alpha2">KG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KGZ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">417</gml:name>
+					<gml:name codeSpace="ISO3166-English">KYRGYZSTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">KIRGHIZISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LA">
+					<gml:identifier codeSpace="ISO3166-alpha2">LA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LAO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">418</gml:name>
+					<gml:name codeSpace="ISO3166-English">LAO PEOPLE'S DEMOCRATIC REPUBLIC</gml:name>
+					<gml:name codeSpace="ISO3166-French">LAO, RÉPUBLIQUE DÉMOCRATIQUE POPULAIRE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LV">
+					<gml:identifier codeSpace="ISO3166-alpha2">LV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LVA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">428</gml:name>
+					<gml:name codeSpace="ISO3166-English">LATVIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">LETTONIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LB">
+					<gml:identifier codeSpace="ISO3166-alpha2">LB</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LBN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">422</gml:name>
+					<gml:name codeSpace="ISO3166-English">LEBANON</gml:name>
+					<gml:name codeSpace="ISO3166-French">LIBAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LS">
+					<gml:identifier codeSpace="ISO3166-alpha2">LS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LSO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">426</gml:name>
+					<gml:name codeSpace="ISO3166-English">LESOTHO</gml:name>
+					<gml:name codeSpace="ISO3166-French">LESOTHO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LR">
+					<gml:identifier codeSpace="ISO3166-alpha2">LR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LBR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">430</gml:name>
+					<gml:name codeSpace="ISO3166-English">LIBERIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">LIBÉRIA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LY">
+					<gml:identifier codeSpace="ISO3166-alpha2">LY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LBY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">434</gml:name>
+					<gml:name codeSpace="ISO3166-English">LIBYAN ARAB JAMAHIRIYA</gml:name>
+					<gml:name codeSpace="ISO3166-French">LIBYENNE, JAMAHIRIYA ARABE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LI">
+					<gml:identifier codeSpace="ISO3166-alpha2">LI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LIE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">438</gml:name>
+					<gml:name codeSpace="ISO3166-English">LIECHTENSTEIN</gml:name>
+					<gml:name codeSpace="ISO3166-French">LIECHTENSTEIN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LT">
+					<gml:identifier codeSpace="ISO3166-alpha2">LT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LTU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">440</gml:name>
+					<gml:name codeSpace="ISO3166-English">LITHUANIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">LITUANIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LU">
+					<gml:identifier codeSpace="ISO3166-alpha2">LU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LUX</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">442</gml:name>
+					<gml:name codeSpace="ISO3166-English">LUXEMBOURG</gml:name>
+					<gml:name codeSpace="ISO3166-French">LUXEMBOURG</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MO">
+					<gml:identifier codeSpace="ISO3166-alpha2">MO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MAC</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">446</gml:name>
+					<gml:name codeSpace="ISO3166-English">MACAO</gml:name>
+					<gml:name codeSpace="ISO3166-French">MACAO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MK">
+					<gml:identifier codeSpace="ISO3166-alpha2">MK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MKD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">807</gml:name>
+					<gml:name codeSpace="ISO3166-English">MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">MACÉDOINE, L'EX-RÉPUBLIQUE YOUGOSLAVE DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MG">
+					<gml:identifier codeSpace="ISO3166-alpha2">MG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MDG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">450</gml:name>
+					<gml:name codeSpace="ISO3166-English">MADAGASCAR</gml:name>
+					<gml:name codeSpace="ISO3166-French">MADAGASCAR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MW">
+					<gml:identifier codeSpace="ISO3166-alpha2">MW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MWI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">454</gml:name>
+					<gml:name codeSpace="ISO3166-English">MALAWI</gml:name>
+					<gml:name codeSpace="ISO3166-French">MALAWI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MY">
+					<gml:identifier codeSpace="ISO3166-alpha2">MY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MYS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">458</gml:name>
+					<gml:name codeSpace="ISO3166-English">MALAYSIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">MALAISIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MV">
+					<gml:identifier codeSpace="ISO3166-alpha2">MV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MDV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">462</gml:name>
+					<gml:name codeSpace="ISO3166-English">MALDIVES</gml:name>
+					<gml:name codeSpace="ISO3166-French">MALDIVES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ML">
+					<gml:identifier codeSpace="ISO3166-alpha2">ML</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MLI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">466</gml:name>
+					<gml:name codeSpace="ISO3166-English">MALI</gml:name>
+					<gml:name codeSpace="ISO3166-French">MALI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MT">
+					<gml:identifier codeSpace="ISO3166-alpha2">MT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MLT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">470</gml:name>
+					<gml:name codeSpace="ISO3166-English">MALTA</gml:name>
+					<gml:name codeSpace="ISO3166-French">MALTE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MH">
+					<gml:identifier codeSpace="ISO3166-alpha2">MH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MHL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">584</gml:name>
+					<gml:name codeSpace="ISO3166-English">MARSHALL ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">MARSHALL, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MQ">
+					<gml:identifier codeSpace="ISO3166-alpha2">MQ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MTQ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">474</gml:name>
+					<gml:name codeSpace="ISO3166-English">MARTINIQUE</gml:name>
+					<gml:name codeSpace="ISO3166-French">MARTINIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MR">
+					<gml:identifier codeSpace="ISO3166-alpha2">MR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MRT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">478</gml:name>
+					<gml:name codeSpace="ISO3166-English">MAURITANIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">MAURITANIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MU">
+					<gml:identifier codeSpace="ISO3166-alpha2">MU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MUS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">480</gml:name>
+					<gml:name codeSpace="ISO3166-English">MAURITIUS</gml:name>
+					<gml:name codeSpace="ISO3166-French">MAURICE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_YT">
+					<gml:identifier codeSpace="ISO3166-alpha2">YT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MYT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">175</gml:name>
+					<gml:name codeSpace="ISO3166-English">MAYOTTE</gml:name>
+					<gml:name codeSpace="ISO3166-French">MAYOTTE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MX">
+					<gml:identifier codeSpace="ISO3166-alpha2">MX</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MEX</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">484</gml:name>
+					<gml:name codeSpace="ISO3166-English">MEXICO</gml:name>
+					<gml:name codeSpace="ISO3166-French">MEXIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_FM">
+					<gml:identifier codeSpace="ISO3166-alpha2">FM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">FSM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">583</gml:name>
+					<gml:name codeSpace="ISO3166-English">MICRONESIA, FEDERATED STATES OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">MICRONÉSIE, ÉTATS FÉDÉRÉS DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MD">
+					<gml:identifier codeSpace="ISO3166-alpha2">MD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MDA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">498</gml:name>
+					<gml:name codeSpace="ISO3166-English">MOLDOVA, REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">MOLDOVA, RÉPUBLIQUE DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MC">
+					<gml:identifier codeSpace="ISO3166-alpha2">MC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MCO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">492</gml:name>
+					<gml:name codeSpace="ISO3166-English">MONACO</gml:name>
+					<gml:name codeSpace="ISO3166-French">MONACO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MN">
+					<gml:identifier codeSpace="ISO3166-alpha2">MN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MNG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">496</gml:name>
+					<gml:name codeSpace="ISO3166-English">MONGOLIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">MONGOLIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ME">
+					<gml:identifier codeSpace="ISO3166-alpha2">ME</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MNE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">499</gml:name>
+					<gml:name codeSpace="ISO3166-English">MONTENEGRO</gml:name>
+					<gml:name codeSpace="ISO3166-French">MONTÉNÉGRO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MS">
+					<gml:identifier codeSpace="ISO3166-alpha2">MS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MSR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">500</gml:name>
+					<gml:name codeSpace="ISO3166-English">MONTSERRAT</gml:name>
+					<gml:name codeSpace="ISO3166-French">MONTSERRAT</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MA">
+					<gml:identifier codeSpace="ISO3166-alpha2">MA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MAR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">504</gml:name>
+					<gml:name codeSpace="ISO3166-English">MOROCCO</gml:name>
+					<gml:name codeSpace="ISO3166-French">MAROC</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">MZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MOZ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">508</gml:name>
+					<gml:name codeSpace="ISO3166-English">MOZAMBIQUE</gml:name>
+					<gml:name codeSpace="ISO3166-French">MOZAMBIQUE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MM">
+					<gml:identifier codeSpace="ISO3166-alpha2">MM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MMR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">104</gml:name>
+					<gml:name codeSpace="ISO3166-English">MYANMAR</gml:name>
+					<gml:name codeSpace="ISO3166-French">MYANMAR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NA">
+					<gml:identifier codeSpace="ISO3166-alpha2">NA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NAM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">516</gml:name>
+					<gml:name codeSpace="ISO3166-English">NAMIBIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">NAMIBIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NR">
+					<gml:identifier codeSpace="ISO3166-alpha2">NR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NRU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">520</gml:name>
+					<gml:name codeSpace="ISO3166-English">NAURU</gml:name>
+					<gml:name codeSpace="ISO3166-French">NAURU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NP">
+					<gml:identifier codeSpace="ISO3166-alpha2">NP</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NPL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">524</gml:name>
+					<gml:name codeSpace="ISO3166-English">NEPAL</gml:name>
+					<gml:name codeSpace="ISO3166-French">NÉPAL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NL">
+					<gml:identifier codeSpace="ISO3166-alpha2">NL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NLD</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">528</gml:name>
+					<gml:name codeSpace="ISO3166-English">NETHERLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">PAYS-BAS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AN">
+					<gml:identifier codeSpace="ISO3166-alpha2">AN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ANT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">530</gml:name>
+					<gml:name codeSpace="ISO3166-English">NETHERLANDS ANTILLES</gml:name>
+					<gml:name codeSpace="ISO3166-French">ANTILLES NÉERLANDAISES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NC">
+					<gml:identifier codeSpace="ISO3166-alpha2">NC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NCL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">540</gml:name>
+					<gml:name codeSpace="ISO3166-English">NEW CALEDONIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">NOUVELLE-CALÉDONIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">NZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NZL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">554</gml:name>
+					<gml:name codeSpace="ISO3166-English">NEW ZEALAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">NOUVELLE-ZÉLANDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NI">
+					<gml:identifier codeSpace="ISO3166-alpha2">NI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NIC</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">558</gml:name>
+					<gml:name codeSpace="ISO3166-English">NICARAGUA</gml:name>
+					<gml:name codeSpace="ISO3166-French">NICARAGUA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NE">
+					<gml:identifier codeSpace="ISO3166-alpha2">NE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NER</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">562</gml:name>
+					<gml:name codeSpace="ISO3166-English">NIGER</gml:name>
+					<gml:name codeSpace="ISO3166-French">NIGER</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NG">
+					<gml:identifier codeSpace="ISO3166-alpha2">NG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NGA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">566</gml:name>
+					<gml:name codeSpace="ISO3166-English">NIGERIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">NIGÉRIA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NU">
+					<gml:identifier codeSpace="ISO3166-alpha2">NU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NIU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">570</gml:name>
+					<gml:name codeSpace="ISO3166-English">NIUE</gml:name>
+					<gml:name codeSpace="ISO3166-French">NIUÉ</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NF">
+					<gml:identifier codeSpace="ISO3166-alpha2">NF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NFK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">574</gml:name>
+					<gml:name codeSpace="ISO3166-English">NORFOLK ISLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">NORFOLK, ÎLE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MP">
+					<gml:identifier codeSpace="ISO3166-alpha2">MP</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MNP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">580</gml:name>
+					<gml:name codeSpace="ISO3166-English">NORTHERN MARIANA ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">MARIANNES DU NORD, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_NO">
+					<gml:identifier codeSpace="ISO3166-alpha2">NO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">NOR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">578</gml:name>
+					<gml:name codeSpace="ISO3166-English">NORWAY</gml:name>
+					<gml:name codeSpace="ISO3166-French">NORVÈGE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_OM">
+					<gml:identifier codeSpace="ISO3166-alpha2">OM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">OMN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">512</gml:name>
+					<gml:name codeSpace="ISO3166-English">OMAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">OMAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PK">
+					<gml:identifier codeSpace="ISO3166-alpha2">PK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PAK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">586</gml:name>
+					<gml:name codeSpace="ISO3166-English">PAKISTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">PAKISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PW">
+					<gml:identifier codeSpace="ISO3166-alpha2">PW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PLW</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">585</gml:name>
+					<gml:name codeSpace="ISO3166-English">PALAU</gml:name>
+					<gml:name codeSpace="ISO3166-French">PALAOS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PS">
+					<gml:identifier codeSpace="ISO3166-alpha2">PS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PSE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">275</gml:name>
+					<gml:name codeSpace="ISO3166-English">PALESTINIAN TERRITORY, OCCUPIED</gml:name>
+					<gml:name codeSpace="ISO3166-French">PALESTINIEN OCCUPÉ, TERRITOIRE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PA">
+					<gml:identifier codeSpace="ISO3166-alpha2">PA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PAN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">591</gml:name>
+					<gml:name codeSpace="ISO3166-English">PANAMA</gml:name>
+					<gml:name codeSpace="ISO3166-French">PANAMA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PG">
+					<gml:identifier codeSpace="ISO3166-alpha2">PG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PNG</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">598</gml:name>
+					<gml:name codeSpace="ISO3166-English">PAPUA NEW GUINEA</gml:name>
+					<gml:name codeSpace="ISO3166-French">PAPOUASIE-NOUVELLE-GUINÉE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PY">
+					<gml:identifier codeSpace="ISO3166-alpha2">PY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PRY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">600</gml:name>
+					<gml:name codeSpace="ISO3166-English">PARAGUAY</gml:name>
+					<gml:name codeSpace="ISO3166-French">PARAGUAY</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PE">
+					<gml:identifier codeSpace="ISO3166-alpha2">PE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PER</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">604</gml:name>
+					<gml:name codeSpace="ISO3166-English">PERU</gml:name>
+					<gml:name codeSpace="ISO3166-French">PÉROU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PH">
+					<gml:identifier codeSpace="ISO3166-alpha2">PH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PHL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">608</gml:name>
+					<gml:name codeSpace="ISO3166-English">PHILIPPINES</gml:name>
+					<gml:name codeSpace="ISO3166-French">PHILIPPINES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PN">
+					<gml:identifier codeSpace="ISO3166-alpha2">PN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PCN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">612</gml:name>
+					<gml:name codeSpace="ISO3166-English">PITCAIRN</gml:name>
+					<gml:name codeSpace="ISO3166-French">PITCAIRN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PL">
+					<gml:identifier codeSpace="ISO3166-alpha2">PL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">POL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">616</gml:name>
+					<gml:name codeSpace="ISO3166-English">POLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">POLOGNE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PT">
+					<gml:identifier codeSpace="ISO3166-alpha2">PT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PRT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">620</gml:name>
+					<gml:name codeSpace="ISO3166-English">PORTUGAL</gml:name>
+					<gml:name codeSpace="ISO3166-French">PORTUGAL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PR">
+					<gml:identifier codeSpace="ISO3166-alpha2">PR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">PRI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">630</gml:name>
+					<gml:name codeSpace="ISO3166-English">PUERTO RICO</gml:name>
+					<gml:name codeSpace="ISO3166-French">PORTO RICO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_QA">
+					<gml:identifier codeSpace="ISO3166-alpha2">QA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">QAT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">634</gml:name>
+					<gml:name codeSpace="ISO3166-English">QATAR</gml:name>
+					<gml:name codeSpace="ISO3166-French">QATAR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_RE">
+					<gml:identifier codeSpace="ISO3166-alpha2">RE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">REU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">638</gml:name>
+					<gml:name codeSpace="ISO3166-English">REUNION</gml:name>
+					<gml:name codeSpace="ISO3166-French">RÉUNION</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_RO">
+					<gml:identifier codeSpace="ISO3166-alpha2">RO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ROU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">642</gml:name>
+					<gml:name codeSpace="ISO3166-English">ROMANIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ROUMANIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_RU">
+					<gml:identifier codeSpace="ISO3166-alpha2">RU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">RUS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">643</gml:name>
+					<gml:name codeSpace="ISO3166-English">RUSSIAN FEDERATION</gml:name>
+					<gml:name codeSpace="ISO3166-French">RUSSIE, FÉDÉRATION DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_RW">
+					<gml:identifier codeSpace="ISO3166-alpha2">RW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">RWA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">646</gml:name>
+					<gml:name codeSpace="ISO3166-English">RWANDA</gml:name>
+					<gml:name codeSpace="ISO3166-French">RWANDA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_BL">
+					<gml:identifier codeSpace="ISO3166-alpha2">BL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">BLM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">652</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT BARTHÉLEMY</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-BARTHÉLEMY</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SH">
+					<gml:identifier codeSpace="ISO3166-alpha2">SH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SHN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">654</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT HELENA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINTE-HÉLÈNE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_KN">
+					<gml:identifier codeSpace="ISO3166-alpha2">KN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">KNA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">659</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT KITTS AND NEVIS</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-KITTS-ET-NEVIS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LC">
+					<gml:identifier codeSpace="ISO3166-alpha2">LC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LCA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">662</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT LUCIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINTE-LUCIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_MF">
+					<gml:identifier codeSpace="ISO3166-alpha2">MF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">MAF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">663</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT MARTIN</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-MARTIN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_PM">
+					<gml:identifier codeSpace="ISO3166-alpha2">PM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SPM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">666</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT PIERRE AND MIQUELON</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-PIERRE-ET-MIQUELON</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VC">
+					<gml:identifier codeSpace="ISO3166-alpha2">VC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VCT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">670</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAINT VINCENT AND THE GRENADINES</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-VINCENT-ET-LES GRENADINES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_WS">
+					<gml:identifier codeSpace="ISO3166-alpha2">WS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">WSM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">882</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAMOA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAMOA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SM">
+					<gml:identifier codeSpace="ISO3166-alpha2">SM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SMR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">674</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAN MARINO</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAINT-MARIN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ST">
+					<gml:identifier codeSpace="ISO3166-alpha2">ST</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">STP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">678</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAO TOME AND PRINCIPE</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAO TOMÉ-ET-PRINCIPE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SA">
+					<gml:identifier codeSpace="ISO3166-alpha2">SA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SAU</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">682</gml:name>
+					<gml:name codeSpace="ISO3166-English">SAUDI ARABIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ARABIE SAOUDITE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SN">
+					<gml:identifier codeSpace="ISO3166-alpha2">SN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SEN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">686</gml:name>
+					<gml:name codeSpace="ISO3166-English">SENEGAL</gml:name>
+					<gml:name codeSpace="ISO3166-French">SÉNÉGAL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_RS">
+					<gml:identifier codeSpace="ISO3166-alpha2">RS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SRB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">688</gml:name>
+					<gml:name codeSpace="ISO3166-English">SERBIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SERBIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SC">
+					<gml:identifier codeSpace="ISO3166-alpha2">SC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SYC</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">690</gml:name>
+					<gml:name codeSpace="ISO3166-English">SEYCHELLES</gml:name>
+					<gml:name codeSpace="ISO3166-French">SEYCHELLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SL">
+					<gml:identifier codeSpace="ISO3166-alpha2">SL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SLE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">694</gml:name>
+					<gml:name codeSpace="ISO3166-English">SIERRA LEONE</gml:name>
+					<gml:name codeSpace="ISO3166-French">SIERRA LEONE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SG">
+					<gml:identifier codeSpace="ISO3166-alpha2">SG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SGP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">702</gml:name>
+					<gml:name codeSpace="ISO3166-English">SINGAPORE</gml:name>
+					<gml:name codeSpace="ISO3166-French">SINGAPOUR</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SK">
+					<gml:identifier codeSpace="ISO3166-alpha2">SK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SVK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">703</gml:name>
+					<gml:name codeSpace="ISO3166-English">SLOVAKIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SLOVAQUIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SI">
+					<gml:identifier codeSpace="ISO3166-alpha2">SI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SVN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">705</gml:name>
+					<gml:name codeSpace="ISO3166-English">SLOVENIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SLOVÉNIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SB">
+					<gml:identifier codeSpace="ISO3166-alpha2">SB</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SLB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">090</gml:name>
+					<gml:name codeSpace="ISO3166-English">SOLOMON ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">SALOMON, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SO">
+					<gml:identifier codeSpace="ISO3166-alpha2">SO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SOM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">706</gml:name>
+					<gml:name codeSpace="ISO3166-English">SOMALIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SOMALIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ZA">
+					<gml:identifier codeSpace="ISO3166-alpha2">ZA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ZAF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">710</gml:name>
+					<gml:name codeSpace="ISO3166-English">SOUTH AFRICA</gml:name>
+					<gml:name codeSpace="ISO3166-French">AFRIQUE DU SUD</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GS">
+					<gml:identifier codeSpace="ISO3166-alpha2">GS</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SGS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">239</gml:name>
+					<gml:name codeSpace="ISO3166-English">SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">GÉORGIE DU SUD ET LES ÎLES SANDWICH DU SUD</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ES">
+					<gml:identifier codeSpace="ISO3166-alpha2">ES</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ESP</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">724</gml:name>
+					<gml:name codeSpace="ISO3166-English">SPAIN</gml:name>
+					<gml:name codeSpace="ISO3166-French">ESPAGNE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_LK">
+					<gml:identifier codeSpace="ISO3166-alpha2">LK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">LKA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">144</gml:name>
+					<gml:name codeSpace="ISO3166-English">SRI LANKA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SRI LANKA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SD">
+					<gml:identifier codeSpace="ISO3166-alpha2">SD</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SDN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">736</gml:name>
+					<gml:name codeSpace="ISO3166-English">SUDAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">SOUDAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SR">
+					<gml:identifier codeSpace="ISO3166-alpha2">SR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SUR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">740</gml:name>
+					<gml:name codeSpace="ISO3166-English">SURINAME</gml:name>
+					<gml:name codeSpace="ISO3166-French">SURINAME</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SJ">
+					<gml:identifier codeSpace="ISO3166-alpha2">SJ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SJM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">744</gml:name>
+					<gml:name codeSpace="ISO3166-English">SVALBARD AND JAN MAYEN</gml:name>
+					<gml:name codeSpace="ISO3166-French">SVALBARD ET ÎLE JAN MAYEN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">SZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SWZ</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">748</gml:name>
+					<gml:name codeSpace="ISO3166-English">SWAZILAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">SWAZILAND</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SE">
+					<gml:identifier codeSpace="ISO3166-alpha2">SE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SWE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">752</gml:name>
+					<gml:name codeSpace="ISO3166-English">SWEDEN</gml:name>
+					<gml:name codeSpace="ISO3166-French">SUÈDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_CH">
+					<gml:identifier codeSpace="ISO3166-alpha2">CH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">CHE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">756</gml:name>
+					<gml:name codeSpace="ISO3166-English">SWITZERLAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">SUISSE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_SY">
+					<gml:identifier codeSpace="ISO3166-alpha2">SY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">SYR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">760</gml:name>
+					<gml:name codeSpace="ISO3166-English">SYRIAN ARAB REPUBLIC</gml:name>
+					<gml:name codeSpace="ISO3166-French">SYRIENNE, RÉPUBLIQUE ARABE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TW">
+					<gml:identifier codeSpace="ISO3166-alpha2">TW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TWN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">158</gml:name>
+					<gml:name codeSpace="ISO3166-English">TAIWAN, PROVINCE OF CHINA</gml:name>
+					<gml:name codeSpace="ISO3166-French">TAÏWAN, PROVINCE DE CHINE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TJ">
+					<gml:identifier codeSpace="ISO3166-alpha2">TJ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TJK</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">762</gml:name>
+					<gml:name codeSpace="ISO3166-English">TAJIKISTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">TADJIKISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">TZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TZA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">834</gml:name>
+					<gml:name codeSpace="ISO3166-English">TANZANIA, UNITED REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">TANZANIE, RÉPUBLIQUE-UNIE DE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TH">
+					<gml:identifier codeSpace="ISO3166-alpha2">TH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">THA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">764</gml:name>
+					<gml:name codeSpace="ISO3166-English">THAILAND</gml:name>
+					<gml:name codeSpace="ISO3166-French">THAÏLANDE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TL">
+					<gml:identifier codeSpace="ISO3166-alpha2">TL</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TLS</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">626</gml:name>
+					<gml:name codeSpace="ISO3166-English">TIMOR-LESTE</gml:name>
+					<gml:name codeSpace="ISO3166-French">TIMOR-LESTE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TG">
+					<gml:identifier codeSpace="ISO3166-alpha2">TG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TGO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">768</gml:name>
+					<gml:name codeSpace="ISO3166-English">TOGO</gml:name>
+					<gml:name codeSpace="ISO3166-French">TOGO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TK">
+					<gml:identifier codeSpace="ISO3166-alpha2">TK</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TKL</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">772</gml:name>
+					<gml:name codeSpace="ISO3166-English">TOKELAU</gml:name>
+					<gml:name codeSpace="ISO3166-French">TOKELAU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TO">
+					<gml:identifier codeSpace="ISO3166-alpha2">TO</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TON</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">776</gml:name>
+					<gml:name codeSpace="ISO3166-English">TONGA</gml:name>
+					<gml:name codeSpace="ISO3166-French">TONGA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TT">
+					<gml:identifier codeSpace="ISO3166-alpha2">TT</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TTO</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">780</gml:name>
+					<gml:name codeSpace="ISO3166-English">TRINIDAD AND TOBAGO</gml:name>
+					<gml:name codeSpace="ISO3166-French">TRINITÉ-ET-TOBAGO</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TN">
+					<gml:identifier codeSpace="ISO3166-alpha2">TN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TUN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">788</gml:name>
+					<gml:name codeSpace="ISO3166-English">TUNISIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">TUNISIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TR">
+					<gml:identifier codeSpace="ISO3166-alpha2">TR</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TUR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">792</gml:name>
+					<gml:name codeSpace="ISO3166-English">TURKEY</gml:name>
+					<gml:name codeSpace="ISO3166-French">TURQUIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TM">
+					<gml:identifier codeSpace="ISO3166-alpha2">TM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TKM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">795</gml:name>
+					<gml:name codeSpace="ISO3166-English">TURKMENISTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">TURKMÉNISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TC">
+					<gml:identifier codeSpace="ISO3166-alpha2">TC</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TCA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">796</gml:name>
+					<gml:name codeSpace="ISO3166-English">TURKS AND CAICOS ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">TURKS ET CAÏQUES, ÎLES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_TV">
+					<gml:identifier codeSpace="ISO3166-alpha2">TV</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">TUV</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">798</gml:name>
+					<gml:name codeSpace="ISO3166-English">TUVALU</gml:name>
+					<gml:name codeSpace="ISO3166-French">TUVALU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_UG">
+					<gml:identifier codeSpace="ISO3166-alpha2">UG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">UGA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">800</gml:name>
+					<gml:name codeSpace="ISO3166-English">UGANDA</gml:name>
+					<gml:name codeSpace="ISO3166-French">OUGANDA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_UA">
+					<gml:identifier codeSpace="ISO3166-alpha2">UA</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">UKR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">804</gml:name>
+					<gml:name codeSpace="ISO3166-English">UKRAINE</gml:name>
+					<gml:name codeSpace="ISO3166-French">UKRAINE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_AE">
+					<gml:identifier codeSpace="ISO3166-alpha2">AE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ARE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">784</gml:name>
+					<gml:name codeSpace="ISO3166-English">UNITED ARAB EMIRATES</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉMIRATS ARABES UNIS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_GB">
+					<gml:identifier codeSpace="ISO3166-alpha2">GB</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">GBR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">826</gml:name>
+					<gml:name codeSpace="ISO3166-English">UNITED KINGDOM</gml:name>
+					<gml:name codeSpace="ISO3166-French">ROYAUME-UNI</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_US">
+					<gml:identifier codeSpace="ISO3166-alpha2">US</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">USA</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">840</gml:name>
+					<gml:name codeSpace="ISO3166-English">UNITED STATES</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÉTATS-UNIS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_UM">
+					<gml:identifier codeSpace="ISO3166-alpha2">UM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">UMI</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">581</gml:name>
+					<gml:name codeSpace="ISO3166-English">UNITED STATES MINOR OUTLYING ISLANDS</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÎLES MINEURES ÉLOIGNÉES DES ÉTATS-UNIS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_UY">
+					<gml:identifier codeSpace="ISO3166-alpha2">UY</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">URY</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">858</gml:name>
+					<gml:name codeSpace="ISO3166-English">URUGUAY</gml:name>
+					<gml:name codeSpace="ISO3166-French">URUGUAY</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_UZ">
+					<gml:identifier codeSpace="ISO3166-alpha2">UZ</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">UZB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">860</gml:name>
+					<gml:name codeSpace="ISO3166-English">UZBEKISTAN</gml:name>
+					<gml:name codeSpace="ISO3166-French">OUZBÉKISTAN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VU">
+					<gml:identifier codeSpace="ISO3166-alpha2">VU</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VUT</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">548</gml:name>
+					<gml:name codeSpace="ISO3166-English">VANUATU</gml:name>
+					<gml:name codeSpace="ISO3166-French">VANUATU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VE">
+					<gml:identifier codeSpace="ISO3166-alpha2">VE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VEN</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">862</gml:name>
+					<gml:name codeSpace="ISO3166-English">VENEZUELA, BOLIVARIAN REPUBLIC OF</gml:name>
+					<gml:name codeSpace="ISO3166-French">VENEZUELA, RÉPUBLIQUE BOLIVARIENNE DU</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VN">
+					<gml:identifier codeSpace="ISO3166-alpha2">VN</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VNM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">704</gml:name>
+					<gml:name codeSpace="ISO3166-English">VIET NAM</gml:name>
+					<gml:name codeSpace="ISO3166-French">VIET NAM</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VG">
+					<gml:identifier codeSpace="ISO3166-alpha2">VG</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VGB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">092</gml:name>
+					<gml:name codeSpace="ISO3166-English">VIRGIN ISLANDS, BRITISH</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÎLES VIERGES BRITANNIQUES</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_VI">
+					<gml:identifier codeSpace="ISO3166-alpha2">VI</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">VIR</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">850</gml:name>
+					<gml:name codeSpace="ISO3166-English">VIRGIN ISLANDS, U.S.</gml:name>
+					<gml:name codeSpace="ISO3166-French">ÎLES VIERGES DES ÉTATS-UNIS</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_WF">
+					<gml:identifier codeSpace="ISO3166-alpha2">WF</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">WLF</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">876</gml:name>
+					<gml:name codeSpace="ISO3166-English">WALLIS AND FUTUNA</gml:name>
+					<gml:name codeSpace="ISO3166-French">WALLIS ET FUTUNA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_EH">
+					<gml:identifier codeSpace="ISO3166-alpha2">EH</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ESH</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">732</gml:name>
+					<gml:name codeSpace="ISO3166-English">WESTERN SAHARA</gml:name>
+					<gml:name codeSpace="ISO3166-French">SAHARA OCCIDENTAL</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_YE">
+					<gml:identifier codeSpace="ISO3166-alpha2">YE</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">YEM</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">887</gml:name>
+					<gml:name codeSpace="ISO3166-English">YEMEN</gml:name>
+					<gml:name codeSpace="ISO3166-French">YÉMEN</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ZM">
+					<gml:identifier codeSpace="ISO3166-alpha2">ZM</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ZMB</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">894</gml:name>
+					<gml:name codeSpace="ISO3166-English">ZAMBIA</gml:name>
+					<gml:name codeSpace="ISO3166-French">ZAMBIE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="CountryCode_ZW">
+					<gml:identifier codeSpace="ISO3166-alpha2">ZW</gml:identifier>
+					<gml:name codeSpace="ISO3166-alpha3">ZWE</gml:name>
+					<gml:name codeSpace="ISO3166-numeric">716</gml:name>
+					<gml:name codeSpace="ISO3166-English">ZIMBABWE</gml:name>
+					<gml:name codeSpace="ISO3166-French">ZIMBABWE</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+</CT_CodelistCatalogue>
