@@ -11,61 +11,100 @@ module Robots
         def perform_work
           logger.debug "extract-iso19139 working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
-
           # See if generation is needed
-          geo_metadata_filename = File.join(rootdir, 'metadata', 'geoMetadata.xml')
+          geo_metadata_filename = File.join(staging_dir, 'metadata', 'geoMetadata.xml')
           if File.size?(geo_metadata_filename)
             logger.info "extract-iso19139: #{bare_druid} found #{geo_metadata_filename}"
             return
           end
 
-          begin
-            esri_filename = GisRobotSuite.locate_esri_metadata("#{rootdir}/temp")
-            if esri_filename =~ /^(.*).(shp|tif).xml$/ || esri_filename =~ %r{^(.*/metadata).xml$}
-              output_file = "#{Regexp.last_match(1)}-iso19139.xml"
-              ofn_fc = "#{Regexp.last_match(1)}-iso19110.xml"
-              ofn_fgdc = "#{Regexp.last_match(1)}-fgdc.xml"
-            end
-            logger.debug "extract-iso19139 working on #{esri_filename}"
-            arcgis_to_iso19139(esri_filename, output_file, ofn_fc, ofn_fgdc)
-          rescue RuntimeError => e
-            logger.error "extract-iso19139: #{bare_druid} is missing ESRI metadata files"
-            raise e
-          end
+          # Generate ISO 19139 and FGDC for all data types
+          generate_iso19139
+          generate_fgdc
+
+          # Only generate ISO 19110 for data types with a feature catalog
+          generate_iso19110 if data_type == 'Shapefile'
         end
 
         private
 
-        # XSLT file locations
-        XSLT = {
-          arcgis: 'config/ArcGIS/Transforms/ArcGIS2ISO19139.xsl',
-          arcgis_fc: 'lib/xslt/arcgis_to_iso19110.xsl',
-          arcgis_fgdc: 'config/ArcGIS/Transforms/ArcGIS2FGDC.xsl'
-        }.freeze
+        # Staging directory for this object
+        def staging_dir
+          GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+        end
 
-        # XSLT processor
-        XSLTPROC = 'xsltproc --novalid --xinclude'
-        # XML cleaner
-        XMLLINT = 'xmllint --format --xinclude --nsclean'
+        # XML metadata file exported from ArcGIS
+        def esri_metadata_file
+          GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'temp'))
+        rescue RuntimeError => e
+          logger.error "extract-iso19139: #{bare_druid} is missing ESRI metadata files"
+          raise e
+        end
 
-        # Converts an ESRI ArcCatalog metadata.xml into ISO 19139
-        # @param [String] input_file Input file
-        # @param [String] output_file Output file
-        # @param [String] ofn_fc Output file for the Feature Catalog (optional)
-        def arcgis_to_iso19139(input_file, output_file, ofn_fc = nil, ofn_fgdc = nil)
-          logger.info "generating #{output_file}"
-          # Root of the project.  This is needed to find the XSLT files.
-          basepath = File.absolute_path("#{__FILE__}/../../../../..")
-          system("#{XSLTPROC} #{File.join(basepath, XSLT[:arcgis])} '#{input_file}' | #{XMLLINT} -o '#{output_file}' -", exception: true)
-          unless ofn_fc.nil?
-            logger.info "generating #{ofn_fc}"
-            system("#{XSLTPROC} #{File.join(basepath, XSLT[:arcgis_fc])} '#{input_file}' | #{XMLLINT} -o '#{ofn_fc}' -", exception: true)
+        # Type of GIS data for this object
+        def data_type
+          file_name = File.basename(esri_metadata_file)
+          return 'Shapefile' if file_name.end_with?('.shp.xml')
+          return 'GeoTIFF' if file_name.end_with?('.tif.xml')
+
+          'ArcGRID'
+        end
+
+        # Filename of the original GIS data without any extensions
+        def layer_name
+          case data_type
+          when 'Shapefile'
+            File.basename(esri_metadata_file, '.shp.xml')
+          when 'GeoTIFF'
+            File.basename(esri_metadata_file, '.tif.xml')
+          when 'ArcGRID'
+            File.basename(File.dirname(esri_metadata_file))
           end
-          return if ofn_fgdc
+        end
 
-          logger.info "generating #{ofn_fgdc}"
-          system("#{XSLTPROC} #{File.join(basepath, XSLT[:arcgis_fgdc])} '#{input_file}' | #{XMLLINT} -o '#{ofn_fgdc}' -", exception: true)
+        # Directory where XSL transforms are located
+        def xslt_path
+          File.join(File.absolute_path("#{__FILE__}/../../../../.."), 'config', 'ArcGIS', 'Transforms')
+        end
+
+        # Comand to invoke xsltproc to transform XML
+        def xslt_command
+          'xsltproc --novalid --xinclude'
+        end
+
+        # Command to post-process transformed XML with xmllint
+        def xml_lint_command
+          'xmllint --format --xinclude --nsclean'
+        end
+
+        # Apply an XSL transform to the ESRI metadata file
+        def transform_arcgis_metadata(output_file, xslt_name)
+          logger.info "generating #{output_file}"
+          system("#{xslt_command} #{File.join(xslt_path, xslt_name)} '#{esri_metadata_file}' | #{xml_lint_command} -o '#{output_file}' -", exception: true)
+        end
+
+        # Generate ISO 19139 metadata from ESRI metadata
+        def generate_iso19139
+          transform_arcgis_metadata(
+            File.join(staging_dir, 'temp', "#{layer_name}-iso19139.xml"),
+            'ArcGIS2ISO19139.xsl'
+          )
+        end
+
+        # Generate ISO 19110 metadata from ESRI metadata
+        def generate_iso19110
+          transform_arcgis_metadata(
+            File.join(staging_dir, 'temp', "#{layer_name}-iso19110.xml"),
+            'arcgis_to_iso19110.xsl'
+          )
+        end
+
+        # Generate FGDC metadata from ESRI metadata
+        def generate_fgdc
+          transform_arcgis_metadata(
+            File.join(staging_dir, 'temp', "#{layer_name}-fgdc.xml"),
+            'ArcGIS2FGDC.xsl'
+          )
         end
       end
     end

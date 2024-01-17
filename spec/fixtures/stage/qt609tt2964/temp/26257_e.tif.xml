@@ -1,0 +1,476 @@
+<metadata xml:lang="en">
+  <Esri>
+    <CreaDate>20130419</CreaDate>
+    <CreaTime>10021200</CreaTime>
+    <DataProperties>
+      <itemProps>
+        <itemName Sync="TRUE">26257_e.tif</itemName>
+        <itemLocation>
+          <linkage Sync="TRUE">
+            file://Q:\Data\World_Nautical_Charts\GeoTIFF\NauticalCharts\GeoWGS84\26257_e.tif</linkage>
+          <protocol Sync="TRUE">Local Area Network</protocol>
+        </itemLocation>
+        <imsContentType Sync="TRUE" export="False">002</imsContentType>
+        <nativeExtBox>
+          <westBL Sync="TRUE">-77.639455</westBL>
+          <eastBL Sync="TRUE">-77.583068</eastBL>
+          <southBL Sync="TRUE">24.200423</southBL>
+          <northBL Sync="TRUE">24.244871</northBL>
+          <exTypeCode Sync="TRUE">1</exTypeCode>
+        </nativeExtBox>
+      </itemProps>
+      <coordRef>
+        <type Sync="TRUE">Geographic</type>
+        <geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn>
+        <csUnits Sync="TRUE">Angular Unit: Degree (0.017453)</csUnits>
+        <peXml Sync="TRUE">
+          &lt;GeographicCoordinateSystem
+          xsi:type='typens:GeographicCoordinateSystem'
+          xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+          xmlns:xs='http://www.w3.org/2001/XMLSchema'
+          xmlns:typens='http://www.esri.com/schemas/ArcGIS/10.8'&gt;&lt;WKT&gt;GEOGCS[&amp;quot;GCS_WGS_1984&amp;quot;,DATUM[&amp;quot;D_WGS_1984&amp;quot;,SPHEROID[&amp;quot;WGS_1984&amp;quot;,6378137.0,298.257223563]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433],AUTHORITY[&amp;quot;EPSG&amp;quot;,4326]]&lt;/WKT&gt;&lt;XOrigin&gt;-400&lt;/XOrigin&gt;&lt;YOrigin&gt;-400&lt;/YOrigin&gt;&lt;XYScale&gt;11258999068426.238&lt;/XYScale&gt;&lt;ZOrigin&gt;-100000&lt;/ZOrigin&gt;&lt;ZScale&gt;10000&lt;/ZScale&gt;&lt;MOrigin&gt;-100000&lt;/MOrigin&gt;&lt;MScale&gt;10000&lt;/MScale&gt;&lt;XYTolerance&gt;8.983152841195215e-09&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;LeftLongitude&gt;-180&lt;/LeftLongitude&gt;&lt;WKID&gt;4326&lt;/WKID&gt;&lt;LatestWKID&gt;4326&lt;/LatestWKID&gt;&lt;/GeographicCoordinateSystem&gt;</peXml>
+      </coordRef>
+      <RasterProperties>
+        <General>
+          <PixelDepth Sync="TRUE">8</PixelDepth>
+          <HasColormap Sync="TRUE">TRUE</HasColormap>
+          <CompressionType Sync="TRUE">PACKBITS</CompressionType>
+          <NumBands Sync="TRUE">1</NumBands>
+          <Format Sync="TRUE">TIFF</Format>
+          <HasPyramids Sync="TRUE">FALSE</HasPyramids>
+          <SourceType Sync="TRUE">discrete</SourceType>
+          <PixelType Sync="TRUE">unsigned integer</PixelType>
+          <NoDataValue Sync="TRUE" />
+        </General>
+      </RasterProperties>
+    </DataProperties>
+    <SyncDate>20231208</SyncDate>
+    <SyncTime>13555300</SyncTime>
+    <ModDate>20231208</ModDate>
+    <ModTime>13561100</ModTime>
+    <scaleRange>
+      <minScale>150000000</minScale>
+      <maxScale>5000</maxScale>
+    </scaleRange>
+    <ArcGISFormat>1.0</ArcGISFormat>
+    <ArcGISProfile>ISO19139</ArcGISProfile>
+  </Esri>
+  <itemProps>
+    <imsContentType Sync="TRUE" export="False">002</imsContentType>
+  </itemProps>
+  <mdParentID>https://purl.stanford.edu/qt609tt2964.mods</mdParentID>
+  <mdHrLv>
+    <ScopeCd value="005" />
+  </mdHrLv>
+  <mdContact>
+    <rpOrgName>Stanford Geospatial Center</rpOrgName>
+    <rpCntInfo>
+      <cntAddress addressType="physical">
+        <delPoint>Branner Earth Sciences Library</delPoint>
+        <city>Stanford</city>
+        <adminArea>California</adminArea>
+        <postCode>94305</postCode>
+        <eMailAdd>brannerlibrary@stanford.edu</eMailAdd>
+        <delPoint>Mitchell Building, 2nd Floor</delPoint>
+        <delPoint>397 Panama Mall</delPoint>
+        <country>US</country>
+      </cntAddress>
+      <cntPhone>
+        <voiceNum>650-723-2746</voiceNum>
+      </cntPhone>
+    </rpCntInfo>
+    <displayName>Stanford Geospatial Center</displayName>
+    <role>
+      <RoleCd value="007" />
+    </role>
+  </mdContact>
+  <distInfo xmlns="">
+    <distFormat xmlns="">
+      <formatName Sync="FALSE">GeoTIFF</formatName>
+    </distFormat>
+    <distributor xmlns="">
+      <distorCont>
+        <rpOrgName>Stanford Geospatial Center</rpOrgName>
+        <rpCntInfo>
+          <cntAddress addressType="physical">
+            <delPoint>Branner Earth Sciences Library</delPoint>
+            <city>Stanford</city>
+            <adminArea>California</adminArea>
+            <postCode>94305</postCode>
+            <eMailAdd>brannerlibrary@stanford.edu</eMailAdd>
+            <delPoint>Mitchell Building, 2nd Floor</delPoint>
+            <delPoint>397 Panama Mall</delPoint>
+            <country>US</country>
+          </cntAddress>
+          <cntPhone>
+            <voiceNum>650-723-2746</voiceNum>
+          </cntPhone>
+        </rpCntInfo>
+        <displayName>Stanford Geospatial Center</displayName>
+        <role>
+          <RoleCd value="005" />
+        </role>
+        <displayName>Stanford Geospatial Center</displayName>
+      </distorCont>
+    </distributor>
+    <distTranOps xmlns="">
+      <onLineSrc xmlns="">
+        <linkage>https://purl.stanford.edu/jy304jy1993</linkage>
+        <protocol>http</protocol>
+        <orName>26257_e.tif</orName>
+      </onLineSrc>
+    </distTranOps>
+  </distInfo>
+  <dataIdInfo>
+    <idPurp>Historic paper maps can provide an excellent view of the changes that have occurred in
+      the cultural and physical landscape. The wide range of information provided on these maps make
+      them useful in the study of historic geography, and urban and rural land use change. As this
+      map has been georeferenced, it can be used in a GIS as a source or background layer in
+      conjunction with other GIS data.</idPurp>
+    <idAbs>&lt;DIV STYLE="text-align:Left;"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This map
+      titled " Andros Island, Golding Cay entrance" is one of five maps from georeferenced nautical
+      chart "West Indies, Plans in the Bahamas" (Map No.: 26257).
+      &lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</idAbs>
+    <themeKeys xmlns="">
+      <thesaName xmlns="">
+        <resTitle>lcsh</resTitle>
+        <date>
+          <reviseDate>2011-04-26T00:00:00</reviseDate>
+        </date>
+        <citId>
+          <identCode>http://id.loc.gov/authorities/subjects.html</identCode>
+        </citId>
+      </thesaName>
+      <keyword>Harbors</keyword>
+      <keyword>Nautical charts</keyword>
+    </themeKeys>
+    <placeKeys xmlns="">
+      <thesaName xmlns="">
+        <resTitle>geonames</resTitle>
+        <date>
+          <reviseDate>2012-11-01T00:00:00</reviseDate>
+        </date>
+        <citId>
+          <identCode>http://www.geonames.org/ontology#</identCode>
+        </citId>
+      </thesaName>
+      <keyword>Andros Island (Bahamas)</keyword>
+      <keyword>Bahamas</keyword>
+    </placeKeys>
+    <idCitation xmlns="">
+      <citId xmlns="">
+        <identCode>https://purl.stanford.edu/jy304jy1993</identCode>
+      </citId>
+      <collTitle>National Geospatial-Intelligence Agency Nautical Charts</collTitle>
+      <resEd>15th ed.</resEd>
+      <citRespParty xmlns="">
+        <rpOrgName>Land Info (Firm)</rpOrgName>
+        <role>
+          <RoleCd value="006" />
+        </role>
+      </citRespParty>
+      <citRespParty xmlns="">
+        <rpOrgName>Land Info (Firm)</rpOrgName>
+        <role>
+          <RoleCd value="010" />
+        </role>
+      </citRespParty>
+      <citRespParty xmlns="">
+        <rpOrgName>United States. Defense Mapping Agency</rpOrgName>
+        <role>
+          <RoleCd value="006" />
+        </role>
+      </citRespParty>
+      <resTitle>West Indies, Plans in the Bahamas --Andros Island, Golding Cay entrance (Raster
+        Image)</resTitle>
+      <presForm xmlns="">
+        <PresFormCd Sync="TRUE" value="005" />
+      </presForm>
+      <date>
+        <pubDate>1995-05-06T00:00:00</pubDate>
+      </date>
+    </idCitation>
+    <dataLang>
+      <languageCode value="eng" />
+      <countryCode Sync="TRUE" value="USA" />
+    </dataLang>
+    <dataChar>
+      <CharSetCd value="004" />
+    </dataChar>
+    <idStatus>
+      <ProgCd value="001" />
+    </idStatus>
+    <resMaint>
+      <maintFreq>
+        <MaintFreqCd value="012" />
+      </maintFreq>
+    </resMaint>
+    <resConst>
+      <LegConsts xmlns="">
+        <accessConsts>
+          <RestrictCd value="007" />
+        </accessConsts>
+        <useConsts>
+          <RestrictCd value="007" />
+        </useConsts>
+        <othConsts>All data is the copyrighted property of LAND INFO Worldwide Mapping, LLC and / or
+          its suppliers. Land Info grants customer unlimited license for internal academic use of
+          data and license to distribute data on an isolated non-commercial basis, or as Derived
+          Works. Derived works that include the source data must be merged with other value-added
+          data in such a way that the derived work can’t be converted back to the original source
+          data format. Other Derived Works that don’t include the source data (vector extraction,
+          classification etc.) have no restrictions on use and distribution. An unlimited license is
+          granted for media use, provided that the following citation is used: "map data courtesy
+          www.landinfo.com."</othConsts>
+      </LegConsts>
+    </resConst>
+    <dataExt xmlns="">
+      <exDesc>publication date of scanned map</exDesc>
+      <tempEle>
+        <TempExtent>
+          <exTemp>
+            <TM_Instant>
+              <tmPosition>1995-05-06T00:00:00</tmPosition>
+            </TM_Instant>
+          </exTemp>
+        </TempExtent>
+      </tempEle>
+    </dataExt>
+    <idPoC>
+      <rpIndName>Nick Hubing</rpIndName>
+      <rpOrgName>LAND INFO Worldwide Mapping, LLC</rpOrgName>
+      <role>
+        <RoleCd value="007" />
+      </role>
+      <rpCntInfo>
+        <cntAddress>
+          <eMailAdd>nick@landinfo.com</eMailAdd>
+        </cntAddress>
+        <cntPhone>
+          <voiceNum>303.790.9730</voiceNum>
+          <faxNum>303.790.9734</faxNum>
+        </cntPhone>
+        <cntInstr>www.landinfo.com</cntInstr>
+      </rpCntInfo>
+    </idPoC>
+    <aggrInfo xmlns="">
+      <assocType>
+        <AscTypeCd value="002" />
+      </assocType>
+      <initType>
+        <InitTypCd value="002" />
+      </initType>
+      <aggrDSName xmlns="">
+        <resTitle>National Geospatial-Intelligence Agency Nautical Charts</resTitle>
+        <citId xmlns="">
+          <identCode>https://purl.stanford.edu/qt609tt2964</identCode>
+        </citId>
+      </aggrDSName>
+    </aggrInfo>
+    <envirDesc Sync="TRUE"> Version 6.2 (Build 9200) ; Esri ArcGIS 10.8.1.14362</envirDesc>
+    <spatRpType>
+      <SpatRepTypCd Sync="TRUE" value="002" />
+    </spatRpType>
+    <dataExt xmlns="">
+      <geoEle xmlns="">
+        <GeoBndBox esriExtentType="search">
+          <exTypeCode Sync="TRUE">1</exTypeCode>
+          <westBL Sync="TRUE">-77.639455</westBL>
+          <eastBL Sync="TRUE">-77.583068</eastBL>
+          <northBL Sync="TRUE">24.244871</northBL>
+          <southBL Sync="TRUE">24.200423</southBL>
+        </GeoBndBox>
+      </geoEle>
+    </dataExt>
+    <tpCat>
+      <TopicCatCd value="010" />
+    </tpCat>
+  </dataIdInfo>
+  <dqInfo>
+    <dataLineage>
+      <dataSource>
+        <srcDesc>Scanned map</srcDesc>
+        <srcCitatn>
+          <resTitle>Sweden, Gulf of Bothnia, Sundsvall and approaches</resTitle>
+          <citId>
+            <identCode>https://purl.stanford.edu/bj183bc0742</identCode>
+          </citId>
+        </srcCitatn>
+      </dataSource>
+    </dataLineage>
+  </dqInfo>
+  <dataSetURI>https://purl.stanford.edu/jy304jy1993</dataSetURI>
+  <mdLang>
+    <languageCode Sync="TRUE" value="eng" />
+    <countryCode Sync="TRUE" value="USA" />
+  </mdLang>
+  <mdDateSt Sync="TRUE">20231208</mdDateSt>
+  <mdFileID>edu.stanford.purl:jy304jy1993</mdFileID>
+  <mdHrLvName Sync="TRUE">dataset</mdHrLvName>
+  <refSysInfo>
+    <RefSystem>
+      <refSysID>
+        <identCode Sync="TRUE" code="4326" />
+        <idCodeSpace Sync="TRUE">EPSG</idCodeSpace>
+        <idVersion Sync="TRUE">6.14(3.0.1)</idVersion>
+      </refSysID>
+    </RefSystem>
+  </refSysInfo>
+  <spatRepInfo>
+    <Georect>
+      <cellGeo>
+        <CellGeoCd Sync="TRUE" value="002" />
+      </cellGeo>
+      <numDims Sync="TRUE">2</numDims>
+      <tranParaAv Sync="TRUE">1</tranParaAv>
+      <chkPtAv Sync="TRUE">0</chkPtAv>
+      <cornerPts>
+        <pos Sync="TRUE">-77.639455 24.200423</pos>
+      </cornerPts>
+      <cornerPts>
+        <pos Sync="TRUE">-77.639455 24.244871</pos>
+      </cornerPts>
+      <cornerPts>
+        <pos Sync="TRUE">-77.583068 24.244871</pos>
+      </cornerPts>
+      <cornerPts>
+        <pos Sync="TRUE">-77.583068 24.200423</pos>
+      </cornerPts>
+      <centerPt>
+        <pos Sync="TRUE">-77.611261 24.222647</pos>
+      </centerPt>
+      <axisDimension type="002">
+        <dimSize Sync="TRUE">5284</dimSize>
+        <dimResol>
+          <value Sync="TRUE" uom="deg">0.000011</value>
+        </dimResol>
+      </axisDimension>
+      <axisDimension type="001">
+        <dimSize Sync="TRUE">4568</dimSize>
+        <dimResol>
+          <value Sync="TRUE" uom="deg">0.000010</value>
+        </dimResol>
+      </axisDimension>
+      <ptInPixel>
+        <PixOrientCd Sync="TRUE" value="001" />
+      </ptInPixel>
+    </Georect>
+  </spatRepInfo>
+  <contInfo>
+    <ImgDesc>
+      <contentTyp>
+        <ContentTypCd Sync="TRUE" value="002" />
+      </contentTyp>
+      <covDim>
+        <Band>
+          <dimDescrp Sync="TRUE">Band_1</dimDescrp>
+          <bitsPerVal Sync="TRUE">8</bitsPerVal>
+          <valUnit>
+            <UOM type="length" />
+          </valUnit>
+        </Band>
+      </covDim>
+    </ImgDesc>
+  </contInfo>
+  <Binary>
+    <Thumbnail>
+      <Data EsriPropertyType="PictureX">/9j/4AAQSkZJRgABAQEAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCACFAMgDASIA
+        AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+        AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+        ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+        p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+        AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+        BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+        U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+        uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iii
+        gAqKe5htgDK+3dwOM5qWsrWv9XF7k96qKu7GdWbhByRa/tOz/wCe4/75P+FH9qWeP9d/46f8K50n
+        t6fTj+gpskqxRvIxO0LuJHJwPpya29jE4/rc+yOk/tOz/wCew/75P+FNbVrFAC04AJA+6f8ACuUi
+        1O2mdURpSegzCwA5x3GB/Wmf2taSwCQG42SL1+zyA4xnptz+f0odKI1ip9jrV1iwdSVn4BIPyMOn
+        XtS/2tY5x5//AI43+FcTHqluiiNjLuZDKMQvgKS3XjrweKupKJo0eMkK4DA4wcdenXPtXLc7zp/7
+        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</Data>
+    </Thumbnail>
+  </Binary>
+  <mdChar>
+    <CharSetCd value="004" />
+  </mdChar>
+</metadata>
