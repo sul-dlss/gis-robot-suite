@@ -29,13 +29,13 @@ RSpec.describe 'utilities' do
     context 'when public' do
       let(:access) { 'world' }
 
-      it { is_expected.to be 'public' }
+      it { is_expected.to eq 'public' }
     end
 
     context 'when restricted' do
       let(:access) { 'stanford' }
 
-      it { is_expected.to be 'restricted' }
+      it { is_expected.to eq 'restricted' }
     end
   end
 end

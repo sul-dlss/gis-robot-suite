@@ -927,7 +927,7 @@
                 </dc:format>
                 <!-- Output Dataset# point, linestring, polygon, raster, etc. -->
                 <dc:type>
-                  <xsl:text>Dataset#</xsl:text>
+                  <xsl:text>Dataset#Raster</xsl:text>
                   <xsl:value-of select="$geometryType"/>
                 </dc:type>
                 <!-- Output bounding box -->
