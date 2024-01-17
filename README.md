@@ -34,6 +34,8 @@ These robots require several dependencies needed to perform the GIS workflow ste
 * `generate-content-metadata` :: Generate contentMetadata manifest
 * `load-geo-metadata` :: Accession geoMetadata xml into SDR
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
+* `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
+
 
 `gisDeliveryWF`
 ---------------
