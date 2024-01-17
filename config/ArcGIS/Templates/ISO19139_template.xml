@@ -1,0 +1,3601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<q:templates
+	xmlns="http://www.isotc211.org/2005/gmd"
+	xmlns:q="http://www.esri.com/metadata/translator/template/"	
+	xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:gts="http://www.isotc211.org/2005/gts"
+	xmlns:srv="http://www.isotc211.org/2005/srv"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:r="http://www.esri.com/metadata/translator/reader/"
+	xmlns:es="http://www.esri.com/metadata/translator/schema/"
+	xmlns:ec="http://www.esri.com/metadata/translator/ctrl/"
+	xmlns:v="http://www.esri.com/metadata/translator/var/"
+	xmlns:em="http://www.esri.com/metadata/translator/instance/"
+	xmlns:gmx="http://www.isotc211.org/2005/gmx"
+	xmlns:gmxRes="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#"
+    xmlns:nato="http://coregis/Resources/Geo_Tools/GeoMetadata_Tools/NATO_Codelists/NATO_CodelistCatalog.xml#">
+
+	<!--// NATO PROFILE requires changes to namespace declarations -->
+	<!--//      search for NATO PROFILE to find modifications specific to this profile -->
+
+	<q:for-one id="MD_Metadata" match="em:Metadata(v:Metadata), em:Resource(v:Resource)">
+		<!--// NOTE: XML Schema for MD_Metadata
+		<xs:element name="fileIdentifier" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="language" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="characterSet" type="gmd:MD_CharacterSetCode_PropertyType" minOccurs="0"/>
+		<xs:element name="parentIdentifier" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="hierarchyLevel" type="gmd:MD_ScopeCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="hierarchyLevelName" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="contact" type="gmd:CI_ResponsibleParty_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="dateStamp" type="gco:Date_PropertyType"/>
+		<xs:element name="metadataStandardName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="metadataStandardVersion" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="dataSetURI" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="locale" type="gmd:PT_Locale_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="spatialRepresentationInfo" type="gmd:MD_SpatialRepresentation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="referenceSystemInfo" type="gmd:MD_ReferenceSystem_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="metadataExtensionInfo" type="gmd:MD_MetadataExtensionInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="identificationInfo" type="gmd:MD_Identification_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="contentInfo" type="gmd:MD_ContentInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="distributionInfo" type="gmd:MD_Distribution_PropertyType" minOccurs="0"/>
+		<xs:element name="dataQualityInfo" type="gmd:DQ_DataQuality_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="portrayalCatalogueInfo" type="gmd:MD_PortrayalCatalogueReference_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="metadataConstraints" type="gmd:MD_Constraints_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="applicationSchemaInfo" type="gmd:MD_ApplicationSchemaInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="metadataMaintenance" type="gmd:MD_MaintenanceInformation_PropertyType" minOccurs="0"/>
+		<xs:element name="series" type="gmd:DS_Aggregate_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="describes" type="gmd:DS_DataSet_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="propertyType" type="gco:ObjectReference_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="featureType" type="gco:ObjectReference_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="featureAttribute" type="gco:ObjectReference_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<!--// NOTE: this might contain the Esri/PublishedDocId value -->
+			<!--//
+			<q:choose>
+				<fileIdentifier q:for-a="em:fileIdentifier(v:Metadata, v:String)">
+					<q:call idref="localizedString"/>
+				</fileIdentifier>
+				<fileIdentifier q:for-a="em:esriPublishedDocID(v:Metadata, v:String)">
+					<q:call idref="localizedString"/>
+				</fileIdentifier>
+			</q:choose>
+			-->
+			<fileIdentifier q:for-a="em:fileIdentifier(v:Metadata, v:String)">
+				<q:call idref="localizedString"/>
+			</fileIdentifier>
+            
+			<q:choose>
+				<!--// NATO PROFILE -->
+				<q:for-a match="em:profile(v:Profile), v:Profile = 'NATO'">
+					<q:for-a match="em:language(v:Metadata, v:Code), v:CodeList = nato:NATO_LanguageCode">
+						<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+							<q:choose>
+								<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+									<q:call idref="localizedString"/>
+								</language>
+								<language q:for-a="es:literal(v:CodeListValue)">
+									<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+										<q:value-of select="CodeName"/>
+									</LanguageCode>
+								</language>
+							</q:choose>
+						</q:call>
+					</q:for-a>
+				</q:for-a>
+				<!--// NATO PROFILE -->
+				<q:for-a match="em:language(v:Metadata, v:Code), v:CodeList = gmxRes:LanguageCode">
+					<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+						<q:choose>
+							<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+								<q:call idref="localizedString"/>
+							</language>
+							<language q:for-a="es:literal(v:CodeListValue)">
+								<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+									<q:value-of select="CodeName"/>
+								</LanguageCode>
+							</language>
+						</q:choose>
+					</q:call>
+				</q:for-a>
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', nato:defaultLanguage(v:String)">
+                        <language>
+                            <q:call idref="localizedString"/>
+                        </language>
+                    </q:for-a>
+                </q:for-a>
+				<q:for-a match="v:codeList=gmxRes:LanguageCode, em:defaultLanguage ({v:codeName, v:codeList, v:codeListValue, v:codeSpace})">
+				  <language>
+					<LanguageCode q:atts="codeList codeList codeListValue codeListValue">
+					  <q:value-of select="codeName"/>
+					</LanguageCode>
+				  </language>        
+				</q:for-a>
+				<language q:for-a="em:defaultLanguage(v:String)">
+					<q:call idref="localizedString"/>
+				</language>
+			</q:choose>
+      
+            <q:choose>
+                <q:for-a match="em:characterSet(v:Metadata, v:Code), v:CodeList = gmxRes:MD_CharacterSetCode">
+                    <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                        <characterSet>
+                            <MD_CharacterSetCode 
+                                q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                                <q:value-of select="CodeName"/>
+                            </MD_CharacterSetCode>
+                        </characterSet>
+                    </q:call>
+                </q:for-a>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', v:codeList=gmxRes:MD_CharacterSetCode, nato:defaultCharacterSet ({v:codeName, v:codeList, v:codeListValue, 'ISOTC211/19115'})">
+                        <characterSet>
+                            <MD_CharacterSetCode q:atts="codeList codeList codeListValue codeListValue">
+                                <q:value-of select="codeName"/>
+                            </MD_CharacterSetCode>
+                        </characterSet>        
+                    </q:for-a>
+                </q:for-a>
+            </q:choose>
+            
+			<parentIdentifier q:for-a="em:parentFileIdentifier(v:Metadata, v:String)">
+				<q:call idref="localizedString" params="String String"/>
+			</parentIdentifier>
+			<q:choose>
+				<q:for-each match="em:hierarchyLevel(v:Resource, v:Code), v:CodeList = gmxRes:MD_ScopeCode">
+				  <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<hierarchyLevel>
+					  <MD_ScopeCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					  </MD_ScopeCode>
+					</hierarchyLevel>
+				  </q:call>
+				</q:for-each>
+                <q:for-a match="em:serviceIdentificationInfo(v:Resource, v:_), es:not (em:identificationInfo(v:Resource, v:_))">
+                    <q:for-a match="v:codeList=gmxRes:MD_ScopeCode, em:svDefaultHierarchyLevel ({v:codeName, v:codeList, v:codeListValue, 'ISOTC211/19115'})">
+                      <hierarchyLevel>
+                        <MD_ScopeCode q:atts="codeList codeList codeListValue codeListValue">
+                          <q:value-of select="codeName"/>
+                        </MD_ScopeCode>
+                      </hierarchyLevel>        
+                    </q:for-a>
+				</q:for-a>
+				<q:for-a match="v:codeList=gmxRes:MD_ScopeCode, em:defaultHierarchyLevel ({v:codeName, v:codeList, v:codeListValue, 'ISOTC211/19115'})">
+				  <hierarchyLevel>
+					<MD_ScopeCode q:atts="codeList codeList codeListValue codeListValue">
+					  <q:value-of select="codeName"/>
+					</MD_ScopeCode>
+				  </hierarchyLevel>        
+				</q:for-a>
+			</q:choose>
+			<q:choose>
+                <hierarchyLevelName q:for-each="em:hierarchyLevelName(v:Resource, v:String)">
+                    <q:call idref="localizedString"/>
+                </hierarchyLevelName>
+                <q:for-a match="em:serviceIdentificationInfo(v:Resource, v:_), es:not (em:identificationInfo(v:Resource, v:_))">
+                    <hierarchyLevelName q:for-a="em:svDefaultHierarchyLevelName(v:String)">
+                        <q:call idref="localizedString"/>
+                    </hierarchyLevelName>
+				</q:for-a>
+			</q:choose>
+			<contact q:for-some="em:contact(v:Metadata, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</contact>
+			<dateStamp q:for-one="em:dateStamp(v:Metadata, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="date" params="Date Date"/>
+			</dateStamp>
+
+			<q:choose>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', nato:metadataStandardName(v:String)">
+                        <metadataStandardName>
+                            <q:call idref="localizedString"/>
+                        </metadataStandardName>
+                    </q:for-a>
+                </q:for-a>
+                <metadataStandardName q:for-a="em:ISO19139standardName(v:String)">
+                    <q:call idref="localizedString"/>
+                </metadataStandardName>
+			</q:choose>
+
+			<q:choose>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', nato:metadataStandardVersion(v:String)">
+                        <metadataStandardVersion>
+                            <q:call idref="localizedString"/>
+                        </metadataStandardVersion>
+                    </q:for-a>
+                </q:for-a>
+                <metadataStandardVersion q:for-a="em:ISO19139standardVersion(v:String)">
+                    <q:call idref="localizedString"/>
+                </metadataStandardVersion>
+			</q:choose>
+      
+			<dataSetURI q:for-a="em:dataSetURI(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</dataSetURI>
+			<locale q:for-each="em:locale(v:Metadata, v:Object)">
+				<PT_Locale>
+					<q:call idref="PT_Locale" params="Subject Object"/>
+				</PT_Locale>
+			</locale>
+			
+			<!--//====================================================-->
+			<!--// NOTE: property name changes depending on sub-class -->
+			<spatialRepresentationInfo q:for-each="em:gridSpatialRepresentationInfo(v:Resource, v:Object)">
+				<MD_GridSpatialRepresentation>
+					<q:call idref="MD_GridSpatialRepresentation" params="Subject Object"/>
+				</MD_GridSpatialRepresentation>
+			</spatialRepresentationInfo>
+			<spatialRepresentationInfo q:for-each="em:georectifiedRepresentationInfo(v:Resource, v:Object)">
+				<MD_Georectified>
+					<q:call idref="MD_Georectified" params="Subject Object"/>
+				</MD_Georectified>
+			</spatialRepresentationInfo>
+			<spatialRepresentationInfo q:for-each="em:georeferenceableRepresentationInfo(v:Resource, v:Object)">
+				<MD_Georeferenceable>
+					<q:call idref="MD_Georeferenceable" params="Subject Object"/>
+				</MD_Georeferenceable>
+			</spatialRepresentationInfo>
+			<spatialRepresentationInfo q:for-each="em:vectorSpatialRepresentationInfo(v:Resource, v:Object)">
+				<MD_VectorSpatialRepresentation>
+					<q:call idref="MD_VectorSpatialRepresentation" params="Subject Object"/>
+				</MD_VectorSpatialRepresentation>
+			</spatialRepresentationInfo>		
+			<!--//====================================================-->
+			<q:choose>
+				<!--// NOTE: FGDC uses a single literal -->
+				<referenceSystemInfo q:for-each="em:referenceSystemInfo(v:Resource, v:String), es:literal(v:String)">
+					<MD_ReferenceSystem>
+						<referenceSystemIdentifier>
+							<RS_Identifier>
+								<code>
+									<q:call idref="localizedString"/>
+								</code>
+							</RS_Identifier>
+						</referenceSystemIdentifier>
+					</MD_ReferenceSystem>				
+				</referenceSystemInfo>
+				<referenceSystemInfo q:for-each="em:referenceSystemInfo(v:Resource, v:Object)">
+					<MD_ReferenceSystem>
+						<referenceSystemIdentifier>
+							<RS_Identifier>
+								<q:call idref="RS_Identifier" params="Subject Object"/>
+							</RS_Identifier>
+						</referenceSystemIdentifier>
+					</MD_ReferenceSystem>
+				</referenceSystemInfo>
+			</q:choose>
+			
+			<metadataExtensionInfo q:for-each="em:metadataExtensionInfo (v:Metadata, v:Object)">
+				<q:call idref="MD_MetadataExtensionInformation" params="Subject Object"/>
+			</metadataExtensionInfo>	
+					
+			<identificationInfo q:for-each="em:identificationInfo(v:Resource, v:Object)">
+				<q:call idref="MD_DataIdentification" params="Subject Object"/>
+			</identificationInfo>
+			<identificationInfo q:for-each="em:serviceIdentificationInfo(v:Resource, v:Object)">
+				<q:call idref="SV_ServiceIdentification" params="Subject Object"/>
+			</identificationInfo>
+			
+			<!--//====================================================-->
+			<!--// NOTE: property name changes depending on sub-class -->
+			<contentInfo q:for-each="em:imageDescription (v:RESOURCE, v:Object)">
+				<MD_ImageDescription>
+					<q:call idref="MD_ImageDescription" params="Subject Object"/>
+				</MD_ImageDescription>
+			</contentInfo>
+			<contentInfo q:for-each="em:coverageDescription (v:RESOURCE, v:Object)">
+				<MD_CoverageDescription>
+					<q:call idref="MD_CoverageDescription" params="Subject Object"/>
+				</MD_CoverageDescription>
+			</contentInfo>
+			<contentInfo q:for-each="em:featureCatalogueDescription (v:RESOURCE, v:Object)">
+				<MD_FeatureCatalogueDescription>
+					<q:call idref="MD_FeatureCatalogueDescription" params="Subject Object"/>
+				</MD_FeatureCatalogueDescription>
+			</contentInfo>
+			<!--//====================================================-->
+		
+            <!--// NOTE: resource description MAY contain IMS content type codes in ESRI-ISO only, information goes into keywords in ISO 19139;
+                      not reading in onLineDescription if it contains a content type code, so no need to test for an online description here; 
+					  old test didn't account for format and transfer options that might exist independent of a distributor -->
+            <q:for-a match="em:distributionInfo(v:Resource, v:Object)">
+                <distributionInfo>
+					<q:call idref="MD_Distribution" params="Subject Object"/>
+                </distributionInfo>
+            </q:for-a>    
+    
+			<dataQualityInfo q:for-each="em:dataQualityInfo(v:Resource, v:Object)">
+				<q:call idref="DQ_DataQuality" params="Subject Object"/>
+			</dataQualityInfo>
+			<portrayalCatalogueInfo q:for-each="em:portrayalCatalogueInfo(v:Resource, v:Object)">
+				<q:call idref="MD_PortrayalCatalogueReference" params="Subject Object"/>
+			</portrayalCatalogueInfo>
+			
+			<!--//====================================================-->
+			<!--// NOTE: more specific properties than em:metadataConstraints -->
+			<metadataConstraints q:for-each="em:legalConstraints(v:Metadata, v:Object)">
+				<q:call idref="MD_LegalConstraints" params="Subject Object"/>
+			</metadataConstraints>	
+			<metadataConstraints q:for-each="em:securityConstraints(v:Metadata, v:Object)">
+				<q:call idref="MD_SecurityConstraints" params="Subject Object"/>
+			</metadataConstraints>
+            <!--// 92SP3 -->
+            <metadataConstraints q:for-each="em:useLimitation(v:Metadata, v:Object)">
+                <q:call idref="MD_Constraints" params="Subject Object"/>
+			</metadataConstraints>	     
+			<!--//====================================================-->
+		
+			<applicationSchemaInfo q:for-each="em:applicationSchemaInfo(v:Metadata, v:Object)">
+				<q:call idref="MD_ApplicationSchemaInformation" params="Subject Object"/>
+			</applicationSchemaInfo>
+			<metadataMaintenance q:for-a="em:metadataMaintenance(v:Metadata, v:Object)">
+				<q:call idref="MD_MaintenanceInformation" params="Subject Object"/>
+			</metadataMaintenance>
+
+		
+			<!--// TODO: series? -->
+			<!--// TODO: describes? -->
+		
+			<propertyType q:for-each="em:propertyType(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+			<propertyType q:for-each="em:propertyType(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>
+			<featureType q:for-each="em:featureType(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+			<featureType q:for-each="em:featureType(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>			
+			<featureAttribute q:for-each="em:featureAttribute(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+			<featureAttribute q:for-each="em:featureAttribute(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>			
+		</MD_Metadata>		
+	</q:for-one>
+	
+	<q:template id="MD_ApplicationSchemaInformation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="name" type="gmd:CI_Citation_PropertyType"/>
+		<xs:element name="schemaLanguage" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="constraintLanguage" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="schemaAscii" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="graphicsFile" type="gco:Binary_PropertyType" minOccurs="0"/>
+		<xs:element name="softwareDevelopmentFile" type="gco:Binary_PropertyType" minOccurs="0"/>
+		<xs:element name="softwareDevelopmentFileFormat" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+        <MD_ApplicationSchemaInformation>
+            <name q:for-one="em:name(v:Subject, v:Object)">
+                <q:call idref="CI_Citation" params="Subject Object"/>
+            </name>
+            <schemaLanguage q:for-one="em:schemaLanguage(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </schemaLanguage>
+            <constraintLanguage q:for-one="em:constraintLanguage(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </constraintLanguage>
+            <schemaAscii q:for-a="em:schemaAscii(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </schemaAscii>
+			<q:choose>
+				<graphicsFile q:for-a="em:graphicsFile(v:Subject, v:Object), v:Object = {v:String, v:URI}">
+					<gco:Binary q:atts="src URI">
+						<q:value-of select="String"/>
+					</gco:Binary>
+				</graphicsFile>
+				<graphicsFile q:for-a="em:graphicsFile(v:Subject, v:String), es:literal(v:String)">
+					<gco:Binary>
+						<q:value-of select="String"/>
+					</gco:Binary>
+				</graphicsFile>
+			</q:choose>
+			<q:choose>
+				<softwareDevelopmentFile q:for-a="em:softwareDevelopmentFile(v:Subject, v:Object), v:Object = {v:String, v:URI}">
+					<gco:Binary q:atts="src URI">
+						<q:value-of select="String"/>
+					</gco:Binary>
+				</softwareDevelopmentFile>
+				<softwareDevelopmentFile q:for-a="em:softwareDevelopmentFile(v:Subject, v:String), es:literal(v:String)">
+					<gco:Binary>
+						<q:value-of select="String"/>
+					</gco:Binary>
+				</softwareDevelopmentFile>
+			</q:choose>
+            <softwareDevelopmentFileFormat q:for-a="em:softwareDevelopmentFileFormat(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </softwareDevelopmentFileFormat>		
+        </MD_ApplicationSchemaInformation>
+	</q:template>
+	
+	<q:template id="MD_PortrayalCatalogueReference" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="portrayalCatalogueCitation" type="gmd:CI_Citation_PropertyType" maxOccurs="unbounded"/>
+		-->
+        <MD_PortrayalCatalogueReference>
+            <portrayalCatalogueCitation q:for-some="em:portrayalCatalogueCitation(v:Subject, v:Object)">
+                <q:call idref="CI_Citation" params="Subject Object"/>
+            </portrayalCatalogueCitation>			
+        </MD_PortrayalCatalogueReference>
+	</q:template>
+	
+	<q:template id="MD_FeatureCatalogueDescription" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="complianceCode" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		<xs:element name="language" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="includedWithDataset" type="gco:Boolean_PropertyType"/>
+		<xs:element name="featureTypes" type="gco:GenericName_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="featureCatalogueCitation" type="gmd:CI_Citation_PropertyType" maxOccurs="unbounded"/>
+		-->
+		<complianceCode q:for-a="em:complianceCode(v:Subject, v:Bool)">
+            <gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</complianceCode>	
+		<q:choose>
+			<!--// NATO PROFILE -->
+			<q:for-a match="em:profile(v:Profile), v:Profile = 'NATO'">
+				<q:for-each match="em:language(v:Subject, v:Code), v:CodeList = nato:NATO_LanguageCode">
+					<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+						<q:choose>
+							<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+								<q:call idref="localizedString"/>
+							</language>
+							<language q:for-a="es:literal(v:CodeListValue)">
+								<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+									<q:value-of select="CodeName"/>
+								</LanguageCode>
+							</language>
+						</q:choose>
+					</q:call>
+				</q:for-each>
+			</q:for-a>
+			<!--// NATO PROFILE -->
+			<q:for-each match="em:language(v:Subject, v:Code), v:CodeList = gmxRes:LanguageCode">
+				<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+					<q:choose>
+						<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+							<q:call idref="localizedString"/>
+						</language>
+						<language q:for-a="es:literal(v:CodeListValue)">
+							<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+								<q:value-of select="CodeName"/>
+							</LanguageCode>
+						</language>
+					</q:choose>
+				</q:call>
+			</q:for-each>
+		</q:choose>
+		<q:for-a match="es:not(em:language(v:Subject, v:String))">
+			<q:choose>
+				<q:for-a match="em:profile(v:Profile)">
+					<q:for-a match="v:Profile = 'NATO', nato:defaultLanguage(v:String)">
+						<language>
+							<q:call idref="localizedString"/>
+						</language>
+					</q:for-a>
+				</q:for-a>
+				<q:for-a match="v:codeList=gmxRes:LanguageCode, em:defaultLanguage ({v:codeName, v:codeList, v:codeListValue, v:codeSpace})">
+				  <language>
+					<LanguageCode q:atts="codeList codeList codeListValue codeListValue">
+					  <q:value-of select="codeName"/>
+					</LanguageCode>
+				  </language>        
+				</q:for-a>
+				<language q:for-a="em:defaultLanguage(v:String)">
+					<q:call idref="localizedString"/>
+				</language>
+			</q:choose>
+		</q:for-a>
+		<includedWithDataset q:for-one="em:includedWithDataset(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</includedWithDataset>		
+        <featureTypes q:for-each="em:featureTypes (v:Subject, v:Object)">
+            <q:choose>
+                <q:for-a match="v:Object = {v:String, v:CodeSpace}">
+                    <gco:LocalName>
+                        <q:attribute name="codeSpace" q:test="v:Object = {v:String, v:CodeSpace}" select="CodeSpace"/>
+                        <q:value-of select="String"/>
+                    </gco:LocalName>
+                </q:for-a>
+                <q:for-a match="es:literal(v:Object), v:String = v:Object">
+                    <gco:LocalName>
+                        <q:value-of select="String"/>
+                    </gco:LocalName>
+                </q:for-a>
+            </q:choose>
+        </featureTypes>			
+		<featureCatalogueCitation q:for-some="em:featureCatalogueCitation(v:Resource, v:Object)">
+			<q:call idref="CI_Citation" params="Subject Object"/>
+		</featureCatalogueCitation>
+	</q:template>
+	
+	<q:template id="MD_CoverageDescription" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="attributeDescription" type="gco:RecordType_PropertyType"/>
+		<xs:element name="contentType" type="gmd:MD_CoverageContentTypeCode_PropertyType"/>
+		<xs:element name="dimension" type="gmd:MD_RangeDimension_PropertyType" minOccurs="0" maxOccurs="unbounded"/>			
+		-->
+		<attributeDescription q:for-one="em:attributeDescription(v:Subject, v:String)"> <!--// TODO: xlink:href  -->
+			<gco:RecordType>
+				<q:value-of select="String"/>
+			</gco:RecordType>
+		</attributeDescription>	
+		<q:for-one match="em:contentType(v:Subject, v:Code), v:CodeList = gmxRes:MD_CoverageContentTypeCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<contentType>
+					<MD_CoverageContentTypeCode
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</MD_CoverageContentTypeCode>
+				</contentType>
+			</q:call>
+		</q:for-one>
+		<dimension q:for-each="em:rangeDimension(v:Subject, v:Object)">
+			<MD_RangeDimension>
+				<q:call idref="MD_RangeDimension" params="Subject Object"/>
+			</MD_RangeDimension>
+		</dimension>
+		<dimension q:for-each="em:bandDimension(v:Subject, v:Object)">
+			<MD_Band>
+				<q:call idref="MD_Band" params="Subject Object"/>
+			</MD_Band>
+		</dimension>		
+	</q:template>
+	
+	<q:template id="MD_RangeDimension" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="sequenceIdentifier" type="gco:MemberName_PropertyType" minOccurs="0"/>
+		<xs:element name="descriptor" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->	
+		<sequenceIdentifier q:for-a="em:sequenceIdentifier(v:Subject, v:Object)">
+			<q:call idref="MemberName" params="Subject Object"/>
+		</sequenceIdentifier>		
+		<descriptor q:for-a="em:descriptor(v:Subject, v:String)"> <!--// TODO: xlink:href  -->
+			<q:call idref="localizedString"/>
+		</descriptor>	
+	</q:template>
+	
+	<q:template id="MemberName" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="aName" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="attributeType" type="gco:TypeName_PropertyType"/>
+		-->
+        <gco:MemberName>
+          <gco:aName q:for-one="em:aName(v:Subject, v:String)">
+            <q:call idref="localizedString"/>
+          </gco:aName>	
+          <gco:attributeType q:for-one="em:attributeTypeName(v:Subject, v:String)">
+            <gco:TypeName>
+                <gco:aName>
+                    <q:call idref="localizedString"/>
+                </gco:aName>
+            </gco:TypeName>
+          </gco:attributeType>
+        </gco:MemberName>
+	</q:template>
+
+	<q:template id="MD_Band" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="maxValue" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="minValue" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="units" type="gco:UomLength_PropertyType" minOccurs="0"/>
+		<xs:element name="peakResponse" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="bitsPerValue" type="gco:Integer_PropertyType" minOccurs="0"/>
+		<xs:element name="toneGradation" type="gco:Integer_PropertyType" minOccurs="0"/>
+		<xs:element name="scaleFactor" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="offset" type="gco:Real_PropertyType" minOccurs="0"/>
+		-->
+		<q:call idref="MD_RangeDimension"/>
+		<maxValue q:for-a="em:maxValue(v:Subject, v:String)">
+			<gco:Real>
+				<q:value-of select="String"/>
+			</gco:Real>
+		</maxValue>
+		<minValue q:for-a="em:minValue(v:Subject, v:String)">
+			<gco:Real>
+				<q:value-of select="String"/>
+			</gco:Real>
+		</minValue>
+		<units q:for-a="em:units(v:Subject, v:Object)">
+			<q:call idref="UnitDefinition" params="Subject Object"/>
+		</units>			
+		<peakResponse q:for-a="em:peakResponse(v:Subject, v:String)">
+			<gco:Real>
+				<q:value-of select="String"/>
+			</gco:Real>
+		</peakResponse>
+		<bitsPerValue q:for-a="em:bitsPerValue(v:Subject, v:String)">
+			<gco:Integer>
+				<q:value-of select="String"/>
+			</gco:Integer>
+		</bitsPerValue>		
+		<toneGradation q:for-a="em:toneGradation(v:Subject, v:String)">
+			<gco:Integer>
+				<q:value-of select="String"/>
+			</gco:Integer>
+		</toneGradation>
+		<scaleFactor q:for-a="em:scaleFactor(v:Subject, v:String)">
+			<gco:Real>
+				<q:value-of select="String"/>
+			</gco:Real>
+		</scaleFactor>
+		<offset q:for-a="em:offset(v:Subject, v:String)">
+			<gco:Real>
+				<q:value-of select="String"/>
+			</gco:Real>
+		</offset>
+	</q:template>
+	
+	<!--//
+	<q:template id="Name" require="Subject">			
+		<q:choose>
+			<q:for-one match="es:literal(v:Literal)"/>
+			<q:for-one match="{v:Id, v:CodeSpace} = v:Subject"/>
+		</q:choose>	
+	</q:template>-->
+	
+	<!--// NOTE: GML -->
+	<q:template id="StandardProperties" require="Subject">
+		<!--// NOTE: XML Schema
+		<sequence>
+			<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/> DEPRECATED
+			<element ref="gml:description" minOccurs="0"/>
+			<element ref="gml:descriptionReference" minOccurs="0"/>
+			<element ref="gml:identifier"/>
+			<element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute ref="gml:id" use="required"/>
+		-->	
+		<gml:description q:for-a="em:description(v:Subject, v:String)">
+			<q:value-of select="String"/>
+		</gml:description>
+		<!--// <q:for-a match="em:descriptionReference(v:Subject, v:Object)">
+			<q:call idref="ReferenceType" params="Subject Subject"/>
+		</q:for-a> -->
+		<!--// below replacement method doesn't work for handling both href and title, so handling only href for now -->
+		<gml:descriptionReference q:atts="xlink:href String" q:for-a="em:gmlDescHref(v:Subject, v:String)">
+		</gml:descriptionReference>
+		<gml:identifier q:for-a="em:identifier (v:Subject, v:Object)">
+			<q:choose>
+				<q:attribute name="codeSpace" q:for-a="v:Object = {v:String, v:CodeSpace}" select="CodeSpace"/>
+				<q:attribute name="codeSpace" q:for-a="v:CS = 'GML_UomSymbol'" select="CS"/>
+			</q:choose>
+			<q:value-of select="Object"/>
+		</gml:identifier>
+		<!--// identifier is required for UnitDefinition, but not other GML objects; 
+			provide a default identifier appropriate for units only if one hasn't been provided -->
+		<q:test match="em:units(v:_, v:Subject), es:not(em:identifier (v:Subject, v:_)); em:valueUnit(v:_, v:Subject), es:not(em:identifier (v:Subject, v:_))">
+			<gml:identifier q:for-a="v:identifier = 'Unified Code of Units of Measure'" >		
+				<q:attribute name="codeSpace" q:for-a="v:CS = 'GML_UomSymbol'" select="CS"/>
+				<q:value-of select="identifier"/>
+			</gml:identifier>
+		</q:test>
+		<gml:name q:for-each="em:name (v:Subject, v:Object)">		
+			<q:attribute name="codeSpace" q:for-a="v:Object = {v:String, v:CodeSpace}" select="CodeSpace"/>
+			<q:value-of select="Object"/>
+		</gml:name>
+	</q:template>
+	
+	<!--// NOTE: GML -->
+	<q:template id="UnitDefinition" require="Subject">
+		<!--// NOTE: XML Schema
+		<sequence>
+			<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/> DEPRECATED
+			<element ref="gml:description" minOccurs="0"/>
+			<element ref="gml:descriptionReference" minOccurs="0"/>
+			<element ref="gml:identifier"/>
+			<element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
+			
+			<element ref="gml:remarks" minOccurs="0"/>
+			
+			<element ref="gml:quantityType" minOccurs="0"/>
+			<element ref="gml:quantityTypeReference" minOccurs="0"/>
+			<element ref="gml:catalogSymbol" minOccurs="0"/>			
+		</sequence>
+		<attribute ref="gml:id" use="required"/>
+		-->	
+		<gml:UnitDefinition  q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID)">
+			<!--// if imported ISO metadata had a GML ID for this unit, it won't be maintained. Will get a new ID when exported. -->
+			
+			<q:call idref="StandardProperties"/>		
+
+			<gml:remarks q:for-a="em:remarks(v:Subject, v:String)">
+				<q:value-of select="String"/>
+			</gml:remarks>
+			<gml:quantityType q:for-a="em:quantityType(v:Subject, v:String)">
+				<q:value-of select="String"/>
+			</gml:quantityType>	
+			<!--// <q:for-a match="em:quantityTypeReference(v:Subject, v:Object)">
+				<q:call idref="ReferenceType" params="Subject Subject"/>
+			</q:for-a> -->
+			<!--// below replacement method doesn't work for handling both href and title, so handling only href for now -->
+			<gml:quantityTypeReference q:atts="xlink:href String" q:for-a="em:unitQuanHref(v:Subject, v:String)">
+			</gml:quantityTypeReference>
+			<gml:catalogSymbol q:for-a="em:catalogSymbol (v:Subject, v:Object)">
+				<q:choose>
+					<q:attribute name="codeSpace" q:for-a="v:Object = {v:String, v:CodeSpace}" select="CodeSpace"/>
+					<q:attribute name="codeSpace" q:for-a="v:CS = 'http://aurora.regenstrief.org/UCUM'" select="CS"/>
+				</q:choose>
+				<q:value-of select="Object"/>
+			</gml:catalogSymbol>
+		</gml:UnitDefinition>
+	</q:template>
+	
+	<!--// NOTE: GML -->
+	<!--// not currently using this template because xlink namespace won't be included in output -->
+	<q:template id="ReferenceType" require="Subject">
+		<!--// NOTE: XML Schema
+		<attribute name="owns" type="boolean" default="false"/>
+		<attributeGroup ref="xlink:simpleLink"/>
+		<attribute name="nilReason" type="gml:NilReasonType"/>
+		<attribute ref="gml:remoteSchema"/>
+		-->		
+		<!--// not supporting owns, because references should only be made to items that exist independently of ArcGIS metadata, but just commenting out in case this has to come back later -->
+		<!--// <q:attribute name="owns" q:for-a="em:owns(v:Subject, v:Bool)" select="Bool"/> -->
+		<q:attribute name="xlink:href" q:for-a="em:href (v:Subject, v:String)" select="String"/>
+		<q:attribute name="xlink:title" q:for-a="em:title (v:Subject, v:String)" select="String"/>
+	</q:template>
+	
+	<q:template id="MD_ImageDescription" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="illuminationElevationAngle" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="illuminationAzimuthAngle" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="imagingCondition" type="gmd:MD_ImagingConditionCode_PropertyType" minOccurs="0"/>
+		<xs:element name="imageQualityCode" type="gmd:MD_Identifier_PropertyType" minOccurs="0"/>
+		<xs:element name="cloudCoverPercentage" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="processingLevelCode" type="gmd:MD_Identifier_PropertyType" minOccurs="0"/>
+		<xs:element name="compressionGenerationQuantity" type="gco:Integer_PropertyType" minOccurs="0"/>
+		<xs:element name="triangulationIndicator" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		<xs:element name="radiometricCalibrationDataAvailability" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		<xs:element name="cameraCalibrationInformationAvailability" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		<xs:element name="filmDistortionInformationAvailability" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		<xs:element name="lensDistortionInformationAvailability" type="gco:Boolean_PropertyType" minOccurs="0"/>
+		-->
+		<q:call idref="MD_CoverageDescription"/>
+		
+		<illuminationElevationAngle q:for-a="em:illuminationElevationAngle(v:Subject, v:String)">
+			<gco:Real><q:value-of select="String"/></gco:Real>
+		</illuminationElevationAngle>
+		<illuminationAzimuthAngle q:for-a="em:illuminationAzimuthAngle(v:Subject, v:String)">
+			<gco:Real><q:value-of select="String"/></gco:Real>
+		</illuminationAzimuthAngle>		
+		<q:for-a match="em:imagingCondition(v:Resource, v:Code), v:CodeList = gmxRes:MD_ImagingConditionCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<imagingCondition>
+					<MD_ImagingConditionCode 
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</MD_ImagingConditionCode>
+				</imagingCondition>
+			</q:call>
+		</q:for-a>
+		<imageQualityCode q:for-a="em:imageQualityCode(v:Subject, v:Object)">
+		  <MD_Identifier>
+			  <q:call idref="MD_Identifier" params="Subject Object"/>
+		  </MD_Identifier>
+		</imageQualityCode>
+		<cloudCoverPercentage q:for-a="em:cloudCoverPercentage(v:Subject, v:String)">
+			<gco:Real><q:value-of select="String"/></gco:Real>
+		</cloudCoverPercentage>
+		<processingLevelCode q:for-a="em:processingLevelCode(v:Subject, v:Object)">
+		  <MD_Identifier>
+			  <q:call idref="MD_Identifier" params="Subject Object"/>
+		  </MD_Identifier>
+		</processingLevelCode>
+		<compressionGenerationQuantity q:for-a="em:compressionGenerationQuantity(v:Subject, v:String)">
+			<gco:Integer><q:value-of select="String"/></gco:Integer>
+		</compressionGenerationQuantity>
+		<triangulationIndicator q:for-a="em:triangulationIndicator(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</triangulationIndicator>
+		<radiometricCalibrationDataAvailability q:for-a="em:radiometricCalibrationDataAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</radiometricCalibrationDataAvailability>
+		<cameraCalibrationInformationAvailability q:for-a="em:cameraCalibrationInformationAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</cameraCalibrationInformationAvailability>
+		<filmDistortionInformationAvailability q:for-a="em:filmDistortionInformationAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</filmDistortionInformationAvailability>
+		<lensDistortionInformationAvailability q:for-a="em:lensDistortionInformationAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</lensDistortionInformationAvailability>	
+	</q:template>
+	
+	<q:template id="PT_Locale" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="languageCode" type="gmd:LanguageCode_PropertyType"/>
+		<xs:element name="country" type="gmd:Country_PropertyType" minOccurs="0"/>
+		<xs:element name="characterEncoding" type="gmd:MD_CharacterSetCode_PropertyType"/>
+		-->
+		<q:for-one match="em:languageCode(v:Subject, v:Code), v:CodeList = gmxRes:LanguageCode">
+			<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+				<languageCode>
+					<LanguageCode
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</LanguageCode>
+				</languageCode>
+			</q:call>
+		</q:for-one>	
+		<q:for-a match="em:countryCode(v:Subject, v:Code), v:CodeList = gmxRes:CountryCode">
+			<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+				<country>
+					<Country
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</Country>
+				</country>
+			</q:call>
+		</q:for-a>	
+		<q:choose>
+			<q:for-a match="em:characterEncoding(v:Subject, v:Code), v:CodeList = gmxRes:MD_CharacterSetCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue">
+					<characterEncoding>
+						<MD_CharacterSetCode
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_CharacterSetCode>
+					</characterEncoding>
+				</q:call>
+			</q:for-a>	
+			<q:for-a match="es:not(em:characterEncoding(v:Subject, v:Code)), v:CodeList=gmxRes:MD_CharacterSetCode, v:Code='utf8'">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<characterEncoding>
+						<MD_CharacterSetCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_CharacterSetCode>
+					</characterEncoding>        
+				</q:call>
+			</q:for-a>
+		</q:choose>
+	</q:template>
+	
+	<q:template id="MD_GridSpatialRepresentation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="numberOfDimensions" type="gco:Integer_PropertyType"/>
+		<xs:element name="axisDimensionProperties" type="gmd:MD_Dimension_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="cellGeometry" type="gmd:MD_CellGeometryCode_PropertyType"/>
+		<xs:element name="transformationParameterAvailability" type="gco:Boolean_PropertyType"/>
+		-->
+		
+		<!--// NOTE: FGDC properties =========================== -->
+		<!--// TODO: favor rules that translate FGDC properties into an ISO 19139 model -->
+		<q:choose>
+			<numberOfDimensions q:for-a="em:rasterObjectType(v:Subject, 'Point')"><gco:integer>1</gco:integer></numberOfDimensions>
+			<numberOfDimensions q:for-a="em:rasterObjectType(v:Subject, 'Pixel')"><gco:integer>2</gco:integer></numberOfDimensions>
+			<numberOfDimensions q:for-a="em:rasterObjectType(v:Subject, 'Grid Cell')"><gco:integer>2</gco:integer></numberOfDimensions>
+			<numberOfDimensions q:for-a="em:rasterObjectType(v:Subject, 'Voxel')"><gco:integer>3</gco:integer></numberOfDimensions>
+		</q:choose>
+	
+		<axisDimensionProperties q:for-each="em:rowCount(v:Subject, v:Object), v:CodeList = gmxRes:MD_DimensionNameTypeCode, v:Code='row'">
+			<MD_Dimension>
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<dimensionName>
+						<MD_DimensionNameTypeCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_DimensionNameTypeCode>
+					</dimensionName>
+				</q:call>
+				<dimensionSize>
+					<gco:Integer><q:value-of select="Object"/></gco:Integer>
+				</dimensionSize>
+			</MD_Dimension>
+		</axisDimensionProperties>
+		<axisDimensionProperties q:for-each="em:colCount(v:Subject, v:Object), v:CodeList = gmxRes:MD_DimensionNameTypeCode, v:Code='column'">
+			<MD_Dimension>
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<dimensionName>
+						<MD_DimensionNameTypeCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_DimensionNameTypeCode>
+					</dimensionName>
+				</q:call>
+				<dimensionSize>
+					<gco:Integer><q:value-of select="Object"/></gco:Integer>
+				</dimensionSize>
+			</MD_Dimension>
+		</axisDimensionProperties>
+		<axisDimensionProperties q:for-each="em:vrtCount(v:Subject, v:Object), v:CodeList = gmxRes:MD_DimensionNameTypeCode, v:Code='vertical'">
+			<MD_Dimension>
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<dimensionName>
+						<MD_DimensionNameTypeCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_DimensionNameTypeCode>
+					</dimensionName>
+				</q:call>
+				<dimensionSize>
+					<gco:Integer><q:value-of select="Object"/></gco:Integer>
+				</dimensionSize>
+			</MD_Dimension>
+		</axisDimensionProperties>		
+		<!--// NOTE: END FGDC properties ======================= -->
+		
+		
+		<numberOfDimensions q:for-one="em:numberOfDimensions(v:Subject, v:String)">
+			<gco:Integer>
+				<q:value-of select="String"/>
+			</gco:Integer>
+		</numberOfDimensions>
+		<axisDimensionProperties q:for-each="em:axisDimensionProperties(v:Subject, v:Object)">
+			<q:call idref="MD_Dimension" params="Subject Object"/>
+		</axisDimensionProperties>
+		<q:for-one match="em:cellGeometry(v:Subject, v:Code), v:CodeList = gmxRes:MD_CellGeometryCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<cellGeometry>
+					<MD_CellGeometryCode 
+								q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</MD_CellGeometryCode>
+				</cellGeometry>
+			</q:call>
+		</q:for-one>
+		<transformationParameterAvailability q:for-one="em:transformationParameterAvailability(v:Subject, v:Bool)">
+			<gco:Boolean>
+				<q:value-of select="Bool"/>
+			</gco:Boolean>
+		</transformationParameterAvailability>
+		<q:test match="es:not(em:transformationParameterAvailability (v:Subject, v:_))">
+			<transformationParameterAvailability gco:nilReason="missing" />
+		</q:test>
+	</q:template>
+	
+	<q:template id="MD_Dimension" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="dimensionName" type="gmd:MD_DimensionNameTypeCode_PropertyType"/>
+		<xs:element name="dimensionSize" type="gco:Integer_PropertyType"/>
+		<xs:element name="resolution" type="gco:Measure_PropertyType" minOccurs="0"/>
+		-->
+		<MD_Dimension>
+			<q:for-one match="em:dimensionName(v:Subject, v:Code), v:CodeList = gmxRes:MD_DimensionNameTypeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<dimensionName>
+						<MD_DimensionNameTypeCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_DimensionNameTypeCode>
+					</dimensionName>
+				</q:call>
+			</q:for-one>	
+			<dimensionSize q:for-one="em:dimensionSize(v:Subject, v:String)">
+				<gco:Integer>
+					<q:value-of select="String"/>
+				</gco:Integer>
+			</dimensionSize>
+			<q:choose>
+				<resolution q:for-a="em:resolution(v:Subject, v:Object), v:Object = {v:String, v:UoM}">
+					<gco:Measure q:atts="uom UoM">
+						<q:value-of select="String"/>
+					</gco:Measure>
+				</resolution>
+				<resolution q:for-a="em:resolution(v:Subject, v:String), es:literal(v:String)">
+					<gco:Measure>
+						<q:value-of select="String"/>
+					</gco:Measure>
+				</resolution>
+			</q:choose>
+		</MD_Dimension>
+	</q:template>
+	
+	<q:template id="MD_Georectified" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="checkPointAvailability" type="gco:Boolean_PropertyType"/>
+		<xs:element name="checkPointDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="cornerPoints" type="gss:GM_Point_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="centerPoint" type="gss:GM_Point_PropertyType" minOccurs="0"/>
+		<xs:element name="pointInPixel" type="gmd:MD_PixelOrientationCode_PropertyType"/>
+		<xs:element name="transformationDimensionDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="transformationDimensionMapping" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="2"/>
+		-->
+		<q:call idref="MD_GridSpatialRepresentation"/>		
+		<checkPointAvailability q:for-one="em:checkPointAvailability(v:Subject, v:Bool)">
+			<gco:Boolean>
+				<q:value-of select="Bool"/>
+			</gco:Boolean>
+		</checkPointAvailability>
+		<checkPointDescription q:for-a="em:checkPointDescription(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</checkPointDescription>
+		<q:choose>
+			<cornerPoints q:for-each="em:cornerPoints(v:Subject, v:String), es:literal(v:String)">
+				<gml:Point q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID)">
+					<gml:pos>
+						<q:value-of select="String"/>
+					</gml:pos>
+				</gml:Point>	
+			</cornerPoints>
+			<cornerPoints q:for-each="em:cornerPoints(v:Subject, v:Object)">
+				<q:call idref="GML_Point" params="Subject Object"/>
+			</cornerPoints>
+		</q:choose>
+		<q:choose>
+			<centerPoint q:for-a="em:centerPoint(v:Subject, v:String), es:literal(v:String)">
+				<gml:Point q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID)">
+					<gml:pos>
+						<q:value-of select="String"/>
+					</gml:pos>
+				</gml:Point>	
+			</centerPoint>			
+			<centerPoint q:for-a="em:centerPoint(v:Subject, v:Object)">
+				<q:call idref="GML_Point" params="Subject Object"/>
+			</centerPoint>			
+		</q:choose>
+		<q:for-one match="em:pointInPixel(v:Subject, v:Code), v:CodeList = gmxRes:MD_PixelOrientationCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<pointInPixel>
+                    <!--// NOTE: this is en enumeration, not a codeList -->
+					<MD_PixelOrientationCode>
+						<q:value-of select="CodeListValue"/>
+					</MD_PixelOrientationCode>
+				</pointInPixel>
+			</q:call>
+		</q:for-one>	
+		<transformationDimensionDescription q:for-a="em:transformationDimensionDescription(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</transformationDimensionDescription>
+		<transformationDimensionMapping q:for-each="em:transformationDimensionMapping(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</transformationDimensionMapping>	
+	</q:template>
+
+	<q:template id="GML_Point" require="Subject">
+		<gml:Point q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID)">
+			<q:call idref="StandardProperties"/>
+
+			<gml:pos q:for-each="em:pos (v:Subject, v:String)">
+                <q:value-of select="String"/>
+			</gml:pos>
+		</gml:Point>	
+	</q:template>
+	
+	<q:template id="MD_Georeferenceable" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="controlPointAvailability" type="gco:Boolean_PropertyType"/>
+		<xs:element name="orientationParameterAvailability" type="gco:Boolean_PropertyType"/>
+		<xs:element name="orientationParameterDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="georeferencedParameters" type="gco:Record_PropertyType"/>
+		<xs:element name="parameterCitation" type="gmd:CI_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->	
+		<q:call idref="MD_GridSpatialRepresentation"/>		
+		<controlPointAvailability q:for-one="em:controlPointAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</controlPointAvailability>
+		<orientationParameterAvailability q:for-one="em:orientationParameterAvailability(v:Subject, v:Bool)">
+			<gco:Boolean><q:value-of select="Bool"/></gco:Boolean>
+		</orientationParameterAvailability>		
+		<orientationParameterDescription q:for-a="em:orientationParameterDescription(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</orientationParameterDescription>	
+        <!--// TODO: xlink:href -->
+		<georeferencedParameters q:for-one="em:georeferencedParameters(v:Subject, v:String)">
+			<gco:Record>
+                <q:value-of select="String"/>
+            </gco:Record>
+		</georeferencedParameters>	
+		<parameterCitation q:for-each="em:parameterCitation(v:Subject, v:Object)">
+			<q:call idref="CI_Citation" params="Subject Object"/>
+		</parameterCitation>		
+	</q:template>
+	
+	<q:template id="MD_VectorSpatialRepresentation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="topologyLevel" type="gmd:MD_TopologyLevelCode_PropertyType" minOccurs="0"/>
+		<xs:element name="geometricObjects" type="gmd:MD_GeometricObjects_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->		
+		<!--// NOTE: FGDC match to tag vpflevel is not obvious -->
+		<q:for-a match="em:topologyLevel(v:Subject, v:Code), v:CodeList = gmxRes:MD_TopologyLevelCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<topologyLevel>
+					<MD_TopologyLevelCode 
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</MD_TopologyLevelCode>
+				</topologyLevel>
+			</q:call>
+		</q:for-a>		
+		<geometricObjects q:for-each="em:geometricObjects(v:Subject, v:Object)">
+			<q:call idref="MD_GeometricObjects" params="Subject Object"/>
+		</geometricObjects>
+	</q:template>	
+	
+	<q:template id="MD_GeometricObjects" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="geometricObjectType" type="gmd:MD_GeometricObjectTypeCode_PropertyType"/>
+		<xs:element name="geometricObjectCount" type="gco:Integer_PropertyType" minOccurs="0"/>
+		-->		
+		<MD_GeometricObjects>
+			<q:for-one match="em:geometricObjectType(v:Subject, v:Code), v:CodeList = gmxRes:MD_GeometricObjectTypeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<geometricObjectType>
+						<MD_GeometricObjectTypeCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_GeometricObjectTypeCode>
+					</geometricObjectType>
+				</q:call>
+			</q:for-one>
+			<geometricObjectCount q:for-a="em:geometricObjectCount(v:Subject, v:String)">
+				<gco:Integer>
+					<q:value-of select="String"/>
+				</gco:Integer>
+			</geometricObjectCount>
+		</MD_GeometricObjects>
+	</q:template>
+	
+	<q:template id="MD_MetadataExtensionInformation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="extensionOnLineResource" type="gmd:CI_OnlineResource_PropertyType" minOccurs="0"/>
+		<xs:element name="extendedElementInformation" type="gmd:MD_ExtendedElementInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_MetadataExtensionInformation>
+			<extensionOnLineResource q:for-a="em:extensionOnLineResource(v:Subject, v:Object)">
+				<q:call idref="CI_OnlineResource" params="Subject Object"/>
+			</extensionOnLineResource>	
+			<extendedElementInformation q:for-each="em:extendedElementInformation(v:Subject, v:Object)">
+				<q:call idref="MD_ExtendedElementInformation" params="Subject Object"/>
+			</extendedElementInformation>
+		</MD_MetadataExtensionInformation>
+	</q:template>
+	
+	<q:template id="MD_ExtendedElementInformation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="shortName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="domainCode" type="gco:Integer_PropertyType" minOccurs="0"/>
+		<xs:element name="definition" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="obligation" type="gmd:MD_ObligationCode_PropertyType" minOccurs="0"/>
+		<xs:element name="condition" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="dataType" type="gmd:MD_DatatypeCode_PropertyType"/>
+		<xs:element name="maximumOccurrence" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="domainValue" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="parentEntity" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="rule" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="rationale" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="source" type="gmd:CI_ResponsibleParty_PropertyType" maxOccurs="unbounded"/>
+		-->	
+		<MD_ExtendedElementInformation>
+			<name q:for-one="em:name(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</name>
+			<shortName q:for-a="em:shortName(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</shortName>		
+			<domainCode q:for-a="em:domainCode(v:Subject, v:String)">
+				<gco:Integer>
+					<q:value-of select="String"/>
+				</gco:Integer>
+			</domainCode>	
+			<definition q:for-one="em:definition(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</definition>	
+			<q:for-a match="em:obligation(v:Subject, v:Code), v:CodeList = gmxRes:MD_ObligationCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<obligation>
+						<!--// NOTE: this is en enumeration, not a codeList -->
+						<MD_ObligationCode>
+							<q:value-of select="CodeListValue"/>
+						</MD_ObligationCode>
+					</obligation>
+				</q:call>
+			</q:for-a>
+			<condition q:for-a="em:condition(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</condition>			
+			<q:for-one match="em:dataType(v:Subject, v:Code), v:CodeList = gmxRes:MD_DatatypeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<dataType>
+						<MD_DatatypeCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_DatatypeCode>
+					</dataType>
+				</q:call>
+			</q:for-one>
+			<maximumOccurrence q:for-a="em:maximumOccurrence(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</maximumOccurrence>			
+			<domainValue q:for-a="em:domainValue(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</domainValue>		
+			<parentEntity q:for-some="em:parentEntity(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</parentEntity>				
+			<rule q:for-one="em:rule(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</rule>
+			<rationale q:for-each="em:rationale(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</rationale>
+			<source q:for-some="em:source(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</source>
+		</MD_ExtendedElementInformation>
+	</q:template>
+	
+	<q:template id="MD_Distribution" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="distributionFormat" type="gmd:MD_Format_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="distributor" type="gmd:MD_Distributor_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="transferOptions" type="gmd:MD_DigitalTransferOptions_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_Distribution>
+			<distributionFormat q:for-each="em:distributionFormat(v:Subject, v:Object)">
+				<q:call idref="MD_Format" params="Subject Object"/>
+			</distributionFormat>	
+			<distributor q:for-each="em:distributor(v:Subject, v:Object)">
+				<q:call idref="MD_Distributor" params="Subject Object"/>
+			</distributor>
+			<transferOptions q:for-each="em:transferOptions(v:Subject, v:Object)">
+				<q:call idref="MD_DigitalTransferOptions" params="Subject Object"/>
+			</transferOptions>
+		</MD_Distribution>
+	</q:template>	
+	
+	<q:template id="MD_Format" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="version" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="amendmentNumber" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="specification" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="fileDecompressionTechnique" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="formatDistributor" type="gmd:MD_Distributor_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_Format>
+			<name q:for-one="em:name(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</name>
+			<q:choose>
+				<version q:for-one="em:version(v:Subject, v:Ver), ec:maybe (em:versionDate(v:_, v:Date)), es:join('; ', [v:Ver, v:Date], v:String)">
+					<q:call idref="localizedString"/>
+				</version>
+				<version q:for-a="em:defaultFormatVersion(v:String)">
+					<q:call idref="localizedString"/>
+				</version>
+			</q:choose>
+			<amendmentNumber q:for-a="em:amendmentNumber(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</amendmentNumber>			
+			<specification q:for-a="em:specification(v:Subject, v:Spec), ec:maybe (em:contentDescription(v:_, v:Desc)), es:join('; ', [v:Spec, v:Desc], v:String)">
+				<q:call idref="localizedString"/>
+			</specification>	
+			<fileDecompressionTechnique q:for-a="em:fileDecompressionTechnique(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</fileDecompressionTechnique>	
+			<formatDistributor q:for-each="em:formatDistributor(v:Subject, v:Object)">
+				<q:call idref="MD_Distributor" params="Subject Object"/>
+			</formatDistributor>
+		</MD_Format>
+	</q:template>
+	
+	<q:template id="MD_Distributor" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="distributorContact" type="gmd:CI_ResponsibleParty_PropertyType"/>
+		<xs:element name="distributionOrderProcess" type="gmd:MD_StandardOrderProcess_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="distributorFormat" type="gmd:MD_Format_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="distributorTransferOptions" type="gmd:MD_DigitalTransferOptions_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_Distributor>
+			<distributorContact q:for-one="em:distributorContact(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</distributorContact>
+			<distributionOrderProcess q:for-each="em:distributionOrderProcess(v:Subject, v:Object)">
+				<q:call idref="MD_StandardOrderProcess" params="Subject Object"/>
+			</distributionOrderProcess>	
+			<distributorFormat q:for-each="em:distributorFormat(v:Subject, v:Object)">
+				<q:call idref="MD_Format" params="Subject Object"/>
+			</distributorFormat>	
+			<distributorTransferOptions q:for-each="em:distributorTransferOptions(v:Subject, v:Object)">
+				<q:call idref="MD_DigitalTransferOptions" params="Subject Object"/>
+			</distributorTransferOptions>
+
+			<!--// NOTE: em:resourceDescription is a shortcut used by FGDC only, won't be a reserved IMS content type code -->
+			<distributorTransferOptions q:for-each="em:resourceDescription(v:Subject, v:String)">
+				<MD_DigitalTransferOptions>
+					<onLine>
+						<CI_OnlineResource>
+							<linkage gco:nilReason="missing"></linkage>
+							<description>
+							  <gco:CharacterString><q:value-of select="String"/></gco:CharacterString>
+							</description>	
+						</CI_OnlineResource>
+					</onLine>
+				</MD_DigitalTransferOptions>
+			</distributorTransferOptions>
+		</MD_Distributor>
+	</q:template>
+
+	<q:template id="MD_StandardOrderProcess" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="fees" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="plannedAvailableDateTime" type="gco:DateTime_PropertyType" minOccurs="0"/>
+		<xs:element name="orderingInstructions" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="turnaround" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<MD_StandardOrderProcess>
+			<fees q:for-a="em:fees(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</fees>	
+			<plannedAvailableDateTime q:for-a="em:plannedAvailableDateTime(v:Subject, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="dateTime" params="DateTime Date"/>
+			</plannedAvailableDateTime>		
+			<orderingInstructions q:for-a="em:orderingInstructions(v:Subject, v:Ins), ec:maybe (em:customOrderProcess(v:Subject, v:Custom)), es:join('; ', [v:Ins, v:Custom], v:String)">
+				<q:call idref="localizedString"/>
+			</orderingInstructions>			
+			<turnaround q:for-a="em:turnaround(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</turnaround>
+		</MD_StandardOrderProcess>
+	</q:template>
+	
+	<q:template id="MD_DigitalTransferOptions" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="unitsOfDistribution" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="transferSize" type="gco:Real_PropertyType" minOccurs="0"/>
+		<xs:element name="onLine" type="gmd:CI_OnlineResource_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="offLine" type="gmd:MD_Medium_PropertyType" minOccurs="0"/>
+		-->
+		<MD_DigitalTransferOptions>  
+			<unitsOfDistribution q:for-a="em:unitsOfDistribution(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</unitsOfDistribution>	
+			<transferSize q:for-a="em:transferSize(v:Subject, v:String)">
+				<gco:Real>
+					<q:value-of select="String"/>
+				</gco:Real>
+			</transferSize>	
+			<onLine q:for-each="em:onLine(v:Subject, v:Object)">
+				<q:call idref="CI_OnlineResource" params="Subject Object"/>
+			</onLine>	
+			<offLine q:for-a="em:offLine(v:Subject, v:Object)">
+				<q:call idref="MD_Medium" params="Subject Object"/>
+			</offLine>
+			<q:for-not-any match="em:unitsOfDistribution(v:Subject,v:_); em:transferSize(v:Subject,v:_); em:onLine(v:Subject,v:_); em:offLine(v:Subject,v:_)">
+				<!-- WARNING: no content -->
+			</q:for-not-any>      
+		</MD_DigitalTransferOptions>
+	</q:template>
+	
+	<q:template id="MD_Medium" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="name" type="gmd:MD_MediumNameCode_PropertyType" minOccurs="0"/>
+		<xs:element name="density" type="gco:Real_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="densityUnits" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="volumes" type="gco:Integer_PropertyType" minOccurs="0"/>
+		<xs:element name="mediumFormat" type="gmd:MD_MediumFormatCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="mediumNote" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<MD_Medium>
+			<q:for-a match="em:name(v:Subject, v:Code), v:CodeList = gmxRes:MD_MediumNameCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<name>
+						<MD_MediumNameCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_MediumNameCode>
+					</name>
+				</q:call>
+			</q:for-a>
+			<density q:for-each="em:density(v:Subject, v:String)">
+				<gco:Real>
+					<q:value-of select="String"/>
+				</gco:Real>
+			</density>				
+			<densityUnits q:for-a="em:densityUnits(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</densityUnits>		
+			<volumes q:for-a="em:volumes(v:Subject, v:String)">
+				<gco:Integer>
+					<q:value-of select="String"/>
+				</gco:Integer>
+			</volumes>			
+			<q:for-each match="em:mediumFormat(v:Subject, v:Code), v:CodeList = gmxRes:MD_MediumFormatCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<mediumFormat>
+						<MD_MediumFormatCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_MediumFormatCode>
+					</mediumFormat>
+				</q:call>
+			</q:for-each>		
+			<mediumNote q:for-a="em:mediumNote(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</mediumNote>
+		</MD_Medium>
+	</q:template>
+	
+	<q:template id="PT_FreeText_Abstract" require="Subject">
+		<gco:CharacterString q:for-a="em:baseAbstract(v:Subject, v:String)">
+			<q:value-of select="String"/>
+		</gco:CharacterString>		
+		<PT_FreeText>
+			<q:for-each q:match="em:localeAbstract(v:Subject, v:Object)">
+				<q:call idref="PT_FreeText_LocaleAbstract" params="Subject Object"/>
+			</q:for-each>
+		</PT_FreeText>		
+	</q:template>
+
+	<q:template id="PT_FreeText_LocaleAbstract" require="Subject">
+		<textGroup q:for-a="em:abs(v:Subject, v:String), em:language(v:Subject, v:Lang), em:country(v:Subject, v:Country), es:concat([v:Lang, '-', v:Country], v:Locale)">
+			<LocalisedCharacterString q:atts="locale Locale">
+				<q:value-of select="String"/>
+			</LocalisedCharacterString>
+		</textGroup>		
+	</q:template>
+
+	<q:template id="MD_Identification" require="Subject">
+		<!--// NOTE: XML Schema for MD_Identification
+		<xs:element name="citation" type="gmd:CI_Citation_PropertyType"/>
+		<xs:element name="abstract" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="purpose" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="credit" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="status" type="gmd:MD_ProgressCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="pointOfContact" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="resourceMaintenance" type="gmd:MD_MaintenanceInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="graphicOverview" type="gmd:MD_BrowseGraphic_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="resourceFormat" type="gmd:MD_Format_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="descriptiveKeywords" type="gmd:MD_Keywords_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="resourceSpecificUsage" type="gmd:MD_Usage_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="resourceConstraints" type="gmd:MD_Constraints_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="aggregationInfo" type="gmd:MD_AggregateInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->	
+		<citation q:for-one="em:citation(v:Subject, v:Object)">
+			<q:call idref="CI_Citation" params="Subject Object"/>
+		</citation>	
+		<q:choose>
+			<abstract xsi:type="PT_FreeText_PropertyType" q:for-each="em:mdIdentAbstract(v:Subject, v:Object), em:identificationInfo(v:Parent, v:Subject)">
+				<q:call idref="PT_FreeText_Abstract" params="Subject Object"/>
+			</abstract>
+			<abstract xsi:type="PT_FreeText_PropertyType" q:for-each="em:mdIdentAbstract(v:Subject, v:Object), em:serviceIdentificationInfo(v:Parent, v:Subject)">
+				<q:call idref="PT_FreeText_Abstract" params="Subject Object"/>
+			</abstract>
+			<abstract q:for-one="em:abstract(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</abstract>
+		</q:choose>
+		<purpose q:for-a="em:purpose(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</purpose>
+		<credit q:for-each="em:credit(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</credit>
+		<q:for-each match="em:status(v:Subject, v:Code), v:CodeList = gmxRes:MD_ProgressCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<status>
+					<MD_ProgressCode 
+						q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</MD_ProgressCode>
+				</status>
+			</q:call>
+		</q:for-each>		
+		<pointOfContact q:for-each="em:pointOfContact(v:Subject, v:Object)">
+			<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+		</pointOfContact>	
+		<resourceMaintenance q:for-each="em:resourceMaintenance(v:Subject, v:Object)">
+			<q:call idref="MD_MaintenanceInformation" params="Subject Object"/>
+		</resourceMaintenance>
+		<graphicOverview q:for-each="em:graphicOverview(v:Subject, v:Object)">
+			<q:call idref="MD_BrowseGraphic" params="Subject Object"/>
+		</graphicOverview>
+		<!--// should only be doing this for NATO profile, not everything
+		<graphicOverview q:for-each="em:thumbnail(v:Subject, v:Object)">
+			<q:call idref="ESRI_Thumbnail" params="Subject Object"/>
+		</graphicOverview>
+		-->
+		<resourceFormat q:for-each="em:resourceFormat(v:Subject, v:Object)">
+			<q:call idref="MD_Format" params="Subject Object"/>
+		</resourceFormat>
+
+		<!--// NOTE: check if there's NO keyword type *AND* it's NOT IMS content-type code -OR- ISO topic -->
+		<q:for-each match="em:descriptiveKeywords(v:Subject, v:Object)">        
+			<descriptiveKeywords q:for-first="em:keyword(v:Object, v:K), es:not(em:onLineDescriptionCode(v:K, v:_)), es:not(em:onLineDescriptionCode(v:_, v:K)), es:not(gmx:CT_CodelistCatalogue (gmxRes:MD_TopicCategoryCode, v:_, {v:K, v:_}))">
+			  <q:call idref="MD_Keywords" params="Subject Object"/>
+			</descriptiveKeywords>    
+		</q:for-each> 
+
+		<q:for-each match="em:searchTags(v:Subject, v:Object), es:not(em:descriptiveKeywords(v:Subject, v:_))">        
+			<descriptiveKeywords>
+			  <q:call idref="MD_Keywords" params="Subject Object"/>
+			</descriptiveKeywords>    
+		</q:for-each>
+		
+		<!--// add IMS content type as a keyword with specific thesaurus? -->
+		
+		<!--// handle the resdesc FDGC  -->
+		<q:for-each match="em:identificationInfo(v:A, v:Subject), em:distributionInfo(v:A, v:B), em:onLineDescription(v:B, v:Desc), em:onLineDescriptionCode(v:Desc, v:_)">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<keyword>
+					  <gco:CharacterString><q:value-of select="Desc"/></gco:CharacterString>
+					</keyword>
+					<thesaurusName uuidref="723f6998-058e-11dc-8314-0800200c9a66"/>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</q:for-each>
+	
+		<!--// handle the resdesc from ESRI-ISO , em:onLineDescriptionCode(v:Label, v:Desc) -->
+		<q:for-each match="em:identificationInfo(v:A, v:Subject), em:distributionInfo(v:A, v:B), em:distributor(v:B, v:C), em:distributorTransferOptions(v:C, v:D), em:onLine(v:D, v:E), em:description(v:E, v:Label), em:onLineDescriptionCode(v:Desc, v:Label)">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<keyword>
+					  <gco:CharacterString><q:value-of select="Desc"/></gco:CharacterString>
+					</keyword>
+					<thesaurusName uuidref="723f6998-058e-11dc-8314-0800200c9a66"/>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</q:for-each>     
+	 
+		<resourceSpecificUsage q:for-each="em:resourceSpecificUsage(v:Subject, v:Object)">
+			<q:call idref="MD_Usage" params="Subject Object"/>
+		</resourceSpecificUsage>
+		<resourceConstraints q:for-each="em:legalConstraints (v:Subject, v:Object)">
+			<q:call idref="MD_LegalConstraints" params="Subject Object"/>
+		</resourceConstraints>			
+		<resourceConstraints q:for-each="em:securityConstraints (v:Subject, v:Object)">
+			<q:call idref="MD_SecurityConstraints" params="Subject Object"/>
+		</resourceConstraints>
+		<!--// 92SP3 -->
+		<resourceConstraints q:for-each="em:useLimitation(v:Subject, v:Object)">
+			<q:call idref="MD_Constraints" params="Subject Object"/>
+		</resourceConstraints>	
+				
+		<aggregationInfo q:for-each="em:aggregationInfo(v:Subject, v:Object)">
+			<q:call idref="MD_AggregateInformation" params="Subject Object"/>
+		</aggregationInfo>	
+	</q:template>
+
+	<q:template id="MD_DataIdentification" require="Subject">
+		<!--// NOTE: XML Schema for MD_DataIdentification only
+		<xs:element name="spatialRepresentationType" type="gmd:MD_SpatialRepresentationTypeCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="spatialResolution" type="gmd:MD_Resolution_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="language" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="characterSet" type="gmd:MD_CharacterSetCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="topicCategory" type="gmd:MD_TopicCategoryCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="environmentDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="extent" type="gmd:EX_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="supplementalInformation" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->		
+		<MD_DataIdentification>
+			<q:call idref="MD_Identification"/>				
+			
+			<q:for-each match="em:spatialRepresentationType(v:Subject, v:Code), v:CodeList = gmxRes:MD_SpatialRepresentationTypeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<spatialRepresentationType>
+						<MD_SpatialRepresentationTypeCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_SpatialRepresentationTypeCode>
+					</spatialRepresentationType>
+				</q:call>
+			</q:for-each>			
+			<!--// <spatialResolution q:for-each="em:spatialResolution (v:Subject, v:Object)">
+				<q:call idref="MD_Resolution" params="Subject Object"/>
+			</spatialResolution> -->
+            <q:for-each match="em:equivalentScale(v:Subject, v:String)">
+				<spatialResolution>
+					<MD_Resolution>
+						<equivalentScale>
+							<MD_RepresentativeFraction>
+								<denominator>
+									<gco:Integer>
+										<q:value-of select="String"/>
+									</gco:Integer>
+								</denominator>
+							</MD_RepresentativeFraction>
+						</equivalentScale>			
+					</MD_Resolution>
+				</spatialResolution>
+            </q:for-each>
+			<q:choose>
+				<q:for-each match="em:distance(v:Subject, v:Object), v:Object = {v:String, v:UoM}">
+					<spatialResolution>
+						<MD_Resolution>
+							<distance>
+								<gco:Distance q:atts="uom UoM">
+									<q:value-of select="String"/>
+								</gco:Distance>
+							</distance>			
+						</MD_Resolution>
+					</spatialResolution>
+				</q:for-each>
+				<q:for-each match="em:distance(v:Subject, v:String), es:literal(v:String)">
+					<spatialResolution>
+						<MD_Resolution>
+							<distance>
+								<gco:Distance>
+									<q:value-of select="String"/>
+								</gco:Distance>
+							</distance>			
+						</MD_Resolution>
+					</spatialResolution>
+				</q:for-each>
+			</q:choose>
+
+			<q:choose>
+				<!--// NATO PROFILE -->
+				<q:for-a match="em:profile(v:Profile), v:Profile = 'NATO'">
+					<q:for-each match="em:language(v:Subject, v:Code), v:CodeList = nato:NATO_LanguageCode">
+						<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+							<q:choose>
+								<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+									<q:call idref="localizedString"/>
+								</language>
+								<language q:for-a="es:literal(v:CodeListValue)">
+									<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+										<q:value-of select="CodeName"/>
+									</LanguageCode>
+								</language>
+							</q:choose>
+						</q:call>
+					</q:for-each>
+				</q:for-a>
+				<!--// NATO PROFILE -->
+				<q:for-each match="em:language(v:Subject, v:Code), v:CodeList = gmxRes:LanguageCode">
+					<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+						<q:choose>
+							<language q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+								<q:call idref="localizedString"/>
+							</language>
+							<language q:for-a="es:literal(v:CodeListValue)">
+								<LanguageCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+									<q:value-of select="CodeName"/>
+								</LanguageCode>
+							</language>
+						</q:choose>
+					</q:call>
+				</q:for-each>
+			</q:choose>
+			<q:for-a match="es:not(em:language(v:Subject, v:String))">
+				<q:choose>
+					<q:for-a match="em:profile(v:Profile)">
+						<q:for-a match="v:Profile = 'NATO', nato:defaultLanguage(v:String)">
+							<language>
+								<q:call idref="localizedString"/>
+							</language>
+						</q:for-a>
+					</q:for-a>
+					<q:for-a match="v:codeList=gmxRes:LanguageCode, em:defaultLanguage ({v:codeName, v:codeList, v:codeListValue, v:codeSpace})">
+					  <language>
+						<LanguageCode q:atts="codeList codeList codeListValue codeListValue">
+						  <q:value-of select="codeName"/>
+						</LanguageCode>
+					  </language>        
+					</q:for-a>
+					<language q:for-a="em:defaultLanguage(v:String)">
+						<q:call idref="localizedString"/>
+					</language>
+				</q:choose>
+			</q:for-a>
+      
+            <q:choose>
+                <q:for-each match="em:characterSet(v:Subject, v:Code), v:CodeList = gmxRes:MD_CharacterSetCode">
+                    <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                        <characterSet>
+                            <MD_CharacterSetCode 
+                                q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                                <q:value-of select="CodeName"/>
+                            </MD_CharacterSetCode>
+                        </characterSet>
+                    </q:call>
+                </q:for-each>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', v:codeList=gmxRes:MD_CharacterSetCode, nato:defaultCharacterSet ({v:codeName, v:codeList, v:codeListValue, 'ISOTC211/19115'})">
+                        <characterSet>
+                            <MD_CharacterSetCode q:atts="codeList codeList codeListValue codeListValue">
+                                <q:value-of select="codeName"/>
+                            </MD_CharacterSetCode>
+                        </characterSet>        
+                    </q:for-a>
+                </q:for-a>
+            </q:choose>
+
+			<q:for-each match="em:topicCategory(v:Subject, v:Code), v:CodeList = gmxRes:MD_TopicCategoryCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<topicCategory>
+						<!--// NOTE: this is en enumeration, not a codeList -->
+						<MD_TopicCategoryCode>
+							<q:value-of select="CodeListValue"/>
+						</MD_TopicCategoryCode>
+					</topicCategory>
+				</q:call>
+			</q:for-each>
+			
+			<environmentDescription q:for-a="em:environmentDescription (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</environmentDescription>	
+			<extent q:for-each="em:extent (v:Subject, v:Object)">
+				<q:call idref="EX_Extent" params="Subject Object"/>
+			</extent>
+            <q:for-each match="em:extentSearchBox(v:Subject, v:Object), es:not (em:extent(v:Subject, v:Object))">
+                <extent>
+                    <EX_Extent>
+                        <geographicElement q:for-a="em:extentSearchBox(v:Subject, v:Object)">
+                            <q:call idref="EX_GeographicBoundingBox" params="Subject Object"/>
+                        </geographicElement>
+                    </EX_Extent>
+                </extent>
+            </q:for-each>
+			<supplementalInformation q:for-a="em:supplementalInformation(v:Subject, v:Info), ec:maybe (em:technicalPrerequisites(v:_, v:Tech)), es:join('; ', [v:Info, v:Tech], v:String)">
+				<q:call idref="localizedString"/>
+			</supplementalInformation>
+			
+			<!--// TODO: review <has>
+			<has>
+			</has>
+			-->
+		</MD_DataIdentification>
+	</q:template>	
+	
+	<!--// shouldn't be used anymore, but kept in case it's needed outside of MD_DataIdentification -->
+	<q:template id="MD_Resolution" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="equivalentScale" type="gmd:MD_RepresentativeFraction_PropertyType"/>
+		<xs:element name="distance" type="gco:Distance_PropertyType"/>
+		-->
+		<MD_Resolution>
+			<equivalentScale q:for-a="em:equivalentScale(v:Subject, v:String)">
+				<MD_RepresentativeFraction>
+					<denominator>
+						<gco:Integer>
+							<q:value-of select="String"/>
+						</gco:Integer>
+					</denominator>
+				</MD_RepresentativeFraction>
+			</equivalentScale>			
+			<q:choose>
+				<distance q:for-a="em:distance(v:Subject, v:Object), v:Object = {v:String, v:UoM}">
+					<gco:Distance q:atts="uom UoM">
+						<q:value-of select="String"/>
+					</gco:Distance>
+				</distance>
+				<distance q:for-a="em:distance(v:Subject, v:String), es:literal(v:String)">
+					<gco:Distance>
+						<q:value-of select="String"/>
+					</gco:Distance>
+				</distance>
+			</q:choose>
+		</MD_Resolution>
+	</q:template>	
+	
+	<q:template id="MD_Usage" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="specificUsage" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="usageDateTime" type="gco:DateTime_PropertyType" minOccurs="0"/>
+		<xs:element name="userDeterminedLimitations" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="userContactInfo" type="gmd:CI_ResponsibleParty_PropertyType" maxOccurs="unbounded"/>
+		-->
+		<MD_Usage>
+			<specificUsage q:for-one="em:specificUsage(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</specificUsage>
+			<usageDateTime q:for-a="em:usageDateTime(v:Subject, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="dateTime" params="DateTime Date"/>
+			</usageDateTime>
+			<userDeterminedLimitations q:for-a="em:userDeterminedLimitations(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</userDeterminedLimitations>
+			<userContactInfo q:for-some="em:userContactInfo(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</userContactInfo>
+		</MD_Usage>
+	</q:template>
+	
+	<q:template id="MD_BrowseGraphic" require="Subject">
+		<!--// NOTE: XML Schema for MD_BrowseGraphic
+		<xs:element name="fileName" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="fileDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="fileType" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+        <MD_BrowseGraphic>
+            <fileName q:for-one="em:fileName(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </fileName>
+            <fileDescription q:for-a="em:fileDescription(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </fileDescription>
+            <fileType q:for-a="em:fileType(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </fileType>	
+        </MD_BrowseGraphic>
+	</q:template>
+	
+	<q:template id="MD_AggregateInformation" require="Subject">
+		<!--// NOTE: XML Schema for MD_AggregateInformation
+		<xs:element name="aggregateDataSetName" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+		<xs:element name="aggregateDataSetIdentifier" type="gmd:MD_Identifier_PropertyType" minOccurs="0"/>
+		<xs:element name="associationType" type="gmd:DS_AssociationTypeCode_PropertyType"/>
+		<xs:element name="initiativeType" type="gmd:DS_InitiativeTypeCode_PropertyType" minOccurs="0"/>
+		-->
+        <MD_AggregateInformation>
+            <aggregateDataSetName q:for-a="em:aggregateDataSetName(v:Subject, v:Object)">
+                <q:call idref="CI_Citation" params="Subject Object"/>
+            </aggregateDataSetName>
+            <aggregateDataSetIdentifier q:for-a="em:aggregateDataSetIdentifier (v:Subject, v:Object)">
+                <MD_Identifier>
+                    <q:call idref="MD_Identifier" params="Subject Object"/>
+                </MD_Identifier>
+            </aggregateDataSetIdentifier>
+            <q:for-one match="em:associationType(v:Subject, v:Code), v:CodeList = gmxRes:DS_AssociationTypeCode">
+                <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                    <associationType>
+                        <DS_AssociationTypeCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                            <q:value-of select="CodeName"/>
+                        </DS_AssociationTypeCode>
+                    </associationType>
+                </q:call>
+            </q:for-one>
+            <q:for-a match="em:initiativeType(v:Subject, v:Code), v:CodeList = gmxRes:DS_InitiativeTypeCode">
+                <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                    <initiativeType>
+                        <DS_InitiativeTypeCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                            <q:value-of select="CodeName"/>
+                        </DS_InitiativeTypeCode>
+                    </initiativeType>
+                </q:call>
+            </q:for-a>
+        </MD_AggregateInformation>
+	</q:template>	
+	
+	<q:template id="MD_Constraints" require="Subject">
+		<!--// NOTE: XML Schema for MD_Constraints
+		<xs:element name="useLimitation" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+        <MD_Constraints>
+            <useLimitation q:for-each="em:useLimitation(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </useLimitation>
+            <useLimitation q:for-a="es:literal(v:Subject)">
+                <q:call idref="localizedString" params="String Subject"/>
+            </useLimitation>
+        </MD_Constraints>
+	</q:template>
+	
+	<q:template id="MD_SecurityConstraints" require="Subject">
+		<!--// NOTE: XML Schema for MD_Constraints
+		<xs:element name="classification" type="gmd:MD_ClassificationCode_PropertyType"/>
+		<xs:element name="userNote" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="classificationSystem" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="handlingDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<MD_SecurityConstraints>			
+            <useLimitation q:for-each="em:useLimitation(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </useLimitation>
+            
+            <q:choose>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-one match="v:Profile = 'NATO', em:classification(v:Subject, v:Code), v:CodeList = nato:NATO_SecurityClassCode">
+                        <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                            <classification>
+                                <MD_ClassificationCode 
+                                    q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                                    <q:value-of select="CodeName"/>
+                                </MD_ClassificationCode>
+                            </classification>
+                        </q:call>
+                    </q:for-one>
+                </q:for-a>
+                <q:for-one match="em:classification(v:Subject, v:Code), v:CodeList = gmxRes:MD_ClassificationCode">
+                    <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                        <classification>
+                            <MD_ClassificationCode 
+                                q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                                <q:value-of select="CodeName"/>
+                            </MD_ClassificationCode>
+                        </classification>
+                    </q:call>
+                </q:for-one>
+				<q:test match="es:not(em:classification (v:Subject, v:_))">
+					<classification gco:nilReason="missing" />
+				</q:test>
+            </q:choose>
+            
+			<userNote q:for-a="em:note(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</userNote>
+            
+			<q:choose>
+                <classificationSystem q:for-a="em:classificationSystem(v:Subject, v:String)">
+                    <q:call idref="localizedString"/>
+                </classificationSystem>
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile(v:Profile)">
+                    <q:for-a match="v:Profile = 'NATO', nato:defaultClassificationSystem(v:String)">
+                        <classificationSystem>
+                            <q:call idref="localizedString"/>
+                        </classificationSystem>
+                    </q:for-a>
+                </q:for-a>
+			</q:choose>
+            
+			<handlingDescription q:for-a="em:handlingDescription(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</handlingDescription>
+		</MD_SecurityConstraints>
+	</q:template>
+	
+	<q:template id="MD_LegalConstraints" require="Subject">
+		<!--// NOTE: XML Schema for MD_LegalConstraints
+		<xs:element name="accessConstraints" type="gmd:MD_RestrictionCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="useConstraints" type="gmd:MD_RestrictionCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="otherConstraints" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<MD_LegalConstraints>
+            <useLimitation q:for-each="em:useLimitation(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </useLimitation>	
+      
+			<!--// NOTE: for FGDC, the subject may be a string -->
+			<q:for-each match="es:literal(v:Subject), em:accessConstraints(v:_, v:Subject), v:Code='otherRestrictions', v:CodeList = gmxRes:MD_RestrictionCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<accessConstraints>
+						<MD_RestrictionCode 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_RestrictionCode>
+					</accessConstraints>
+				</q:call>		
+			</q:for-each>
+			
+			<q:for-each match="em:accessConstraints(v:Subject, v:Code), v:CodeList = gmxRes:MD_RestrictionCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<accessConstraints>
+						<MD_RestrictionCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_RestrictionCode>
+					</accessConstraints>
+				</q:call>
+			</q:for-each>
+			
+			<!--// NOTE: for FGDC, the subject may be a string  -->
+			<q:for-each match="es:literal(v:Subject), em:useConstraints(v:_, v:Subject), v:Code='otherRestrictions', v:CodeList = gmxRes:MD_RestrictionCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<useConstraints>
+						<MD_RestrictionCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_RestrictionCode>
+					</useConstraints>
+				</q:call>		
+			</q:for-each>
+			
+			<q:for-each match="em:useConstraints(v:Subject, v:Code), v:CodeList = gmxRes:MD_RestrictionCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<useConstraints>
+						<MD_RestrictionCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_RestrictionCode>
+					</useConstraints>
+				</q:call>
+			</q:for-each>
+			
+            <otherConstraints q:for-each="em:otherConstraints(v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </otherConstraints>
+        
+			<q:choose>
+				<otherConstraints q:for-each="es:literal(v:Subject), em:accessConstraints(v:_, v:Subject), es:concat(['access constraints: ', v:Subject], v:String)">
+					<q:call idref="localizedString"/>
+				</otherConstraints>
+				<otherConstraints q:for-each="es:literal(v:Subject), em:useConstraints(v:_, v:Subject), es:concat(['use constraints: ', v:Subject], v:String)">
+					<q:call idref="localizedString"/>
+				</otherConstraints>
+				<otherConstraints q:for-each="es:literal(v:Subject), v:String = v:Subject">
+					<q:call idref="localizedString"/>
+				</otherConstraints>
+			</q:choose>
+			
+		</MD_LegalConstraints>
+	</q:template>
+	
+	<q:template id="MD_Keywords" require="Subject">
+		<!--// NOTE: XML Schema for MD_Keywords
+		<xs:element name="keyword" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="type" type="gmd:MD_KeywordTypeCode_PropertyType" minOccurs="0"/>
+		<xs:element name="thesaurusName" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+		-->
+		<MD_Keywords>		
+			<keyword q:for-each="em:keyword(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</keyword>
+      
+            <q:choose>
+              <!--// explicit type following ISO model -->
+              <q:for-a match="em:type(v:Subject, v:Code), v:CodeList = gmxRes:MD_KeywordTypeCode">
+                <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                  <type>
+                    <MD_KeywordTypeCode 
+                          q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                      <q:value-of select="CodeName"/>
+                    </MD_KeywordTypeCode>
+                  </type>
+                </q:call>
+              </q:for-a>
+              <!--// derived (rule-based), if the more explicit em:type isn't available -->
+              <q:for-a match="em:keywordType(v:Subject, v:Code), v:CodeList = gmxRes:MD_KeywordTypeCode">
+                <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                  <type>
+                    <MD_KeywordTypeCode 
+                          q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                      <q:value-of select="CodeName"/>
+                    </MD_KeywordTypeCode>
+                  </type>
+                </q:call>
+              </q:for-a>        
+            </q:choose>
+      
+			<thesaurusName q:for-a="em:thesaurusName(v:Subject, v:Object)">
+				<q:call idref="CI_Citation" params="Subject Object"/>
+			</thesaurusName>
+		</MD_Keywords>
+	</q:template>
+	
+	<q:template id="MD_MaintenanceInformation" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="maintenanceAndUpdateFrequency" type="gmd:MD_MaintenanceFrequencyCode_PropertyType"/>
+		<xs:element name="dateOfNextUpdate" type="gco:Date_PropertyType" minOccurs="0"/>
+		<xs:element name="userDefinedMaintenanceFrequency" type="gts:TM_PeriodDuration_PropertyType" minOccurs="0"/>
+		<xs:element name="updateScope" type="gmd:MD_ScopeCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="updateScopeDescription" type="gmd:MD_ScopeDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="maintenanceNote" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="contact" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->			
+		<MD_MaintenanceInformation>
+			<q:for-one match="em:maintenanceAndUpdateFrequency(v:Subject, v:Code), v:CodeList = gmxRes:MD_MaintenanceFrequencyCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<maintenanceAndUpdateFrequency>
+						<MD_MaintenanceFrequencyCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_MaintenanceFrequencyCode>
+					</maintenanceAndUpdateFrequency>
+				</q:call>
+			</q:for-one>
+			<dateOfNextUpdate q:for-a="em:dateOfNextUpdate (v:Subject, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="date" params="Date Date"/>
+			</dateOfNextUpdate>
+            
+            <!--// from http://www.isotc211.org/schemas/2005/gts/temporalObjects.xsd:
+                <xs:element name="TM_PeriodDuration" type="xs:duration" />
+            from http://www.w3.org/TR/xmlschema-2/#duration:
+                The lexical representation for duration is the [ISO 8601] extended format PnYnMnDTnHnMnS, where nY represents the number of years... and so on
+            -->
+			<userDefinedMaintenanceFrequency q:for-a="em:userDefinedMaintenanceFrequency(v:Subject, v:String)">
+				<gts:TM_PeriodDuration>
+					<q:value-of select="String"/>
+				</gts:TM_PeriodDuration>
+			</userDefinedMaintenanceFrequency>			
+
+			<q:for-each match="em:updateScope(v:Subject, v:Code), v:CodeList = gmxRes:MD_ScopeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<updateScope>
+						<MD_ScopeCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_ScopeCode>
+					</updateScope>
+				</q:call>
+			</q:for-each>
+			<q:for-each match="em:updateScopeDescription(v:Subject, v:Object)">
+				<q:call idref="MD_ScopeDescription" params="Subject Object"/>
+			</q:for-each>
+			
+			<!--// NOTE: FGDC property: metadataReviewDate -->
+			<maintenanceNote q:for-each="em:metadataReviewDate(v:Subject, v:Date), es:concat(['Last metadata review date: ', v:Date], v:String)">
+				<q:call idref="localizedString"/>
+			</maintenanceNote>
+			<maintenanceNote q:for-each="em:maintenanceNote(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</maintenanceNote>
+			<contact q:for-each="em:maintenanceContact(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</contact>
+		</MD_MaintenanceInformation>
+	</q:template>
+	
+	<q:template id="MD_ScopeDescription" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:choice>
+			<xs:element name="attributes" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="features" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="featureInstances" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="attributeInstances" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="dataset" type="gco:CharacterString_PropertyType"/>
+			<xs:element name="other" type="gco:CharacterString_PropertyType"/>
+		</xs:choice>
+		
+		<xs:attributeGroup name="ObjectReference">
+			<xs:attributeGroup ref="xlink:simpleLink"/>
+			<xs:attribute name="uuidref" type="xs:string"/>
+		</xs:attributeGroup>		
+		-->	
+		<q:for-each match="em:attributes(v:Subject, v:Object)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<attributes q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<attributes q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<attributes q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<attributes q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+		<q:for-each match="em:features(v:Subject, v:Object)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<features q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<features q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<features q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<features q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+		<q:for-each match="em:featureInstances(v:Subject, v:Object)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<featureInstances q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<featureInstances q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<featureInstances q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<featureInstances q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+		<q:for-each match="em:attributeInstances(v:Subject, v:Object)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<attributeInstances q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<attributeInstances q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<attributeInstances q:test="es:literal(v:Object)" q:atts="uuidref Object"/>
+						<attributeInstances q:test="es:uri(v:Object)" q:atts="xlink:href Object"/>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+		<q:for-each match="em:dataset(v:Subject, v:String)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<dataset>
+							<q:call idref="localizedString"/>
+						</dataset>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<dataset>
+							<q:call idref="localizedString"/>
+						</dataset>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+		<q:for-each match="em:other(v:Subject, v:String)">
+			<q:test match="em:updateScopeDescription(v:_, v:Subject)">
+				<updateScopeDescription>
+					<MD_ScopeDescription>
+						<other>
+							<q:call idref="localizedString"/>
+						</other>
+					</MD_ScopeDescription>
+				</updateScopeDescription>
+			</q:test>
+			<q:test match="em:levelDescription(v:_, v:Subject)">
+				<levelDescription>
+					<MD_ScopeDescription>
+						<other>
+							<q:call idref="localizedString"/>
+						</other>
+					</MD_ScopeDescription>
+				</levelDescription>
+			</q:test>
+		</q:for-each>
+
+	</q:template>
+	
+	<!--//
+	<q:template id="ScopeDescriptions" require="Subject">
+		<attributes q:for-each="em:attributes(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+		<attributes q:for-each="em:attributes(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>
+		<features q:for-each="em:features(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+		<features q:for-each="em:features(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>
+		<featureInstances q:for-each="em:featureInstances(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+		<featureInstances q:for-each="em:featureInstances(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>
+		<attributeInstances q:for-each="em:attributeInstances(v:Subject, v:Object), es:literal(v:Object)" q:atts="uuidref Object"/>
+		<attributeInstances q:for-each="em:attributeInstances(v:Subject, v:Object), es:uri(v:Object)" q:atts="xlink:href Object"/>
+		<dataset q:for-a="em:dataset(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</dataset>
+		<other q:for-a="em:other(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</other>
+	</q:template>
+	-->
+
+	<q:template id="PT_FreeText_Title" require="Subject">
+		<gco:CharacterString q:for-a="em:baseTitle(v:Subject, v:String)">
+			<q:value-of select="String"/>
+		</gco:CharacterString>		
+		<PT_FreeText>
+			<q:for-each q:match="em:localeTitle(v:Subject, v:Object)">
+				<q:call idref="PT_FreeText_LocaleTitle" params="Subject Object"/>
+			</q:for-each>
+		</PT_FreeText>		
+	</q:template>
+
+	<q:template id="PT_FreeText_LocaleTitle" require="Subject">
+		<textGroup q:for-a="em:ttl(v:Subject, v:String), em:language(v:Subject, v:Lang), em:country(v:Subject, v:Country), es:concat([v:Lang, '-', v:Country], v:Locale)">
+			<LocalisedCharacterString q:atts="locale Locale">
+				<q:value-of select="String"/>
+			</LocalisedCharacterString>
+		</textGroup>		
+	</q:template>
+
+	<q:template id="CI_Citation" require="Subject">
+		<!--// NOTE: XML Schema for CI_Citation
+		<xs:element name="title" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="alternateTitle" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="date" type="gmd:CI_Date_PropertyType" maxOccurs="unbounded"/>
+		<xs:element name="edition" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="editionDate" type="gco:Date_PropertyType" minOccurs="0"/>
+		<xs:element name="identifier" type="gmd:MD_Identifier_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="citedResponsibleParty" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="presentationForm" type="gmd:CI_PresentationFormCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="series" type="gmd:CI_Series_PropertyType" minOccurs="0"/>
+		<xs:element name="otherCitationDetails" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="collectiveTitle" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="ISBN" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="ISSN" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<CI_Citation>
+			<q:choose>		
+				<title xsi:type="PT_FreeText_PropertyType" q:for-each="em:mdIdentTitle(v:Subject, v:Object)">
+					<q:call idref="PT_FreeText_Title" params="Subject Object"/>
+				</title>
+				<title q:for-a="em:title(v:Subject, v:String), es:not(em:mdIdentTitle(v:Subject, v:Object))">
+					<q:call idref="localizedString"/>
+				</title>
+				<!--// NOTE: FGDC produces a simple literal -->
+				<title q:for-a="es:literal(v:Subject)">
+					<q:call idref="localizedString" params="String Subject"/>
+				</title>
+			</q:choose>				
+			<alternateTitle q:for-each="em:alternateTitle(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</alternateTitle>
+            <q:choose>
+              <date q:for-some="em:date(v:Subject, v:Date, v:Code), es:nonEmptyString(v:Date)">
+                <CI_Date>
+                  <date>
+                    <q:call idref="date" params="Date Date"/>
+                  </date>
+                  <q:for-some match="v:CodeList = gmxRes:CI_DateTypeCode">
+                    <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                      <dateType>
+                        <CI_DateTypeCode 
+                              q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                          <q:value-of select="CodeName"/>
+                        </CI_DateTypeCode>
+                      </dateType>
+                    </q:call>
+                  </q:for-some>
+                </CI_Date>
+              </date>
+              <date q:for-some="em:dateNil(v:Subject, v:Date, v:Code), es:nonEmptyString(v:Date)">
+                <CI_Date>
+                  <date q:atts="gco:nilReason Date">
+                  </date>
+                  <q:for-some match="v:CodeList = gmxRes:CI_DateTypeCode">
+                    <q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+                      <dateType>
+                        <CI_DateTypeCode 
+                              q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+                          <q:value-of select="CodeName"/>
+                        </CI_DateTypeCode>
+                      </dateType>
+                    </q:call>
+                  </q:for-some>
+                </CI_Date>
+              </date>
+			  <q:test match="es:not(em:date (v:Subject, v:_)) ; es:not(em:dateNil (v:Subject, v:_))">
+				<date gco:nilReason="missing" />
+			  </q:test>
+            </q:choose>
+      
+			<edition q:for-a="em:edition(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</edition>					
+			<editionDate q:for-a="em:editionDate(v:Subject, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="date" params="Date Date"/>
+			</editionDate>			
+			<identifier q:for-each="em:identifier (v:Subject, v:Object)">
+				<MD_Identifier>
+					<q:call idref="MD_Identifier" params="Subject Object"/>
+				</MD_Identifier>
+			</identifier>
+			<citedResponsibleParty q:for-each="em:citedResponsibleParty(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</citedResponsibleParty>
+			<q:for-each match="em:presentationForm(v:Subject, v:Code), v:CodeList = gmxRes:CI_PresentationFormCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<presentationForm>
+						<CI_PresentationFormCode 
+									q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</CI_PresentationFormCode>
+					</presentationForm>
+				</q:call>
+			</q:for-each>
+			<series q:for-a="em:series(v:Subject, v:Object)">
+				<q:call idref="CI_Series" params="Subject Object"/>
+			</series>
+			<otherCitationDetails q:for-a="em:otherCitationDetails(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</otherCitationDetails>
+			<collectiveTitle q:for-a="em:collectiveTitle(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</collectiveTitle>		
+			<ISBN q:for-a="em:ISBN(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</ISBN>
+			<ISSN q:for-a="em:ISSN(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</ISSN>		
+		</CI_Citation>
+	</q:template>
+	
+	<q:template id="CI_Series" require="Subject">
+		<!--// XML Schema
+		<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="issueIdentification" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="page" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+        <CI_Series>
+            <name q:for-a="em:name (v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </name>
+            <issueIdentification q:for-a="em:issueIdentification (v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </issueIdentification>
+            <page q:for-a="em:page (v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </page>
+        </CI_Series>
+	</q:template>
+		
+	<q:template id="EX_BoundingPolygon" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:sequence>
+			<xs:element name="polygon" type="gss:GM_Object_PropertyType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		
+		Definition (ISO-19115): boundary enclosing the dataset, expressed as the closed set of
+			(x,y) coordinates of the polygon (last point replicates first point)
+			
+			Constrained the implementation of the EX_BoundingPolygon's polygon attribute to be a Box (upper and
+			lower corner Points) or Polygon (outer and inner bounding Rings)
+            
+            gmd:EX_BoundingPolygon
+              gmd:polygon
+                gml:Polygon  id="x"
+                      [gml:Polygon substitutes for gml:AbstractSurface extends gml:AbstractSurface with elements exterior (0..1) and interior (0..n)
+                      gml:AbstractSurface substitutes for gml:AbstractGeometricPrimitive extends gml:AbstractGeometricPrimitiveType
+                      gml:AbstractGeometricPrimitive substitutes for gml:AbstractGeometry extends gml:AbstractGeometryType
+                      gml:AbstractGeometry substitutes for gml:AbstractGML extends gml:AbstractGMLType with optional SRSReferenceGroup not used
+                      gml:AbstractGML substitutes for gml:AbstractObject (anything) adds required gml:id attribute and elements gml:StandardObjectProperties
+                        id (1 type "ID", constrained to be unique in the XML document in which it occurs)
+                      gml:StandardObjectProperties not deprecated (not used): 
+                        description (0..1 gml:StringOrRefType)
+                        descriptionReference with xlink:href (0..1) gml:ReferenceType
+                        identifier special identifier (0..1 gml:CodeWithAuthorityType)
+                        name label or identifier, authority for a name given with codeSpace (0..n gml:CodeType)]
+                  gml:exterior
+                        "A boundary of a surface consists of a number of rings. In the normal 2D case, one of these rings is distinguished as being the 
+                        exterior boundary. In a general manifold this is not always possible, in which case all boundaries shall be listed as interior 
+                        boundaries, and the exterior will be empty"
+                  gml:interior
+                        "A boundary of a surface consists of a number of rings. The "interior" rings separate the surface / surface patch from the area 
+                        enclosed by the rings"
+                        
+                        [both type gml:AbstractRingPropertyType: 
+                        references gml:AbstractRing substitutes for gml:AbstractObject]
+                        [gml:LinearRing substitutes for gml:AbstractRing extends gml:AbstractRing with elements 4..n gml:pos or 1 gml:posList not used]
+                    gml:LinearRing
+                        "A LinearRing is defined by four or more coordinate tuples, with linear interpolation between them; the first and last coordinates 
+                        shall be coincident. The number of direct positions in the list shall be at least four"
+                      gml:pos
+                        [gml:DirectPositionType extends gml:doubleList with optional SRSReferenceGroup not used]
+                      gml:posList
+                        [gml:DirectPositionListType extends gml:doubleList with optional SRSReferenceGroup not used and optional count attribute not used]
+                        "The optional attribute count specifies the number of direct positions in the list. If the attribute count is present then the 
+                        attribute srsDimension shall be present, too. The number of entries in the list is equal to the product of the dimensionality of 
+                        the coordinate reference system (i.e. it is a derived value of the coordinate reference system definition) and the number of 
+                        direct positions."
+                        
+                        XML Schema: list items will be separated at space boundaries
+		-->
+		<EX_BoundingPolygon>		
+			<extentTypeCode q:for-a="em:extentTypeCode(v:Subject, v:Bool)">
+				<gco:Boolean>
+					<q:value-of select="Bool"/>
+				</gco:Boolean>
+			</extentTypeCode>				
+			<polygon q:for-some="em:polygon (v:Subject, v:Object)">
+				<q:call idref="GML_Polygon" params="Subject Object"/>
+			</polygon>
+		</EX_BoundingPolygon>	
+	</q:template>
+	
+	<q:template id="GML_Polygon" require="Subject">
+		<gml:Polygon q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID)">
+			<q:call idref="StandardProperties"/>		
+
+			<gml:exterior q:for-a="em:exterior (v:Subject, v:Object)">
+                <q:call idref="GML_LinearRing" params="Subject Object"/>
+			</gml:exterior>
+			<gml:interior q:for-each="em:interior (v:Subject, v:Object)">
+                <q:call idref="GML_LinearRing" params="Subject Object"/>
+			</gml:interior>
+		</gml:Polygon>	
+	</q:template>
+	
+	<q:template id="GML_LinearRing" require="Subject">
+		<gml:LinearRing>
+            <q:choose>
+                <gml:pos q:for-each="em:pos (v:Subject, v:String)">
+                    <q:value-of select="String"/>
+                </gml:pos>
+                <gml:posList q:for-a="em:posList (v:Subject, v:String)">
+                    <q:value-of select="String"/>
+                </gml:posList>
+            </q:choose>
+		</gml:LinearRing>	
+	</q:template>
+	
+	<q:template id="EX_GeographicDescription" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="geographicIdentifier" type="gmd:MD_Identifier_PropertyType"/>
+		-->
+		<EX_GeographicDescription>
+			<extentTypeCode q:for-a="em:extentTypeCode(v:Subject, v:Bool)">
+				<gco:Boolean>
+					<q:value-of select="Bool"/>
+				</gco:Boolean>
+			</extentTypeCode>				
+			<geographicIdentifier q:for-one="em:identifier (v:Subject, v:Object)">
+				<MD_Identifier>
+					<q:call idref="MD_Identifier" params="Subject Object"/>
+				</MD_Identifier>
+			</geographicIdentifier>
+		</EX_GeographicDescription>
+	</q:template>
+	
+	<q:template id="EX_GeographicBoundingBox" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="westBoundLongitude" type="gco:Decimal_PropertyType"/>
+		<xs:element name="eastBoundLongitude" type="gco:Decimal_PropertyType"/>
+		<xs:element name="southBoundLatitude" type="gco:Decimal_PropertyType"/>
+		<xs:element name="northBoundLatitude" type="gco:Decimal_PropertyType"/>
+		-->
+		<EX_GeographicBoundingBox>
+			<extentTypeCode q:for-a="em:extentTypeCode(v:Subject, v:Bool)">
+				<gco:Boolean>
+					<q:value-of select="Bool"/>
+				</gco:Boolean>
+			</extentTypeCode>				
+			<westBoundLongitude q:for-one="em:westBoundLongitude (v:Subject, v:String)">
+				<gco:Decimal>
+					<q:value-of select="String"/>
+				</gco:Decimal>
+			</westBoundLongitude>
+			<eastBoundLongitude q:for-one="em:eastBoundLongitude (v:Subject, v:String)">
+				<gco:Decimal>
+					<q:value-of select="String"/>
+				</gco:Decimal>
+			</eastBoundLongitude>
+			<southBoundLatitude q:for-one="em:southBoundLatitude (v:Subject, v:String)">
+				<gco:Decimal>
+					<q:value-of select="String"/>
+				</gco:Decimal>
+			</southBoundLatitude>
+			<northBoundLatitude q:for-one="em:northBoundLatitude (v:Subject, v:String)">
+				<gco:Decimal>
+					<q:value-of select="String"/>
+				</gco:Decimal>
+			</northBoundLatitude>
+		</EX_GeographicBoundingBox>
+	</q:template>
+
+	<q:template id="CI_ResponsibleParty" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="individualName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="organisationName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="positionName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="contactInfo" type="gmd:CI_Contact_PropertyType" minOccurs="0"/>
+		<xs:element name="role" type="gmd:CI_RoleCode_PropertyType"/>
+		-->
+		<CI_ResponsibleParty>
+			<individualName q:for-a="em:individualName(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</individualName>
+			<organisationName q:for-a="em:organisationName(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</organisationName>
+			<organisationName q:for-a="em:name(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+				<!-- WARNING: translation from FGDC is ambiguous, this may require correction -->
+			</organisationName>
+			<positionName q:for-a="em:position(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</positionName>
+			<contactInfo q:for-a="em:contactInfo(v:Subject, v:Object)">
+				<q:call idref="CI_Contact" params="Subject Object"/>
+			</contactInfo>
+			<!--// NOTE: in ISO contact information has it's own class,	but in FGDC it doesn't. 
+					Consult a rule to determine if there's contact info here:
+			-->
+			<contactInfo q:for-a="em:contactInfo(v:Subject)">
+				<q:call idref="CI_Contact" params="Subject Subject"/>
+			</contactInfo>
+			<q:choose>
+				<q:for-first match="em:role(v:Subject, v:Code), v:CodeList = gmxRes:CI_RoleCode">
+					<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+						<role>
+							<CI_RoleCode 
+										q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+								<q:value-of select="CodeName"/>
+							</CI_RoleCode>
+						</role>
+					</q:call>
+				</q:for-first>
+				<q:for>
+					<role>
+						<CI_RoleCode 
+								codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" 
+								codeListValue="pointOfContact"
+								codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+					</role>
+				</q:for>
+			</q:choose>
+		</CI_ResponsibleParty>
+	</q:template>
+	
+	<q:template id="CI_Contact" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="phone" type="gmd:CI_Telephone_PropertyType" minOccurs="0"/>
+		<xs:element name="address" type="gmd:CI_Address_PropertyType" minOccurs="0"/>
+		<xs:element name="onlineResource" type="gmd:CI_OnlineResource_PropertyType" minOccurs="0"/>
+		<xs:element name="hoursOfService" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="contactInstructions" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<CI_Contact>
+			<q:test match="em:voiceNum(v:Subject, v:_) ; em:faxNum(v:Subject, v:_)">
+				<phone>
+					<CI_Telephone>
+						<voice q:for-each="em:voiceNum(v:Subject, v:String)">
+							<q:call idref="localizedString"/>
+						</voice>
+						<facsimile q:for-each="em:faxNum(v:Subject, v:String)">
+							<q:call idref="localizedString"/>
+						</facsimile>
+					</CI_Telephone>
+				</phone>
+			</q:test>
+			<address q:for-a="em:address(v:Subject, v:Object)">
+				<q:call idref="CI_Address" params="Subject Object"/>
+			</address>
+			<onlineResource q:for-a="em:onlineResource(v:Subject, v:Object)">
+				<q:call idref="CI_OnlineResource" params="Subject Object"/>
+			</onlineResource>
+			<hoursOfService q:for-a="em:hours(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</hoursOfService>
+			<contactInstructions q:for-a="em:instructions(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</contactInstructions>
+
+			<!--// TODO: review this: if an address is not known, then test for em:location and place inside contact instructions -->
+			<q:for-a match="em:location(v:Subject, v:String)">
+				<contactInstructions>
+					<q:call idref="localizedString"/>
+				</contactInstructions>
+			</q:for-a>
+		</CI_Contact>
+	</q:template>
+
+	<q:template id="CI_OnlineResource" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="linkage" type="gmd:URL_PropertyType"/>
+		<xs:element name="protocol" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="applicationProfile" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="function" type="gmd:CI_OnLineFunctionCode_PropertyType" minOccurs="0"/>
+		-->
+		<CI_OnlineResource>
+			<linkage q:for-one="em:linkage(v:Subject, v:Value)">
+				<URL>
+					<q:value-of select="Value"/>
+				</URL>
+			</linkage>
+			<protocol q:for-a="em:protocol(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</protocol>
+			<applicationProfile q:for-a="em:applicationProfile(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</applicationProfile>
+			<name q:for-a="em:name(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</name>		
+			<description q:for-a="em:description(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</description>
+			<q:for-a match="em:function(v:Subject, v:Code), v:CodeList = gmxRes:CI_OnLineFunctionCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<function>
+						<CI_OnLineFunctionCode 
+								q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</CI_OnLineFunctionCode>
+					</function>
+				</q:call>
+			</q:for-a>
+		</CI_OnlineResource>
+	</q:template>
+	
+	<q:template id="CI_Address" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="deliveryPoint" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="city" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="administrativeArea" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="postalCode" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="country" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="electronicMailAddress" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<CI_Address>
+			<deliveryPoint q:for-each="em:deliveryPoint(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</deliveryPoint>
+			<city q:for-a="em:city(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</city>
+			<administrativeArea q:for-a="em:administrativeArea(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</administrativeArea>
+			<postalCode q:for-a="em:postalCode(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</postalCode>
+			<q:for-a match="em:country(v:Subject, v:Code), v:CodeList = gmxRes:CountryCode">
+				<q:call idref="code2" bind-all="CodeName CodeListValue CodeSpace">
+					<q:choose>
+						<country q:for-a="es:equalsIgnoreCase(v:CodeListValue,''), v:String=v:Code">
+							<q:call idref="localizedString"/>
+						</country>
+						<country q:for-a="es:literal(v:CodeListValue)">
+							<Country q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+								<q:value-of select="CodeName"/>
+							</Country>
+						</country>
+					</q:choose>
+				</q:call>
+			</q:for-a>
+			<electronicMailAddress q:for-each="em:electronicMailAddress(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</electronicMailAddress>
+		</CI_Address>
+	</q:template>
+	
+	<q:template id="DQ_Scope" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="level" type="gmd:MD_ScopeCode_PropertyType"/>
+		<xs:element name="extent" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+		<xs:element name="levelDescription" type="gmd:MD_ScopeDescription_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<DQ_Scope>
+			<q:for-one match="em:level(v:Subject, v:Code), v:CodeList = gmxRes:MD_ScopeCode">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<level>
+						<MD_ScopeCode q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</MD_ScopeCode>
+					</level>
+				</q:call>
+			</q:for-one>
+			<extent q:for-a="em:extent(v:Subject, v:Object)">
+				<q:call idref="EX_Extent" params="Subject Object"/>
+			</extent>
+			<q:for-each match="em:levelDescription(v:Subject, v:Object)">
+				<q:call idref="MD_ScopeDescription" params="Subject Object"/>
+			</q:for-each>
+		</DQ_Scope>
+	</q:template>
+	
+	<q:template id="DQ_DataQuality" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="scope" type="gmd:DQ_Scope_PropertyType"/>
+		<xs:element name="report" type="gmd:DQ_Element_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="lineage" type="gmd:LI_Lineage_PropertyType" minOccurs="0"/>
+		-->
+		
+		<DQ_DataQuality>
+			<scope q:for-one="em:scope(v:Subject, v:Object)">
+				<q:call idref="DQ_Scope" params="Subject Object"/>
+			</scope>			
+			<report q:for-each="em:completenessOmissionReport(v:Subject, v:Object)">
+				<DQ_CompletenessOmission>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_CompletenessOmission>
+			</report>
+			<report q:for-each="em:completenessCommissionReport(v:Subject, v:Object)">
+				<DQ_CompletenessCommission>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_CompletenessCommission>
+			</report>
+			<report q:for-each="em:topologicalConsistencyReport(v:Subject, v:Object)">
+				<DQ_TopologicalConsistency>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_TopologicalConsistency>
+			</report>		
+			<report q:for-each="em:formatConsistencyReport(v:Subject, v:Object)">
+				<DQ_FormatConsistency>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_FormatConsistency>
+			</report>	
+			<report q:for-each="em:domainConsistencyReport(v:Subject, v:Object)">
+				<DQ_DomainConsistency>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_DomainConsistency>
+			</report>
+			<report q:for-each="em:conceptualConsistencyReport(v:Subject, v:Object)">
+				<DQ_ConceptualConsistency>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_ConceptualConsistency>
+			</report>	
+			<report q:for-each="em:relativeInternalPositionalAccuracyReport(v:Subject, v:Object)">
+				<DQ_RelativeInternalPositionalAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_RelativeInternalPositionalAccuracy>
+			</report>	
+			<report q:for-each="em:griddedDataPositionalAccuracyReport(v:Subject, v:Object)">
+				<DQ_GriddedDataPositionalAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_GriddedDataPositionalAccuracy>
+			</report>
+			<report q:for-each="em:absoluteExternalPositionalAccuracyReport(v:Subject, v:Object)">
+				<DQ_AbsoluteExternalPositionalAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_AbsoluteExternalPositionalAccuracy>
+			</report>
+			<report q:for-each="em:quantitativeAttributeAccuracyReport(v:Subject, v:Object)">
+				<DQ_QuantitativeAttributeAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_QuantitativeAttributeAccuracy>
+			</report>		
+			<report q:for-each="em:nonQuantitativeAttributeAccuracyReport(v:Subject, v:Object)">
+				<DQ_NonQuantitativeAttributeAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_NonQuantitativeAttributeAccuracy>
+			</report>	
+			<report q:for-each="em:thematicClassificationCorrectnessReport(v:Subject, v:Object)">
+				<DQ_ThematicClassificationCorrectness>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_ThematicClassificationCorrectness>
+			</report>	
+			<report q:for-each="em:temporalValidityReport(v:Subject, v:Object)">
+				<DQ_TemporalValidity>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_TemporalValidity>
+			</report>			
+			<report q:for-each="em:temporalConsistencyReport(v:Subject, v:Object)">
+				<DQ_TemporalConsistency>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_TemporalConsistency>
+			</report>	
+			<report q:for-each="em:accuracyOfATimeMeasurementReport(v:Subject, v:Object)">
+				<DQ_AccuracyOfATimeMeasurement>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_AccuracyOfATimeMeasurement>
+			</report>
+			
+			<!--// handle FGDC data quality info -->
+			<report q:for-each="em:logicalConsistencyReport(v:Subject, v:String)">
+				<DQ_ConceptualConsistency>
+					<measureDescription>
+						<q:call idref="localizedString"/>
+					</measureDescription>
+				</DQ_ConceptualConsistency>
+			</report>	
+			<report q:for-each="em:completenessReport(v:Subject, v:String)">
+				<DQ_CompletenessOmission>
+					<measureDescription>
+						<q:call idref="localizedString"/>
+					</measureDescription>
+				</DQ_CompletenessOmission>
+			</report>
+			<report q:for-each="em:attributeAccuracyReport(v:Subject, v:Object)">
+				<DQ_QuantitativeAttributeAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_QuantitativeAttributeAccuracy>
+			</report>
+			<report q:for-each="em:horizPositionalAccuracyReport(v:Subject, v:Object)">
+				<DQ_AbsoluteExternalPositionalAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_AbsoluteExternalPositionalAccuracy>
+			</report>
+			<report q:for-each="em:vertPositionalAccuracyReport(v:Subject, v:Object)">
+				<DQ_AbsoluteExternalPositionalAccuracy>
+					<q:call idref="DQ_Element" params="Subject Object"/>
+				</DQ_AbsoluteExternalPositionalAccuracy>
+			</report>
+
+			<lineage q:for-a="em:lineage(v:Subject, v:Object)">
+				<q:call idref="LI_Lineage" params="Subject Object"/>
+			</lineage>
+		</DQ_DataQuality>
+	</q:template>
+	
+	<q:template id="LI_Lineage" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="statement" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="processStep" type="gmd:LI_ProcessStep_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="source" type="gmd:LI_Source_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<LI_Lineage>
+			<statement q:for-a="em:statement(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</statement>
+			<processStep q:for-each="em:processStep(v:Subject, v:Object)">
+				<q:call idref="LI_ProcessStep" params="Subject Object"/>
+			</processStep>
+			<source q:for-each="em:source(v:Subject, v:Object)">
+				<q:call idref="LI_Source" params="Subject Object"/>
+			</source>
+		</LI_Lineage>
+	</q:template>
+	
+	<!--// NOTE: this has been colapsed into referenceSystemInfo
+	<q:template id="MD_ReferenceSystem" require="Subject">
+	</q:template> -->
+		<!--// NOTE: XML Schema
+		<xs:element name="referenceSystemIdentifier" type="gmd:RS_Identifier_PropertyType" minOccurs="0"/>
+		-->		
+	
+	<q:template id="LI_Source" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="scaleDenominator" type="gmd:MD_RepresentativeFraction_PropertyType" minOccurs="0"/>
+		<xs:element name="sourceReferenceSystem" type="gmd:MD_ReferenceSystem_PropertyType" minOccurs="0"/>
+		<xs:element name="sourceCitation" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+		<xs:element name="sourceExtent" type="gmd:EX_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="sourceStep" type="gmd:LI_ProcessStep_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<LI_Source>
+			<description q:for-a="em:description(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</description>
+			<!--// for NAP only, concatenate media code with description -->
+			<scaleDenominator q:for-a="em:scaleDenominator(v:Subject, v:String)">
+				<MD_RepresentativeFraction>
+					<denominator>
+						<gco:Integer>
+							<q:value-of select="String"/>
+						</gco:Integer>
+					</denominator>
+				</MD_RepresentativeFraction>
+			</scaleDenominator>
+			<sourceReferenceSystem q:for-a="em:sourceReferenceSystem(v:Subject, v:Object)">
+				<MD_ReferenceSystem>
+					<referenceSystemIdentifier>
+						<RS_Identifier>
+							<q:call idref="RS_Identifier" params="Subject Object"/>
+						</RS_Identifier>
+					</referenceSystemIdentifier>
+				</MD_ReferenceSystem>				
+			</sourceReferenceSystem>
+			<sourceCitation q:for-a="em:sourceCitation(v:Subject, v:Object)">
+				<q:call idref="CI_Citation" params="Subject Object"/>
+			</sourceCitation>
+			<sourceExtent q:for-each="em:sourceExtent(v:Subject, v:Object)">
+				<q:call idref="EX_Extent" params="Subject Object"/>
+			</sourceExtent>
+			<sourceStep q:for-each="em:sourceStep(v:Subject, v:Object)">
+				<q:call idref="LI_ProcessStep" params="Subject Object"/>
+			</sourceStep>
+		</LI_Source>
+	</q:template>
+	
+	<q:template id="LI_ProcessStep" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="description" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="rationale" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="dateTime" type="gco:DateTime_PropertyType" minOccurs="0"/>
+		<xs:element name="processor" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="source" type="gmd:LI_Source_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		-->
+		<LI_ProcessStep>
+			<description q:for-one="em:description(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</description>
+			<rationale q:for-a="em:rationale(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</rationale>
+            <dateTime q:for-a="em:dateTime(v:Subject, v:Date), es:nonEmptyString(v:Date)">
+				<q:call idref="dateTime" params="DateTime Date"/>
+			</dateTime>
+            <dateTime q:atts="gco:nilReason String" q:for-a="em:dateTimeNil(v:Subject, v:String), es:nonEmptyString(v:String)">
+			</dateTime>
+			<processor q:for-each="em:processor(v:Subject, v:Object)">
+				<q:call idref="CI_ResponsibleParty" params="Subject Object"/>
+			</processor>		
+			<source q:for-each="em:source(v:Subject, v:Object)">
+				<q:call idref="LI_Source" params="Subject Object"/>
+			</source>
+		</LI_ProcessStep>
+	</q:template>
+	
+	<q:template id="EX_Extent" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="geographicElement" type="gmd:EX_GeographicExtent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="temporalElement" type="gmd:EX_TemporalExtent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="verticalElement" type="gmd:EX_VerticalExtent_PropertyType" minOccurs="0" maxOccurs="unbounded"/>				
+		-->
+		<EX_Extent>
+			<description q:for-a="em:description(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</description>
+			<geographicElement q:for-each="em:boundingPolygon(v:Subject, v:Object)">
+				<q:call idref="EX_BoundingPolygon" params="Subject Object"/>
+			</geographicElement>
+			<geographicElement q:for-each="em:boundingBox(v:Subject, v:Object)">
+				<q:call idref="EX_GeographicBoundingBox" params="Subject Object"/>
+			</geographicElement>
+			<geographicElement q:for-each="em:geographicDescription(v:Subject, v:Object)">
+				<q:call idref="EX_GeographicDescription" params="Subject Object"/>
+			</geographicElement>
+			<temporalElement q:for-each="em:temporalElement(v:Subject, v:Object)">
+                <EX_TemporalExtent>
+                    <extent>
+                        <q:call idref="GML_TIME" params="Subject Object"/>
+                    </extent>
+                </EX_TemporalExtent>
+			</temporalElement>
+			<temporalElement q:for-each="em:spatialTemporalElement(v:Subject, v:Object)">
+                <EX_SpatialTemporalExtent>
+                    <extent>
+                        <q:call idref="GML_TIME" params="Subject Object"/>
+                    </extent>
+                    <q:call idref="EX_SpatialTemporalExtent" params="Subject Object"/>
+                </EX_SpatialTemporalExtent>
+			</temporalElement>
+			<verticalElement q:for-each="em:verticalElement(v:Subject, v:Object)">
+				<q:call idref="EX_VerticalExtent" params="Subject Object"/>
+			</verticalElement>
+		</EX_Extent>
+	</q:template>
+	
+	<q:template id="EX_SpatialTemporalExtent" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:extension base="gmd:EX_TemporalExtent_Type">
+            <xs:sequence>
+                <xs:element name="spatialExtent" type="gmd:EX_GeographicExtent_PropertyType" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:extension>
+		-->
+        <spatialExtent q:for-each="em:boundingPolygon(v:Subject, v:Object)">
+            <q:call idref="EX_BoundingPolygon" params="Subject Object"/>
+        </spatialExtent>
+        <spatialExtent q:for-each="em:boundingBox(v:Subject, v:Object)">
+            <q:call idref="EX_GeographicBoundingBox" params="Subject Object"/>
+        </spatialExtent>
+        <spatialExtent q:for-each="em:geographicDescription(v:Subject, v:Object)">
+            <q:call idref="EX_GeographicDescription" params="Subject Object"/>
+        </spatialExtent>
+	</q:template>	
+	
+	<!--// NOTE: GML -->
+	<q:template id="GML_TIME" require="Subject">	
+		<!--// handling for ArcGIS dates -->
+		<gml:TimeInstant q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID), em:timeInstant(v:Subject, v:Object)">
+			<q:for-one match="em:timePosition(v:Object, v:Date), es:nonEmptyString(v:Date), es:formatIsoDateTime (v:Date, v:DateTime)">
+				<q:call idref="StandardProperties" params="Subject Object"/>		
+				<gml:timePosition><q:value-of select="DateTime"/></gml:timePosition>
+			</q:for-one>
+		</gml:TimeInstant>    
+		
+		<!--// handling for FGDC dates; won't have GML properties -->
+		<gml:TimeInstant q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID), em:tmPosDateTime(v:Subject, v:String), es:nonEmptyString(v:String)">
+			<gml:timePosition>
+				<q:test match="es:date(v:String) ; es:dateTime(v:String)">
+					<q:value-of select="String"/>
+				</q:test>
+			</gml:timePosition>
+		</gml:TimeInstant>    
+		  
+		<!--// handling for ESRI-ISO dates; won't have GML properties -->
+		<gml:TimeInstant q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID), es:not(em:timeInstant(v:Subject, v:_)), em:timePosition(v:Subject, v:Date), es:formatIsoDateTime (v:Date, v:DateTime)">
+			<gml:timePosition><q:value-of select="DateTime"/></gml:timePosition>
+		</gml:TimeInstant>    
+		  
+		<gml:TimePeriod q:atts="gml:id ID" q:for-a="es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID), em:timePeriod(v:Subject, v:Object), em:beginTime(v:Object, v:Begin) ; es:secureRandom32(v:r), es:md5([v:r,v:Subject], v:digest), es:concat(['_',v:digest], v:ID), em:timePeriod(v:Subject, v:Object), em:beginTimeNil(v:Object, v:BeginNil)">
+			<q:call idref="StandardProperties" params="Subject Object"/>
+			<q:for-a match="es:nonEmptyString(v:Begin), es:formatIsoDateTime (v:Begin, v:DateTime)">
+				<gml:beginPosition><q:value-of select="DateTime"/></gml:beginPosition>
+			</q:for-a>
+			<q:for-a match="es:nonEmptyString(v:BeginNil)">
+				<gml:beginPosition q:atts="indeterminatePosition BeginNil" />
+			</q:for-a>
+			<q:for-a match="em:endTime (v:Object, v:End), es:nonEmptyString(v:End), es:formatIsoDateTime (v:End, v:DateTime)">
+				<gml:endPosition><q:value-of select="DateTime"/></gml:endPosition>
+			</q:for-a>
+			<q:for-a match="em:endTimeNil (v:Object, v:String)">
+				<gml:endPosition q:atts="indeterminatePosition String" />
+			</q:for-a>
+		</gml:TimePeriod>
+	</q:template>
+	
+	<q:template id="EX_VerticalExtent" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="minimumValue" type="gco:Real_PropertyType"/>
+		<xs:element name="maximumValue" type="gco:Real_PropertyType"/>
+		<xs:element name="verticalCRS" type="gsr:SC_CRS_PropertyType"/>
+		-->
+		<EX_VerticalExtent>
+			<minimumValue q:for-one="em:minimumValue(v:Subject, v:String)">
+				<gco:Real><q:value-of select="String"/></gco:Real>
+			</minimumValue>
+			<maximumValue q:for-one="em:maximumValue(v:Subject, v:String)">
+				<gco:Real><q:value-of select="String"/></gco:Real>
+			</maximumValue>	
+	
+            <!--// don't use verticalCRS, which refers to the GML AbstractCRS class; this info should be
+                    provided in the reference system section instead since none of the other extent 
+                    options let you associate the extent with a specific coordinate system
+            <xs:element name="verticalCRS" type="gsr:SC_CRS_PropertyType"/>
+            -->
+			<verticalCRS gco:nilReason="other:see_referenceSystemInfo" />
+		</EX_VerticalExtent>
+	</q:template>	
+	
+	<q:template id="MD_Identifier" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="authority" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+		<xs:element name="code" type="gco:CharacterString_PropertyType"/>
+		-->
+		<authority q:for-a="em:authority (v:Subject, v:Object)">
+			<q:call idref="CI_Citation" params="Subject Object"/>
+		</authority>
+        <q:choose>
+            <code q:for-one="em:code (v:Subject, v:String)">
+                <q:call idref="localizedString"/>
+            </code>
+            <code q:for-a="es:literal(v:Subject)">
+                <q:call idref="localizedString" params="String Subject"/>
+            </code>
+        </q:choose>
+	</q:template>
+	
+	<q:template id="RS_Identifier" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="codeSpace" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="version" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		-->
+		<q:call idref="MD_Identifier"/>		
+		<codeSpace q:for-a="em:codeSpace(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</codeSpace>
+		<version q:for-a="em:version(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</version>		
+	</q:template>
+	
+	<q:template id="DQ_Element" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="nameOfMeasure" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="measureIdentification" type="gmd:MD_Identifier_PropertyType" minOccurs="0"/>
+		<xs:element name="measureDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="evaluationMethodType" type="gmd:DQ_EvaluationMethodTypeCode_PropertyType" minOccurs="0"/>
+		<xs:element name="evaluationMethodDescription" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="evaluationProcedure" type="gmd:CI_Citation_PropertyType" minOccurs="0"/>
+		<xs:element name="dateTime" type="gco:DateTime_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="result" type="gmd:DQ_Result_PropertyType" maxOccurs="2"/>
+		-->
+		<nameOfMeasure q:for-each="em:nameOfMeasure(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</nameOfMeasure>
+		<measureIdentification q:for-a="em:identifier(v:Subject, v:Object)">
+			<MD_Identifier>
+				<q:call idref="MD_Identifier" params="Subject Object"/>
+			</MD_Identifier>
+		</measureIdentification>
+		<measureDescription q:for-a="em:measureDescription(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</measureDescription>
+		<q:for-a match="em:evaluationMethodType(v:Subject, v:Code), v:CodeList = gmxRes:DQ_EvaluationMethodTypeCode">
+			<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+				<evaluationMethodType>
+					<DQ_EvaluationMethodTypeCode 
+								q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+						<q:value-of select="CodeName"/>
+					</DQ_EvaluationMethodTypeCode>
+				</evaluationMethodType>
+			</q:call>
+		</q:for-a>
+		<evaluationMethodDescription q:for-a="em:evaluationMethodDescription(v:Subject, v:String)">
+			<q:call idref="localizedString"/>
+		</evaluationMethodDescription>
+		<evaluationProcedure q:for-a="em:evaluationProcedure(v:Subject, v:Object)">
+			<q:call idref="CI_Citation" params="Subject Object"/>
+		</evaluationProcedure>
+		<dateTime q:for-each="em:dateTime (v:Subject, v:Date), es:nonEmptyString(v:Date)">
+			<q:call idref="dateTime" params="DateTime Date"/>
+		</dateTime>		
+		<result q:for-each="em:conformanceResult(v:Subject, v:Object)">
+			<q:call idref="DQ_ConformanceResult" params="Subject Object"/>
+		</result>
+		<result q:for-each="em:quantitativeResult(v:Subject, v:Object)">
+			<q:call idref="DQ_QuantitativeResult" params="Subject Object"/>
+		</result>
+		<q:test match="es:not(em:conformanceResult (v:Subject, v:_)), es:not(em:quantitativeResult (v:Subject, v:_))">
+			<result gco:nilReason="missing" />
+		</q:test>
+	</q:template>
+	
+	
+	<q:template id="DQ_ConformanceResult" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="specification" type="gmd:CI_Citation_PropertyType"/>
+		<xs:element name="explanation" type="gco:CharacterString_PropertyType"/>
+		<xs:element name="pass" type="gco:Boolean_PropertyType"/>
+		-->
+		<DQ_ConformanceResult>
+			<specification q:for-one="em:specification(v:Subject, v:Object)">
+				<q:call idref="CI_Citation" params="Subject Object"/>
+			</specification>		
+			<explanation q:for-one="em:explanation(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</explanation>		
+			<pass q:for-one="em:pass(v:Subject, v:Bool)">
+				<gco:Boolean>
+					<q:value-of select="Bool"/>
+				</gco:Boolean>
+			</pass>
+		</DQ_ConformanceResult>
+	</q:template>
+	
+	<q:template id="DQ_QuantitativeResult" require="Subject">
+		<!--// NOTE: XML Schema
+		<xs:element name="valueType" type="gco:RecordType_PropertyType" minOccurs="0"/>
+		<xs:element name="valueUnit" type="gco:UnitOfMeasure_PropertyType"/>
+		<xs:element name="errorStatistic" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+		<xs:element name="value" type="gco:Record_PropertyType" maxOccurs="unbounded"/>
+		-->
+		<DQ_QuantitativeResult>
+			<valueType q:for-a="em:valueType(v:Subject, v:String)"> <!--// TODO: xlink:href  -->
+				<gco:RecordType>
+					<q:value-of select="String"/>
+				</gco:RecordType>
+			</valueType>
+			<valueUnit q:for-one="em:valueUnit(v:Subject, v:Object)">
+				<q:call idref="UnitDefinition" params="Subject Object"/>
+			</valueUnit>
+			<q:test match="es:not(em:valueUnit (v:Subject, v:_))">
+				<valueUnit gco:nilReason="missing" />
+			</q:test>
+			<errorStatistic q:for-a="em:errorStatistic(v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</errorStatistic>
+			<value q:for-some="em:value(v:Subject, v:String)"> <!--// NOTE: content of Record not defined by ISO 19139 -->
+				<gco:Record>
+					<q:value-of select="String"/>
+				</gco:Record>
+			</value>
+		</DQ_QuantitativeResult>
+	</q:template>
+	
+	<!--// ISO 19119 Begin -->
+	<q:template id="SV_ServiceIdentification" require="Subject">
+		<!--// NOTE: XML Schema for SV_ServiceIdentification
+		  <xs:element name="serviceType" type="gco:GenericName_PropertyType" /> 
+		  <xs:element name="serviceTypeVersion" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded" /> 
+		  <xs:element name="accessProperties" type="gmd:MD_StandardOrderProcess_PropertyType" minOccurs="0" /> 
+		  <xs:element name="restrictions" type="gmd:MD_Constraints_PropertyType" minOccurs="0" /> 
+		  <xs:element name="keywords" type="gmd:MD_Keywords_PropertyType" minOccurs="0" maxOccurs="unbounded" /> 
+		  <xs:element name="extent" type="gmd:EX_Extent_PropertyType" minOccurs="0" maxOccurs="unbounded" /> 
+		  <xs:element name="coupledResource" type="srv:SV_CoupledResource_PropertyType" minOccurs="0" maxOccurs="unbounded" /> 
+		  <xs:element name="couplingType" type="srv:SV_CouplingType_PropertyType" /> 
+		  <xs:element name="containsOperations" type="srv:SV_OperationMetadata_PropertyType" maxOccurs="unbounded" /> 
+		  <xs:element name="operatesOn" type="gmd:MD_DataIdentification_PropertyType" minOccurs="0" maxOccurs="unbounded" />		-->		
+		<srv:SV_ServiceIdentification>
+			<q:call idref="MD_Identification"/>	
+			
+            <!--// GenericName is abstract; LocalName and ScopedName are substitutes that are the same with different names -->
+			<srv:serviceType q:for-one="em:serviceType (v:Subject, v:Object)">
+                <q:choose>
+                    <q:for-a match="v:Object = {v:String, v:CodeSpace}">
+                        <gco:LocalName>
+                            <q:attribute name="codeSpace" q:test="v:Object = {v:String, v:CodeSpace}" select="CodeSpace"/>
+                            <q:value-of select="String"/>
+                        </gco:LocalName>
+                    </q:for-a>
+                    <q:for-a match="es:literal(v:Object), v:String = v:Object">
+                        <gco:LocalName>
+                            <q:value-of select="String"/>
+                        </gco:LocalName>
+                    </q:for-a>
+                </q:choose>
+			</srv:serviceType>
+            
+			<srv:serviceTypeVersion q:for-each="em:serviceTypeVersion (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:serviceTypeVersion>	
+			<srv:accessProperties q:for-a="em:accessProperties (v:Subject, v:Object)">
+				<q:call idref="MD_StandardOrderProcess" params="Subject Object"/>
+			</srv:accessProperties>			
+			<!--// not supporting restrictions and keywords elements since these are duplicates of inherited roles from MD_IdentificationInformation -->
+			<srv:extent q:for-each="em:extent (v:Subject, v:Object)">
+				<q:call idref="EX_Extent" params="Subject Object"/>
+			</srv:extent>
+            
+			<srv:coupledResource q:for-each="em:coupledResource (v:Subject, v:Object)">
+				<q:call idref="SV_CoupledResource" params="Subject Object"/>
+			</srv:coupledResource>
+			<q:for-one match="em:couplingType(v:Subject, v:Code), v:CodeList = gmxRes:SV_CouplingType">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<srv:couplingType>
+						<srv:SV_CouplingType 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</srv:SV_CouplingType>
+					</srv:couplingType>
+				</q:call>
+			</q:for-one>
+
+			<srv:containsOperations q:for-some="em:containsOperations (v:Subject, v:Object)">
+				<q:call idref="SV_OperationMetadata" params="Subject Object"/>
+			</srv:containsOperations>
+			<srv:operatesOn q:for-each="em:operatesOn (v:Subject, v:Object)">
+				<q:call idref="MD_DataIdentification" params="Subject Object"/>
+			</srv:operatesOn>
+			
+		</srv:SV_ServiceIdentification>
+	</q:template>	
+	
+	<q:template id="SV_OperationMetadata" require="Subject">
+		<!--// NOTE: XML Schema for SV_OperationMetadata
+		  <xs:element name="operationName" type="gco:CharacterString_PropertyType" /> 
+		  <xs:element name="DCP" type="srv:DCPList_PropertyType" maxOccurs="unbounded" /> 
+		  <xs:element name="operationDescription" type="gco:CharacterString_PropertyType" minOccurs="0" /> 
+		  <xs:element name="invocationName" type="gco:CharacterString_PropertyType" minOccurs="0" /> 
+		  <xs:element name="parameters" type="srv:SV_Parameter_PropertyType" minOccurs="0" maxOccurs="unbounded" /> 
+		  <xs:element name="connectPoint" type="gmd:CI_OnlineResource_PropertyType" maxOccurs="unbounded" /> 
+		  <xs:element name="dependsOn" type="srv:SV_OperationMetadata_PropertyType" minOccurs="0" maxOccurs="unbounded" />		-->		
+		<srv:SV_OperationMetadata>
+			<srv:operationName q:for-one="em:operationName (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:operationName>	
+
+			<q:for-some match="em:DCP(v:Subject, v:Code), v:CodeList = gmxRes:DCPList">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<srv:DCP>
+						<srv:DCPList 
+							q:atts="codeList CodeList codeListValue CodeListValue codeSpace CodeSpace">
+							<q:value-of select="CodeName"/>
+						</srv:DCPList>
+					</srv:DCP>
+				</q:call>
+			</q:for-some>
+
+			<srv:operationDescription q:for-a="em:operationDescription (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:operationDescription>
+			<srv:invocationName q:for-a="em:invocationName (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:invocationName>
+			<srv:parameters q:for-each="em:parameters (v:Subject, v:Object)">
+				<q:call idref="SV_Parameter" params="Subject Object"/>
+			</srv:parameters>	
+			<srv:connectPoint q:for-some="em:connectPoint (v:Subject, v:Object)">
+				<q:call idref="CI_OnlineResource" params="Subject Object"/>
+			</srv:connectPoint>	
+			<srv:dependsOn q:for-each="em:dependsOn (v:Subject, v:Object)">
+				<q:call idref="SV_OperationMetadata" params="Subject Object"/>
+			</srv:dependsOn>	
+		</srv:SV_OperationMetadata>
+	</q:template>	
+			
+	<q:template id="SV_Parameter" require="Subject">
+		<!--// NOTE: XML Schema for SV_Parameter
+		  <xs:element name="name" type="gco:MemberName_Type" /> 
+		  <xs:element name="direction" type="srv:SV_ParameterDirection_PropertyType" minOccurs="0" /> 
+		  <xs:element name="description" type="gco:CharacterString_PropertyType" minOccurs="0" /> 
+		  <xs:element name="optionality" type="gco:CharacterString_PropertyType" /> 
+		  <xs:element name="repeatability" type="gco:Boolean_PropertyType" /> 
+		  <xs:element name="valueType" type="gco:TypeName_PropertyType" />		-->		
+		<srv:SV_Parameter>
+			<srv:name q:for-one="em:paramName (v:Subject, v:Object)">
+				<q:call idref="MemberName" params="Subject Object"/>
+			</srv:name>	
+
+			<!--// NOTE: this is en enumeration, not a codeList -->
+			<q:for-a match="em:direction(v:Subject, v:Code), v:CodeList = gmxRes:SV_ParameterDirection">
+				<q:call idref="code" bind-all="CodeName CodeListValue CodeSpace">
+					<srv:direction>
+						<srv:SV_ParameterDirection>
+							<q:value-of select="CodeListValue"/>
+						</srv:SV_ParameterDirection>
+					</srv:direction>
+				</q:call>
+			</q:for-a>
+			
+			<srv:description q:for-a="em:paramDescription (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:description>
+			<q:choose>
+                <srv:optionality q:for-one="em:optionality (v:Subject, v:String)">
+                    <q:call idref="localizedString"/>
+                </srv:optionality>
+				<srv:optionality q:for-a="em:defaultSvParamOptionality(v:String)">
+					<q:call idref="localizedString"/>
+				</srv:optionality>
+			</q:choose>
+			<srv:repeatability q:for-one="em:repeatability (v:Subject, v:Bool)">
+				<gco:Boolean>
+					<q:value-of select="Bool"/>
+				</gco:Boolean>
+			</srv:repeatability>
+			<srv:valueType q:for-one="em:paramValueType (v:Subject, v:String)">
+				<gco:TypeName>
+					<gco:aName>
+						<q:call idref="localizedString"/>
+					</gco:aName>
+				</gco:TypeName>
+			</srv:valueType>
+		</srv:SV_Parameter>
+	</q:template>	
+			
+	<q:template id="SV_CoupledResource" require="Subject">
+		<!--// NOTE: XML Schema for SV_CoupledResource
+		  <xs:element name="operationName" type="gco:CharacterString_PropertyType" /> 
+		  <xs:element name="identifier" type="gco:CharacterString_PropertyType" /> 
+		  <xs:element ref="gco:ScopedName" minOccurs="0" maxOccurs="1" />
+            gco:ScopedName isn't in the 19119 standard or UML, so not supporting it for translation
+		-->		
+		<srv:SV_CoupledResource>
+			<srv:operationName q:for-one="em:operationName (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:operationName>	
+			<srv:identifier q:for-one="em:resourceIdentifier (v:Subject, v:String)">
+				<q:call idref="localizedString"/>
+			</srv:identifier>	
+		</srv:SV_CoupledResource>
+	</q:template>	
+	<!--// ISO 19119 End -->
+
+
+    <!--// NATO Profile Begin -->
+	<q:template id="ESRI_Thumbnail" require="Subject">
+		<!--// thumbnail with EsriPropertyType Picture created by ESRI and BMP format
+             thumbnail with EsriPropertyType Image and OriginalFileName thumbnail.jpg is thumbnail converted to JPG by ArcIMS Metadata Server
+		-->
+        <MD_BrowseGraphic>
+            <fileName q:for-one="em:thumbnailData(v:Subject, v:String), es:concat(['base64data: ', v:String], v:Result)">
+                <gco:CharacterString>
+                    <q:value-of select="Result"/>
+                </gco:CharacterString>
+            </fileName>
+            <fileDescription q:for-a="nato:thumbnailDescription(v:String)">
+                <q:call idref="localizedString"/>
+            </fileDescription>
+            
+            <q:for-a match="em:thumbnailType(v:Subject, v:Type)">
+                <fileType q:for-a="v:Type = 'Picture', nato:thumbnailTypeBMP(v:String)">
+                    <q:call idref="localizedString"/>
+                </fileType>	
+                <fileType q:for-a="v:Type = 'Image', nato:thumbnailTypeJPG(v:String)">
+                    <q:call idref="localizedString"/>
+                </fileType>	
+            </q:for-a>
+        </MD_BrowseGraphic>
+	</q:template>
+    <!--// NATO Profile End -->
+	
+    
+			
+	<!--// LOCALIZED STRINGS -->
+	<q:template id="localizedString" require="String">
+		<q:choose>
+			<q:for-each match="es:list(v:String), es:member(v:Member, v:String), es:literal(v:Member, {v:Text, v:Lang})">
+				<PT_FreeText>
+					<textGroup>
+						<LocalisedCharacterString q:atts="locale Lang">
+							<q:value-of select="Text"/>
+						</LocalisedCharacterString>
+					</textGroup>
+				</PT_FreeText>			
+			</q:for-each>
+			<q:for-each match="es:ground(v:Lang), v:String = {v:Text, v:Lang}">
+				<PT_FreeText>
+					<textGroup>
+						<LocalisedCharacterString q:atts="locale Lang">
+							<q:value-of select="Text"/>
+						</LocalisedCharacterString>
+					</textGroup>
+				</PT_FreeText>
+			</q:for-each>
+			<q:for-a match="es:literal (v:String)">
+				<gco:CharacterString>
+					<q:value-of select="String"/>
+				</gco:CharacterString>
+			</q:for-a>
+		</q:choose>
+	</q:template>
+
+  <!--// DATES -->
+  <q:template id="date" require="Date">
+    <q:for-a match="es:dateTime(v:Date), es:formatIsoDateTime(v:Date, v:IsoDateTime)">
+      <gco:DateTime><q:value-of select="IsoDateTime"/></gco:DateTime>
+    </q:for-a>    
+    <q:for-a match="es:formatIsoDate(v:Date, v:IsoDate)">
+      <gco:Date><q:value-of select="IsoDate"/></gco:Date>
+    </q:for-a>      
+  </q:template>
+  
+  <q:template id="dateTime" require="DateTime">
+    <q:for-a match="es:nonEmptyString(v:DateTime), es:formatIsoDateTime(v:DateTime, v:IsoDateTime)">
+      <gco:DateTime><q:value-of select="IsoDateTime"/></gco:DateTime>
+    </q:for-a>
+  </q:template>
+
+  <q:template id="isodate" require="Date">
+    <q:for-a match="es:formatIsoDate(v:Date, v:IsoDate)">
+      <q:value-of select="IsoDate"/>
+    </q:for-a>      
+  </q:template>
+  
+  <q:template id="isoDateTime" require="DateTime">
+    <q:for-a match="es:formatIsoDateTime(v:DateTime, v:IsoDateTime)">
+      <q:value-of select="IsoDateTime"/>
+    </q:for-a>
+  </q:template>
+
+  
+	<!--// CODES -->
+	<!--// if value provided isn't a valid code the value won't be included in the output -->
+	<q:template id="code" require="CodeList Code">
+		<q:choose>
+			<!--// code has a codeName, codeList, codeListValue and codeSpace-->
+			<q:for-a match="v:Code = {v:CodeName, v:CodeList, v:CodeListValue, v:CodeSpace}">
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName,  v:CodeSpace})"/>	
+			</q:for-a>
+			<!--// code has a codeName, codeList, codeListValue, NO codeSpace, * Ignore the codeName * -->
+			<q:for-a match="v:Code = {v:CodeName , v:CodeList, v:CodeListValue}, es:nonEmptyString(v:CodeName)"> <!--// v:Code = {v:CodeName, v:CodeList, v:CodeListValue}"> -->
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, v:CodeSpace})"/>
+			</q:for-a>			
+
+			<q:for-a match="v:Code = {'' , v:CodeList, v:CodeListValue}"> <!--// v:Code = {v:CodeName, v:CodeList, v:CodeListValue}"> -->
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeListValue, v:CodeSpace})"/>
+			</q:for-a>			
+			
+			<!--// 
+				code is only a codeName, prefer the standard codeSpace of "ISOTC211/19115"
+				NOTE: ISO 19139 metadata should never have codes that are unqualified by a codeListValue -->
+			<q:for-a match="v:Code = {v:AltCodeName}">
+				<!--// identify the codeListValue given the codeName 	-->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:AltCodeName, v:AltCodeSpace})">	
+					<q:for-a match="v:CodeSpace='ISOTC211/19115', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISOTC211/19115'})"/>
+                    <!--// NATO PROFILE -->
+					<q:for-a match="em:profile('NATO'), v:CodeSpace='ISO19115/NATO1.0', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISO19115/NATO1.0'})"/>
+				</q:for-a>
+			</q:for-a>
+			<!--// 
+				code is only a codeName
+				NOTE: ISO 19139 metadata should never have codes that are unqualified by a codeListValue -->				
+			<q:for-a match="es:literal(v:Code), gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:Code, v:_})">
+				<!--// identify the codeListValue given the codeName -->
+				<q:for-a match="v:CodeSpace='ISOTC211/19115', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+                <!--// NATO PROFILE -->
+                <q:for-a match="em:profile('NATO'), v:CodeSpace='ISO19115/NATO1.0', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>		
+			</q:for-a>
+					
+		</q:choose>
+	</q:template>
+  
+	<!--// CODES II -->
+	<!--// code template v.II, for handling language and country codes with their specific codespace values -->
+	<!--// language and country can be either CharacterStrings OR codelist values -->
+	<!--// special handling so if the value doesn't unify to a code the original string will be returned and spit out as-is -->
+	<q:template id="code2" require="CodeList Code">
+		<q:choose>
+			<!--// code has a codeName, codeList, codeListValue and codeSpace-->
+			<q:for-a match="v:Code = {v:CodeName, v:CodeList, v:CodeListValue, v:CodeSpace}">
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName,  v:CodeSpace})"/>	
+			</q:for-a>
+			<!--// code has a codeName, codeList, codeListValue, NO codeSpace, * Ignore the codeName * -->
+			<q:for-a match="v:Code = {v:CodeName , v:CodeList, v:CodeListValue}, es:nonEmptyString(v:CodeName)"> <!--// v:Code = {v:CodeName, v:CodeList, v:CodeListValue}"> -->
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, v:CodeSpace})"/>
+			</q:for-a>			
+
+			<q:for-a match="v:Code = {'' , v:CodeList, v:CodeListValue}"> <!--// v:Code = {v:CodeName, v:CodeList, v:CodeListValue}"> -->
+				<!--// identify by the codeListValue -->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeListValue, v:CodeSpace})"/>
+			</q:for-a>			
+			
+			<!--// 
+				code is only a codeName, prefer the standard codeSpace of "ISOTC211/19115"
+				NOTE: ISO 19139 metadata should never have codes that are unqualified by a codeListValue -->
+			<q:for-a match="v:Code = {v:AltCodeName}">
+				<!--// identify the codeListValue given the codeName 	-->
+				<q:for-a match="gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:AltCodeName, v:AltCodeSpace})">	
+					<q:for-a match="v:CodeSpace='ISO3166-alpha2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISO3166-alpha2'})"/>
+					<!--// <q:for-a match="v:CodeSpace='ISO3166-alpha3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISO3166-alpha3'})"/> -->
+					<q:for-a match="v:CodeSpace='ISO639-3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISO639-3'})"/>
+					<q:for-a match="v:CodeSpace='ISO639-2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:CodeName, 'ISO639-2'})"/>
+				</q:for-a>
+			</q:for-a>
+			<!--// 
+				code is only a codeName
+				NOTE: ISO 19139 metadata should never have codes that are unqualified by a codeListValue -->				
+			<q:for-a match="es:literal(v:Code), gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:Code, v:_})">
+				<!--// identify the codeListValue given the codeName -->
+				<q:for-a match="v:CodeSpace='ISO3166-alpha2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+				<!--// <q:for-a match="v:CodeSpace='ISO3166-alpha3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/> -->
+				<q:for-a match="v:CodeSpace='ISO639-3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+				<q:for-a match="v:CodeSpace='ISO639-2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+			</q:for-a>
+					
+			<q:for-a match="es:literal(v:Code), gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:Code2, v:_}), es:equalsIgnoreCase(v:Code,v:Code2)">
+				<!--// identify the codeListValue given the codeName -->
+				<q:for-a match="v:CodeSpace='ISO3166-alpha2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+				<!--// <q:for-a match="v:CodeSpace='ISO3166-alpha3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/> -->
+				<q:for-a match="v:CodeSpace='ISO639-3', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+				<q:for-a match="v:CodeSpace='ISO639-2', gmx:CT_CodelistCatalogue (v:CodeList, v:CodeListValue, {v:isoDomainCode, v:CodeSpace}), v:CodeListValue = v:CodeName"/>	
+			</q:for-a>	  
+			<q:for-a match="v:CodeSpace = '', v:CodeName = '', v:CodeListValue = '' " />
+		</q:choose>
+	</q:template>
+</q:templates>

@@ -1,0 +1,2141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CT_CodelistCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink ../../xlink/xlinks.xsd">
+	<name>
+		<gco:CharacterString>esriisoCodeLists</gco:CharacterString>
+	</name>
+	<scope>
+		<gco:CharacterString>Codelists for description of metadata datasets compliant with ISO/TC 211 19115:2003 and 19139</gco:CharacterString>
+	</scope>
+	<fieldOfApplication>
+		<gco:CharacterString>GMX (and imported) namespace</gco:CharacterString>
+	</fieldOfApplication>
+	<versionNumber>
+		<gco:CharacterString>1.0</gco:CharacterString>
+	</versionNumber>
+	<versionDate>
+		<gco:Date>2009-08-20</gco:Date>
+	</versionDate>
+	<codelistItem>
+		<CodeListDictionary gml:id="UnitsCode">
+			<gml:description>Units of measure identified by The Unified Code for Units of Measure from http://unitsofmeasure.org as recommended by GML</gml:description>
+			<gml:identifier codeSpace="ISOTC211/19115">UnitsCode</gml:identifier>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_m">
+					<gml:identifier codeSpace="UCUM_code">m</gml:identifier>
+					<gml:name codeSpace="UCUM_name">meter</gml:name>
+					<gml:name codeSpace="UCUM_print">m</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_s">
+					<gml:identifier codeSpace="UCUM_code">s</gml:identifier>
+					<gml:name codeSpace="UCUM_name">second</gml:name>
+					<gml:name codeSpace="UCUM_print">s</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_g">
+					<gml:identifier codeSpace="UCUM_code">g</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gram</gml:name>
+					<gml:name codeSpace="UCUM_print">g</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_rad">
+					<gml:identifier codeSpace="UCUM_code">rad</gml:identifier>
+					<gml:name codeSpace="UCUM_name">radian</gml:name>
+					<gml:name codeSpace="UCUM_print">rad</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_K">
+					<gml:identifier codeSpace="UCUM_code">K</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Kelvin</gml:name>
+					<gml:name codeSpace="UCUM_print">K</gml:name>
+					<gml:name codeSpace="UCUM_unitType">temperature</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_C">
+					<gml:identifier codeSpace="UCUM_code">C</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Coulomb</gml:name>
+					<gml:name codeSpace="UCUM_print">C</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric charge</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cd">
+					<gml:identifier codeSpace="UCUM_code">cd</gml:identifier>
+					<gml:name codeSpace="UCUM_name">candela</gml:name>
+					<gml:name codeSpace="UCUM_print">cd</gml:name>
+					<gml:name codeSpace="UCUM_unitType">luminous intensity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_10*">
+					<gml:identifier codeSpace="UCUM_code">10*</gml:identifier>
+					<gml:name codeSpace="UCUM_name">the number ten for arbitrary powers</gml:name>
+					<gml:name codeSpace="UCUM_print">10</gml:name>
+					<gml:name codeSpace="UCUM_unitType">number</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_10^">
+					<gml:identifier codeSpace="UCUM_code">10^</gml:identifier>
+					<gml:name codeSpace="UCUM_name">the number ten for arbitrary powers</gml:name>
+					<gml:name codeSpace="UCUM_print">10</gml:name>
+					<gml:name codeSpace="UCUM_unitType">number</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pi]">
+					<gml:identifier codeSpace="UCUM_code">[pi]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">the number pi</gml:name>
+					<gml:name codeSpace="UCUM_print">π</gml:name>
+					<gml:name codeSpace="UCUM_unitType">number</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_%">
+					<gml:identifier codeSpace="UCUM_code">%</gml:identifier>
+					<gml:name codeSpace="UCUM_name">percent</gml:name>
+					<gml:name codeSpace="UCUM_print">%</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ppth]">
+					<gml:identifier codeSpace="UCUM_code">[ppth]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">parts per thousand</gml:name>
+					<gml:name codeSpace="UCUM_print">ppth</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ppm]">
+					<gml:identifier codeSpace="UCUM_code">[ppm]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">parts per million</gml:name>
+					<gml:name codeSpace="UCUM_print">ppm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ppb]">
+					<gml:identifier codeSpace="UCUM_code">[ppb]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">parts per billion</gml:name>
+					<gml:name codeSpace="UCUM_print">ppb</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pptr]">
+					<gml:identifier codeSpace="UCUM_code">[pptr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">parts per trillion</gml:name>
+					<gml:name codeSpace="UCUM_print">pptr</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mol">
+					<gml:identifier codeSpace="UCUM_code">mol</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mole</gml:name>
+					<gml:name codeSpace="UCUM_print">mol</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of substance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_sr">
+					<gml:identifier codeSpace="UCUM_code">sr</gml:identifier>
+					<gml:name codeSpace="UCUM_name">steradian</gml:name>
+					<gml:name codeSpace="UCUM_print">sr</gml:name>
+					<gml:name codeSpace="UCUM_unitType">solid angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Hz">
+					<gml:identifier codeSpace="UCUM_code">Hz</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Hertz</gml:name>
+					<gml:name codeSpace="UCUM_print">Hz</gml:name>
+					<gml:name codeSpace="UCUM_unitType">frequency</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_N">
+					<gml:identifier codeSpace="UCUM_code">N</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Newton</gml:name>
+					<gml:name codeSpace="UCUM_print">N</gml:name>
+					<gml:name codeSpace="UCUM_unitType">force</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Pa">
+					<gml:identifier codeSpace="UCUM_code">Pa</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Pascal</gml:name>
+					<gml:name codeSpace="UCUM_print">Pa</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_J">
+					<gml:identifier codeSpace="UCUM_code">J</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Joule</gml:name>
+					<gml:name codeSpace="UCUM_print">J</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_W">
+					<gml:identifier codeSpace="UCUM_code">W</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Watt</gml:name>
+					<gml:name codeSpace="UCUM_print">W</gml:name>
+					<gml:name codeSpace="UCUM_unitType">power</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_A">
+					<gml:identifier codeSpace="UCUM_code">A</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Ampère</gml:name>
+					<gml:name codeSpace="UCUM_print">A</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric current</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_V">
+					<gml:identifier codeSpace="UCUM_code">V</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Volt</gml:name>
+					<gml:name codeSpace="UCUM_print">V</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric potential</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_F">
+					<gml:identifier codeSpace="UCUM_code">F</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Farad</gml:name>
+					<gml:name codeSpace="UCUM_print">F</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric capacitance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Ohm">
+					<gml:identifier codeSpace="UCUM_code">Ohm</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Ohm</gml:name>
+					<gml:name codeSpace="UCUM_print">Ω</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric resistance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_S">
+					<gml:identifier codeSpace="UCUM_code">S</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Siemens</gml:name>
+					<gml:name codeSpace="UCUM_print">S</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric conductance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Wb">
+					<gml:identifier codeSpace="UCUM_code">Wb</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Weber</gml:name>
+					<gml:name codeSpace="UCUM_print">Wb</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magentic flux</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Cel">
+					<gml:identifier codeSpace="UCUM_code">Cel</gml:identifier>
+					<gml:name codeSpace="UCUM_name">degree Celsius</gml:name>
+					<gml:name codeSpace="UCUM_print">°C</gml:name>
+					<gml:name codeSpace="UCUM_unitType">temperature</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_T">
+					<gml:identifier codeSpace="UCUM_code">T</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Tesla</gml:name>
+					<gml:name codeSpace="UCUM_print">T</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magnetic flux density</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_H">
+					<gml:identifier codeSpace="UCUM_code">H</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Henry</gml:name>
+					<gml:name codeSpace="UCUM_print">H</gml:name>
+					<gml:name codeSpace="UCUM_unitType">inductance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_lm">
+					<gml:identifier codeSpace="UCUM_code">lm</gml:identifier>
+					<gml:name codeSpace="UCUM_name">lumen</gml:name>
+					<gml:name codeSpace="UCUM_print">lm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">luminous flux</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_lx">
+					<gml:identifier codeSpace="UCUM_code">lx</gml:identifier>
+					<gml:name codeSpace="UCUM_name">lux</gml:name>
+					<gml:name codeSpace="UCUM_print">lx</gml:name>
+					<gml:name codeSpace="UCUM_unitType">illuminance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Bq">
+					<gml:identifier codeSpace="UCUM_code">Bq</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Becquerel</gml:name>
+					<gml:name codeSpace="UCUM_print">Bq</gml:name>
+					<gml:name codeSpace="UCUM_unitType">radioactivity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Gy">
+					<gml:identifier codeSpace="UCUM_code">Gy</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gray</gml:name>
+					<gml:name codeSpace="UCUM_print">Gy</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy dose</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Sv">
+					<gml:identifier codeSpace="UCUM_code">Sv</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Sievert</gml:name>
+					<gml:name codeSpace="UCUM_print">Sv</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dose equivalent</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_gon">
+					<gml:identifier codeSpace="UCUM_code">gon</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gon</gml:name>
+					<gml:name codeSpace="UCUM_name">grade</gml:name>
+					<gml:name codeSpace="UCUM_print">□g</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_deg">
+					<gml:identifier codeSpace="UCUM_code">deg</gml:identifier>
+					<gml:name codeSpace="UCUM_name">degree</gml:name>
+					<gml:name codeSpace="UCUM_print">°</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_'">
+					<gml:identifier codeSpace="UCUM_code">'</gml:identifier>
+					<gml:name codeSpace="UCUM_name">minute</gml:name>
+					<gml:name codeSpace="UCUM_print">'</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_''">
+					<gml:identifier codeSpace="UCUM_code">''</gml:identifier>
+					<gml:name codeSpace="UCUM_name">second</gml:name>
+					<gml:name codeSpace="UCUM_print">''</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_l">
+					<gml:identifier codeSpace="UCUM_code">l</gml:identifier>
+					<gml:name codeSpace="UCUM_name">liter</gml:name>
+					<gml:name codeSpace="UCUM_print">l</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_L">
+					<gml:identifier codeSpace="UCUM_code">L</gml:identifier>
+					<gml:name codeSpace="UCUM_name">liter</gml:name>
+					<gml:name codeSpace="UCUM_print">L</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_ar">
+					<gml:identifier codeSpace="UCUM_code">ar</gml:identifier>
+					<gml:name codeSpace="UCUM_name">are</gml:name>
+					<gml:name codeSpace="UCUM_print">a</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_min">
+					<gml:identifier codeSpace="UCUM_code">min</gml:identifier>
+					<gml:name codeSpace="UCUM_name">minute</gml:name>
+					<gml:name codeSpace="UCUM_print">min</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_h">
+					<gml:identifier codeSpace="UCUM_code">h</gml:identifier>
+					<gml:name codeSpace="UCUM_name">hour</gml:name>
+					<gml:name codeSpace="UCUM_print">h</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_d">
+					<gml:identifier codeSpace="UCUM_code">d</gml:identifier>
+					<gml:name codeSpace="UCUM_name">day</gml:name>
+					<gml:name codeSpace="UCUM_print">d</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_a_t">
+					<gml:identifier codeSpace="UCUM_code">a_t</gml:identifier>
+					<gml:name codeSpace="UCUM_name">tropical year</gml:name>
+					<gml:name codeSpace="UCUM_print">at</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_a_j">
+					<gml:identifier codeSpace="UCUM_code">a_j</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean Julian year</gml:name>
+					<gml:name codeSpace="UCUM_print">aj</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_a_g">
+					<gml:identifier codeSpace="UCUM_code">a_g</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean Gregorian year</gml:name>
+					<gml:name codeSpace="UCUM_print">ag</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_a">
+					<gml:identifier codeSpace="UCUM_code">a</gml:identifier>
+					<gml:name codeSpace="UCUM_name">year</gml:name>
+					<gml:name codeSpace="UCUM_print">a</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_wk">
+					<gml:identifier codeSpace="UCUM_code">wk</gml:identifier>
+					<gml:name codeSpace="UCUM_name">week</gml:name>
+					<gml:name codeSpace="UCUM_print">wk</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mo_s">
+					<gml:identifier codeSpace="UCUM_code">mo_s</gml:identifier>
+					<gml:name codeSpace="UCUM_name">synodal month</gml:name>
+					<gml:name codeSpace="UCUM_print">mos</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mo_j">
+					<gml:identifier codeSpace="UCUM_code">mo_j</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean Julian month</gml:name>
+					<gml:name codeSpace="UCUM_print">moj</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mo_g">
+					<gml:identifier codeSpace="UCUM_code">mo_g</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean Gregorian month</gml:name>
+					<gml:name codeSpace="UCUM_print">mog</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mo">
+					<gml:identifier codeSpace="UCUM_code">mo</gml:identifier>
+					<gml:name codeSpace="UCUM_name">month</gml:name>
+					<gml:name codeSpace="UCUM_print">mo</gml:name>
+					<gml:name codeSpace="UCUM_unitType">time</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_t">
+					<gml:identifier codeSpace="UCUM_code">t</gml:identifier>
+					<gml:name codeSpace="UCUM_name">tonne</gml:name>
+					<gml:name codeSpace="UCUM_print">t</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_bar">
+					<gml:identifier codeSpace="UCUM_code">bar</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bar</gml:name>
+					<gml:name codeSpace="UCUM_print">bar</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_u">
+					<gml:identifier codeSpace="UCUM_code">u</gml:identifier>
+					<gml:name codeSpace="UCUM_name">unified atomic mass unit</gml:name>
+					<gml:name codeSpace="UCUM_print">u</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_eV">
+					<gml:identifier codeSpace="UCUM_code">eV</gml:identifier>
+					<gml:name codeSpace="UCUM_name">electronvolt</gml:name>
+					<gml:name codeSpace="UCUM_print">eV</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_AU">
+					<gml:identifier codeSpace="UCUM_code">AU</gml:identifier>
+					<gml:name codeSpace="UCUM_name">astronomic unit</gml:name>
+					<gml:name codeSpace="UCUM_print">AU</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_pc">
+					<gml:identifier codeSpace="UCUM_code">pc</gml:identifier>
+					<gml:name codeSpace="UCUM_name">parsec</gml:name>
+					<gml:name codeSpace="UCUM_print">pc</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[c]">
+					<gml:identifier codeSpace="UCUM_code">[c]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">velocity of light</gml:name>
+					<gml:name codeSpace="UCUM_print">c</gml:name>
+					<gml:name codeSpace="UCUM_unitType">velocity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[h]">
+					<gml:identifier codeSpace="UCUM_code">[h]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Planck constant</gml:name>
+					<gml:name codeSpace="UCUM_print">h</gml:name>
+					<gml:name codeSpace="UCUM_unitType">action</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[k]">
+					<gml:identifier codeSpace="UCUM_code">[k]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Boltzmann constant</gml:name>
+					<gml:name codeSpace="UCUM_print">k</gml:name>
+					<gml:name codeSpace="UCUM_unitType">(unclassified)</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[eps_0]">
+					<gml:identifier codeSpace="UCUM_code">[eps_0]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">permittivity of vacuum</gml:name>
+					<gml:name codeSpace="UCUM_print">ε0</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric permittivity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mu_0]">
+					<gml:identifier codeSpace="UCUM_code">[mu_0]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">permeability of vacuum</gml:name>
+					<gml:name codeSpace="UCUM_print">μ0</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magnetic permeability</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[e]">
+					<gml:identifier codeSpace="UCUM_code">[e]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">elementary charge</gml:name>
+					<gml:name codeSpace="UCUM_print">e</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric charge</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[m_e]">
+					<gml:identifier codeSpace="UCUM_code">[m_e]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">electron mass</gml:name>
+					<gml:name codeSpace="UCUM_print">me</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[m_p]">
+					<gml:identifier codeSpace="UCUM_code">[m_p]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">proton mass</gml:name>
+					<gml:name codeSpace="UCUM_print">mp</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[G]">
+					<gml:identifier codeSpace="UCUM_code">[G]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Newtonian constant of gravitation</gml:name>
+					<gml:name codeSpace="UCUM_print">G</gml:name>
+					<gml:name codeSpace="UCUM_unitType">(unclassified)</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[g]">
+					<gml:identifier codeSpace="UCUM_code">[g]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">standard acceleration of free fall</gml:name>
+					<gml:name codeSpace="UCUM_print">gn</gml:name>
+					<gml:name codeSpace="UCUM_unitType">acceleration</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_atm">
+					<gml:identifier codeSpace="UCUM_code">atm</gml:identifier>
+					<gml:name codeSpace="UCUM_name">standard atmosphere</gml:name>
+					<gml:name codeSpace="UCUM_print">atm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ly]">
+					<gml:identifier codeSpace="UCUM_code">[ly]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">light-year</gml:name>
+					<gml:name codeSpace="UCUM_print">l.y.</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_gf">
+					<gml:identifier codeSpace="UCUM_code">gf</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gram-force</gml:name>
+					<gml:name codeSpace="UCUM_print">gf</gml:name>
+					<gml:name codeSpace="UCUM_unitType">force</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lbf_av]">
+					<gml:identifier codeSpace="UCUM_code">[lbf_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pound force</gml:name>
+					<gml:name codeSpace="UCUM_print">lbf</gml:name>
+					<gml:name codeSpace="UCUM_unitType">force</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Ky">
+					<gml:identifier codeSpace="UCUM_code">Ky</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Kayser</gml:name>
+					<gml:name codeSpace="UCUM_print">K</gml:name>
+					<gml:name codeSpace="UCUM_unitType">lineic number</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Gal">
+					<gml:identifier codeSpace="UCUM_code">Gal</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gal</gml:name>
+					<gml:name codeSpace="UCUM_print">Gal</gml:name>
+					<gml:name codeSpace="UCUM_unitType">acceleration</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_dyn">
+					<gml:identifier codeSpace="UCUM_code">dyn</gml:identifier>
+					<gml:name codeSpace="UCUM_name">dyne</gml:name>
+					<gml:name codeSpace="UCUM_print">dyn</gml:name>
+					<gml:name codeSpace="UCUM_unitType">force</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_erg">
+					<gml:identifier codeSpace="UCUM_code">erg</gml:identifier>
+					<gml:name codeSpace="UCUM_name">erg</gml:name>
+					<gml:name codeSpace="UCUM_print">erg</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_P">
+					<gml:identifier codeSpace="UCUM_code">P</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Poise</gml:name>
+					<gml:name codeSpace="UCUM_print">P</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dynamic viscosity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Bi">
+					<gml:identifier codeSpace="UCUM_code">Bi</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Biot</gml:name>
+					<gml:name codeSpace="UCUM_print">Bi</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric current</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_St">
+					<gml:identifier codeSpace="UCUM_code">St</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Stokes</gml:name>
+					<gml:name codeSpace="UCUM_print">St</gml:name>
+					<gml:name codeSpace="UCUM_unitType">kinematic viscosity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Mx">
+					<gml:identifier codeSpace="UCUM_code">Mx</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Maxwell</gml:name>
+					<gml:name codeSpace="UCUM_print">Mx</gml:name>
+					<gml:name codeSpace="UCUM_unitType">flux of magnetic induction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_G">
+					<gml:identifier codeSpace="UCUM_code">G</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gauss</gml:name>
+					<gml:name codeSpace="UCUM_print">Gs</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magnetic flux density</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Oe">
+					<gml:identifier codeSpace="UCUM_code">Oe</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Oersted</gml:name>
+					<gml:name codeSpace="UCUM_print">Oe</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magnetic field intensity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Gb">
+					<gml:identifier codeSpace="UCUM_code">Gb</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gilbert</gml:name>
+					<gml:name codeSpace="UCUM_print">Gb</gml:name>
+					<gml:name codeSpace="UCUM_unitType">magnetic tension</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_sb">
+					<gml:identifier codeSpace="UCUM_code">sb</gml:identifier>
+					<gml:name codeSpace="UCUM_name">stilb</gml:name>
+					<gml:name codeSpace="UCUM_print">sb</gml:name>
+					<gml:name codeSpace="UCUM_unitType">lum. intensity density</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Lmb">
+					<gml:identifier codeSpace="UCUM_code">Lmb</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Lambert</gml:name>
+					<gml:name codeSpace="UCUM_print">L</gml:name>
+					<gml:name codeSpace="UCUM_unitType">brightness</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_ph">
+					<gml:identifier codeSpace="UCUM_code">ph</gml:identifier>
+					<gml:name codeSpace="UCUM_name">phot</gml:name>
+					<gml:name codeSpace="UCUM_print">ph</gml:name>
+					<gml:name codeSpace="UCUM_unitType">illuminance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Ci">
+					<gml:identifier codeSpace="UCUM_code">Ci</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Curie</gml:name>
+					<gml:name codeSpace="UCUM_print">Ci</gml:name>
+					<gml:name codeSpace="UCUM_unitType">radioactivity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_R">
+					<gml:identifier codeSpace="UCUM_code">R</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Roentgen</gml:name>
+					<gml:name codeSpace="UCUM_print">R</gml:name>
+					<gml:name codeSpace="UCUM_unitType">ion dose</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_RAD">
+					<gml:identifier codeSpace="UCUM_code">RAD</gml:identifier>
+					<gml:name codeSpace="UCUM_name">radiation absorbed dose</gml:name>
+					<gml:name codeSpace="UCUM_print">RAD</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy dose</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_REM">
+					<gml:identifier codeSpace="UCUM_code">REM</gml:identifier>
+					<gml:name codeSpace="UCUM_name">radiation equivalent man</gml:name>
+					<gml:name codeSpace="UCUM_print">REM</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dose equivalent</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[in_i]">
+					<gml:identifier codeSpace="UCUM_code">[in_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">inch</gml:name>
+					<gml:name codeSpace="UCUM_print">in</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ft_i]">
+					<gml:identifier codeSpace="UCUM_code">[ft_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">foot</gml:name>
+					<gml:name codeSpace="UCUM_print">ft</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[yd_i]">
+					<gml:identifier codeSpace="UCUM_code">[yd_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">yard</gml:name>
+					<gml:name codeSpace="UCUM_print">yd</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mi_i]">
+					<gml:identifier codeSpace="UCUM_code">[mi_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">statute mile</gml:name>
+					<gml:name codeSpace="UCUM_print">mi</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fth_i]">
+					<gml:identifier codeSpace="UCUM_code">[fth_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fathom</gml:name>
+					<gml:name codeSpace="UCUM_print">fth</gml:name>
+					<gml:name codeSpace="UCUM_unitType">depth of water</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[nmi_i]">
+					<gml:identifier codeSpace="UCUM_code">[nmi_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">nautical mile</gml:name>
+					<gml:name codeSpace="UCUM_print">n.mi</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[kn_i]">
+					<gml:identifier codeSpace="UCUM_code">[kn_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">knot</gml:name>
+					<gml:name codeSpace="UCUM_print">knot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">velocity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[sin_i]">
+					<gml:identifier codeSpace="UCUM_code">[sin_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">square inch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[sft_i]">
+					<gml:identifier codeSpace="UCUM_code">[sft_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">square foot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[syd_i]">
+					<gml:identifier codeSpace="UCUM_code">[syd_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">square yard</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cin_i]">
+					<gml:identifier codeSpace="UCUM_code">[cin_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cubic inch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cft_i]">
+					<gml:identifier codeSpace="UCUM_code">[cft_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cubic foot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cyd_i]">
+					<gml:identifier codeSpace="UCUM_code">[cyd_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cubic yard</gml:name>
+					<gml:name codeSpace="UCUM_print">cu.yd</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[bf_i]">
+					<gml:identifier codeSpace="UCUM_code">[bf_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">board foot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cr_i]">
+					<gml:identifier codeSpace="UCUM_code">[cr_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cord</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mil_i]">
+					<gml:identifier codeSpace="UCUM_code">[mil_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mil</gml:name>
+					<gml:name codeSpace="UCUM_print">mil</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cml_i]">
+					<gml:identifier codeSpace="UCUM_code">[cml_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">circular mil</gml:name>
+					<gml:name codeSpace="UCUM_print">circ.mil</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[hd_i]">
+					<gml:identifier codeSpace="UCUM_code">[hd_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">hand</gml:name>
+					<gml:name codeSpace="UCUM_print">hd</gml:name>
+					<gml:name codeSpace="UCUM_unitType">height of horses</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ft_us]">
+					<gml:identifier codeSpace="UCUM_code">[ft_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">foot</gml:name>
+					<gml:name codeSpace="UCUM_print">ftus</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[yd_us]">
+					<gml:identifier codeSpace="UCUM_code">[yd_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">yard</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[in_us]">
+					<gml:identifier codeSpace="UCUM_code">[in_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">inch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[rd_us]">
+					<gml:identifier codeSpace="UCUM_code">[rd_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">rod</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ch_us]">
+					<gml:identifier codeSpace="UCUM_code">[ch_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gunter's chain</gml:name>
+					<gml:name codeSpace="UCUM_name">Surveyor's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lk_us]">
+					<gml:identifier codeSpace="UCUM_code">[lk_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">link for Gunter's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[rch_us]">
+					<gml:identifier codeSpace="UCUM_code">[rch_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Ramden's chain</gml:name>
+					<gml:name codeSpace="UCUM_name">Engineer's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[rlk_us]">
+					<gml:identifier codeSpace="UCUM_code">[rlk_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">link for Ramden's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fth_us]">
+					<gml:identifier codeSpace="UCUM_code">[fth_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fathom</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fur_us]">
+					<gml:identifier codeSpace="UCUM_code">[fur_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">furlong</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mi_us]">
+					<gml:identifier codeSpace="UCUM_code">[mi_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mile</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[acr_us]">
+					<gml:identifier codeSpace="UCUM_code">[acr_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">acre</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[srd_us]">
+					<gml:identifier codeSpace="UCUM_code">[srd_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">square rod</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[smi_us]">
+					<gml:identifier codeSpace="UCUM_code">[smi_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">square mile</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[sct]">
+					<gml:identifier codeSpace="UCUM_code">[sct]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">section</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[twp]">
+					<gml:identifier codeSpace="UCUM_code">[twp]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">township</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mil_us]">
+					<gml:identifier codeSpace="UCUM_code">[mil_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mil</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[in_br]">
+					<gml:identifier codeSpace="UCUM_code">[in_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">inch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ft_br]">
+					<gml:identifier codeSpace="UCUM_code">[ft_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">foot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[rd_br]">
+					<gml:identifier codeSpace="UCUM_code">[rd_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">rod</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ch_br]">
+					<gml:identifier codeSpace="UCUM_code">[ch_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Gunter's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lk_br]">
+					<gml:identifier codeSpace="UCUM_code">[lk_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">link for Gunter's chain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fth_br]">
+					<gml:identifier codeSpace="UCUM_code">[fth_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fathom</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pc_br]">
+					<gml:identifier codeSpace="UCUM_code">[pc_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pace</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[yd_br]">
+					<gml:identifier codeSpace="UCUM_code">[yd_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">yard</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mi_br]">
+					<gml:identifier codeSpace="UCUM_code">[mi_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mile</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[nmi_br]">
+					<gml:identifier codeSpace="UCUM_code">[nmi_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">nautical mile</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[kn_br]">
+					<gml:identifier codeSpace="UCUM_code">[kn_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">knot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">velocity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[acr_br]">
+					<gml:identifier codeSpace="UCUM_code">[acr_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">acre</gml:name>
+					<gml:name codeSpace="UCUM_unitType">area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gal_us]">
+					<gml:identifier codeSpace="UCUM_code">[gal_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Queen Anne's wine gallon</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[bbl_us]">
+					<gml:identifier codeSpace="UCUM_code">[bbl_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">barrel</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[qt_us]">
+					<gml:identifier codeSpace="UCUM_code">[qt_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">quart</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pt_us]">
+					<gml:identifier codeSpace="UCUM_code">[pt_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pint</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gil_us]">
+					<gml:identifier codeSpace="UCUM_code">[gil_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gill</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[foz_us]">
+					<gml:identifier codeSpace="UCUM_code">[foz_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fluid ounce</gml:name>
+					<gml:name codeSpace="UCUM_print">oz fl</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fdr_us]">
+					<gml:identifier codeSpace="UCUM_code">[fdr_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fluid dram</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[min_us]">
+					<gml:identifier codeSpace="UCUM_code">[min_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">minim</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[crd_us]">
+					<gml:identifier codeSpace="UCUM_code">[crd_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cord</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[bu_us]">
+					<gml:identifier codeSpace="UCUM_code">[bu_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bushel</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dry volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gal_wi]">
+					<gml:identifier codeSpace="UCUM_code">[gal_wi]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">historical winchester gallon</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dry volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pk_us]">
+					<gml:identifier codeSpace="UCUM_code">[pk_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">peck</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dry volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[dqt_us]">
+					<gml:identifier codeSpace="UCUM_code">[dqt_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">dry quart</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dry volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[dpt_us]">
+					<gml:identifier codeSpace="UCUM_code">[dpt_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">dry pint</gml:name>
+					<gml:name codeSpace="UCUM_unitType">dry volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[tbs_us]">
+					<gml:identifier codeSpace="UCUM_code">[tbs_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">tablespoon</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[tsp_us]">
+					<gml:identifier codeSpace="UCUM_code">[tsp_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">teaspoon</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cup_us]">
+					<gml:identifier codeSpace="UCUM_code">[cup_us]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cup</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gal_br]">
+					<gml:identifier codeSpace="UCUM_code">[gal_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gallon</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pk_br]">
+					<gml:identifier codeSpace="UCUM_code">[pk_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">peck</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[bu_br]">
+					<gml:identifier codeSpace="UCUM_code">[bu_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bushel</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[qt_br]">
+					<gml:identifier codeSpace="UCUM_code">[qt_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">quart</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pt_br]">
+					<gml:identifier codeSpace="UCUM_code">[pt_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pint</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gil_br]">
+					<gml:identifier codeSpace="UCUM_code">[gil_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gill</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[foz_br]">
+					<gml:identifier codeSpace="UCUM_code">[foz_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fluid ounce</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[fdr_br]">
+					<gml:identifier codeSpace="UCUM_code">[fdr_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">fluid dram</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[min_br]">
+					<gml:identifier codeSpace="UCUM_code">[min_br]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">minim</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[gr]">
+					<gml:identifier codeSpace="UCUM_code">[gr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">grain</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lb_av]">
+					<gml:identifier codeSpace="UCUM_code">[lb_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pound</gml:name>
+					<gml:name codeSpace="UCUM_print">lb</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[oz_av]">
+					<gml:identifier codeSpace="UCUM_code">[oz_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">ounce</gml:name>
+					<gml:name codeSpace="UCUM_print">oz</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[dr_av]">
+					<gml:identifier codeSpace="UCUM_code">[dr_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">dram</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[scwt_av]">
+					<gml:identifier codeSpace="UCUM_code">[scwt_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">short hundredweight</gml:name>
+					<gml:name codeSpace="UCUM_name">U.S. hundredweight</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lcwt_av]">
+					<gml:identifier codeSpace="UCUM_code">[lcwt_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">long hunderdweight</gml:name>
+					<gml:name codeSpace="UCUM_name">British hundredweight</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ston_av]">
+					<gml:identifier codeSpace="UCUM_code">[ston_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">short ton</gml:name>
+					<gml:name codeSpace="UCUM_name">U.S. ton</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lton_av]">
+					<gml:identifier codeSpace="UCUM_code">[lton_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">long ton</gml:name>
+					<gml:name codeSpace="UCUM_name">British ton</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[stone_av]">
+					<gml:identifier codeSpace="UCUM_code">[stone_av]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">stone</gml:name>
+					<gml:name codeSpace="UCUM_name">British stone</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pwt_tr]">
+					<gml:identifier codeSpace="UCUM_code">[pwt_tr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pennyweight</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[oz_tr]">
+					<gml:identifier codeSpace="UCUM_code">[oz_tr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">ounce</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lb_tr]">
+					<gml:identifier codeSpace="UCUM_code">[lb_tr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pound</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[sc_ap]">
+					<gml:identifier codeSpace="UCUM_code">[sc_ap]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">scruple</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[dr_ap]">
+					<gml:identifier codeSpace="UCUM_code">[dr_ap]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">dram</gml:name>
+					<gml:name codeSpace="UCUM_name">drachm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[oz_ap]">
+					<gml:identifier codeSpace="UCUM_code">[oz_ap]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">ounce</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lb_ap]">
+					<gml:identifier codeSpace="UCUM_code">[lb_ap]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pound</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[lne]">
+					<gml:identifier codeSpace="UCUM_code">[lne]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">line</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pnt]">
+					<gml:identifier codeSpace="UCUM_code">[pnt]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">point</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pca]">
+					<gml:identifier codeSpace="UCUM_code">[pca]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pica</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pnt_pr]">
+					<gml:identifier codeSpace="UCUM_code">[pnt_pr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Printer's point</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pca_pr]">
+					<gml:identifier codeSpace="UCUM_code">[pca_pr]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Printer's pica</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pied]">
+					<gml:identifier codeSpace="UCUM_code">[pied]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pied</gml:name>
+					<gml:name codeSpace="UCUM_name">French foot</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pouce]">
+					<gml:identifier codeSpace="UCUM_code">[pouce]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pouce</gml:name>
+					<gml:name codeSpace="UCUM_name">French inch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ligne]">
+					<gml:identifier codeSpace="UCUM_code">[ligne]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">ligne</gml:name>
+					<gml:name codeSpace="UCUM_name">French line</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[didot]">
+					<gml:identifier codeSpace="UCUM_code">[didot]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">didot</gml:name>
+					<gml:name codeSpace="UCUM_name">Didot's point</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[cicero]">
+					<gml:identifier codeSpace="UCUM_code">[cicero]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">cicero</gml:name>
+					<gml:name codeSpace="UCUM_name">Didot's pica</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[degF]">
+					<gml:identifier codeSpace="UCUM_code">[degF]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">degree Fahrenheit</gml:name>
+					<gml:name codeSpace="UCUM_print">°F</gml:name>
+					<gml:name codeSpace="UCUM_unitType">temperature</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal_[15]">
+					<gml:identifier codeSpace="UCUM_code">cal_[15]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">calorie at 15 °C</gml:name>
+					<gml:name codeSpace="UCUM_print">cal15°C</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal_[20]">
+					<gml:identifier codeSpace="UCUM_code">cal_[20]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">calorie at 20 °C</gml:name>
+					<gml:name codeSpace="UCUM_print">cal20°C</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal_m">
+					<gml:identifier codeSpace="UCUM_code">cal_m</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean calorie</gml:name>
+					<gml:name codeSpace="UCUM_print">calm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal_IT">
+					<gml:identifier codeSpace="UCUM_code">cal_IT</gml:identifier>
+					<gml:name codeSpace="UCUM_name">international table calorie</gml:name>
+					<gml:name codeSpace="UCUM_print">calIT</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal_th">
+					<gml:identifier codeSpace="UCUM_code">cal_th</gml:identifier>
+					<gml:name codeSpace="UCUM_name">thermochemical calorie</gml:name>
+					<gml:name codeSpace="UCUM_print">calth</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_cal">
+					<gml:identifier codeSpace="UCUM_code">cal</gml:identifier>
+					<gml:name codeSpace="UCUM_name">calorie</gml:name>
+					<gml:name codeSpace="UCUM_print">cal</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Cal]">
+					<gml:identifier codeSpace="UCUM_code">[Cal]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">nutrition label Calories</gml:name>
+					<gml:name codeSpace="UCUM_print">Cal</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_39]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_39]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">British thermal unit at 39 °F</gml:name>
+					<gml:name codeSpace="UCUM_print">Btu39°F</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_59]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_59]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">British thermal unit at 59 °F</gml:name>
+					<gml:name codeSpace="UCUM_print">Btu59°F</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_60]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_60]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">British thermal unit at 60 °F</gml:name>
+					<gml:name codeSpace="UCUM_print">Btu60°F</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_m]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_m]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mean British thermal unit</gml:name>
+					<gml:name codeSpace="UCUM_print">Btum</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_IT]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_IT]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">international table British thermal unit</gml:name>
+					<gml:name codeSpace="UCUM_print">BtuIT</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu_th]">
+					<gml:identifier codeSpace="UCUM_code">[Btu_th]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">thermochemical British thermal unit</gml:name>
+					<gml:name codeSpace="UCUM_print">Btuth</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Btu]">
+					<gml:identifier codeSpace="UCUM_code">[Btu]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">British thermal unit</gml:name>
+					<gml:name codeSpace="UCUM_print">btu</gml:name>
+					<gml:name codeSpace="UCUM_unitType">energy</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[HP]">
+					<gml:identifier codeSpace="UCUM_code">[HP]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">horsepower</gml:name>
+					<gml:name codeSpace="UCUM_unitType">power</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_m[H2O]">
+					<gml:identifier codeSpace="UCUM_code">m[H2O]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">meter of water column</gml:name>
+					<gml:name codeSpace="UCUM_print">m H2O</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_m[Hg]">
+					<gml:identifier codeSpace="UCUM_code">m[Hg]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">meter of mercury column</gml:name>
+					<gml:name codeSpace="UCUM_print">m Hg</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[in_i'H2O]">
+					<gml:identifier codeSpace="UCUM_code">[in_i'H2O]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">inch of water column</gml:name>
+					<gml:name codeSpace="UCUM_print">in H2O</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[in_i'Hg]">
+					<gml:identifier codeSpace="UCUM_code">[in_i'Hg]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">inch of mercury column</gml:name>
+					<gml:name codeSpace="UCUM_print">in Hg</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[PRU]">
+					<gml:identifier codeSpace="UCUM_code">[PRU]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">peripheral vascular resistance unit</gml:name>
+					<gml:name codeSpace="UCUM_print">P.R.U.</gml:name>
+					<gml:name codeSpace="UCUM_unitType">fluid resistance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[diop]">
+					<gml:identifier codeSpace="UCUM_code">[diop]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">diopter</gml:name>
+					<gml:name codeSpace="UCUM_print">dpt</gml:name>
+					<gml:name codeSpace="UCUM_unitType">refraction of a lens</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[p'diop]">
+					<gml:identifier codeSpace="UCUM_code">[p'diop]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">prism diopter</gml:name>
+					<gml:name codeSpace="UCUM_print">PD</gml:name>
+					<gml:name codeSpace="UCUM_unitType">refraction of a prism</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_%[slope]">
+					<gml:identifier codeSpace="UCUM_code">%[slope]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">percent of slope</gml:name>
+					<gml:name codeSpace="UCUM_print">%</gml:name>
+					<gml:name codeSpace="UCUM_unitType">slope</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mesh_i]">
+					<gml:identifier codeSpace="UCUM_code">[mesh_i]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mesh</gml:name>
+					<gml:name codeSpace="UCUM_unitType">lineic number</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[Ch]">
+					<gml:identifier codeSpace="UCUM_code">[Ch]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Charrière</gml:name>
+					<gml:name codeSpace="UCUM_name">french</gml:name>
+					<gml:name codeSpace="UCUM_print">Ch</gml:name>
+					<gml:name codeSpace="UCUM_unitType">gauge of catheters</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[drp]">
+					<gml:identifier codeSpace="UCUM_code">[drp]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">drop</gml:name>
+					<gml:name codeSpace="UCUM_print">drp</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[hnsf'U]">
+					<gml:identifier codeSpace="UCUM_code">[hnsf'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Hounsfield unit</gml:name>
+					<gml:name codeSpace="UCUM_print">HF</gml:name>
+					<gml:name codeSpace="UCUM_unitType">x-ray attenuation</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[MET]">
+					<gml:identifier codeSpace="UCUM_code">[MET]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">metabolic equivalent</gml:name>
+					<gml:name codeSpace="UCUM_print">MET</gml:name>
+					<gml:name codeSpace="UCUM_unitType">metabolic cost of physical activity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[hp_X]">
+					<gml:identifier codeSpace="UCUM_code">[hp_X]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">homeopathic potency of decimal series</gml:name>
+					<gml:name codeSpace="UCUM_print">X</gml:name>
+					<gml:name codeSpace="UCUM_unitType">homeopathic potency</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[hp_C]">
+					<gml:identifier codeSpace="UCUM_code">[hp_C]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">homeopathic potency of centesimal series</gml:name>
+					<gml:name codeSpace="UCUM_print">C</gml:name>
+					<gml:name codeSpace="UCUM_unitType">homeopathic potency</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_eq">
+					<gml:identifier codeSpace="UCUM_code">eq</gml:identifier>
+					<gml:name codeSpace="UCUM_name">equivalents</gml:name>
+					<gml:name codeSpace="UCUM_print">eq</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of substance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_osm">
+					<gml:identifier codeSpace="UCUM_code">osm</gml:identifier>
+					<gml:name codeSpace="UCUM_name">osmole</gml:name>
+					<gml:name codeSpace="UCUM_print">osm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of substance (dissolved particles)</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[pH]">
+					<gml:identifier codeSpace="UCUM_code">[pH]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pH</gml:name>
+					<gml:name codeSpace="UCUM_print">pH</gml:name>
+					<gml:name codeSpace="UCUM_unitType">acidity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_g%">
+					<gml:identifier codeSpace="UCUM_code">g%</gml:identifier>
+					<gml:name codeSpace="UCUM_name">gram percent</gml:name>
+					<gml:name codeSpace="UCUM_print">g%</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass concentration</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[S]">
+					<gml:identifier codeSpace="UCUM_code">[S]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Svedberg unit</gml:name>
+					<gml:name codeSpace="UCUM_print">S</gml:name>
+					<gml:name codeSpace="UCUM_unitType">sedimentation coefficient</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[HPF]">
+					<gml:identifier codeSpace="UCUM_code">[HPF]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">high power field</gml:name>
+					<gml:name codeSpace="UCUM_print">HPF</gml:name>
+					<gml:name codeSpace="UCUM_unitType">view area in microscope</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[LPF]">
+					<gml:identifier codeSpace="UCUM_code">[LPF]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">low power field</gml:name>
+					<gml:name codeSpace="UCUM_print">LPF</gml:name>
+					<gml:name codeSpace="UCUM_unitType">view area in microscope</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_kat">
+					<gml:identifier codeSpace="UCUM_code">kat</gml:identifier>
+					<gml:name codeSpace="UCUM_name">katal</gml:name>
+					<gml:name codeSpace="UCUM_print">kat</gml:name>
+					<gml:name codeSpace="UCUM_unitType">catalytic activity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_U">
+					<gml:identifier codeSpace="UCUM_code">U</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Unit</gml:name>
+					<gml:name codeSpace="UCUM_print">U</gml:name>
+					<gml:name codeSpace="UCUM_unitType">catalytic activity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[iU]">
+					<gml:identifier codeSpace="UCUM_code">[iU]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">international unit</gml:name>
+					<gml:name codeSpace="UCUM_print">i.U.</gml:name>
+					<gml:name codeSpace="UCUM_unitType">arbitrary</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[arb'U]">
+					<gml:identifier codeSpace="UCUM_code">[arb'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">arbitary unit</gml:name>
+					<gml:name codeSpace="UCUM_print">arb. U</gml:name>
+					<gml:name codeSpace="UCUM_unitType">arbitrary</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[USP'U]">
+					<gml:identifier codeSpace="UCUM_code">[USP'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">United States Pharmacopeia unit</gml:name>
+					<gml:name codeSpace="UCUM_print">U.S.P.</gml:name>
+					<gml:name codeSpace="UCUM_unitType">arbitrary</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[GPL'U]">
+					<gml:identifier codeSpace="UCUM_code">[GPL'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">GPL unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of anticardiolipin IgG</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[MPL'U]">
+					<gml:identifier codeSpace="UCUM_code">[MPL'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">MPL unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of anticardiolipin IgM</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[APL'U]">
+					<gml:identifier codeSpace="UCUM_code">[APL'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">APL unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of anticardiolipin IgA</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[beth'U]">
+					<gml:identifier codeSpace="UCUM_code">[beth'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Bethesda unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of factor VIII inhibitor</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[todd'U]">
+					<gml:identifier codeSpace="UCUM_code">[todd'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Todd unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity antistreptolysin O</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[dye'U]">
+					<gml:identifier codeSpace="UCUM_code">[dye'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Dye unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of amylase</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[smgy'U]">
+					<gml:identifier codeSpace="UCUM_code">[smgy'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Somogyi unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of amylase</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[bdsk'U]">
+					<gml:identifier codeSpace="UCUM_code">[bdsk'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Bodansky unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of phosphatase</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[ka'U]">
+					<gml:identifier codeSpace="UCUM_code">[ka'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">King-Armstrong unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of phosphatase</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[knk'U]">
+					<gml:identifier codeSpace="UCUM_code">[knk'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Kunkel unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">arbitrary biologic activity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[mclg'U]">
+					<gml:identifier codeSpace="UCUM_code">[mclg'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Mac Lagan unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">arbitrary biologic activity</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[tb'U]">
+					<gml:identifier codeSpace="UCUM_code">[tb'U]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">tuberculin unit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity of tuberculin</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[CCID_50]">
+					<gml:identifier codeSpace="UCUM_code">[CCID_50]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">50% cell culture infectious dose</gml:name>
+					<gml:name codeSpace="UCUM_print">CCID50</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity (infectivity) of an infectious agent preparation</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[TCID_50]">
+					<gml:identifier codeSpace="UCUM_code">[TCID_50]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">50% tissue culture infectious dose</gml:name>
+					<gml:name codeSpace="UCUM_print">TCID50</gml:name>
+					<gml:name codeSpace="UCUM_unitType">biologic activity (infectivity) of an infectious agent preparation</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[PFU]">
+					<gml:identifier codeSpace="UCUM_code">[PFU]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">plaque forming units</gml:name>
+					<gml:name codeSpace="UCUM_print">PFU</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of an infectious agent</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[FFU]">
+					<gml:identifier codeSpace="UCUM_code">[FFU]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">immunofocus forming units</gml:name>
+					<gml:name codeSpace="UCUM_print">FFU</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of an infectious agent</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[CFU]">
+					<gml:identifier codeSpace="UCUM_code">[CFU]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">colony forming units</gml:name>
+					<gml:name codeSpace="UCUM_print">CFU</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of a proliferating organism</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Np">
+					<gml:identifier codeSpace="UCUM_code">Np</gml:identifier>
+					<gml:name codeSpace="UCUM_name">neper</gml:name>
+					<gml:name codeSpace="UCUM_print">Np</gml:name>
+					<gml:name codeSpace="UCUM_unitType">level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B">
+					<gml:identifier codeSpace="UCUM_code">B</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel</gml:name>
+					<gml:name codeSpace="UCUM_print">B</gml:name>
+					<gml:name codeSpace="UCUM_unitType">level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[SPL]">
+					<gml:identifier codeSpace="UCUM_code">B[SPL]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel sound pressure</gml:name>
+					<gml:name codeSpace="UCUM_print">B(SPL)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[V]">
+					<gml:identifier codeSpace="UCUM_code">B[V]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel volt</gml:name>
+					<gml:name codeSpace="UCUM_print">B(V)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric potential level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[mV]">
+					<gml:identifier codeSpace="UCUM_code">B[mV]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel millivolt</gml:name>
+					<gml:name codeSpace="UCUM_print">B(mV)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric potential level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[uV]">
+					<gml:identifier codeSpace="UCUM_code">B[uV]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel microvolt</gml:name>
+					<gml:name codeSpace="UCUM_print">B(μV)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric potential level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[W]">
+					<gml:identifier codeSpace="UCUM_code">B[W]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel watt</gml:name>
+					<gml:name codeSpace="UCUM_print">B(W)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">power level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_B[kW]">
+					<gml:identifier codeSpace="UCUM_code">B[kW]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bel kilowatt</gml:name>
+					<gml:name codeSpace="UCUM_print">B(kW)</gml:name>
+					<gml:name codeSpace="UCUM_unitType">power level</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_st">
+					<gml:identifier codeSpace="UCUM_code">st</gml:identifier>
+					<gml:name codeSpace="UCUM_name">stere</gml:name>
+					<gml:name codeSpace="UCUM_print">st</gml:name>
+					<gml:name codeSpace="UCUM_unitType">volume</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Ao">
+					<gml:identifier codeSpace="UCUM_code">Ao</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Ångström</gml:name>
+					<gml:name codeSpace="UCUM_print">Å</gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_b">
+					<gml:identifier codeSpace="UCUM_code">b</gml:identifier>
+					<gml:name codeSpace="UCUM_name">barn</gml:name>
+					<gml:name codeSpace="UCUM_print">b</gml:name>
+					<gml:name codeSpace="UCUM_unitType">action area</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_att">
+					<gml:identifier codeSpace="UCUM_code">att</gml:identifier>
+					<gml:name codeSpace="UCUM_name">technical atmosphere</gml:name>
+					<gml:name codeSpace="UCUM_print">at</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_mho">
+					<gml:identifier codeSpace="UCUM_code">mho</gml:identifier>
+					<gml:name codeSpace="UCUM_name">mho</gml:name>
+					<gml:name codeSpace="UCUM_print">mho</gml:name>
+					<gml:name codeSpace="UCUM_unitType">electric conductance</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[psi]">
+					<gml:identifier codeSpace="UCUM_code">[psi]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">pound per sqare inch</gml:name>
+					<gml:name codeSpace="UCUM_print">psi</gml:name>
+					<gml:name codeSpace="UCUM_unitType">pressure</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_circ">
+					<gml:identifier codeSpace="UCUM_code">circ</gml:identifier>
+					<gml:name codeSpace="UCUM_name">circle</gml:name>
+					<gml:name codeSpace="UCUM_print">circ</gml:name>
+					<gml:name codeSpace="UCUM_unitType">plane angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_sph">
+					<gml:identifier codeSpace="UCUM_code">sph</gml:identifier>
+					<gml:name codeSpace="UCUM_name">spere</gml:name>
+					<gml:name codeSpace="UCUM_print">sph</gml:name>
+					<gml:name codeSpace="UCUM_unitType">solid angle</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[car_m]">
+					<gml:identifier codeSpace="UCUM_code">[car_m]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">metric carat</gml:name>
+					<gml:name codeSpace="UCUM_print">ctm</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[car_Au]">
+					<gml:identifier codeSpace="UCUM_code">[car_Au]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">carat of gold alloys</gml:name>
+					<gml:name codeSpace="UCUM_print">ctAu</gml:name>
+					<gml:name codeSpace="UCUM_unitType">mass fraction</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_[smoot]">
+					<gml:identifier codeSpace="UCUM_code">[smoot]</gml:identifier>
+					<gml:name codeSpace="UCUM_name">Smoot</gml:name>
+					<gml:name codeSpace="UCUM_print"></gml:name>
+					<gml:name codeSpace="UCUM_unitType">length</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_bit_s">
+					<gml:identifier codeSpace="UCUM_code">bit_s</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bit</gml:name>
+					<gml:name codeSpace="UCUM_print">bits</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of information</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_bit">
+					<gml:identifier codeSpace="UCUM_code">bit</gml:identifier>
+					<gml:name codeSpace="UCUM_name">bit</gml:name>
+					<gml:name codeSpace="UCUM_print">bit</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of information</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_By">
+					<gml:identifier codeSpace="UCUM_code">By</gml:identifier>
+					<gml:name codeSpace="UCUM_name">byte</gml:name>
+					<gml:name codeSpace="UCUM_print">B</gml:name>
+					<gml:name codeSpace="UCUM_unitType">amount of information</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+			<codeEntry>
+				<CodeDefinition gml:id="UnitsCode_Bd">
+					<gml:identifier codeSpace="UCUM_code">Bd</gml:identifier>
+					<gml:name codeSpace="UCUM_name">baud</gml:name>
+					<gml:name codeSpace="UCUM_print">Bd</gml:name>
+					<gml:name codeSpace="UCUM_unitType">signal transmission rate</gml:name>
+				</CodeDefinition>
+			</codeEntry>
+		</CodeListDictionary>
+	</codelistItem>
+</CT_CodelistCatalogue>

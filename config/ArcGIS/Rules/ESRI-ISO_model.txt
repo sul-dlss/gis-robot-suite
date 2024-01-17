@@ -1,0 +1,782 @@
+# ESRI-ISO Model default rules
+
+#nsdecl em http://www.esri.com/metadata/translator/instance/
+#nsdecl es http://www.esri.com/metadata/translator/schema/
+#nsdecl v http://www.esri.com/metadata/translator/var/
+#nsdecl ec http://www.esri.com/metadata/translator/ctrl/
+#nsdecl gmx http://www.isotc211.org/2005/gmx
+#nsdecl gmxRes http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#
+
+
+#################
+# DEFAULT VALUES 
+#################
+
+# metadata standard name and version
+em:ISO19139standardName("ISO 19139 Geographic Information - Metadata - Implementation Specification")
+em:ISO19139standardVersion("2007")
+
+em:ESRIISOstandardName("ArcGIS Metadata")
+em:ESRIISOstandardVersion("1.0")
+
+# language
+em:defaultLanguage ({"eng", gmxRes:LanguageCode, "eng", "ISO639-2"})
+
+# hierarchyLevels
+em:defaultHierarchyLevel ({"dataset", gmxRes:MD_ScopeCode, "dataset", "ISOTC211/19115"})
+em:defaultHierarchyLevel ({"005", gmxRes:MD_ScopeCode, "005", "esriDomainCode"})
+
+em:svDefaultHierarchyLevel ({"service", gmxRes:MD_ScopeCode, "service", "ISOTC211/19115"})
+em:svDefaultHierarchyLevel ({"014", gmxRes:MD_ScopeCode, "014", "esriDomainCode"})
+
+em:svDefaultHierarchyLevelName("service")
+
+# format version
+em:defaultFormatVersion("unknown")
+
+# service operation parameter optionality
+em:defaultSvParamOptionality("Mandatory")
+
+# date and time
+em:dateTime(v:a, v:out) <-- em:date(v:a, v:b), em:time(v:a, v:c), es:concat([v:b, "T", v:c], v:out); em:date(v:a, v:b), es:concat([v:b, "T00:00:00"], v:out)
+
+em:fdate(v:a, v:b), es:date(v:b), es:formatIsoDate(v:b, v:out) --> em:tmPosDate(v:a, v:out)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "not complete"), v:c="inapplicable" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "incomplete"), v:c="inapplicable" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "unpublished"), v:c="inapplicable" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "unpublished material"), v:c="inapplicable" --> em:tmPosDate(v:a, v:c)
+em:fdate(v:a, v:b), es:not(es:date(v:b)), es:not(es:equalsIgnoreCase (v:b, "unknown")), es:not(es:equalsIgnoreCase (v:b, "not known")), es:not(es:equalsIgnoreCase (v:b, "now")), es:not(es:equalsIgnoreCase (v:b, "present")), es:not(es:equalsIgnoreCase (v:b, "current")), es:not(es:equalsIgnoreCase (v:b, "not complete")), es:not(es:equalsIgnoreCase (v:b, "incomplete"), v:c="inapplicable"), es:not(es:equalsIgnoreCase (v:b, "unpublished")), es:not(es:equalsIgnoreCase (v:b, "unpublished material")), es:defaultDate(v:b, v:out) --> em:tmPosDate(v:a, v:out)
+em:ftime(v:a, v:b), es:time(v:b), es:formatIsoTime(v:b, v:out) --> em:tmPosTime(v:a, v:out)
+em:ftime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:tmPosTime(v:a, v:c)
+em:ftime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:tmPosTime(v:a, v:c)
+em:ftime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:tmPosTime(v:a, v:c)
+em:ftime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:tmPosTime(v:a, v:c)
+em:ftime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:tmPosTime(v:a, v:c)
+em:tmPosDate(v:a, v:b), es:not(es:date(v:b)), es:defaultDate(v:b, v:out) --> em:tmPosDateTime(v:a, v:out)
+em:tmPosDate(v:a, v:b), es:date(v:b), em:tmPosTime(v:a, v:c), es:time(v:c), es:concat([v:b, "T", v:c], v:out) --> em:tmPosDateTime(v:a, v:out)
+em:tmPosDate(v:a, v:b), es:date(v:b), em:tmPosTime(v:a, v:c), es:not(es:time(v:c)) --> em:tmPosDateTime(v:a, v:b)
+em:tmPosDate(v:a, v:b), es:date(v:b), es:not(em:tmPosTime(v:a, v:c)) --> em:tmPosDateTime(v:a, v:b)
+
+em:fbeginDate(v:a, v:b), es:date(v:b), es:formatIsoDate(v:b, v:out) --> em:beginDate(v:a, v:out)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:beginDate(v:a, v:c)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:beginDate(v:a, v:c)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:beginDate(v:a, v:c)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:beginDate(v:a, v:c)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:beginDate(v:a, v:c)
+em:fbeginDate(v:a, v:b), es:not(es:date(v:b)), es:not(es:equalsIgnoreCase (v:b, "unknown")), es:not(es:equalsIgnoreCase (v:b, "not known")), es:not(es:equalsIgnoreCase (v:b, "now")), es:not(es:equalsIgnoreCase (v:b, "present")), es:not(es:equalsIgnoreCase (v:b, "current")), es:defaultDate(v:b, v:out) --> em:beginDate(v:a, v:out)
+em:fbeginTime(v:a, v:b), es:time(v:b), es:formatIsoTime(v:b, v:out) --> em:beginTime(v:a, v:out)
+em:fbeginTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:beginTime(v:a, v:c)
+em:fbeginTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:beginTime(v:a, v:c)
+em:fbeginTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:beginTime(v:a, v:c)
+em:fbeginTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:beginTime(v:a, v:c)
+em:fbeginTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:beginTime(v:a, v:c)
+em:beginDate(v:a, v:b), es:not(es:date(v:b)), es:defaultDate(v:b, v:out) --> em:beginDateTime(v:a, v:out)
+em:beginDate(v:a, v:b), es:date(v:b), em:beginTime(v:a, v:c), es:time(v:c), es:concat([v:b, "T", v:c], v:out) --> em:beginDateTime(v:a, v:out)
+em:beginDate(v:a, v:b), es:date(v:b), em:beginTime(v:a, v:c), es:not(es:time(v:c)) --> em:beginDateTime(v:a, v:b)
+em:beginDate(v:a, v:b), es:date(v:b), es:not(em:beginTime(v:a, v:c)) --> em:beginDateTime(v:a, v:b)
+
+em:fendDate(v:a, v:b), es:date(v:b), es:formatIsoDate(v:b, v:out) --> em:endDate(v:a, v:out)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:endDate(v:a, v:c)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:endDate(v:a, v:c)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:endDate(v:a, v:c)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:endDate(v:a, v:c)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:endDate(v:a, v:c)
+em:fendDate(v:a, v:b), es:not(es:date(v:b)), es:not(es:equalsIgnoreCase (v:b, "unknown")), es:not(es:equalsIgnoreCase (v:b, "not known")), es:not(es:equalsIgnoreCase (v:b, "now")), es:not(es:equalsIgnoreCase (v:b, "present")), es:not(es:equalsIgnoreCase (v:b, "current")), es:defaultDate(v:b, v:out) --> em:endDate(v:a, v:out)
+em:fendTime(v:a, v:b), es:time(v:b), es:formatIsoTime(v:b, v:out) --> em:endTime(v:a, v:out)
+em:fendTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "unknown"), v:c="unknown" --> em:endTime(v:a, v:c)
+em:fendTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "not known"), v:c="unknown" --> em:endTime(v:a, v:c)
+em:fendTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "now"), v:c="now" --> em:endTime(v:a, v:c)
+em:fendTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "present"), v:c="now" --> em:endTime(v:a, v:c)
+em:fendTime(v:a, v:b), es:not(es:time(v:b)), es:equalsIgnoreCase (v:b, "current"), v:c="now" --> em:endTime(v:a, v:c)
+em:endDate(v:a, v:b), es:not(es:date(v:b)), es:defaultDate(v:b, v:out) --> em:endDateTime(v:a, v:out)
+em:endDate(v:a, v:b), es:date(v:b), em:endTime(v:a, v:c), es:time(v:c), es:concat([v:b, "T", v:c], v:out) --> em:endDateTime(v:a, v:out)
+em:endDate(v:a, v:b), es:date(v:b), em:endTime(v:a, v:c), es:not(es:time(v:c)) --> em:endDateTime(v:a, v:b)
+em:endDate(v:a, v:b), es:date(v:b), es:not(em:endTime(v:a, v:c)) --> em:endDateTime(v:a, v:b)
+
+#em:fbeginDate(v:a, v:b), es:date(v:b), em:fbeginTime(v:a, v:c), es:time(v:c), es:concat([v:b, "T", v:c], v:d), es:formatIsoDateTime(v:d, v:out) --> em:beginDate(v:a, v:out) 
+#em:fendDate(v:a, v:b), es:date(v:b), em:fendTime(v:a, v:c), es:time(v:c), es:concat([v:b, "T", v:c], v:d), es:formatIsoDateTime(v:d, v:out) --> em:endDate(v:a, v:out) 
+
+
+#########################################
+# FACTS USED TO TRANSLATE FGDC METADATA 
+#########################################
+
+# ESRI
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "point") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Multipoint") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Polyline") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Polygon") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Arc") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "node") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "region") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "route") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "tic") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "label") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "annotation") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "triangle") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "edge") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "solid") --> em:geometricObjectType(v:Subject, {"solid", gmxRes:MD_GeometricObjectTypeCode, "solid", "ISOTC211/19115"})
+
+# FGDC SDTS
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Entity point") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Label point") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Area point") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Node, planar graph") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Node, network") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "String") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Link") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Complete chain") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Area chain") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Network chain, planar graph") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Network chain, nonplanar graph") --> em:geometricObjectType(v:Subject, {"composite", gmxRes:MD_GeometricObjectTypeCode, "composite", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Circular arc, three point center") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Elliptical arc") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Uniform B-spline") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Piecewise Bezier") --> em:geometricObjectType(v:Subject, {"curve", gmxRes:MD_GeometricObjectTypeCode, "curve", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Ring with mixed composition") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Ring composed of strings") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Ring composed of chains") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Ring composed of arcs") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "G-polygon") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "GT-polygon composed of rings") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "GT-polygon composed of chains") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Universe polygon composed of rings") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Universe polygon composed of chains") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Void polygon composed of rings") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "Void polygon composed of chains") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+
+# FGDC VPF -- node and edge covered above
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "face") --> em:geometricObjectType(v:Subject, {"complex", gmxRes:MD_GeometricObjectTypeCode, "complex", "ISOTC211/19115"})
+em:fgeometricObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "text") --> em:geometricObjectType(v:Subject, {"point", gmxRes:MD_GeometricObjectTypeCode, "point", "ISOTC211/19115"})
+
+# FGDC VPF Topology
+em:ftopologyLevel(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "0") --> em:topologyLevel(v:Subject, {"geometryOnly", gmxRes:MD_TopologyLevelCode, "geometryOnly", "ISOTC211/19115"})
+em:ftopologyLevel(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "1") --> em:topologyLevel(v:Subject, {"topology1D", gmxRes:MD_TopologyLevelCode, "topology1D", "ISOTC211/19115"})
+em:ftopologyLevel(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "2") --> em:topologyLevel(v:Subject, {"fullPlanarGraph", gmxRes:MD_TopologyLevelCode, "fullPlanarGraph", "ISOTC211/19115"})
+em:ftopologyLevel(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "3") --> em:topologyLevel(v:Subject, {"fullTopology3D", gmxRes:MD_TopologyLevelCode, "fullTopology3D", "ISOTC211/19115"})
+
+# FGDC Raster Object Type
+em:rasterObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "point") --> em:cellGeometry(v:Subject, {"point", gmxRes:MD_CellGeometryCode, "point", "ISOTC211/19115"})
+em:rasterObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "pixel") --> em:cellGeometry(v:Subject, {"area", gmxRes:MD_CellGeometryCode, "area", "ISOTC211/19115"})
+em:rasterObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "grid cell") --> em:cellGeometry(v:Subject, {"area", gmxRes:MD_CellGeometryCode, "area", "ISOTC211/19115"})
+em:rasterObjectType(v:Subject, v:Code), es:equalsIgnoreCase (v:Code, "voxel") --> em:cellGeometry(v:Subject, {"voxel", gmxRes:MD_CellGeometryCode, "voxel", "ISOTC211/19115"})
+
+# FGDC Spatial Data Organization, Direct Spatial Reference Domain: "Point" "Vector" "Raster"
+em:fspatialRepresentationType(v:Subject, v:Code), es:equalsIgnoreCase ("Vector", v:Code) -->  em:spatialRepresentationType(v:Subject, {"vector", gmxRes:MD_SpatialRepresentationTypeCode, "vector", "ISOTC211/19115"})
+em:fspatialRepresentationType(v:Subject, v:Code), es:equalsIgnoreCase ("Raster", v:Code) -->  em:spatialRepresentationType(v:Subject, {"raster", gmxRes:MD_SpatialRepresentationTypeCode, "raster", "ISOTC211/19115"})
+# NOTE: "Point" has been translated to "vector"
+em:fspatialRepresentationType(v:Subject, v:Code), es:equalsIgnoreCase ("Point", v:Code) -->  em:spatialRepresentationType(v:Subject, {"vector", gmxRes:MD_SpatialRepresentationTypeCode, "vector", "ISOTC211/19115"})
+
+# FGDC doesn't support recording if type of data is Tin or Table in a clear way
+# assign correct code if ArcGIS native dataset format element is present, synchronized by ESRI in 9.3.1 and earlier in the FGDC idinfo section
+em:fnativeType(v:Subject, v:Code), es:equalsIgnoreCase ("Tin", v:Code) -->  em:spatialRepresentationType(v:Subject, {"tin", gmxRes:MD_SpatialRepresentationTypeCode, "tin", "ISOTC211/19115"})
+em:fnativeType(v:Subject, v:Code), es:containsIgnoreCase ("Table", v:Code) -->  em:spatialRepresentationType(v:Subject, {"textTable", gmxRes:MD_SpatialRepresentationTypeCode, "textTable", "ISOTC211/19115"})
+
+# FGDC / Progress / Domain: "Complete" "In work" "Planned"
+em:fstatus(v:Subject, v:Status), es:equalsIgnoreCase ("complete", v:Status) -->  em:status(v:Subject, {"completed", gmxRes:MD_ProgressCode, "completed", "ISOTC211/19115"})
+em:fstatus(v:Subject, v:Status), es:equalsIgnoreCase ("in work", v:Status) -->  em:status(v:Subject, {"underDevelopment", gmxRes:MD_ProgressCode, "underDevelopment", "ISOTC211/19115"})
+em:fstatus(v:Subject, v:Status), es:equalsIgnoreCase ("planned", v:Status) -->  em:status(v:Subject, {"planned", gmxRes:MD_ProgressCode, "planned", "ISOTC211/19115"})
+
+# FGDC / Maintenance and Update Frequency / 
+# Domain: "Continually" "Daily" "Weekly" "Monthly" "Annually" "Unknown" 
+# "As needed" "Irregular" "None planned" free text
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("continually", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"continual", gmxRes:MD_MaintenanceFrequencyCode, "continual", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("daily", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"daily", gmxRes:MD_MaintenanceFrequencyCode, "daily", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("weekly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"weekly", gmxRes:MD_MaintenanceFrequencyCode, "weekly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("monthly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"monthly", gmxRes:MD_MaintenanceFrequencyCode, "monthly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("annually", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"annually", gmxRes:MD_MaintenanceFrequencyCode, "annually", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("yearly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"annually", gmxRes:MD_MaintenanceFrequencyCode, "annually", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("as needed", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"asNeeded", gmxRes:MD_MaintenanceFrequencyCode, "asNeeded", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("as necessary", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"asNeeded", gmxRes:MD_MaintenanceFrequencyCode, "asNeeded", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("irregular", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"irregular", gmxRes:MD_MaintenanceFrequencyCode, "irregular", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("not regular", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"irregular", gmxRes:MD_MaintenanceFrequencyCode, "irregular", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("none planned", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"notPlanned", gmxRes:MD_MaintenanceFrequencyCode, "notPlanned", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("not planned", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"notPlanned", gmxRes:MD_MaintenanceFrequencyCode, "notPlanned", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("unplanned", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"notPlanned", gmxRes:MD_MaintenanceFrequencyCode, "notPlanned", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("unknown", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"unknown", gmxRes:MD_MaintenanceFrequencyCode, "unknown", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("fortnightly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"fortnightly", gmxRes:MD_MaintenanceFrequencyCode, "fortnightly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("biweekly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"fortnightly", gmxRes:MD_MaintenanceFrequencyCode, "fortnightly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("bi-weekly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"fortnightly", gmxRes:MD_MaintenanceFrequencyCode, "fortnightly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("quarterly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"quarterly", gmxRes:MD_MaintenanceFrequencyCode, "quarterly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("quartely", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"quarterly", gmxRes:MD_MaintenanceFrequencyCode, "quarterly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("biannually", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"biannually", gmxRes:MD_MaintenanceFrequencyCode, "biannually", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("bi-annually", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"biannually", gmxRes:MD_MaintenanceFrequencyCode, "biannually", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("semi-annually", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"biannually", gmxRes:MD_MaintenanceFrequencyCode, "biannually", "ISOTC211/19115"})
+# from NAP codes
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("bimonthly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"semimonthly", gmxRes:MD_MaintenanceFrequencyCode, "semimonthly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("bi-monthly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"semimonthly", gmxRes:MD_MaintenanceFrequencyCode, "semimonthly", "ISOTC211/19115"})
+em:fmaintenanceAndUpdateFrequency(v:Subject, v:Status), es:equalsIgnoreCase ("semi-monthly", v:Status) -->  em:maintenanceAndUpdateFrequency(v:Subject, {"semimonthly", gmxRes:MD_MaintenanceFrequencyCode, "semimonthly", "ISOTC211/19115"})
+
+# FGDC metadata review date or metadata future review date will create metadata maintenance section but no update frequency
+# state unknown frequency code in this case
+em:metadataMaintenance(v:Subject, v:Object), em:metadataReviewDate(v:Object, v:_), es:not(em:maintenanceAndUpdateFrequency(v:Object, v:_)) -->  em:maintenanceAndUpdateFrequency(v:Object, {"unknown", gmxRes:MD_MaintenanceFrequencyCode, "unknown", "ISOTC211/19115"})
+em:metadataMaintenance(v:Subject, v:Object), em:dateOfNextUpdate(v:Object, v:_), es:not(em:maintenanceAndUpdateFrequency(v:Object, v:_)) -->  em:maintenanceAndUpdateFrequency(v:Object, {"unknown", gmxRes:MD_MaintenanceFrequencyCode, "unknown", "ISOTC211/19115"})
+
+# FGDC unique property: em:onLineDescription, value from Resource Description element
+#em:onLineDescriptionCode("Live Data and Maps", "001")
+#em:onLineDescriptionCode("Downloadable Data", "002")
+#em:onLineDescriptionCode("Offline Data", "003")
+#em:onLineDescriptionCode("Static Map Images", "004")
+#em:onLineDescriptionCode("Other Documents", "005")
+#em:onLineDescriptionCode("Clearinghouses", "008")
+#em:onLineDescriptionCode("Applications", "006")
+#em:onLineDescriptionCode("Geographic Services", "007")
+#em:onLineDescriptionCode("Map Files", "009")
+#em:onLineDescriptionCode("Geographic Activities", "010")				
+
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Live Data and Maps", v:String) -->  em:onLineDescriptionCode(v:Subject,"001")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("001", v:String) -->  em:onLineDescriptionCode(v:Subject,"001")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Downloadable Data", v:String) -->  em:onLineDescriptionCode(v:Subject,"002")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("002", v:String) -->  em:onLineDescriptionCode(v:Subject,"002")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Offline Data", v:String) -->  em:onLineDescriptionCode(v:Subject,"003")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("003", v:String) -->  em:onLineDescriptionCode(v:Subject,"003")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Static Map Images", v:String) -->  em:onLineDescriptionCode(v:Subject,"004")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("004", v:String) -->  em:onLineDescriptionCode(v:Subject,"004")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Other Documents", v:String) -->  em:onLineDescriptionCode(v:Subject,"005")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("005", v:String) -->  em:onLineDescriptionCode(v:Subject,"005")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Clearinghouses", v:String) -->  em:onLineDescriptionCode(v:Subject,"006")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("006", v:String) -->  em:onLineDescriptionCode(v:Subject,"006")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Applications", v:String) -->  em:onLineDescriptionCode(v:Subject,"007")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("007", v:String) -->  em:onLineDescriptionCode(v:Subject,"007")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Geographic Services", v:String) -->  em:onLineDescriptionCode(v:Subject,"008")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("008", v:String) -->  em:onLineDescriptionCode(v:Subject,"008")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Map Files", v:String) -->  em:onLineDescriptionCode(v:Subject,"009")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("009", v:String) -->  em:onLineDescriptionCode(v:Subject,"009")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("Geographic Activities", v:String) -->  em:onLineDescriptionCode(v:Subject,"010")
+em:onLineDescription(v:Subject, v:String), es:equalsIgnoreCase ("010", v:String) -->  em:onLineDescriptionCode(v:Subject,"010")
+
+# FGDC / Security Classification / Domain: "Top secret" "Secret" "Confidential" "Restricted" "Unclassified" "Sensitive"
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("top secret", v:Status) -->  em:classification(v:Subject, {"topSecret", gmxRes:MD_ClassificationCode, "topSecret", "ISOTC211/19115"})
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("secret", v:Status) -->  em:classification(v:Subject, {"secret", gmxRes:MD_ClassificationCode, "secret", "ISOTC211/19115"})
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("confidential", v:Status) -->  em:classification(v:Subject, {"confidential", gmxRes:MD_ClassificationCode, "confidentiel", "ISOTC211/19115"})
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("restricted", v:Status) -->  em:classification(v:Subject, {"restricted", gmxRes:MD_ClassificationCode, "restricted", "ISOTC211/19115"})
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("unclassified", v:Status) -->  em:classification(v:Subject, {"unclassified", gmxRes:MD_ClassificationCode, "unclassified", "ISOTC211/19115"})
+# NOTE: "Sensitive" has been translated to "confidential"
+em:fclassification(v:Subject, v:Status), es:equalsIgnoreCase ("sensitive", v:Status) -->  em:classification(v:Subject, {"confidential", gmxRes:MD_MaintenanceFrequencyCode, "confidentiel", "ISOTC211/19115"})
+
+# FGDC / Cross Reference / ISO's aggregationInfo subsumes a crossReference
+em:aggregationInfo (v:Subject, v:Object) <-- em:crossReference (v:Subject, v:Object)
+# ISO's associationType is infered from the specific crossReference association
+em:associationType(v:Subject, v:Code) <-- em:crossReference(v:_, v:Subject), v:Code={"crossReference", gmxRes:DS_AssociationTypeCode, "crossReference", "ISOTC211/19115"}
+
+# FGDC / Larger Work Citation / ISO's aggregationInfo subsumes a largerWork
+em:aggregationInfo (v:Subject, v:Object) <-- em:largerWork (v:Subject, v:Object)
+# ISO's associationType is infered from the specific largerWork association
+em:associationType(v:Subject, v:Code) <-- em:largerWork(v:_, v:Subject), v:Code={"largerWorkCitation", gmxRes:DS_AssociationTypeCode, "largerWorkCitation", "ISOTC211/19115"}
+
+# FGDC / Address Type
+#"mailing" "physical" "mailing and physical"
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("mailing", v:Type) -->  em:addressType(v:Subject, "postal")
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("mailing address", v:Type) -->  em:addressType(v:Subject, "postal")
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("mailing and physical", v:Type) -->  em:addressType(v:Subject, "both")
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("mailing and physical address", v:Type) -->  em:addressType(v:Subject, "both")
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("physical", v:Type) -->  em:addressType(v:Subject, "physical")
+em:faddressType(v:Subject, v:Type), es:equalsIgnoreCase ("physical address", v:Type) -->  em:addressType(v:Subject, "physical")
+
+# FGDC / Geospatial Data Presentation Form
+#"atlas" "audio" "diagram" "document" "globe" "map" "model" "multimedia presentation"
+#"profile" "raster digital data" "remote-sensing image" "section" "spreadsheet" "tabular digital data" 
+#"vector digital data" "video" "view"
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("atlas", v:Status) -->  em:presentationForm(v:Subject, {"mapHardcopy", gmxRes:CI_PresentationFormCode, "mapHardcopy", "ISOTC211/19115"})
+#audio use NAP code
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("audio", v:Status) -->  em:presentationForm(v:Subject, {"audioHardcopy", gmxRes:CI_PresentationFormCode, "audioHardcopy", "ISOTC211/19115"})
+#diagram use NAP code
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("diagram", v:Status) -->  em:presentationForm(v:Subject, {"diagramHardcopy", gmxRes:CI_PresentationFormCode, "diagramHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("document", v:Status) -->  em:presentationForm(v:Subject, {"documentHardcopy", gmxRes:CI_PresentationFormCode, "documentHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("globe", v:Status) -->  em:presentationForm(v:Subject, {"mapHardcopy", gmxRes:CI_PresentationFormCode, "mapHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("map", v:Status) -->  em:presentationForm(v:Subject, {"mapHardcopy", gmxRes:CI_PresentationFormCode, "mapHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("model", v:Status) -->  em:presentationForm(v:Subject, {"modelHardcopy", gmxRes:CI_PresentationFormCode, "modelHardcopy", "ISOTC211/19115"})
+#multimedia use NAP code
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("multimedia presentation", v:Status) -->  em:presentationForm(v:Subject, {"multimediaDigital", gmxRes:CI_PresentationFormCode, "multimediaDigital", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("profile", v:Status) -->  em:presentationForm(v:Subject, {"profileHardcopy", gmxRes:CI_PresentationFormCode, "profileHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("raster digital data", v:Status) -->  em:presentationForm(v:Subject, {"mapDigital", gmxRes:CI_PresentationFormCode, "mapDigital", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("remote-sensing image", v:Status) -->  em:presentationForm(v:Subject, {"mapDigital", gmxRes:CI_PresentationFormCode, "mapDigital", "ISOTC211/19115"})
+# no match for "section"
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("spreadsheet", v:Status) -->  em:presentationForm(v:Subject, {"tableDigital", gmxRes:CI_PresentationFormCode, "documentHardcopy", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("tabular digital data", v:Status) -->  em:presentationForm(v:Subject, {"tableDigital", gmxRes:CI_PresentationFormCode, "documentDigital", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("vector digital data", v:Status) -->  em:presentationForm(v:Subject, {"mapDigital", gmxRes:CI_PresentationFormCode, "mapDigital", "ISOTC211/19115"})
+em:fpresentationForm(v:Subject, v:Status), es:equalsIgnoreCase ("video", v:Status) -->  em:presentationForm(v:Subject, {"videoHardcopy", gmxRes:CI_PresentationFormCode, "videoHardcopy", "ISOTC211/19115"})
+# no match for "view"
+
+# FGDC / Distribution Offline Media
+# "CD-ROM" "3-1/2 inch floppy disk" "5-1/4 inch floppy disk" "9-track tape" "4 mm cartridge tape"
+# "8 mm cartridge tape" "1/4-inch cartridge tape" free text 
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "cdRom") -->  em:name(v:Subject, "cdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "cd-rom") -->  em:name(v:Subject, "cdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "cd rom") -->  em:name(v:Subject, "cdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "dvd") -->  em:name(v:Subject, "dvd")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "dvdRom") -->  em:name(v:Subject, "dvdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "dvd-rom") -->  em:name(v:Subject, "dvdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "dvd rom") -->  em:name(v:Subject, "dvdRom")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "3-1/2 inch floppy disk") -->  em:name(v:Subject, "3halfInchFloppy")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "5-1/4 inch floppy disk") -->  em:name(v:Subject, "5quarterInchFloppy")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "9-track tape") -->  em:name(v:Subject, "9trackTape")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "3480 Cartridge") -->  em:name(v:Subject, "3480Cartridge")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "3490 Cartridge") -->  em:name(v:Subject, "3490Cartridge")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "3580 Cartridge") -->  em:name(v:Subject, "3580Cartridge")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "4 mm cartridge tape") -->  em:name(v:Subject, "4mmCartridgeTape")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "8 mm cartridge tape") -->  em:name(v:Subject, "8mmCartridgeTape")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "1/4-inch cartridge tape") -->  em:name(v:Subject, "1quarterInchCartridgeTape")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "digital linear tape") -->  em:name(v:Subject, "digitalLinearTape")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "satellite") -->  em:name(v:Subject, "satellite")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "telephone") -->  em:name(v:Subject, "telephoneLink")
+#em:fmediaName(v:Subject, v:Status), em:offLine (v:_, v:Subject), es:containsIgnoreCase (v:Status, "hardcopy") -->  em:name(v:Subject, "hardcopy")
+
+# FGDC / Distribution Offline Media
+# "CD-ROM" "3-1/2 inch floppy disk" "5-1/4 inch floppy disk" "9-track tape" "4 mm cartridge tape"
+# "8 mm cartridge tape" "1/4-inch cartridge tape" free text 
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "cd") -->  em:media(v:Subject, "cdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "cdRom") -->  em:media(v:Subject, "cdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "cd-rom") -->  em:media(v:Subject, "cdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "cd rom") -->  em:media(v:Subject, "cdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "dvd") -->  em:media(v:Subject, "dvd")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "dvdRom") -->  em:media(v:Subject, "dvdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "dvd-rom") -->  em:media(v:Subject, "dvdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "dvd rom") -->  em:media(v:Subject, "dvdRom")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "3-1/2 inch floppy disk") -->  em:media(v:Subject, "3halfInchFloppy")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "5-1/4 inch floppy disk") -->  em:media(v:Subject, "5quarterInchFloppy")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "9-track tape") -->  em:media(v:Subject, "9trackTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "3480 Cartridge") -->  em:media(v:Subject, "3480Cartridge")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "3490 Cartridge") -->  em:media(v:Subject, "3490Cartridge")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "3580 Cartridge") -->  em:media(v:Subject, "3580Cartridge")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "4 mm cartridge tape") -->  em:media(v:Subject, "4mmCartridgeTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "8 mm cartridge tape") -->  em:media(v:Subject, "8mmCartridgeTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "1/4-inch cartridge tape") -->  em:media(v:Subject, "1quarterInchCartridgeTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "digital linear tape") -->  em:media(v:Subject, "digitalLinearTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "satellite") -->  em:media(v:Subject, "satellite")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "telephone") -->  em:media(v:Subject, "telephoneLink")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "hardcopy") -->  em:media(v:Subject, "hardcopy")
+# FGDC / Type of Source Media
+# "paper" "stable-base material" "microfiche" "microfilm" "audiocassette" "chart" "filmstrip" 
+# "transparency" "videocassette" "videodisc" "physical model" "computer program" "disc" 
+# "cartridge tape" "magnetic tape" "online" "CD-ROM" "electronic bulletin board" 
+# "electronic mail system" free text 
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "paper") -->  em:media(v:Subject, "hardcopyPaper")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "stable-base material") -->  em:media(v:Subject, "hardcopyDiazo")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "microfiche") -->  em:media(v:Subject, "hardcopyMicrofilmMicrofiche")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "microfilm") -->  em:media(v:Subject, "hardcopyMicrofilmGeneral")
+#em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "audiocassette") -->  em:media(v:Subject, "")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "chart") -->  em:media(v:Subject, "hardcopy")
+#em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "filmstrip") -->  em:media(v:Subject, "")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "transparency") -->  em:media(v:Subject, "hardcopyDiazo")
+#em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "videocassette") -->  em:media(v:Subject, "")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "videodisc") -->  em:media(v:Subject, "dvd")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "physical model") -->  em:media(v:Subject, "hardcopy")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "computer program") -->  em:media(v:Subject, "onLine")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "disc") -->  em:media(v:Subject, "hardDisk")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "hard disk") -->  em:media(v:Subject, "hardDisk")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "cartridge tape") -->  em:media(v:Subject, "4mmCartridgeTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "magnetic tape") -->  em:media(v:Subject, "digitalLinearTape")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "online") -->  em:media(v:Subject, "onLine")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "electronic bulletin board") -->  em:media(v:Subject, "onLine")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "electronic mail system") -->  em:media(v:Subject, "onLine")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "traced paper") -->  em:media(v:Subject, "hardcopyTracedPaper")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "tracing") -->  em:media(v:Subject, "hardcopyTracedPaper")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "diazo") -->  em:media(v:Subject, "hardcopyDiazo")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "polyester") -->  em:media(v:Subject, "hardcopyDiazoPolyester08")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "polyester 08") -->  em:media(v:Subject, "hardcopyDiazoPolyester08")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "card microfilm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "microfilm 240mm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "240mm microfilm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "microfilm 35mm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "35mm microfilm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "microfilm 70mm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "70mm microfilm") -->  em:media(v:Subject, "hardcopyCardMicrofilm")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "negative") -->  em:media(v:Subject, "hardcopyNegativePhoto")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "negative photo") -->  em:media(v:Subject, "hardcopyNegativePhoto")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "photo negative") -->  em:media(v:Subject, "hardcopyNegativePhoto")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "photo") -->  em:media(v:Subject, "hardcopyPhoto")
+em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "usb") -->  em:media(v:Subject, "USBFlashDrive")
+#preliminary test had it working with this more verbose method:
+#em:fmedia(v:Subject, v:Type), es:containsIgnoreCase (v:Type, "paper") -->  em:media(v:Subject, {"hardcopy", gmxRes:MD_MediumNameCode, "hardcopy", "ISOTC211/19115"})
+
+# FGDC nondig is a literal, but translated to a offline Medium format code for ISO
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "cdrom"), v:Code="cdRom"
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "cd-rom"), v:Code="cdRom"
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "dvd"), v:Code="dvdRom"
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "satellite"), v:Code="satellite"
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "telephone"), v:Code="telephoneLink"
+#em:name(v:Subject, v:Code) <-- em:offLine(v:_, v:Subject), es:containsIgnoreCase(v:Subject, "hardcopy"), v:Code="hardcopy"
+
+
+# FGDC / Distribution Offline Media Recording Format
+# "cpio" "tar" "High Sierra" "ISO 9660" "ISO 9660 with Rock Ridge extensions" "ISO 9660 with Apple HFS extensions" free text 
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "tar") -->  em:mediumFormat(v:Subject, "tar")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "cpio") -->  em:mediumFormat(v:Subject, "cpio")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "high sierra") -->  em:mediumFormat(v:Subject, "highSierra")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "Rock Ridge") -->  em:mediumFormat(v:Subject, "iso9660RockRidge")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "UNIX") -->  em:mediumFormat(v:Subject, "iso9660RockRidge")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "Apple HFS") -->  em:mediumFormat(v:Subject, "iso9660AppleHFS")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "Macintosh") -->  em:mediumFormat(v:Subject, "iso9660AppleHFS")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "iso9660") -->  em:mediumFormat(v:Subject, "iso9660")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "iso 9660") -->  em:mediumFormat(v:Subject, "iso9660")
+em:fmediumFormat(v:Subject, v:Status), es:containsIgnoreCase (v:Status, "iso-9660") -->  em:mediumFormat(v:Subject, "iso9660")
+
+
+# FGDC Distribution sections have an extra elements that must be appended together to correctly format information for ISO
+# these info model elements will only have a value if both elements to be joined have values
+#  FGDC Distribution Format Version and Version Date to go into ISO MD_Format Version element
+em:version (v:Subject, v:String), em:versionDate (v:Subject, v:Date), es:concat([v:String, "; ", v:Date], v:out) --> em:versionInfo (v:Subject, v:out)
+
+# each FGDC offline distribution section to go into a separate transfer options section because of cardinality restrictions
+em:distributorTransferOptions (v:Subject, v:Object) <-- em:offLine (v:Subject, v:Object)
+
+# FGDC data quality scope code uses a simple literal, e.g. em:scope(gen:EEA, "dataset"), instead of a model of a DQ_Scope
+# em:level(v:Subject, v:Code) must succeed for the fact em:scope(gen:EEA, "dataset")
+em:level(v:Subject, v:Code) <-- es:literal(v:Subject), v:Code = v:Subject
+
+# FGDC lineage process step source used and source produced
+#em:processStep(v:_, v:A), em:srcUsedAbbreviation(v:A, v:C) --> em:source(v:A, v:B), em:srcUsedAbbreviation(v:B, v:C) 
+#em:processStep(v:_, v:A), em:srcProducedAbbreviation(v:A, v:C) --> em:source(v:A, v:B), em:srcProducedAbbreviation(v:B, v:C) 
+
+
+# FGDC access and use constrains / subsumed by ISO's legalConstraints / MD_RestrictionCode inference
+#em:legalConstraints (v:Subject, v:Object) <-- em:accessConstraints (v:Subject, v:Object)
+#em:legalConstraints (v:Subject, v:Object) <-- em:useConstraints (v:Subject, v:Object)
+#em:useLimitation (v:Subject, v:Object) <-- em:distributionLiability (v:Subject, v:Object) 
+#em:legalConstraints (v:Subject, v:Object) <-- em:distributionLiability (v:Subject, v:Object) 
+
+
+# ISO CI_Citation date inference
+#  used to determine if there are any dates and put a surrounding date element around them
+em:date (v:Subject, v:Object) <-- em:creationDate (v:Subject, v:Object)
+em:date (v:Subject, v:Object) <-- em:publicationDate (v:Subject, v:Object)
+em:date (v:Subject, v:Object) <-- em:tmPosDateTime (v:Subject, v:Object)
+em:date (v:Subject, v:Object) <-- em:revisionDate (v:Subject, v:Object)
+em:date (v:Subject, v:Object, v:Code) <-- em:creationDate (v:Subject, v:Object), v:Code={"creation", gmxRes:CI_DateTypeCode, "creation", "ISOTC211/19115"}
+em:date (v:Subject, v:Object, v:Code) <-- em:publicationDate (v:Subject, v:Object), v:Code={"publication", gmxRes:CI_DateTypeCode, "publication", "ISOTC211/19115"}
+em:date (v:Subject, v:Object, v:Code) <-- em:tmPosDateTime (v:Subject, v:Object), v:Code={"publication", gmxRes:CI_DateTypeCode, "publication", "ISOTC211/19115"}
+em:date (v:Subject, v:Object, v:Code) <-- em:revisionDate (v:Subject, v:Object), v:Code={"revision", gmxRes:CI_DateTypeCode, "revision", "ISOTC211/19115"}
+
+em:dateNil (v:Subject, v:Object, v:Code) <-- em:creationDateNil (v:Subject, v:Object), v:Code={"publication", gmxRes:CI_DateTypeCode, "publication", "ISOTC211/19115"}
+em:dateNil (v:Subject, v:Object, v:Code) <-- em:publicationDateNil (v:Subject, v:Object), v:Code={"publication", gmxRes:CI_DateTypeCode, "publication", "ISOTC211/19115"}
+em:dateNil (v:Subject, v:Object, v:Code) <-- em:revisionDateNil (v:Subject, v:Object), v:Code={"publication", gmxRes:CI_DateTypeCode, "publication", "ISOTC211/19115"}
+
+# Map ambiguous FGDC originator and publisher info to ISO citation citedResponsibleParty
+#  not required for translating other contact information from FGDC, or any contact info from ISO
+em:originator (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+em:publisher (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:processor (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:author (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:custodian (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:distributor (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:owner (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:pointOfContact (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:principalInvestigator (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:resourceProvider (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+#em:user (v:Subject, v:Object) --> em:citedResponsibleParty (v:Subject, v:Object)
+
+# Assign a role code for different contacts
+#  only distributor, originator, pointofcontact, processor and publisher required for FGDC
+em:distributorContact(v:_, v:Subject), es:not(em:role(v:Subject, v:_)), v:Code={"distributor", gmxRes:CI_RoleCode, "distributor", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+em:originator(v:_, v:Subject), es:not(em:role(v:Subject, v:_)), v:Code={"originator", gmxRes:CI_RoleCode, "originator", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+em:pointOfContact(v:_, v:Subject), es:not(em:role(v:Subject, v:_)), v:Code={"pointOfContact", gmxRes:CI_RoleCode, "pointOfContact", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+em:processor(v:_, v:Subject), es:not(em:role(v:Subject, v:_)), v:Code={"processor", gmxRes:CI_RoleCode, "processor", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+em:publisher(v:_, v:Subject), es:not(em:role(v:Subject, v:_)), v:Code={"publisher", gmxRes:CI_RoleCode, "publisher", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:author(v:_, v:Subject), v:Code={"author", gmxRes:CI_RoleCode, "author", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:custodian(v:_, v:Subject), v:Code={"custodian", gmxRes:CI_RoleCode, "custodian", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:owner(v:_, v:Subject), v:Code={"owner", gmxRes:CI_RoleCode, "owner", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:principalInvestigator(v:_, v:Subject), v:Code={"principalInvestigator", gmxRes:CI_RoleCode, "principalInvestigator", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:resourceProvider(v:_, v:Subject), v:Code={"resourceProvider", gmxRes:CI_RoleCode, "resourceProvider", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+#em:user(v:_, v:Subject), v:Code={"user", gmxRes:CI_RoleCode, "user", "ISOTC211/19115"} --> em:role(v:Subject, v:Code)
+
+# CI_ResponsibleParty
+# NOTE: responsible parties are defined as a union class of the full CI_ResponsibleParty, an object with a em:name property, or just a plain literal
+# this declaration states that the value of a literal's name property is the literal itself
+em:name (v:Subject, v:Object) <-- es:literal(v:Subject), v:Object = v:Subject
+
+# FGDC has no explicit CI_Contact object
+em:contactInfo (v:Subject) <-- em:address(v:Subject, v:_); em:voiceNum(v:Subject, v:_); em:faxNum(v:Subject, v:_); em:hours(v:Subject, v:_); em:instructions(v:Subject, v:_); em:electronicMailAddress(v:Subject, v:_) 
+em:address(v:A, v:B), em:electronicMailAddress(v:A, v:C) --> em:electronicMailAddress(v:B, v:C) 
+
+# FGDC theme keywords to ISO topics
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "farming"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "farming")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "agriculture"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "farming")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "biota"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "biota")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "boundaries"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "boundaries")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "climatologyMeteorologyAtmosphere"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "climatologyMeteorologyAtmosphere")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "climatology"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "climatologyMeteorologyAtmosphere")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "meteorology"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "climatologyMeteorologyAtmosphere")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "atmosphere"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "climatologyMeteorologyAtmosphere")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "economy"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "economy")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "elevation"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "elevation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "environment"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "environment")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "geoscientificInformation"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "geoscientificInformation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "geology"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "geoscientificInformation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "health"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "health")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "imageryBaseMapsEarthCover"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "imageryBaseMapsEarthCover")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "imagery"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "imageryBaseMapsEarthCover")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "basemaps"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "imageryBaseMapsEarthCover")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "earth cover"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "imageryBaseMapsEarthCover")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "intelligenceMilitary"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "intelligenceMilitary")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "intelligence"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "intelligenceMilitary")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "military"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "intelligenceMilitary")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "inlandWaters"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "inlandWaters")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "lakes"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "inlandWaters")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "rivers"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "inlandWaters")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "streams"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "inlandWaters")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "ponds"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "inlandWaters")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "location"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "location")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "oceans"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "oceans")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "planningCadastre"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "planningCadastre")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "planning"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "planningCadastre")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "cadastre"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "planningCadastre")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "cadastral"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "planningCadastre")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "society"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "society")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "structure"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "structure")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "transportation"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "transportation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "roads"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "transportation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "streets"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "transportation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "trails"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "transportation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "highways"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "transportation")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "utilitiesCommunication"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "utilitiesCommunication")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "utilities"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "utilitiesCommunication")
+em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "communication"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "utilitiesCommunication")
+
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:themeKeywords(v:Subject, v:Object) 
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:placeKeywords(v:Subject, v:Object) 
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:stratumKeywords(v:Subject, v:Object) 
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:temporalKeywords(v:Subject, v:Object)
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:disciplineKeywords(v:Subject, v:Object)
+em:descriptiveKeywords(v:Subject, v:Object) <-- em:otherKeywords(v:Subject, v:Object)
+
+#em:ThemeKeywords(v:Subject) <-- em:themeKeywords(v:_, v:Subject); em:type(v:Subject, {v:_, gmxRes:MD_KeywordTypeCode, "theme", v:_})
+#em:PlaceKeywords(v:Subject) <-- em:placeKeywords(v:_, v:Subject); em:type(v:Subject, {v:_, gmxRes:MD_KeywordTypeCode, "place", v:_})
+# THIS DOESN'T WORK em:PlaceKeywords(v:Subject) <-- em:placeKeywords(v:_, v:Subject); em:type(v:Subject, v:Code={v:_, gmxRes:MD_KeywordTypeCode, "place", v:_}
+#em:StratumKeywords(v:Subject) <-- em:stratumKeywords(v:_, v:Subject); em:type(v:Subject, {v:_, gmxRes:MD_KeywordTypeCode, "stratum", v:_})
+#em:TemporalKeywords(v:Subject) <-- em:temporalKeywords(v:_, v:Subject); em:type(v:Subject, {v:_, gmxRes:MD_KeywordTypeCode, "temporal", v:_})
+#em:DisciplineKeywords(v:Subject) <-- em:disciplineKeywords(v:_, v:Subject); em:type(v:Subject, {v:_, gmxRes:MD_KeywordTypeCode, "discipline", v:_})
+
+
+# determine the type based on it's specific keyword property
+# keyword type is output in ESRI-ISO and ISO 19139
+
+em:keywordType(v:Subject, v:Code) <-- em:themeKeywords(v:_, v:Subject), v:Code={"theme", gmxRes:MD_KeywordTypeCode, "theme", "ISOTC211/19115"}
+em:keywordType(v:Subject, v:Code) <-- em:placeKeywords(v:_, v:Subject), v:Code={"place", gmxRes:MD_KeywordTypeCode, "place", "ISOTC211/19115"}
+em:keywordType(v:Subject, v:Code) <-- em:stratumKeywords(v:_, v:Subject), v:Code={"stratum", gmxRes:MD_KeywordTypeCode, "stratum", "ISOTC211/19115"}
+em:keywordType(v:Subject, v:Code) <-- em:temporalKeywords(v:_, v:Subject), v:Code={"temporal", gmxRes:MD_KeywordTypeCode, "temporal", "ISOTC211/19115"}
+em:keywordType(v:Subject, v:Code) <-- em:disciplineKeywords(v:_, v:Subject), v:Code={"discipline", gmxRes:MD_KeywordTypeCode, "discipline", "ISOTC211/19115"}
+
+#em:keywordTypeNumber(v:Subject, v:Code) <-- em:PlaceKeywords(v:Subject), v:Code="002"; em:ThemeKeywords(v:Subject), v:Code="005"; em:PlaceKeywords(v:Subject), v:Code="002"; em:StratumKeywords(v:Subject), v:Code="003"; em:TemporalKeywords(v:Subject), v:Code="004"; em:DisciplineKeywords(v:Subject), v:Code="001"; v:Code="000"
+
+
+# FGDC Logical Consistency Report is freetext with possible translations to any of the ISO DQ_LogicalConsistency report subclasses
+# Rules can be defined that allow the translator to decide which subclass to choose from when translating this type of report
+em:conceptualConsistencyReport(v:Subject, v:Object) <-- em:logicalConsistencyReport (v:Subject, v:Object), es:contains(v:Object, "concept")
+em:topologicalConsistencyReport(v:Subject, v:Object) <-- em:logicalConsistencyReport (v:Subject,  v:Object), es:contains(v:Object, "topo")
+#em:formatConsistencyReport(v:Subject, v:Object) <-- em:logicalConsistencyReport (v:Subject, v:Object), es:contains(v:Object, "format")
+em:domainConsistencyReport(v:Subject, v:Object) <-- em:logicalConsistencyReport (v:Subject, v:Object), es:contains(v:Object, "domain")
+# NOTE: if the report is just a literal, then translate that to the evaluationMethodDescription
+em:evaluationMethodDescription(v:Subject, v:String) <-- es:literal(v:Subject), v:Subject=v:String
+
+# FGDC Completeness Report
+em:completenessOmissionReport(v:Subject, v:Object) <--  em:completenessReport(v:Subject, v:Object), es:contains(v:Object, "omission")
+em:completenessCommissionReport(v:Subject, v:Object) <--  em:completenessReport(v:Subject, v:Object), es:contains(v:Object, "commission")
+
+
+
+####################################
+# SETTING DEFAULT ESRI SCALE RANGE 
+####################################
+
+# If only a single scale scale is provided, determine the range into which it falls, and deduce an approximate default scale range from that
+# Buildings 1:5,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:lte(v:Value, 38750), v:Max=5000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:lte(v:Value, 38750), v:Min=50000
+# City 1:50,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 38750), es:lte(v:Value, 162500), v:Max=5000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 38750), es:lte(v:Value, 162500), v:Min=500000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 162500), es:lte(v:Value, 387500), v:Max=50000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 162500), es:lte(v:Value, 387500), v:Min=500000
+# County 1:500,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 387500), es:lte(v:Value, 1625000), v:Max=50000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 387500), es:lte(v:Value, 1625000), v:Min=5000000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 1625000), es:lte(v:Value, 3875000), v:Max=500000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 1625000), es:lte(v:Value, 3875000), v:Min=5000000
+# State 1:5,000,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 3875000), es:lte(v:Value, 8750000), v:Max=500000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 3875000), es:lte(v:Value, 8750000), v:Min=20000000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 8750000), es:lte(v:Value, 16250000), v:Max=5000000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 8750000), es:lte(v:Value, 16250000), v:Min=20000000
+# Country 1:20,000,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 16250000), es:lte(v:Value, 27500000), v:Max=5000000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 16250000), es:lte(v:Value, 27500000), v:Min=50000000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 27500000), es:lte(v:Value, 42500000), v:Max=20000000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 27500000), es:lte(v:Value, 42500000), v:Min=50000000
+# Continent 1:50,000,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 42500000), es:lte(v:Value, 75000000), v:Max=20000000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 42500000), es:lte(v:Value, 75000000), v:Min=150000000
+# Globe 1:150,000,000
+em:maxScale(v:Subject, v:Max) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 75000000), v:Max=50000000
+em:minScale(v:Subject, v:Min) <-- em:singleScale(v:Subject, v:Value), es:gt(v:Value, 75000000), v:Min=150000000
+
+#em:Box(v:xmin, v:ymin, v:xmax, v:ymax) <-- es:gte(v:xmin,-180.0), es:lte(v:xmax,180.0), es:gte(v:ymin,-90.0), es:lte(v:ymax,90.0), es:lte(v:xmin,v:xmax), es:lte(v:ymin,v:ymax)
+
+#em:keyword (v:B, v:Key), es:containsIgnoreCase(v:Key, "communication"), em:descriptiveKeywords (v:A, v:B) --> em:topicCategory(v:A, "utilitiesCommunication")
+
+
+########################
+# ISO CLASS DEFINITIONS 
+#   validation rules
+########################
+
+# validate that boolean elements are being handled as booleans
+em:Boolean(v:a) <-- es:false(v:a) ; es:true(v:a)
+
+
+# validate an element is an EX_Extent object
+#   EX_GeographicExtent subclasses are collapsed up so they are elements directly in extent
+#   model doesn't include EX_SpatialTemporalExtent
+em:EX_Extent(v:a) <-- em:description(v:a, v:_)
+em:EX_Extent(v:a) <-- em:boundingPolygon(v:a, v:_)
+em:EX_Extent(v:a) <-- em:boundingBox(v:a, v:_)
+em:EX_Extent(v:a) <-- em:geographicDescription(v:a, v:_)
+em:EX_Extent(v:a) <-- em:temporalElement(v:a, v:_)
+em:EX_Extent(v:a) <-- em:spatialTemporalElement(v:a, v:_)
+em:EX_Extent(v:a) <-- em:verticalElement(v:a, v:_)
+
+
+# validate an element is an EX_BoundingBox object
+em:Box(v:xmin, v:ymin, v:xmax, v:ymax) <-- es:gte(v:xmin,-180.0), es:lte(v:xmax,180.0), es:gte(v:ymin,-90.0), es:lte(v:ymax,90.0), es:lte(v:xmin,v:xmax), es:lte(v:ymin,v:ymax)
+em:EX_GeographicBoundingBox(v:a) <-- em:westBoundLongitude(v:a, v:w), em:eastBoundLongitude(v:a, v:e), em:southBoundLatitude(v:a, v:s), em:northBoundLatitude(v:a, v:n), em:Box (v:w, v:s, v:e, v:n)
+
+
+# validate an element is an EX_GeographicDescription object
+em:EX_GeographicDescription(v:a) <-- em:identifier(v:a, v:b), em:code(v:b, v:c), es:nonEmptyString(v:c)
+
+
+# validate an element is an EX_SpatialTemporalExtent object
+em:EX_SpatialTemporalExtent(v:a) <-- em:timeInstant(v:a, v:_), em:boundingPolygon(v:a, v:_)
+em:EX_SpatialTemporalExtent(v:a) <-- em:timeInstant(v:a, v:_), em:boundingBox(v:a, v:_)
+em:EX_SpatialTemporalExtent(v:a) <-- em:timeInstant(v:a, v:_), em:geographicDescription(v:a, v:_)
+em:EX_SpatialTemporalExtent(v:a) <-- em:timePeriod(v:a, v:_), em:boundingPolygon(v:a, v:_)
+em:EX_SpatialTemporalExtent(v:a) <-- em:timePeriod(v:a, v:_), em:boundingBox(v:a, v:_)
+em:EX_SpatialTemporalExtent(v:a) <-- em:timePeriod(v:a, v:_), em:geographicDescription(v:a, v:_)
+
+
+# validate that an ISO 19115 contact has one of the required names to identify the contact and a role
+em:CI_ResponsibleParty(v:a) <-- em:individualName(v:a, v:b), es:nonEmptyString(v:b), em:role(v:a, v:_)  
+em:CI_ResponsibleParty(v:a) <-- em:organisationName(v:a, v:c), es:nonEmptyString(v:c), em:role(v:a, v:_)  
+em:CI_ResponsibleParty(v:a) <-- em:position(v:a, v:d), es:nonEmptyString(v:d), em:role(v:a, v:_)  
+
+
+# validate that an ISO 19115 citation has one of the required dates and a title
+em:CI_Citation(v:a) <-- em:creationDate(v:a, v:b), es:date(v:b), em:title(v:a, v:c), es:nonEmptyString(v:c)
+em:CI_Citation(v:a) <-- em:publicationDate(v:a, v:d), es:date(v:d), em:title(v:a, v:e), es:nonEmptyString(v:e)
+em:CI_Citation(v:a) <-- em:revisionDate(v:a, v:f), es:date(v:f), em:title(v:a, v:g), es:nonEmptyString(v:g)
+
+
+# check if the resource described is at the dataset level
+#   should also test value in hierarchyLevelName?
+#   if no hierarchyLevel it is a dataset because "dataset" is defined as the default value in 19115 - provide this value in minRules schema
+#   no guidance in standards, but if hierarchy level not defined and service identification is provided, default should be "service" and not "dataset"
+#     add check that service identification not provided when hierarchyLevel not provided before stating the resource is a dataset
+#     more appropriate than checking if identification info exists
+em:Dataset(v:a) <-- em:hierarchyLevel(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_ScopeCode, "dataset")
+em:Dataset(v:a) <-- es:not(em:hierarchyLevel(v:a, v:_)), es:not(em:serviceIdentificationInfo(v:a, v:_))
+
+
+# check if the code is present indicating other restrictions are in effect and must be described
+em:OtherRestrictionsCode(v:a) <-- em:accessConstraints(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_RestrictionCode, "otherRestrictions")
+em:OtherRestrictionsCode(v:a) <-- em:useConstraints(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_RestrictionCode, "otherRestrictions")
+
+
+# validate other legal constraints provided with correct restriction codes or are not provided
+em:MD_LegalConstraints(v:a) <-- es:not(em:otherConstraints(v:a, v:_)), es:not(em:OtherRestrictionsCode(v:a))
+em:MD_LegalConstraints(v:a) <-- em:otherConstraints(v:a, v:_), em:OtherRestrictionsCode(v:a)
+
+
+# check if data quality described is at the dataset level
+#   there is no default value of "dataset" for data quality scope the way there is for metadata hierarchyLevel
+em:DQDataset(v:a) <-- em:scope(v:a, v:b), em:level(v:b, v:c), em:lookupCode(v:c, gmxRes:MD_ScopeCode, "dataset")
+
+
+# check if data quality described is at the dataset or series level
+em:DQDatasetOrSeries(v:a) <-- em:scope(v:a, v:b), em:level(v:b, v:c), em:lookupCode(v:c, gmxRes:MD_ScopeCode, "dataset")
+em:DQDatasetOrSeries(v:a) <-- em:scope(v:a, v:b), em:level(v:b, v:c), em:lookupCode(v:c, gmxRes:MD_ScopeCode, "series")
+
+
+# validate an element is of the DQ_DataQuality class
+#   scope must not be at the dataset level, or lineage or one of the DQ_Element classes must be used to report on the resource's quality
+#   the class used to document the report role is the abstract DQ_Element class, which has a large number of subclasses
+#     we don't use the report element, we collapse up the abstract classes so data quality contains elements indicating the DQ_Element subclass used
+em:DQ_DataQuality(v:a) <-- es:not(em:DQDataset(v:a))
+em:DQ_DataQuality(v:a) <-- em:lineage(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:completenessOmissionReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:completenessCommissionReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:topologicalConsistencyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:formatConsistencyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:domainConsistencyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:conceptualConsistencyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:relativeInternalPositionalAccuracyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:griddedDataPositionalAccuracyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:absoluteExternalPositionalAccuracyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:quantitativeAttributeAccuracyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:nonQuantitativeAttributeAccuracyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:thematicClassificationCorrectnessReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:temporalValidityReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:temporalConsistencyReport(v:a, v:_)
+em:DQ_DataQuality(v:a) <-- em:accuracyOfATimeMeasurementReport(v:a, v:_)
+
+
+# check if metadata extension element data type is code list
+em:DTCodelist(v:a) <-- em:dataType(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_DatatypeCode, "codelist")
+
+
+# check if metadata extension element data type is code list, enumeration, or codelist element
+em:DTCodeEnumElement(v:a) <-- em:dataType(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_DatatypeCode, "codelist")
+em:DTCodeEnumElement(v:a) <-- em:dataType(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_DatatypeCode, "enumeration")
+em:DTCodeEnumElement(v:a) <-- em:dataType(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_DatatypeCode, "codelistElement")
+
+
+# check if metadata extension element obligation is conditional
+em:ConditionalElement(v:a) <-- em:obligation(v:a, v:b), em:lookupCode(v:b, gmxRes:MD_ObligationCode, "conditional")
+
+
+# check if resource is either a "dataset" or a "service"
+em:DatasetOrService(v:a) <-- em:Dataset(v:a)
+em:DatasetOrService(v:a) <-- em:serviceIdentificationInfo(v:a, v:_)
+
+
+# check if resource has service description present
+em:ServiceInfo(v:a) <-- em:serviceIdentificationInfo(v:a, v:_)
+
+
+# check if service metadata element couplingType is mixed or tight
+em:SvTightlyCoupled(v:a) <-- em:couplingType(v:a, v:b), em:lookupCode(v:b, gmxRes:SV_CouplingType, "mixed")
+em:SvTightlyCoupled(v:a) <-- em:couplingType(v:a, v:b), em:lookupCode(v:b, gmxRes:SV_CouplingType, "tight")
+
+
+# check if minimum conditions required by MD_Identification have been met
+em:MD_Identification(v:a) <-- em:citation(v:a, v:b), em:CI_Citation(v:b), em:abstract(v:a, v:h), es:nonEmptyString(v:h)
+
+
+# check if minimum conditions required by MD_DataIdentification have been met without considering conditional elements for services
+em:MD_DataIdentForServiceMD(v:a) <-- em:MD_Identification(v:a), em:language(v:a, v:i), es:nonEmptyString(v:i)
+em:MD_DataIdentForServiceMD(v:a) <-- em:MD_Identification(v:a), em:defaultLanguage(v:_)
+
+
+# check if GenericName elements are valid
+#   no current way to validate the URI portion of the value is not null or is a valid URI, e.g. es:uri(v:URI)
+em:GenericName(v:in) <-- v:in = {v:Name, v:URI}, es:nonEmptyString(v:Name)
+
+
+###################################
+# TEST A VALUE AGAINST A CODELIST
+###################################
+
+# test if a codeName is valid in the codeList
+em:lookupCodeName (v:in, v:CodeList) <-- v:in = {v:CodeName, v:CodeList, v:_}, gmx:CT_CodelistCatalogue(v:CodeList, v:_, {v:CodeName, v:_})
+em:lookupCodeName (v:in, v:CodeList) <-- v:in = {v:CodeName, v:CodeList, v:_, v:_}, gmx:CT_CodelistCatalogue(v:CodeList, v:_, {v:CodeName, v:_})
+em:lookupCodeName (v:in, v:CodeList) <-- es:literal(v:in), gmx:CT_CodelistCatalogue(v:CodeList, v:_, {v:in, v:_})
+
+# test if a codeName is valid in the codeList and a codeListValue
+em:lookupCode (v:in, v:CodeList, v:CodeListValue) <-- v:in = {v:CodeName, v:CodeList, v:CodeListValue}, gmx:CT_CodelistCatalogue(v:CodeList, v:CodeListValue, {v:CodeName, v:_})
+em:lookupCode (v:in, v:CodeList, v:CodeListValue) <-- v:in = {v:CodeName, v:CodeList, v:CodeListValue, v:_}, gmx:CT_CodelistCatalogue(v:CodeList, v:CodeListValue, {v:CodeName, v:_})
+em:lookupCode (v:in, v:CodeList, v:CodeListValue) <-- es:literal(v:in), gmx:CT_CodelistCatalogue(v:CodeList, v:CodeListValue, {v:in, v:_})
+
