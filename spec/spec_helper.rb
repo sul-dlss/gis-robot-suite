@@ -14,6 +14,7 @@ ENV['ROBOT_ENVIRONMENT'] = 'test'
 require File.expand_path("#{__dir__}/../config/boot")
 
 require 'pry'
+require 'byebug'
 require 'rspec'
 require 'cocina/rspec'
 include LyberCore::Rspec # rubocop:disable Style/MixinUsage

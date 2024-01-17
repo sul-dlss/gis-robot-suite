@@ -13,64 +13,75 @@ module Robots
         def perform_work
           logger.debug "generate-mods working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
-
-          # short-circuit if already have MODS file
-          desc_metadata = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          if File.size?(desc_metadata)
-            logger.info "generate-mods: #{bare_druid} found existing #{desc_metadata}"
-            return
-          end
-
-          geo_metadata_file = File.join(rootdir, 'metadata', 'geoMetadata.xml')
           raise "generate-mods: #{bare_druid} cannot locate #{geo_metadata_file}" unless File.size?(geo_metadata_file)
 
-          # parse geometadata as input to MODS transform
-          geo_metadata_rdf_xml = Nokogiri::XML(File.read(geo_metadata_file))
-
-          # detect fileFormat and geometryType
-          shp_file = Dir.glob("#{rootdir}/temp/*.shp").first
-          if shp_file.nil?
-            geometry_type = 'Raster'
-            tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
-            if tif_file.nil?
-              metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-              raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
-
-              file_format = 'ArcGRID'
-            else
-              file_format = 'GeoTIFF'
-            end
-          else
-            geometry_type = geometry_type_ogrinfo(shp_file)
-            geometry_type = 'LineString' if geometry_type =~ /^Line/
-            file_format = 'Shapefile'
-          end
-
-          # load PURL
-          purl = Settings.purl.url + "/#{bare_druid}"
-
-          # clean up geo_metadata_rdf_xml to not generate transforms
-          mods_xml_file = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          File.open(mods_xml_file, 'wb') do |file_content|
-            file_content << to_mods(geo_metadata_rdf_xml,
-                                    geometryType: geometry_type,
-                                    fileFormat: file_format,
-                                    purl:).to_xml(index: 2)
-          rescue ArgumentError => e
-            raise "generate-mods: #{bare_druid} cannot process MODS: #{e}"
-          end
-
-          raise "generate-mods: #{bare_druid} did not write MODS correctly" unless File.size?(mods_xml_file)
+          description_props = Cocina::Models::Mapping::FromMods::Description.props(mods: mods_ng, druid: cocina_object.externalIdentifier,
+                                                                                   label: cocina_object.label)
+          object_client.update(params: cocina_object.new(description: description_props))
         end
 
         private
 
+        def rootdir
+          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+        end
+
+        def geo_metadata_file
+          @geo_metadata_file ||= File.join(rootdir, 'metadata', 'geoMetadata.xml')
+        end
+
+        def geo_metadata_rdf_xml
+          # parse geometadata as input to MODS transform
+          @geo_metadata_rdf_xml ||= Nokogiri::XML(File.read(geo_metadata_file))
+        end
+
+        def purl
+          @purl ||= Settings.purl.url + "/#{bare_druid}"
+        end
+
+        def shp_file
+          @shp_file ||= Dir.glob("#{rootdir}/temp/*.shp").first
+        end
+
+        def raster?
+          shp_file.nil?
+        end
+
+        def geometry_type
+          @geometry_type ||= if raster?
+                               'Raster'
+                             elsif geometry_type_ogrinfo =~ /^Line/
+                               'LineString'
+                             else
+                               geometry_type_ogrinfo
+                             end
+        end
+
+        def file_format
+          @file_format ||= if raster?
+                             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
+                             if tif_file.nil?
+                               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+                               raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+
+                               'ArcGRID'
+                             else
+                               'GeoTIFF'
+                             end
+                           else
+                             'Shapefile'
+                           end
+        end
+
         # Reads the shapefile to determine geometry type
         #
         # @return [String] Point, Polygon, LineString as appropriate
-        def geometry_type_ogrinfo(shp_filename)
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_filename}'") do |file|
+        def geometry_type_ogrinfo
+          @geometry_type_ogrinfo ||= find_geometry_type_ogrinfo
+        end
+
+        def find_geometry_type_ogrinfo
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_file}'") do |file|
             file.readlines.each do |line|
               next unless line =~ /^Geometry:\s+(.*)\s*$/
 
@@ -133,24 +144,30 @@ module Robots
         # Uses GML SimpleFeatures for the geometry type (e.g., Polygon, LineString, etc.)
         # @see http://portal.opengeospatial.org/files/?artifact_id=25355
         #
-        def to_mods(metadata, params)
-          params[:geometryType] ||= 'Polygon'
-          params[:zipName] ||= 'data.zip'
-          raise ArgumentError, 'generate-mods: Missing PURL parameter' if params[:purl].nil?
+        def mods_ng
+          @mods_ng ||= begin
+            doc = XSLT_GEOMODS.transform(geo_metadata_rdf_xml.document, xslt_args)
+            raise 'generate-mods: to_mods produced incorrect xml' unless doc.root && !doc.root.children.empty?
 
-          args = Nokogiri::XSLT.quote_params(params.to_h { |(k, v)| [k.to_s, v] }.to_a.flatten)
-          doc = XSLT_GEOMODS.transform(metadata.document, args)
-          raise 'generate-mods: to_mods produced incorrect xml' unless doc.root && !doc.root.children.empty?
-
-          # cleanup projection and coords for human-readable
-          doc.xpath('/mods:mods' \
-                    '/mods:subject' \
-                    '/mods:cartographics' \
-                    '/mods:coordinates',
-                    'xmlns:mods' => MODS_NS).each do |e|
-            e.content = "(#{to_coordinates_ddmmss(e.content.to_s)})"
+            # cleanup projection and coords for human-readable
+            doc.xpath('/mods:mods' \
+                      '/mods:subject' \
+                      '/mods:cartographics' \
+                      '/mods:coordinates',
+                      'xmlns:mods' => MODS_NS).each do |e|
+              e.content = "(#{to_coordinates_ddmmss(e.content.to_s)})"
+            end
+            doc
           end
-          doc
+        end
+
+        def xslt_args
+          params = {
+            geometryType: geometry_type || 'Polygon',
+            fileFormat: file_format,
+            zipName: 'data.zip'
+          }
+          Nokogiri::XSLT.quote_params(params.to_h { |(k, v)| [k.to_s, v] }.to_a.flatten)
         end
       end
     end

@@ -33,6 +33,7 @@ group :development do
 end
 
 group :test do
+  gem 'byebug'
   gem 'webmock'
   gem 'rspec_junit_formatter' # For circleCI
   gem 'simplecov', require: 'false'
