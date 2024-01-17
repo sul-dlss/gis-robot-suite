@@ -30,6 +30,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
     it 'generates an ISO 19139 XML document' do
       expect(File).to exist(File.join(staging_dir, 'WATER_BODY-iso19139.xml'))
     end
+
+    it 'generates an FGDC XML document' do
+      expect(File).to exist(File.join(staging_dir, 'WATER_BODY-fgdc.xml'))
+    end
+
+    it 'generates an ISO 19110 XML document' do
+      expect(File).to exist(File.join(staging_dir, 'WATER_BODY-iso19110.xml'))
+    end
   end
 
   context 'with ESRI metadata for a geoTIFF' do
@@ -38,6 +46,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
 
     it 'generates an ISO 19139 XML document' do
       expect(File).to exist(File.join(staging_dir, '26257_e-iso19139.xml'))
+    end
+
+    it 'generates an FGDC XML document' do
+      expect(File).to exist(File.join(staging_dir, '26257_e-fgdc.xml'))
+    end
+
+    it 'does not generate an ISO 19110 XML document' do
+      expect(File).not_to exist(File.join(staging_dir, '26257_e-iso19110.xml'))
     end
   end
 end
