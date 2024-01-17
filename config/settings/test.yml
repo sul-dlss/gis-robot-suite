@@ -1,2 +1,3 @@
 geohydra:
   workspace: 'spec/fixtures/workspace'
+  stage: 'spec/fixtures/stage'
