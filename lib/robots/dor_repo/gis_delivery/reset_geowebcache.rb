@@ -11,7 +11,7 @@ module Robots
         def perform_work
           logger.debug "reset-geowebcache working on #{druid}"
 
-          rights = GisRobotSuite.determine_rights(bare_druid).downcase
+          rights = GisRobotSuite.determine_rights(cocina_object)
           ##
           # Truncate the cache for the layer in every place
           Settings.geoserver[rights].map do |_key, setting|
