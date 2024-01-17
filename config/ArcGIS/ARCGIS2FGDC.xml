@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<translator name="ARCGIS to FGDC" xslt="Transforms\ArcGIS2FGDC.xsl" logLevel="error" stopOnErrors="no">
+	<!-- empty -->
+</translator>

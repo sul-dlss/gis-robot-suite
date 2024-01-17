@@ -1,0 +1,53 @@
+#nsdecl em http://www.esri.com/metadata/translator/instance/
+#nsdecl es http://www.esri.com/metadata/translator/schema/
+#nsdecl v http://www.esri.com/metadata/translator/var/
+#nsdecl ec http://www.esri.com/metadata/translator/ctrl/
+
+
+################
+#   Parsing    #
+################
+
+# match a date ; hyphens, months, days are optional
+es:date(v:x, v:p, v:r) <-- es:match("^(\d{4})-?(\d{2})?-?(\d{2})?", v:x, v:p, v:r)
+
+# match a time ; colons are optional
+es:time(v:x, v:p, v:r) <-- es:match("^(\d{2}):?(\d{2}):?(\d{2})(?:00)?", v:x, v:p, v:r)
+
+# TODO: add a parser for dateTime matching a 6-size array of date and time parts?
+
+###############
+#   Types     #
+###############
+
+es:date(v:x) <-- es:date(v:x, v:_, "")
+es:time(v:x) <-- es:time(v:x, v:_, "")
+es:dateTime(v:x) <-- es:date(v:x, v:_, v:a), es:match("^T", v:a, v:_, v:b), es:time(v:b)
+
+###############
+#  Format     #
+###############
+
+# default date parts for month and day
+es:defaultDate(v:x, v:out) <-- es:emptyString(v:x), v:out = "01"; v:out = v:x
+es:defaultTime(v:x, v:out) <-- es:emptyString(v:x), v:out = "00"; v:out = v:x
+
+# date and time formatting
+es:formatDate(v:x, v:sep, v:out) <-- es:date(v:x, v:p0, ""), ec:map(es:defaultDate, v:p0, v:p1), es:join (v:sep, v:p1, v:out)
+es:formatTime(v:x, v:sep, v:out) <-- es:time(v:x, v:p0, ""), ec:map(es:defaultTime, v:p0, v:p1), es:join (v:sep, v:p1, v:out)
+
+# iso formatting
+es:formatIsoDate(v:x, v:out) <-- es:formatDate(v:x, "-", v:out)
+es:formatSimpleDate(v:x, v:out) <-- es:formatDate(v:x, "", v:out)
+
+es:formatIsoTime(v:x, v:out) <-- es:formatTime(v:x, ":", v:out)
+es:formatSimpleTime(v:x, v:out) <-- es:formatTime(v:x, "", v:out)
+
+
+es:formatIsoDateTime(v:x, v:out) <-- es:date(v:x, v:p0, ""), ec:map(es:defaultDate, v:p0, v:p1), es:join ("-", v:p1, v:out0), es:concat([v:out0, "T00:00:00"], v:out)
+es:formatIsoDateTime(v:x, v:out) <-- es:date(v:x, v:DateParts, v:a), es:match("^T", v:a, v:_, v:b), es:time(v:b, v:TimeParts, ""), ec:map(es:defaultDate, v:DateParts, v:DateParts0), es:join("-", v:DateParts0, v:out0), es:join(":", v:TimeParts, v:out1), es:concat([v:out0, "T", v:out1], v:out)
+
+es:formatSimpleDateTime(v:x, v:out) <-- es:date(v:x, v:p0, v:_), ec:map(es:defaultDate, v:p0, v:p1), es:join ("", v:p1, v:out)
+#, es:concat([v:out0, "T000000"], v:out)
+#es:formatSimpleDateTime(v:x, v:out) <-- es:date(v:x, v:DateParts, v:a), es:match("^T", v:a, v:_, v:b), es:time(v:b, v:TimeParts, ""), ec:map(es:defaultDate, v:DateParts, v:DateParts0), es:join("", v:DateParts0, v:out0), es:join("", v:TimeParts, v:out1), es:concat([v:out0, "T", v:out1], v:out)
+

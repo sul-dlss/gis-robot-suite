@@ -10,3 +10,6 @@ workflows:
       - ruby-rails/test-gem:
           name: test
           context: dlss
+          before-test:
+            - run: sudo apt-get update -y
+            - run: sudo apt-get install -y xsltproc libxml2-utils

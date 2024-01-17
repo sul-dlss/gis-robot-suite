@@ -1,0 +1,2405 @@
+#nsdecl em http://www.esri.com/metadata/translator/instance/
+#nsdecl es http://www.esri.com/metadata/translator/schema/
+#nsdecl v http://www.esri.com/metadata/translator/var/
+#nsdecl ec http://www.esri.com/metadata/translator/ctrl/
+#nsdecl gmx http://www.isotc211.org/2005/gmx
+#nsdecl gmxRes http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#
+
+
+#-----------------------------------------------------------------
+#
+# Details: Mandatory and Conditional Elements for Optional Classes
+#
+#-----------------------------------------------------------------
+
+# this schema contains the rules to test the mandatory and conditional elements in optional classes 
+#   rules for presence of the minimum mandatory and conditional elements are handled in other schemas
+#   other schemas check the correct data type has been provided for all elements that are present
+
+# - no tests for optional elements (only tests for mandatory elements within optional elements only when optional elements exist)
+# - no tests for elements only contains valid children elements
+# - no tests for correct cardinality
+
+
+#################################################################
+# MD_Metadata
+#   mandatory: contact (CI_ResponsibleParty), dateStamp
+#   conditional: language, characterSet, hierarchyLevel, hierarchyLevelName, parentIdentifier
+#     conditions:
+#       language - documented if not defined by encoding standard
+#       characterSet - documented if ISO 10646-1 not used and not defined by encoding standard
+#       hierarchyLevel - documented if != dataset
+#       hierarchyLevelName - documented if != dataset
+#       parentIdentifier - documented if hierarchy of a higher level exists
+#     default values: characterSet "utf8", hierarchyLevel "dataset"
+#   optional: fileIdentifier, metadataStandardName, metadataStandardVersion, dataSetURI, locale (PT_Locale)
+#   - may be only a maximum of one of all elements except hierarchyLevel, hierarchyLevelName, contact, locale
+#
+#   mandatory relationships: identificationInfo (MD_Identification)
+#   optional relationships: metadataConstraints (MD_Constraints), spatialRepresentationInfo (MD_SpatialRepresentation), 
+#      referenceSystemInfo (MD_ReferenceSystem), dataQualityInfo (DQ_DataQuality), distributionInfo (MD_Distribution),
+#      metadataMaintenance (MD_MaintenanceInformation), contentInfo (MD_ContentInformation),
+#      portrayalCatalogueInfo (MD_PortrayalCatalogueReference), applicationSchemaInfo (MD_ApplicationSchemaInformation),
+#      metadataExtensionInfo (MD_MetadataExtensionInformation)
+#   - note cardinality restriction that there may be only one instance of:
+#       metadataMaintenance, distributionInfo
+#################################################################
+
+#################################################################
+# PT_Locale
+#
+# elements with the data type PT_Locale
+#   MD_Metadata locale - em:locale
+#################################################################
+
+# mandatory and conditional rules handled by minimum schema
+
+
+#################################################################
+# MD_Identification
+#   mandatory: citation (CI_Citation), abstract
+#   optional: purpose, credit, status, pointOfContact (CI_ResponsibleParty)
+#   - may be only one each of citation, abstract, and purpose
+#   - mandatory and conditional handled by minimum schema
+#
+#   optional relationships: aggregationInfo (MD_AggregateInformation), graphicoverview (MD_BrowseGraphic), 
+#      resourceSpecificUsage (MD_Usage), resourceFormat (MD_Format), resourceConstraints (MD_Constraints), 
+#      descriptiveKeywords (MD_Keywords), resourceMaintenance (MD_MaintenanceInformation)
+#   - em:identificationInfo contains data identification elements, 
+#     how to determine if the MD_DataIdentification rules should be tested?
+#
+# roles with the data type MD_Identification
+#   MD_Metadata identificationInfo - em:identificationInfo (MD_DataIdentification)
+#   MD_Metadata identificationInfo - em:serviceIdentificationInfo (SV_ServiceIdentification)
+#   SV_ServiceIdentification operatesOn - em:operatesOn (MD_DataIdentification)
+#################################################################
+
+#################################################################
+# MD_DataIdentification - type of MD_Identification, inherits elements
+#   mandatory: language
+#   conditional: characterSet, topicCategory, extent (EX_Extent)
+#   - mandatory and conditional handled by minimum schema
+#   optional: spatialRepresentationType, spatialResolution (MD_Resolution), environmentDescription, supplementalInformation
+#   - may be only a maximum of one instance of environmentDescription and supplementalInformation
+#
+# roles with the data type MD_DataIdentification
+#   MD_Metadata identificationInfo - em:identificationInfo
+#   SV_ServiceIdentification operatesOn - em:operatesOn
+#################################################################
+
+#################################################################
+# SV_ServiceIdentification (change from MD_ServiceIdentification) - type of MD_Identification, inherits elements
+#   mandatory: serviceType, couplingType, containsOperations (SV_OperationMetadata)
+#   conditional: operatesOn (MD_DataIdentification), coupledResource (SV_CoupledResource)
+#     operatesOn - if couplingType = mixed or tight, the tightly-coupled resource must be documented 
+#       [see table C.6, Data dictionary for SV_CouplingType]
+#     coupledResource - if couplingType = mixed or tight, at least one operation must be associated with the tightly coupled resource and that association must be documented
+#       [see coupledResource description in table C.1, Data dictionary for SV_ServiceIdentification, and description of identifier 
+#       in table C.5, Data dictionary for SV_CoupledResource]
+#   optional: serviceTypeVersion, accessProperties (MD_StandardOrderProcess), extent (EX_Extent)
+#
+# roles with the data type SV_ServiceIdentification
+#   MD_Metadata identificationInfo - em:serviceIdentificationInfo
+#################################################################
+
+# mandatory and conditional rules handled by minimum schema
+#   operatesOn is conditional in SV_ServiceIdentification
+#     it may be present when not required, and if optional, this is the only place it will be tested 
+#     minimum schema additionally tests this element when it is mandatory in SV_IdentificationInfo
+
+# operatesOn is MD_DataIdentification
+#   not tested here with conditional extent and topic category rules as for em:identificationInfo
+#   no way to know if this resource is a "dataset" since hierarchy level value is for the service, not the tightly-coupled resource
+#   it must be the metadata author's responsibility to provide extent and topic category info if appropriate 
+#   can't validate the condition in this case; service may be connected with a non-geographic dataset, no way to know resource's status
+em:operatesOn(v:_, v:a) --> em:MD_DataIdentForServiceMD(v:a)
+
+
+#################################################################
+# MD_Resolution
+#   conditional: equivalentScale (MD_RepresentativeFraction), distance (Distance)
+#   - only one of each element may be provided
+#
+# elements with the data type MD_Resolution 
+#   MD_DataIdentification spatialResolution - em:spatialResolution
+#################################################################
+
+em:spatialResolution(v:_, v:a) --> em:equivalentScale(v:a, v:_) ; em:distance(v:a, v:_)
+
+
+#################################################################
+# MD_RepresentativeFraction
+#   mandatory: denominator
+#   - may be only one denominator provided
+#
+# elements with the data type MD_RepresentativeFraction
+#   MD_Resolution equivalentScale - em:equivalentScale
+#   LI_Source scaleDenominator - em:scaleDenominator
+#   - for both instances, this class is collapsed into the element that has this data type 
+#      in translator model 
+#   - no need to test for denominator separately, just that higher level element has correct value
+#       - tested in data type schema for numbers
+#################################################################
+
+
+#################################################################
+# MD_Keywords
+#   mandatory: keyword
+#   optional: type, thesaurusName (CI_Citation)
+#   - may only have maximum of one instance each of type and thesaurusName
+#
+# roles with the data type MD_Keywords
+#   MD_Identification descriptiveKeywords - em:descriptiveKeywords
+#################################################################
+
+em:descriptiveKeywords(v:_, v:a) --> em:keyword(v:a, v:_)
+
+
+#################################################################
+# MD_BrowseGraphic
+#   mandatory: fileName
+#   optional: fileDescription, fileType
+#   - may be only a maximum of one instance of each element in this class
+#
+# roles with the data type MD_BrowseGraphic
+#   MD_Identification graphicOverview - em:graphicOverview
+#################################################################
+
+em:graphicOverview(v:_, v:a) --> em:fileName(v:a, v:_)
+
+
+#################################################################
+# MD_Usage
+#   mandatory: specificUsage, userContactInfo (CI_ResponsibleParty)
+#   optional: usageDateTime, userDeterminedLimitations
+#   - may be only one or a maximum or one instance of all elements except userContactinfo
+#
+# roles with the data type MD_Usage
+#   MD_Identification resourceSpecificUsage - em:resourceSpecificUsage
+#################################################################
+
+em:resourceSpecificUsage(v:_, v:a) --> em:specificUsage(v:a, v:_), em:userContactInfo(v:a, v:_)
+
+
+#################################################################
+# MD_AggregateInformaiton
+#   mandatory: associationType 
+#   conditional: aggregateDataSetName (CI_Citation), aggregateDataSetIdentifier (MD_Identifier)
+#     either aggregateDataSetIdentifier or aggregateDataSetName must be provided
+#   optional: initiativeType
+#   - may only be one instance of each element in this class
+#
+# roles with the data type MD_AggregateInformaiton
+#   MD_Identification aggregationInfo - em:aggregationInfo
+#################################################################
+
+em:aggregationInfo(v:_, v:a) --> em:aggregateDataSetName(v:a, v:_), em:associationType(v:a, v:_) ; em:aggregateDataSetIdentifier(v:a, v:_), em:associationType(v:a, v:_)
+
+
+#################################################################
+# MD_Constraints
+#   optional: useLimitation
+#
+# roles with the data type MD_Constraints
+#   MD_Metadata metadataConstraints - em:useLimitation, em:legalConstraints, em:securityConstraints
+#   MD_Identification resourceConstraints - em:useLimitation, em:legalConstraints, em:securityConstraints
+#     - subclasses collapsed up into elements within calling element
+#################################################################
+
+
+#################################################################
+# MD_LegalConstraints - type of MD_Constraints, inherits elements
+#   conditional: otherConstraints
+#     must be documented if either accessConstraints or useConstraints = "otherRestrictions"
+#   optional: accessConstraints, useConstraints 
+#################################################################
+
+em:legalConstraints(v:_, v:a) --> em:MD_LegalConstraints(v:a)
+
+
+#################################################################
+# MD_SecurityConstraints - type of MD_Constraints, inherits elements
+#   mandatory: classification
+#   optional: userNote, classificationSystem, handlingDescription
+#   - no more than one instance of each element may be present
+#################################################################
+
+em:securityConstraints(v:_, v:a) --> em:classification(v:a, v:_)
+
+
+#################################################################
+# MD_MaintenanceInformation
+#   mandatory: maintenanceAndUpdateFrequency
+#   optional: dateOfNextUpdate, userDefinedMaintenanceFrequency, updateScope, 
+#     updateScopeDescription (MD_ScopeDescription), maintenanceNote, contact (CI_ResponsibleParty)
+#   - may only be one instance each of maintenanceAndUpdateFrequency, dateOfNextUpdate, 
+#      and userDefinedMaintenanceFrequency
+#
+# roles with the data type MD_MaintenanceInformation
+#   MD_Metadata metadataMaintenance - em:metadataMaintenance
+#   MD_Identification resourceMaintenance - em:resourceMaintenance
+#################################################################
+
+em:metadataMaintenance(v:_, v:a) --> em:maintenanceAndUpdateFrequency(v:a, v:_)
+em:resourceMaintenance(v:_, v:a) --> em:maintenanceAndUpdateFrequency(v:a, v:_)
+
+
+#################################################################
+# DQ_DataQuality
+#   mandatory: scope (DQ_Scope)
+#
+#   conditional relationships: lineage (LI_Lineage), report (DQ_Element)
+#     report or lineage are mandatory if scope.DQ_Scope.level = "dataset"
+#   - may be only one instance of LI_Lineage
+#
+# roles with the data type DQ_DataQuality
+#   MD_Metadata dataQualityInfo - em:dataQualityInfo
+#################################################################
+
+#################################################################
+# DQ_Scope
+#   mandatory: level
+#   conditional: levelDescription (MD_ScopeDescription)
+#     required if level != "dataset"
+#   optional: extent (EX_Extent)
+#   - may be only one instance of all elements except levelDescription
+#
+# elements with the data type DQ_Scope
+#   DQ_Quality scope - em:scope
+#################################################################
+
+# data quality must have a scope, and scope level must be provided
+em:dataQualityInfo(v:_, v:a) --> em:scope(v:a, v:b), em:level(v:b, v:_)
+
+# handles the data quality condition that lineage or report must be provided when scope level is "dataset"
+em:dataQualityInfo(v:_, v:a) --> em:DQ_DataQuality(v:a)
+
+# handles the data quality scope condition that scope level description be provided when scope level is not dataset or series
+em:dataQualityInfo(v:_, v:a) --> em:DQDatasetOrSeries(v:a) ; em:scope(v:a, v:b), em:levelDescription(v:b, v:_)
+
+
+#################################################################
+# MD_ScopeDescription
+#   mandatory: attributes (Set<GF_AttributeType>), features (Set<GF_FeatureType>), 
+#     featureInstances (Set<GF_FeatureType>), attributeInstances (Set<GF_AttributeType>), 
+#     dataset, other
+#   - may be no more than one instance of each element
+#   - note: each set of GF_AttributeType and GF_FeatureType is a set of instances of these
+#
+# elements with the data type MD_ScopeDescription
+#   DQ_Scope levelDescription - em:levelDescription
+#   MD_MaintenanceInformation updateScopeDescription - em:updateScopeDescription
+#################################################################
+
+em:levelDescription(v:_, v:a) --> em:attributes(v:a, v:_) ; em:features(v:a, v:_) ; em:featureInstances(v:a, v:_) ; em:attributeInstances(v:a, v:_) ; em:dataset(v:a, v:_) ; em:other(v:a, v:_)
+em:updateScopeDescription(v:_, v:a) --> em:attributes(v:a, v:_) ; em:features(v:a, v:_) ; em:featureInstances(v:a, v:_) ; em:attributeInstances(v:a, v:_) ; em:dataset(v:a, v:_) ; em:other(v:a, v:_)
+
+
+#################################################################
+# DQ_Element
+#   mandatory: result
+#   optional: nameOfMeasure, measureIdentification (MD_Identifier), measureDesription, 
+#     evaluationMethodType, evaluationMethodDescription, evaluationProcedure (CI_Citation), 
+#     dateTime
+#   - may only be one or two instances of result
+#   - may be no more than one instance of all elements except nameOfMeasure and dateTime
+#
+# roles with the data type DQ_Element
+#   DQ_DataQuality report
+#     - not represented in ESRI model, collapsed up to have DQ_Element subclasses contained by em:dataQualityInfo
+#
+#   many classes are types of DQ_Element that do not add elements:
+#     DQ_Completeness (Abstract) 
+#     DQ_CompletenessComission - em:completenessCommissionReport
+#     DQ_CompletenessOmission - em:completenessOmissionReport 
+#     DQ_LogicalConsistency (Abstract) 
+#     DQ_ConceptualConsistency - em:conceptualConsistencyReport
+#     DQ_DomainConsistency - em:domainConsistencyReport
+#     DQ_FormatConsistency - em:formatConsistencyReport
+#     DQ_TopologicalConsistency - em:topologicalConsistencyReport
+#     DQ_PositionalAccuracy (Abstract)
+#     DQ_AbsoluteExternalPositionalAccuracy - em:absoluteExternalPositionalAccuracyReport
+#     DQ_GriddedDataPositionalAccuracy - em:griddedDataPositionalAccuracyReport
+#     DQ_RelativeinternalPositionalAccuracy - em:relativeInternalPositionalAccuracyReport
+#     DQ_ThematicAccuracy (Abstract)
+#     DQ_ThematicClassificationCorrectness - em:thematicClassificationCorrectnessReport
+#     DQ_NonQuantitativeAttributeAccuracy - em:nonQuantitativeAttributeAccuracyReport
+#     DQ_QuantitativeAttributeAccuracy - em:quantitativeAttributeAccuracyReport
+#     DQ_TemporalAccuracy (Abstract) 
+#     DQ_AccuracyOfATimeMeasurement - em:accuracyOfATimeMeasurementReport
+#     DQ_TemporalConsistency - em:temporalConsistencyReport
+#     DQ_TemporalValidity - em:temporalValidityReport
+#################################################################
+
+#################################################################
+# DQ_Result - abstract, doesn't contain any elements
+# 
+# elements with the data type DQ_Result
+#   DQ_Element result
+#     - not represented in ESRI model, collapsed up to have DQ_Result subclasses contained by DQ_Element subclass elements
+#
+#   subclasses of DQ_Result:
+#     DQ_ConformanceResult - em:conformanceResult
+#     DQ_QuantitativeResult - em:quantitativeResult
+#################################################################
+
+em:completenessOmissionReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:completenessCommissionReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:topologicalConsistencyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:formatConsistencyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:domainConsistencyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:conceptualConsistencyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:relativeInternalPositionalAccuracyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:griddedDataPositionalAccuracyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:absoluteExternalPositionalAccuracyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:quantitativeAttributeAccuracyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:nonQuantitativeAttributeAccuracyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:thematicClassificationCorrectnessReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:temporalValidityReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:temporalConsistencyReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+em:accuracyOfATimeMeasurementReport(v:_, v:a) --> em:conformanceResult(v:a, v:_) ; em:quantitativeResult(v:a, v:_)
+
+
+#################################################################
+# DQ_ConformanceResult - type of DQ_Result
+#   mandatory: specification (CI_Citation), explanation, pass
+# 
+# elements with the data type DQ_ConformanceResult
+#     DQ_ConformanceResult - em:conformanceResult
+#################################################################
+
+em:conformanceResult(v:_, v:a) --> em:specification(v:a, v:_), em:explanation(v:a, v:_), em:pass(v:a, v:_)
+
+
+#################################################################
+# DQ_QuantitativeResult - type of DQ_Result
+#   mandatory: valueUnit (UnitOfMeasure), value (Record)
+#   optional: valueType (RecordType), errorStatistic
+#   - may be no more than one of all elements except value
+# 
+# elements with the data type DQ_ConformanceResult
+#     DQ_QuantitativeResult - em:quantitativeResult
+#################################################################
+
+em:quantitativeResult(v:_, v:a) --> em:value(v:a, v:_), em:valueType(v:a, v:_)
+
+
+#################################################################
+# LI_Lineage
+#   conditional: statement
+#     mandatory if count of source + count of processStep = 0 and  
+#       DQ_DataQuality.scope.level = "dataset" or "series", then statement is mandatory
+#   - may be not more than one instance of statement
+#
+#   conditional relationships: source (LI_Source), processStep(LI_ProcessStep)
+#     source or processStep must be provided if LI_Lineage.statement is not documented
+#     
+# roles with the data type LI_Lineage
+#   DQ_DataQuality lineage - em:lineage
+#################################################################
+
+# don't understand the context in which lineage may be present and none of statement, process step or source
+#   are provided and that is OK because scope level is not dataset or series - in this case would lineage element be empty?
+em:lineage(v:_, v:a) --> em:statement(v:a, v:_) ; em:processStep(v:a, v:_) ; em:source(v:a, v:_)
+
+
+#################################################################
+# LI_Source
+#   conditional: description, sourceExtent (EX_Extent)
+#     either description or sourceExtent must be provided
+#   optional: scaleDenominator (MD_RepresentativeFraction), sourceReferenceSystem (MD_ReferenceSystem), 
+#     sourceCitation (CI_Citation)
+#   - there may be no more than one of any element except sourceExtent
+#
+#   optional relationship: sourceStep (LI_ProcessStep)
+#
+# roles with the data type LI_Source
+#   LI_Lineage source - em:source
+#   LI_ProcessStep source - em:source
+#################################################################
+
+# both occurrances of em:source in LI_Lineage are LI_Source, but in MD_ExtendedElementInformation, em:source is CI_ResponsibleParty
+# test em:source from parent object to ensure correct element is tested with correct validation rule
+#   em:source as LI_Source under LI_Lineage, optional in both cases
+em:lineage(v:_, v:a) --> es:not(em:source(v:a, v:_)) ; em:source(v:a, v:b), em:description(v:b, v:_) ; em:source(v:a, v:b), em:sourceExtent(v:b, v:_)
+
+
+#################################################################
+# LI_ProcessStep
+#   mandatory: description
+#   optional: rationale, dateTime, processor (CI_ResponsibleParty)
+#
+#   optional relationship: source (LI_Source)
+#
+# roles with the data type LI_ProcessStep
+#   LI_Lineage processStep - em:processStep
+#   LI_Source sourceStep - em:sourceStep
+#################################################################
+
+em:processStep(v:_, v:a) --> em:description(v:a, v:_)
+em:sourceStep(v:_, v:a) --> em:description(v:a, v:_)
+
+
+#################################################################
+# MD_SpatialRepresentation - abstract, doesn't contain any elements
+#
+# roles with the data type MD_SpatialRepresentation
+#   MD_Metadata spatialRepresentationInfo
+#     - not represented in ESRI model, collapsed up to have MD_SpatialRepresentation subclasses contained by MD_Metadata
+#
+#   subclasses of MD_SpatialRepresentation:
+#     MD_GridSpatialRepresentation - em:gridSpatialRepresentationInfo
+#     MD_Georectified - em:georectifiedRepresentationInfo
+#     MD_Georeferenceable - em:georeferenceableRepresentationInfo
+#     MD_VectorSpatialRepresentation - em:vectorSpatialRepresentationInfo
+#################################################################
+
+
+#################################################################
+# MD_GridSpatialRepresentation - type of MD_SpatialRepresentation
+#   mandatory: numberOfDimensions, axisDimensionProperties (Sequence<MD_Dimension>), 
+#     cellGeometry, transformationParameterAvailability
+#   - may be no more than one instance of each element
+#################################################################
+
+em:gridSpatialRepresentationInfo(v:_, v:a) --> em:numberOfDimensions(v:a, v:_), em:axisDimensionProperties(v:a, v:_), em:cellGeometry(v:a, v:_), em:transformationParameterAvailability(v:a, v:_)
+
+
+#################################################################
+# MD_Georectified - type of MD_GridSpatialRepresentation, inherits all elements
+#   mandatory: checkPointAvailability, cornerPoints (Sequence<GM_Point>), pointInPixel 
+#   conditional: checkPointDescription 
+#     checkPointDescription required if checkPointAvailability = 1
+#   optional: centerPoint (GM_Point), transformationDimensionDescription, 
+#     transformationDimensionMapping
+#   - may be no more than one of any element except transformationDimensionMapping, which
+#       may have up to two instances
+#################################################################
+
+em:georectifiedRepresentationInfo(v:_, v:a) --> em:numberOfDimensions(v:a, v:_), em:axisDimensionProperties(v:a, v:_), em:cellGeometry(v:a, v:_), em:transformationParameterAvailability(v:a, v:_), em:checkPointAvailability(v:a, v:_), em:cornerPoints(v:a, v:_), em:pointInPixel(v:a, v:_)
+em:georectifiedRepresentationInfo(v:_, v:a) --> em:checkPointAvailability(v:a, v:b), es:not(es:true(v:b)) ; em:checkPointDescription(v:a, v:_)
+
+# cornerPoints is repeating once with data type Sequence<GM_Point> in 19115
+#   in 19139 XML Schema shows cornerPoints as repeating with each instance containing one GM_Point
+#     GML Point just contains the gml:pos position element; put the gml:pos doubleList value directly in these elements
+#   19115 specifies that at least two cornerPoints should be provided -- can't check here for number of occurrances
+
+
+#################################################################
+# MD_Georeferenceable - type of MD_GridSpatialRepresentation, inherits all elements
+#   mandatory: controlPointAvailability, orientationParameterAvailability, 
+#     georeferencedParameters (Record)'
+#   optional: orientationParameterDescription, parameterCitation (CI_Citation)
+#   - no condition to provide orientationParameterDescription if parameterAvailability=1?
+#   - may be only one instance of all elements except parameterCitation
+#################################################################
+
+em:georeferenceableRepresentationInfo(v:_, v:a) --> em:numberOfDimensions(v:a, v:_), em:axisDimensionProperties(v:a, v:_), em:cellGeometry(v:a, v:_), em:transformationParameterAvailability(v:a, v:_), em:controlPointAvailability(v:a, v:_), em:orientationParameterAvailability(v:a, v:_), em:georeferencedParameters(v:a, v:_)
+
+
+#################################################################
+# MD_Dimension
+#   mandatory: dimensionName, dimensionSize
+#   optional: resolution (Measure)
+#   - may be no more than one instance of each element
+#   - don't test independently, with Sequence<MD_Dimension>?
+#################################################################
+
+#################################################################
+# Sequence<MD_Dimension>
+#
+# elements with the data type Sequence<MD_Dimension>
+#   MD_GridSpatialRepresentation axisDimensionProperties - em:axisDimensionProperties
+#################################################################
+
+# not quite sure if this is the correct way to test the sequence
+em:axisDimensionProperties(v:_, v:a) --> em:dimensionName(v:a, v:_), em:dimensionSize(v:a, v:_)
+
+
+#################################################################
+# MD_VectorSpatialRepresentation - type of MD_SpatialRepresentation
+#   optional: topologyLevel, geometricObjects (MD_GeometricObjects)
+#   - no more than one instance of topologyLevel
+#################################################################
+
+
+#################################################################
+# MD_GeometricObjects
+#   mandatory: geometricObjectType
+#   optional: geometricObjectCount
+#   - may be no more than one of each element
+#
+# elements with the data type MD_Identifier
+#   MD_VectorSpatialRepresentation geometricObjects - em:geometricObjects
+#################################################################
+
+em:geometricObjects(v:_, v:a) --> em:geometricObjectType(v:a, v:_)
+
+
+#################################################################
+# MD_ReferenceSystem
+#   optional: referenceSystemIdentifier (RS_Identifier)
+#   - may be no more than one of the element
+#   - refer to ISO 19111 when coordinate reference system information is not given through 
+#       reference system identifier
+#
+# roles/elements with the data type MD_ReferenceSystem
+#   MD_Metadata referenceSystemInfo - em:referenceSystemInfo
+#   LI_Source sourceReferenceSystem - em:sourceReferenceSystem
+#################################################################
+
+#################################################################
+# RS_ReferenceSystem (Abstract) - no connection to MD_ReferenceSystem
+#   mandatory: name (RS_Identifier)
+#   optional: domainOfValidity (EX_Extent)
+#   - only one instance of name permitted
+#
+#   - NOT IN ESRI MODEL
+#################################################################
+
+#################################################################
+# SC_CRS (Abstract) - no connection to anything except EX_VerticalExtent
+#   - no info in 19115, from Spatial Referencing by Coordinates
+#   - NOT IN ESRI MODEL
+#################################################################
+
+#################################################################
+# MD_Identifier
+#   mandatory: code
+#   optional: authority (CI_Citation)
+#
+# elements with the data type MD_Identifier
+#   CI_Citation identifier - em:identifier 
+#   Ex_GeographicDescription geographicIdentifier - em:identifier
+#   MD_ImageDescription imageQualityCode - em:imageQualityCode
+#   MD_ImageDescription processingLevelCode - em:processingLevelCode
+#   DQ_Element measureIdentification - em:identifier
+#   MD_AggregateInformation aggregateDataSetIdentifier - em:aggregateDataSetIdentifier
+#################################################################
+
+# currently GMLUnitDefinition identifier is also em:identifier with different data type
+#   when supported, need to change validation rules appropriately or use different translator model element name for GML since they are different data types
+em:identifier(v:_, v:a) --> em:code(v:a, v:_)
+em:imageQualityCode(v:_, v:a) --> em:code(v:a, v:_)
+em:processingLevelCode(v:_, v:a) --> em:code(v:a, v:_)
+em:aggregateDataSetIdentifier(v:_, v:a) --> em:code(v:a, v:_)
+
+
+#################################################################
+# RS_Identifier - type of MD_Identifier, inherits all elements
+#   optional: codeSpace, version
+#   - may be no more than one of each element
+#
+# elements with the data type RS_Identifier
+#   MD_ReferenceSystem referenceSystemIdentifier 
+#   RS_ReferenceSystem name - not in our model
+#   LI_Source sourceReferenceSystem 
+#   - not represented separately in ESRI model, collapsed up into the elements with this data type
+#################################################################
+
+em:referenceSystemInfo(v:_, v:a) --> em:code(v:a, v:_)
+em:sourceReferenceSystem(v:_, v:a) --> em:code(v:a, v:_)
+
+
+#################################################################
+# MD_ContentInformation (abstract), no elements
+#
+# roles with the data type MD_ContentInformation
+#   MD_Metadata contentInfo
+#     - not represented in ESRI model, collapsed up to have MD_ContentInformation subclasses contained by MD_Metadata
+#
+#   subclasses of MD_SpatialRepresentation:
+#     MD_CoverageDescription - em:coverageDescription
+#     MD_ImageDescription - em:imageDescription
+#     MD_FeatureCatalogueDescription - em:featureCatalogueDescription
+#################################################################
+
+
+#################################################################
+# MD_CoverageDescription - type of MD_ContentInformation
+#   mandatory: attributeDescription (RecordType), contentType
+#   - may be no more than one instance of each element
+#
+#   optional relationships: dimension (MD_RangeDimension)
+#################################################################
+
+em:coverageDescription(v:_, v:a) --> em:attributeDescription(v:a, v:_), em:contentType(v:a, v:_)
+
+
+#################################################################
+# MD_ImageDescription - type of MD_CoverageDescription, inherits all elements
+#   optional: illuminationElevationAngle, illuminationAzimuthAngle, imagingCondition, 
+#     imageQualityCode (MD_Identifier), cloudCoverPercentage, processingLevelCode (MD_Identifier), 
+#     compressionGenerationQuantity, triangulationIndicator, 
+#     radiometricCalibrationDataAvailability, cameraCalibrationInformationAvailability, 
+#     filmDistortionInformationAvailability, lensDistortionInformationAvailability
+#   - may be no more than one instance of each element
+#################################################################
+
+em:imageDescription(v:_, v:a) --> em:attributeDescription(v:a, v:_), em:contentType(v:a, v:_)
+
+
+#################################################################
+# MD_FeatureCatalogueDescription - type of MD_ContentInformation
+#   mandatory: includedWithDataset, featureCatalogueCitation (CI_Citation)
+#   optional: complianceCode, language, featureTypes (GenericName)
+#   - may be no more than one each of complianceCode, includedWithDataset
+#################################################################
+
+em:featureCatalogueDescription(v:_, v:a) --> em:includedWithDataset(v:a, v:_), em:featureCatalogueCitation(v:a, v:_)
+
+
+#################################################################
+# MD_RangeDimension
+#   optional: sequenceIdentifier (MemberName), descriptor
+#   - may be no more than one each of complianceCode, includedWithDataset
+#
+# roles with the data type MD_RangeDimension
+#   MD_CoverageDescription dimension - em:rangeDimension
+#
+#   subclasses of MD_RangeDimension:
+#     MD_Band - em:bandDimension
+#
+#   - collapsed up to have MD_RangeDimension and MD_Band subclass both separate elements contained by 
+#     em:coverageDescription and em:imageDescription
+#################################################################
+
+#################################################################
+# MD_Band - type of MD_RangeDimension, inherits all elements
+#   conditional: units (UomLength)
+#     units mandatory if maxValue or minValue provided
+#   optional: maxValue, minValue, peakResponse, bitsPerValue, toneGradation, scaleFactor, 
+#     offset
+#################################################################
+
+em:bandDimension(v:_, v:a) --> es:not(em:maxValue(v:a, v:_)), es:not(em:minValue(v:a, v:_)) ; em:units(v:a, v:_)
+
+
+#################################################################
+# MD_PortrayalCatalogueReference
+#   mandatory: portrayalCatalogueCitation (CI_Citation)
+#
+# roles with the data type MD_PortrayalCatalogueReference
+#   MD_Metadata portrayalCatalogueInfo - em:portrayalCatalogueInfo
+#################################################################
+
+em:portrayalCatalogueInfo(v:_, v:a) --> em:portrayalCatalogueCitation(v:a, v:_)
+
+
+#################################################################
+# MD_Distribution
+#   conditional relationships: distributionFormat (MD_Format)
+#     must have distributionFormat or distributor relationship with a distributorFormat 
+#       relationship 
+#   optional relationships: transferOptions (MD_DigitalTransferOptions), 
+#     distributor (MD_Distributor)
+#
+# roles with the data type MD_Distribution
+#   MD_Metadata distributionInfo - em:distributionInfo
+#################################################################
+
+em:distributionInfo(v:_, v:a) --> em:distributionFormat(v:a, v:_) ; em:distributor(v:a, v:b), em:distributorFormat(v:b, v:_)
+
+
+#################################################################
+# MD_Format
+#   mandatory: name, version
+#   optional: amendmentNumber, specification, fileDecompressionTechnique
+#   - may be no more than one each of complianceCode, includedWithDataset
+#
+#   optional relationships: formatDistributor (MD_Distributor)
+#
+# roles with the data type MD_Format
+#   MD_Identification resourceFormat - em:resourceFormat
+#   MD_Distribution distributionFormat - em:distributionFormat
+#   MD_Distributor distributorFormat - em:distributorFormat
+#################################################################
+
+em:resourceFormat(v:_, v:a) --> em:name(v:a, v:_), em:version(v:a, v:_)
+em:distributionFormat(v:_, v:a) --> em:name(v:a, v:_), em:version(v:a, v:_)
+em:distributorFormat(v:_, v:a) --> em:name(v:a, v:_), em:version(v:a, v:_)
+
+
+#################################################################
+# MD_Distributor
+#   mandatory: distributorContact (CI_ResponsibleParty)
+#
+#   conditional relationships: distributorFormat (MD_Format)
+#     must have distributorFormat relationship or MD_DIstribution must have 
+#       distributionFormat relationship 
+#   optional relationships: distributorTransferOptions (MD_DigitalTransferOptions), 
+#     distributionOrderProcess (MD_StandardOrderProcess)
+#
+# roles with the data type MD_Distributor
+#   MD_Distribution distributor - em:distributor
+#   MD_Format formatDistributor - em:formatDistributor
+#################################################################
+
+em:distributor(v:_, v:a) --> em:distributorContact(v:a, v:_)
+em:formatDistributor(v:_, v:a) --> em:distributorContact(v:a, v:_)
+
+
+#################################################################
+# MD_StandardOrderProcess
+#   optional: fees, plannedAvailableDateTime, orderingInstructions, turnaround
+#   - may be no more than one each of complianceCode, includedWithDataset
+#
+# elements and roles with the data type MD_StandardOrderProcess
+#   MD_Distributor distributionOrderProcess - em:distributionOrderProcess
+#   SV_ServiceIdentification accessProperties - em:accessProperties
+#################################################################
+
+
+#################################################################
+# MD_DigitalTransferOptions
+#   optional: unitsOfDistribution, transferSize, onLine (CI_OnlineResource), 
+#     offLine (MD_Medium)
+#   - may be no more than one each of all elements except onLine
+#
+# roles with the data type MD_DigitalTransferOptions
+#   MD_Distribution transferOptions - em:transferOptions
+#   MD_Distributor distributorTransferOptions - em:distributorTransferOptions
+#################################################################
+
+
+#################################################################
+# MD_Medium
+#   conditional: densityUnits
+#     densityUnits must be provided if density is present
+#   optional: name, density, volumes, mediumFormat, mediumNote
+#   - may be no more than one each of all elements except density, mediumFormat
+#
+# elements with the data type MD_Medium
+#   MD_DigitalTransferOptions offLine - em:offLine
+#################################################################
+
+em:offLine(v:_, v:a) --> es:not(em:density(v:a, v:_)) ; em:densityUnits(v:a, v:_)
+
+
+#################################################################
+# MD_MetadataExtensionInformation
+#   optional: extensionOnLineResource (CI_OnlineResource)
+#   - may be no more than one each of all elements 
+#
+#   optional relationships: extendedElementInformation (MD_ExtendedElementInformation)
+#
+# roles with the data type MD_MetadataExtensionInformation
+#   MD_Metadata metadataExtensionInfo - em:metadataExtensionInfo
+#################################################################
+
+
+#################################################################
+# MD_ExtendedElementInformation
+#   mandatory: name, definition, dataType, parentEntity, rule, source (CI_ResponsibleParty)
+#   conditional: shortName, domainCode, obligation, condition, maximumOccurrence, domainValue
+#     if dataType = codelistElement domainCode is mandatory
+#     if dataType != codelistElement shortName is mandatory
+#     if dataType != codelist, enumeration, or codelistElement obligation, 
+#       maximumOccurrence and domainValue are mandatory
+#     if obligation = conditional condition is mandatory
+#   optional: rationale
+#   - may be no more than one each of all elements except parentEntity, rationale, source
+#
+# roles with the data type MD_ExtendedElementInformation
+#   MD_MetadataExtensionInformation extendedElementInformation - em:extendedElementInformation
+#################################################################
+
+em:extendedElementInformation(v:_, v:a) --> em:name(v:a, v:_), em:definition(v:a, v:_), em:dataType(v:a, v:_), em:parentEntity(v:a, v:_), em:rule(v:a, v:_), em:source(v:a, v:_)
+em:extendedElementInformation(v:_, v:a) --> em:DTCodelist(v:a), em:domainCode(v:a, v:_) ; em:shortName(v:a, v:_)
+em:extendedElementInformation(v:_, v:a) --> em:DTCodeEnumElement(v:a) ; em:obligation(v:a, v:_), em:maximumOccurrence(v:a, v:_), em:domainValue(v:a, v:_)
+em:extendedElementInformation(v:_, v:a) --> es:not(em:ConditionalElement(v:a)) ; em:condition(v:a, v:_)
+
+#for maximumOccurrence, domain is "N" or any Integer - test here since not just one data type
+em:maximumOccurrence(v:_, v:a) --> v:a="N" ; es:number(v:a)
+
+
+#################################################################
+# MD_ApplicationSchemaInformation
+#   mandatory: name (CI_Citation), schemaLanguage, constraintLanguage, 
+#   optional: schemaAscii, graphicsFile (Binary), softwareDevelopmentFile (Binary), 
+#     softwareDevelopmentFileFormat
+#   - may be no more than one each of any element
+#     
+# roles with the data type MD_ApplicationSchemaInformation
+#   MD_Metadata applicationSchemaInfo - em:applicationSchemaInfo
+#################################################################
+
+em:applicationSchemaInfo(v:_, v:a) --> em:name(v:a, v:_), em:schemaLanguage(v:a, v:_), em:constraintLanguage(v:a, v:_)
+
+
+#################################################################
+# EX_Extent
+#   optional: description
+#   - may be no more than one each of all elements 
+#
+#   conditional relationships: geographicElement (EX_GeographicExtent), 
+#     temporalElement (EX_TemporalExtent), verticalElement (EX_VerticalExtent)
+#       count (description + geographicElement + temporalElement + verticalElement) >0
+#
+# elements with data type EX_Extent
+#   MD_DataIdentification extent - em:extent 
+#   DQ_Scope extent - em:extent 
+#   LI_Source sourceExtent - em:sourceExtent
+#   RS_ReferenceSystem domainOfValidity - NOT PRESENT IN OUR MODELS
+#   SV_ServiceIdentification - em:extent
+#################################################################
+
+em:extent(v:_, v:a) --> em:EX_Extent(v:a)
+em:sourceExtent(v:_, v:a) --> em:EX_Extent(v:a)
+
+
+#################################################################
+# EX_GeographicExtent (abstract)
+#   optional: extentTypeCode
+#   - may be no more than one each of all elements 
+#   - boolean = 1, default value indicates location defines where the data is vs an area where the data is not present
+#     
+# roles with the data type EX_GeographicExtent
+#   EX_Extent geographicElement
+#     - not in our model, EX_GeographicExtent subclasses are collapsed up so they are elements directly in extent
+#     - EX_SpatialTemporalExtent spatialExtent also uses subclasses collapsed up into that element
+#
+#   subclasses of EX_GeographicExtent:
+#     EX_BoundingPolygon - em:boundingPolygon
+#     EX_GeographicBoundingBox - em:boundingBox
+#     EX_GeographicDescription - em:geographicDescription
+#################################################################
+
+
+#################################################################
+# EX_BoundingPolygon - type of EX_GeographicExtent, inherits all elements
+#   mandatory: polygon (GM_Object)
+#     - GM_Object refers to abstract GML geometry; only GML Polygon will be supported in bounding polygon
+#################################################################
+
+em:boundingPolygon(v:_, v:a) --> em:polygon(v:a, v:_) 
+
+
+#################################################################
+# EX_GeographicBoundingBox - type of EX_GeographicExtent, inherits all elements
+#   mandatory: westBoundLongitude, eastBoundLongitude, southBoundLatitude, northBoundLatitude
+#   - may be no more than one each of all elements 
+#   - domain value conditions stated in data dictionary 
+#################################################################
+
+em:boundingBox(v:_, v:a) --> em:EX_GeographicBoundingBox(v:a)
+
+
+#################################################################
+# EX_GeographicDescription - type of EX_GeographicExtent, inherits all elements
+#  mandatory: geographicIdentifier (MD_Identifier)
+#   - may be no more than one each of all elements 
+#################################################################
+
+em:geographicDescription(v:_, v:a) --> em:EX_GeographicDescription(v:a)
+
+
+#################################################################
+# EX_TemporalExtent
+#   mandatory: extent (TM_Primitive)
+#   - may be no more than one each of all elements 
+#   - model collapses all time content up into temporal element, nothing to test
+#     
+# roles with the data type EX_TemporalExtent
+#   EX_Extent temporalElement - em:temporalElement
+#
+#   subclasses of EX_TemporalExtent:
+#     EX_SpatialTemporalExtent - em:spatialTemporalElement
+#################################################################
+
+
+#################################################################
+# EX_SpatialTemporalExtent - type of EX_TemporalExtent, inherits all elements
+#   mandatory: extent (TM_Primitive)
+#   - time content all in temporal extent element, can't test
+#
+#   mandatory relationships: spatialExtent (EX_GeographicExtent)
+#   - must be a minimum of one spatialExtent, may be more
+#   - EX_GeographicExtent subclasses collapsed up directly into em:spatialTemporalElement
+#       EX_BoundingPolygon - em:boundingPolygon
+#       EX_GeographicBoundingBox - em:boundingBox
+#       EX_GeographicDescription - em:geographicDescription
+#################################################################
+
+em:spatialTemporalElement(v:_, v:a) --> em:EX_SpatialTemporalExtent(v:a)
+
+
+#################################################################
+# EX_VerticalExtent
+#   mandatory: minimumValue, maximumValue
+#   - corrigendum removes unitOfMeasure (UomLength) as an element
+#
+#   mandatory relationship: verticalCRS (SC_CRS, from Spatial Referencing by Coordinates)
+#   - must be one verticalCRS
+#   - verticalCRS NOT IN OUR MODEL so can't test this; will always be added to output with nilReason
+#     
+# roles with the data type EX_VerticalExtent
+#   EX_Extent verticalElement - em:verticalElement
+#################################################################
+
+em:verticalElement(v:_, v:a) --> em:minimumValue(v:a, v:_), em:maximumValue(v:a, v:_)
+
+
+#################################################################
+# CI_Citation
+#   mandatory: title, date (CI_Date)
+#   optional: alternateTitle, edition, editionDate, identifier (MD_Identifier), 
+#     citedResponsibleParty (CI_ResponsibleParty), presentationForm, series (CI_Series), 
+#     otherCitationDetails, collectiveTitle, ISBN, ISSN
+#   - may be no more than one each of title, edition, editionDate, series, othercitationDetails,
+#       collectiveTitle, ISBN, ISSN
+#
+# elements with the data type CI_Citation
+#   MD_Identification citation - em:citation - this instance mandatory handled in minimum schema
+#   MD_AggregateInformation aggregateDataSetName - em:aggregateDataSetName
+#   MD_Keywords thesaurusName - em:thesaurusName
+#   DQ_Element evaluationProcedure - em:evaluationProcedure
+#   DQ_ConformanceResult specification - em:specification
+#   LI_Source sourceCitation - em:sourceCitation
+#   MD_Georeferenceable parameterCitation - em:parameterCitation
+#   MD_Identifier authority - em:authority
+#   MD_FeatureCatalogueDescription featureCatalogueCitation - em:featureCatalogueCitation
+#   MD_PortrayalCatalogueReference portrayalCatalgueCitation - em:portrayalCatalogueCitation
+#   MD_ApplicationSchemaInformation name - em:name
+#################################################################
+
+#################################################################
+# CI_Date (em:date in ISO19139 translator)
+#   mandatory: date, dateType 
+#   - may be no more than one each of any element
+#   - 3 date types are represented as different elements in translator model for 
+#      CI_Citation instead of separate
+#   - test these as part of CI_Citation instead testing CI_Date separately
+#
+# elements with the data type CI_Date
+#   CI_Citation date - em:date in templates; em:creationDate, em:publicationDate, and em:revisionDate in model
+#################################################################
+
+# mandatory and conditional rules handled by defining class CI_Citation in ESRI-ISO_model
+#   metadata citation commented out - handled in minimum schema
+
+#em:citation(v:_, v:a) --> em:CI_Citation(v:a)
+em:sourceCitation(v:_, v:a) --> em:CI_Citation(v:a)
+em:thesaurusName(v:_, v:a) --> em:CI_Citation(v:a)
+em:aggregateDataSetName(v:_, v:a) --> em:CI_Citation(v:a)
+em:evaluationProcedure(v:_, v:a) --> em:CI_Citation(v:a)
+em:parameterCitation(v:_, v:a) --> em:CI_Citation(v:a)
+em:authority(v:_, v:a) --> em:CI_Citation(v:a)
+em:featureCatalogueCitation(v:_, v:a) --> em:CI_Citation(v:a)
+em:portrayalCatalogueCitation(v:_, v:a) --> em:CI_Citation(v:a)
+
+# must test ConformanceResult's specification element, em:specification, from parent object to make sure correct element is tested for correct data type and optionality
+#   em:specification in DQ_ConformanceResult, mandatory
+em:conformanceResult(v:_, v:a) --> em:specification(v:a, v:b), em:CI_Citation(v:b)
+
+# must test ApplicationSchema's name element, em:name, from parent object to make sure correct element is tested for correct data type and optionality
+#   em:name in MD_ApplicationSchemaInformation, mandatory
+em:applicationSchemaInfo(v:_, v:a) --> em:name(v:a, v:b), em:CI_Citation(v:b)
+
+
+#################################################################
+# CI_Series
+#   optional: name, issueIdentification, page
+#   - may be no more than one each of any element
+#
+# elements with the data type CI_Series
+#   CI_Citation series - em:series
+#################################################################
+
+
+#################################################################
+# CI_ResponsibleParty
+#   mandatory: role
+#   conditional: individualName, organisationName, positionName
+#     count (individualName + organisationName + positionName) >0
+#   optional: contactInfo (CI_Contact)
+#   - may be no more than one each of any element
+#   - add rules that test the role code provided for specific contacts? 
+#       not explicit in 19115, but reflects the general nature of the contact & roles provided
+#
+# elements with the data type CI_ResponsibleParty
+#   MD_Metadata contact - em:contact
+#   MD_Identification pointOfContact - em:pointOfContact
+#   MD_Usage userContactInfo - em:userContactInfo
+#   MD_MaintenanceInformation contact - em:maintenanceContact
+#   LI_ProcessStep processor - em:processor
+#   MD_Distributor distributorContact - em:distributorContact
+#   MD_ExtendedElementInformation source - em:source
+#   CI_Citation citedResponsbileParty - em:citedResponsibleParty
+#################################################################
+
+
+# mandatory and conditional rules handled by defining class CI_ResponsibleParty in ESRI-ISO_model
+#   - mandatory metadata contact handled in minimum schema, not included here
+#   - other sources are LI_Source, not CI_ResponsibleParty
+
+#em:contact(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:maintenanceContact(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:citedResponsibleParty(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:pointOfContact(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:userContactInfo(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:processor(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+em:distributorContact(v:_, v:a) --> em:CI_ResponsibleParty(v:a)
+
+# must test em:source from parent object to make sure correct element is tested with correct validation rule
+#   em:source in MD_ExtendedElementInformation, mandatory
+em:extendedElementInformation(v:_, v:a) --> em:source(v:a, v:b), em:CI_ResponsibleParty(v:b)
+
+
+#################################################################
+# CI_Contact
+#   optional: phone (CI_Telephone), address (CI_Address), onlineResource (CI_OnlineResource), 
+#     hoursOfService, contactInstructions
+#   - may be no more than one each of any element
+#
+# elements with the data type CI_Contact
+#   CI_ResponsibleParty contactInfo - em:contactInfo
+#################################################################
+
+
+#################################################################
+# CI_Telephone
+#   optional: voice, facsimile
+#   - test as part of CI_Citation
+#
+# elements with the data type CI_Telephone
+#   CI_Contact phone 
+#     - class is collapsed up in translator model for CI_Contact, which contains: em:voiceNum, em:faxNum
+#################################################################
+
+
+#################################################################
+# CI_Address
+#  optional: deliveryPoint, city, administrativeArea, postalCode, country, electronicMailAddress
+#   - may be no more than one each of all elements except deliveryPoint, electronicMailAddress
+#
+# elements with the data type CI_Address
+#   CI_Contact addess - em:address
+#################################################################
+
+
+#################################################################
+# CI_OnlineResource
+#   mandatory: linkage (URL)
+#   optional: protocol, applicationProfile, name, description, function
+#   - may be no more than one each of any element
+#
+# elements with the data type CI_OnlineResource
+#   CI_Contact onlineResource - em:onlineResource
+#   MD_DigitalTransferOptions onLine - em:onLine, em:onLineDescription (FGDC shortcut)
+#   MD_MetadataExtensionInformation extensionOnLineResource - em:extensionOnLineResource
+#   SV_OperationMetadata connectPoint - em:connectPoint
+#################################################################
+
+em:onlineResource(v:_, v:a) --> em:linkage(v:a, v:_)
+em:onLine(v:_, v:a) --> em:linkage(v:a, v:_)
+#em:onLineDescription(v:_, v:a) --> em:linkage(v:a, v:_) - coming in from FGDC this is content type in limbo, not a complete online resource that should be tested by itself
+em:extensionOnLineResource(v:_, v:a) --> em:linkage(v:a, v:_)
+# handled by minimum schema
+#em:connectPoint(v:_, v:a) --> em:linkage(v:a, v:_)
+
+
+#################################################################
+# SV_CoupledResource
+#   mandatory: identifier, operationName
+#
+# elements with the data type SV_OperationMetadata
+#   SV_IdentificationInformation coupledResource - em:coupledResource
+#################################################################
+
+# mandatory and conditional rules handled by minimum schema
+
+# coupledResource is conditional in SV_ServiceIdentification
+#   it may be present when not required, and if optional, this is the only place it will be tested 
+#   minimum schema additionally tests this element when it is mandatory in SV_IdentificationInfo
+em:coupledResource(v:_, v:a) --> em:operationName(v:a, v:_), em:resourceIdentifier(v:a, v:_)
+
+# SV_CoupledResource associates one of the service's operations with a resource using the resource's citation identifier
+#   the resource's citation identifier is optional according to 19115
+#   if coupledResource and operatesOn both exist, coupledResource should have an identifier
+em:serviceIdentificationInfo(v:_, v:a) --> es:not(em:coupledResource(v:a, v:_)) ; em:operatesOn(v:a, v:b), em:citation(v:b, v:c), em:identifier(v:c, v:d), em:code(v:d, v:e), es:nonEmptyString(v:e)
+
+
+#################################################################
+# SV_OperationMetadata
+#   mandatory: operationName, DCP, connectPoint (CI_OnlineResource)
+#   optional: operationDescription, invocationName, parameters (SV_Parameter), dependsOn (SV_OperationMetadata)
+#     - 19119 UML diagram figure 9 shows parameters as mandatory in connection with parameter name; relationship unclear between parameter name and operation
+#     - srv XML schema provided with OGC ISO profile of CSW shows parameters as optional in SV_OperationMetadata
+#
+# roles with the data type SV_OperationMetadata
+#   SV_IdentificationInformation containsOperations - em:containsOperations
+#   SV_OperationMetadata dependsOn - em:dependsOn
+#################################################################
+
+# mandatory and conditional rules handled by minimum schema
+#   handles the mandatory em:containsOperations
+
+# dependsOn has same rules as containsOperations, but is optional rather than mandatory
+#   not handled by minimum schema 
+em:dependsOn(v:_, v:a) --> em:operationName(v:a, v:_), em:DCP(v:a, v:_), em:connectPoint(v:a, v:_)
+
+
+#################################################################
+# SV_Parameter
+#   mandatory: name (MemberName), optionality, repeatability, valueType (TypeName)
+#   optional: direction, description
+#
+# roles with the data type SV_Parameter
+#   SV_OperationMetadata parameters - em:parameters
+#################################################################
+
+em:parameters(v:_, v:a) --> em:paramName(v:a, v:_), em:optionality(v:a, v:_), em:repeatability(v:a, v:_), em:paramValueType(v:a, v:_) 
+
+
+#################################################################
+# MemberName
+#
+# elements with the data type MemberName
+#   MD_RangeDimension sequenceIdentifier - em:sequenceIdentifier
+#   SV_Parameter name - em:paramName
+#################################################################
+
+em:sequenceIdentifier(v:_, v:a) --> em:aName(v:a, v:_), em:attributeTypeName(v:a, v:_)
+em:paramName(v:_, v:a) --> em:aName(v:a, v:_), em:attributeTypeName(v:a, v:_)
+
+
+#################################################################
+# GenericName
+#
+# elements with the data type GenericName
+#   MD_FeatureCatalogueDescription featureTypes - em:featureTypes
+#   SV_ServiceIdentification serviceType - em:serviceType
+#################################################################
+
+em:featureTypes(v:_, v:a) --> em:GenericName(v:a)
+em:serviceType(v:_, v:a) --> em:GenericName(v:a)
+
+
+#################################################################
+# Binary
+#
+# elements with the data type Binary
+#   MD_ApplicationSchema graphicsFile - em:graphicsFile
+#   MD_ApplicationSchema softwareDevelopmentFile - em:softwareDevelopmentFile
+#################################################################
+em:graphicsFile(v:_, v:a) --> em:binarySource(v:a, v:_)
+em:softwareDevelopmentFile(v:_, v:a) --> em:binarySource(v:a, v:_)
+
+
+#################################################################
+# GM_Object
+#
+# elements with the data type GM_Object
+#   EX_BoundingPolygon polygon - data type GM_Object refers to abstract parent of gml:Polygon
+#################################################################
+
+# GML Polygon as exterior and interior LinearRing objects, both optional but need at least one of the two
+#   can have only one exterior ring; can use many interior rings with no exterior ring to describe a multipart polygon
+em:polygon(v:_, v:a) --> em:exterior(v:a, v:_) ; em:interior(v:a, v:_) 
+
+
+#################################################################
+# GML LinearRing
+#
+# elements with the data type GM_LinearRing
+#   GM_Polygon exterior - em:exterior
+#   GM_Polygon interior - em:interior
+#################################################################
+
+# GML LinearRing contains a closed ring described as a series of positions
+#   positions listed either as individual positions with each coordinate point provided as a space-separated list of doubles,
+#   or as a position list, a long list of space-separated coordinates
+em:exterior(v:_, v:a) --> em:pos(v:a, v:_) ; em:posList(v:a, v:_)
+em:interior(v:_, v:a) --> em:pos(v:a, v:_) ; em:posList(v:a, v:_)
+
+
+#################################################################
+# RecordType
+#
+# elements with the data type RecordType
+#   DQ_QuantitativeResult valueType - em:valueType
+#   MD_CoverageDescription attributeDescription - em:attributeDescription
+#    - currently just handled as character string elements
+#################################################################
+
+# TODO
+
+#################################################################
+# Record
+#
+# elements with the data type Record
+#   DQ_QuantitativeResult value - em:value
+#   MD_Georeferenceable georeferencedParameters - em:georeferencedParameters 
+#    - currently just handled as character string elements
+#################################################################
+
+# TODO
+
+#################################################################
+# Distance
+#
+# elements with the data type Distance
+#   MD_Dimension resolution - em:distance
+#################################################################
+
+# TODO
+
+#################################################################
+# Measure
+#
+# elements with the data type Measure
+#   MD_Dimension resolution - em:resolution
+#################################################################
+
+# TODO
+
+#################################################################
+# UnitOfMeasure
+#
+# elements with the data type UnitOfMeasure
+#   DQ_QuantitativeResult valueUnit - em:valueUnit
+#################################################################
+
+#################################################################
+# UomLength
+#
+# elements with the data type UomLength
+#   MD_Band units - em:units
+#################################################################
+
+# both of the above classes are of the type GML UnitDefinition
+# TODO check this
+#   when supported, must validate em:identifier together with citation's em:identifier element or use a different translator element name
+#em:valueUnit(v:_, v:a) --> em:id(v:a, v:_), em:identifier(v:a, v:_)
+#em:units(v:_, v:a) --> em:id(v:a, v:_), em:identifier(v:a, v:_)
+
+
+#################################################################
+# TM_Primitive
+#
+# elements with the data type TM_Primitive
+#   EX_TemporalExtent extent - NOT IN MODEL, COLLAPSED UP SO GML IS IN TEMPORALELEMENT
+#################################################################
+
+# above class is type GML Time
+# TODO check this
+#em:temporalElement(v:_, v:a) --> es:formatIsoDateTime(v:a, v:_)
+
+
+#################################################################
+# URL
+#
+# elements with the data type URL
+#   CI_OnlineResource linkage - em:linkage
+#################################################################
+
+# TODO: currently no way to validate that a CharacterString is a URL; can only validate these elements as CharacterStrings
+
+
+
+#----------------------------------------------------------------
+#
+# Code Lists
+#
+#----------------------------------------------------------------
+
+# TEST THAT VALID ISO CODES HAVE BEEN PROVIDED IN THE APPROPRIATE ELEMENTS
+
+# SHOULD BE ABLE TO CHECK THAT A VALUE IS A VALID CODE DEFINED IN A CODELIST IN ESRI-ISO_CodelistCatalog.xml THIS WAY:
+#   em:topicCategory(v:_, v:a) --> gmx:CT_CodelistCatalogue(gmxRes:MD_TopicCategoryCode, v:_, {v:a, v:_})
+
+#################################################################
+# MD_CharacterSetCode
+#   MD_Metadata characterSet 
+#   MD_DataIdentification characterSet 
+#    ucs2, ucs4, utf7, utf8, utf16, 8859part1, 8859part2, 8859part3, 8859part4, 8859part5, 8859part6, 
+#    8859part7, 8859part8, 8859part9, 8859part10, 8859part11, <reserved for future use>, 8859part13, 
+#    8859part14, 8859part15, 8859part16, jis, shiftJIS, eucJP, usAscii, ebcdic, eucKR, big5, GB2312
+#################################################################
+em:characterSet(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_CharacterSetCode)
+
+
+#################################################################
+# MD_ScopeCode
+#   MD_Metadata hieararchyLevel
+#   DQ_Scope level
+#   MD_MaintenanceInformation updateScope
+#     attribute, attributeType, collectionHardware, collectionSession, dataset, series, 
+#     nonGeographicDataset, dimensionGroup, feature, featureType, propertyType, fieldSession, software, 
+#     service, model, tile
+#   - hierarchyLevel may exist in the metadata, but may not be tested by min_schema if level is not dataset
+#################################################################
+em:hierarchyLevel(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ScopeCode)
+em:level(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ScopeCode)
+em:updateScope(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ScopeCode)
+
+
+#################################################################
+# MD_ProgressCode
+#   MD_Identification status
+#     completed, historicalArchive, obsolete, onGoing, planned, required, underDevelopment
+#################################################################
+em:status(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ProgressCode)
+
+
+#################################################################
+# MD_SpatialRepresentationTypeCode
+#   MD_DataIdentification spatialRepresentationType
+#     vector, grid, textTable, tin, stereoModel, video
+#################################################################
+em:spatialRepresentationType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_SpatialRepresentationTypeCode)
+
+
+#################################################################
+# MD_TopicCategoryCode
+#   MD_DataIdentification topicCategory 
+#     farming, biota, boundaries, comatologyMeteorologyAtmosphere, economy, elevation, environment, 
+#     geoscientificInformation, health, imageryBasemapsEarthCover, intelligenceMilitary, inlandWaters, 
+#     location, oceans, planningCadastre, society, structure, transportation, utilitiesCommunication
+#################################################################
+em:topicCategory(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_TopicCategoryCode)
+
+
+#################################################################
+# MD_KeywordTypeCode
+#   MD_Keywords Type
+#     discipline, place, stratum, temporal, theme
+#################################################################
+em:type(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_KeywordTypeCode)
+
+
+#################################################################
+# DS_AssociationTypeCode
+#   MD_AggregateInformation associationType
+#      crossReference, largerWorkCitation, partOfSeamlessDatabase, source, stereoMate
+#################################################################
+em:associationType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:DS_AssociationTypeCode)
+
+
+#################################################################
+# DS_InitiativeTypeCode
+#   MD_AggregateInformation initiativeType
+#     campaign, collection, exercise, experiment, ivestigation, mission, sensor, operation, platform, 
+#     process, program, project, study, task, trial
+#################################################################
+em:initiativeType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:DS_InitiativeTypeCode)
+
+
+#################################################################
+# MD_RestrictionCode
+#   MD_LegalConstraints accessConstraints 
+#   MD_LegalConstraints useConstraints
+#     copyright, patent, patentPending, trademark, license, intellectualPropertyRights, restricted, 
+#     otherRestrictions
+#################################################################
+em:accessConstraints(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_RestrictionCode)
+em:useConstraints(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_RestrictionCode)
+
+
+#################################################################
+# MD_ClassificationCode
+#   MD_SecurityConstraints classification
+#     unclassified, restricted, confidential, secret, topSecret
+#################################################################
+em:classification(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ClassificationCode)
+
+
+#################################################################
+# DQ_EvaluationMethodTypeCode
+#   DQ_Element evaluationMethodType
+#     directInternal, directExternal, indirect
+#################################################################
+em:evaluationMethodType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:DQ_EvaluationMethodTypeCode)
+
+
+#################################################################
+# MD_MaintenanceFrequencyCode
+#   MD_MaintenanceInformation maintenanceAndUpdateFrequency
+#     continual, daily, weekly, forthnightly, monthly, quarterly, biannually, annually, asNeeded, 
+#     irregular, notPlanned, unknown
+#################################################################
+em:maintenanceAndUpdateFrequency(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_MaintenanceFrequencyCode)
+
+
+#################################################################
+# MD_CellGeometryCode
+#   MD_GridSpatialRepresentation cellGeometry
+#     point, area
+#################################################################
+em:cellGeometry(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_CellGeometryCode)
+
+
+#################################################################
+# MD_PixelOrientationCode
+#   MD_Georectified pointInPixel
+#     center, lowerLeft, lowerRight, upperRight, upperLeft
+#################################################################
+em:pointInPixel(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_PixelOrientationCode)
+
+
+#################################################################
+# MD_DimensionNameTypeCode
+#   MD_Dimension dimensionName
+#     row, column, vertical, track, crossTrack, line, sample, time
+#################################################################
+em:dimensionName(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_DimensionNameTypeCode)
+
+
+#################################################################
+# MD_TopologyLevelCode
+#   MD_VectorSpatialRepresentation topologyLevel
+#     geometryOnly, topology1D, planarGraph, fullPlanarGraph, surfaceGraph, fullSurfaceGraph, 
+#     topology3D, fullTopology3D, abstract
+#################################################################
+em:topologyLevel(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_TopologyLevelCode)
+
+
+#################################################################
+# MD_GeometricObjectTypeCode
+#   MD_GeometricObjects geometricObjectType
+#     complex, composite, curve, point, solid, surface
+#################################################################
+em:geometricObjectType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_GeometricObjectTypeCode)
+
+
+#################################################################
+# MD_CoverageContentTypeCode
+#   MD_CoverageDescription contentType
+#     image, thematicClassification, physicalMeasurement
+#################################################################
+em:contentType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_CoverageContentTypeCode)
+
+
+#################################################################
+# MD_ImagingConditionCode
+#   MD_ImageDescription imagingCondition
+#     blurredImage, cloud, degradingObliquity, fog, heavySmokeOrDust, night, rain, semiDarkness, 
+#     shadow, snow, terrainMasking
+#################################################################
+em:imagingCondition(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ImagingConditionCode)
+
+
+#################################################################
+# MD_MediumNameCode
+#   MD_Medium name - em:name (many em:name elements with different data types)
+#     cdRom, dvd, dvdRom, 3halfInchFloppy, 5quarterInchFloppy, 7trackTape, 9trackTape, 
+#     3480Cartridge, 3490Cartridge, 3580Cartridge, 4mmCartridgeTape, 8mmCartridgeTape, 
+#     1quarterInchCartridgeTape, digitalLinearTape, onLine, satellite, telephoneLink, hardcopy
+#################################################################
+# test em:name from parent object to ensure correct element tested for correct data type and optionality
+#   em:name in MD_Medium, optional
+em:offLine(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), em:lookupCodeName(v:b, gmxRes:MD_MediumNameCode)
+
+
+#################################################################
+# MD_MediumFormatCode
+#   MD_Medium mediumFormat
+#     cpio, tar, highSierra, iso9660, iso9660RockRidge, iso9660AppleHFS
+#################################################################
+em:mediumFormat(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_MediumFormatCode)
+
+
+#################################################################
+# MD_ObligationCode
+#   MD_ExtendedElementInformation obligation
+#     mandatory, optional, conditional
+#################################################################
+em:obligation(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_ObligationCode)
+
+
+#################################################################
+# MD_DatatypeCode
+#   MD_ExtendedElementInformation dataType
+#     class, codelist, enumeration, codelistElement, abstractClass, aggregateClass, specifiedClass, 
+#     datatypeClass, interfaceClass, unionClass, metaClass, typeCalss, characterString, integer, 
+#     association
+#################################################################
+em:dataType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:MD_DatatypeCode)
+
+
+#################################################################
+# CI_PresentationFormCode
+#   CI_Citation presentationForm
+#     documentDigital, documentHardcopy, imageDigital, imageHardcopy, mapDigital, mapHardcopy, 
+#     modelDigital, modelHardcopy, profileDigital, profileHardcopy, tableDigital, tableHardcopy, 
+#     videoDigital, videoHardcopy
+#################################################################
+em:presentationForm(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:CI_PresentationFormCode)
+
+
+#################################################################
+# CI_RoleCode
+#   CI_ResponsibleParty role
+#     resourceProvider, custodian, owner, user, distributor, originator, pointOfContact, 
+#     principalInvestigator, processor, publisher, author
+#################################################################
+em:role(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:CI_RoleCode)
+
+
+#################################################################
+# CI_DateTypeCode
+#   CI_Date dateType
+#     creation, publication, revision
+#     - can only find em:date - date type embedded in the model, can't test it separately
+#################################################################
+em:dateType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:CI_DateTypeCode)
+
+
+#################################################################
+# CI_OnLineFunctionCode
+#   CI_OnlineResource function
+#     download, information, offlineAccess, order, search
+#################################################################
+em:function(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:CI_OnLineFunctionCode)
+
+
+#################################################################
+# language
+#   MD_Metadata language 
+#   MD_DataIdentification language 
+#   MD_FeatureCatalogueDescription language
+#     characterString elements that are supposed to contain language codes from ISO 639 (other parts may be used), currently handled as characterString 
+#       if can handle as codes instead, do it here and comment out the characterString test
+#################################################################
+#em:language(v:_, v:a) --> 
+
+
+#################################################################
+# country
+#   CI_Address country 
+#     ArcGIS uses two-letter country codes
+#     requirement to use ISO 3166-3 country codes was removed in 19115 corrigendum, can be any ISO 3166 codes
+#################################################################
+
+
+#################################################################
+# SV_CouplingType
+#   SV_ServiceIdentification 
+#     loose, mixed, tight
+#################################################################
+# handled by minimum schema
+#em:couplingType(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:SV_CouplingType)
+
+
+#################################################################
+# DCPList
+#   SV_OperationMetadata
+#     XML, CORBA, JAVA, COM, SQL, WebServices
+#################################################################
+# handled by minimum schema
+#em:DCP(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:DCPList)
+
+
+#################################################################
+# SV_ParameterDirection
+#   SV_Parameter
+#     in, out, in/out
+#################################################################
+em:direction(v:_, v:a) --> em:lookupCodeName(v:a, gmxRes:SV_ParameterDirection)
+
+
+
+#----------------------------------------------------------------
+#
+# Dates and Times
+#
+#----------------------------------------------------------------
+
+# CHECK THAT IF ELEMENTS THAT SHOULD CONTAIN DATES/TIMES EXIST, THAT THEIR VALUES ARE CORRECT
+
+# DATE
+# gives values for year, month, day
+# character encoding is a string following the format for date specified by ISO 8601
+# class documented in ISO/TS 19103
+
+#################################################################
+# MD_Metadata 
+#   dateStamp
+#################################################################
+em:dateStamp(v:_, v:a) --> es:date(v:a)
+
+
+#################################################################
+# MD_MaintenanceInformation 
+#   dateOfNextupdate
+#################################################################
+em:dateOfNextUpdate(v:_, v:a) --> es:date(v:a)
+
+
+#################################################################
+# CI_Citation 
+#   editionDate 
+#################################################################
+em:editionDate(v:_, v:a) --> es:date(v:a)
+
+
+#################################################################
+# CI_Date 
+#   date 
+#     three date types for CI_Date from dateType code are embedded in ESRI model
+#     must test these individually instead of just once
+#     template uses em:date, but not in model
+#################################################################
+#em:date(v:_, v:a) --> es:date(v:a)
+em:creationDate(v:_, v:a) --> es:date(v:a)
+em:publicationDate(v:_, v:a) --> es:date(v:a)
+em:revisionDate(v:_, v:a) --> es:date(v:a)
+
+
+# DATETIME
+# combination of a date and a time given by an hour, minute, and second
+# character encoding following ISO 8601
+# class documented in ISO/TS 19103
+
+#################################################################
+# MD_Usage 
+#   usageDateTime
+#################################################################
+em:usageDateTime(v:_, v:a) --> es:dateTime(v:a)
+
+
+#################################################################
+# em:dateTime accounts for the following dateTime elements:
+#   DQ_Element dateTime
+#   LI_ProcessStep dateTime
+#################################################################
+em:dateTime(v:_, v:a) --> es:dateTime(v:a)
+
+
+#################################################################
+# MD_StandardOrderProcess 
+#   plannedAvailableDateTime
+#################################################################
+em:plannedAvailableDateTime(v:_, v:a) --> es:dateTime(v:a)
+
+
+# TIME
+# TM_PeriodDuration: duration of a period specified by ISO 8601
+# TM_Primitive: abstract class representing a non-decomposed element of geometry or topology
+# classes documented in ISO 19108
+
+
+#################################################################
+# EX_TemporalExtent 
+#   extent - TM_Primitive
+#     - not in model, collapsed up to be included in temporalElement
+#     - em:temporalElement - GML_TIME
+#     - em:spatialTemporalElement not in model
+#################################################################
+
+#  GML_TIME elements handled in detailed Rules under TM_Primitive and TM_PeriodDuration
+
+
+
+#----------------------------------------------------------------
+#
+# Booleans
+#
+#----------------------------------------------------------------
+
+
+# CHECK THAT IF ELEMENTS THAT SHOULD CONTAIN BOOLEAN VALUES EXIST, THAT THEIR VALUES ARE es:false (0) OR es:true (1)
+#   - in practice, es:false will be reported if anything other than 1 or true exists in the element
+#   - enhancement in place to allow more strict analysis of the data type to see if the element contains an appropriate boolean value
+
+
+#################################################################
+# DQ_ConformanceResult 
+#   pass - 1=yes, 0=no
+#################################################################
+em:pass(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# MD_GridSpatialRepresentation 
+#   transformationParameterAvailability - 1=yes, 0=no
+#################################################################
+em:transformationParameterAvailability(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# MD_Georectified 
+#   checkPointAvailability - 1=yes, 0=no
+#################################################################
+em:checkPointAvailability(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# MD_Georeferenceable 
+#   controlPointAvailability, orientationParameterAvailability
+#     - for all: 1=yes, 0=no 
+#################################################################
+em:controlPointAvailability(v:_, v:a) --> em:Boolean(v:a)
+em:orientationParameterAvailability(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# MD_FeatureCatalogueDescription 
+#   complianceCode - 1=compliant, 0=not compliant
+#   includedWithDataset - 1=yes, 0=no
+#################################################################
+em:complianceCode(v:_, v:a) --> em:Boolean(v:a)
+em:includedWithDataset(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# MD_ImageDescription 
+#   triangulationIndicator, radiometricCalibrationDataAvailability, 
+#   cameraCalibrationInformationAvailability, filmDistortionInformationAvailability, 
+#   lensDistortionInformationAvailability
+#     - for all: 1=yes, 0=no 
+#################################################################
+em:triangulationIndicator(v:_, v:a) --> em:Boolean(v:a)
+em:radiometricCalibrationDataAvailability(v:_, v:a) --> em:Boolean(v:a)
+em:cameraCalibrationInformationAvailability(v:_, v:a) --> em:Boolean(v:a)
+em:filmDistortionInformationAvailability(v:_, v:a) --> em:Boolean(v:a)
+em:lensDistortionInformationAvailability(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# EX_GeographicExtent 
+#   extentTypeCode - 1=inclusion, 0=exclusion
+#     - in corrigendum, UML states Boolean="1" - true is a default value
+#################################################################
+em:extentTypeCode(v:_, v:a) --> em:Boolean(v:a)
+
+
+#################################################################
+# SV_Parameter
+#   repeatability
+#################################################################
+em:repeatability(v:_, v:a) --> em:Boolean(v:a)
+
+
+
+#----------------------------------------------------------------
+#
+# Numbers: Integers, Decimals, Reals
+#
+#----------------------------------------------------------------
+
+# CHECK THAT IF ELEMENTS THAT SHOULD CONTAIN NUMBERS EXIST, THAT THEIR VALUES ARE NUMBERS
+
+# need to check implementation in 19139/19103 & how we handle it since these involve numbers
+#   defined in ISO/TS 19103
+#     Distance: no info in 19115
+#     Angle: amt rotation to bring one line/plane into coincidence with another, measured in radians or degrees
+#     Measure: result from getting extent, dimensions, quantity
+#     Number: abstract class
+#     Record: no info in 19115
+#     RecordType: no info in 19115
+#     Scale: no info in 19115
+#     UnitOfMeasure: no info in 19115
+#     UomLength: any measuring systems to measure the length or distance between two entities
+
+
+# INTEGER
+
+#################################################################
+# MD_RepresentativeFraction 
+#   denominator - integer >0
+#     - no direct access to this element to test it
+#     - accessed from elements that have the type MD_RepresentativeFraction
+#
+#   MD_Resolution equivalentScale 
+#   LI_Source scaleDenominator 
+#################################################################
+em:equivalentScale(v:_, v:a) --> es:gt(v:a, 0)
+em:scaleDenominator(v:_, v:a) --> es:gt(v:a, 0)
+
+
+#################################################################
+# MD_GridSpatialRepresentation 
+#   numberOfDimensions - no requirement on value
+#     - if value provided isn't a number it will become a zero
+#################################################################
+em:numberOfDimensions(v:_, v:a) --> es:number(v:a)
+
+
+#################################################################
+# MD_Dimension 
+#   dimensionSize - no requirement on value
+#     - if value provided isn't a number it will become a zero
+#################################################################
+em:dimensionSize(v:_, v:a) --> es:number(v:a)
+
+
+#################################################################
+# MD_GeometricObjects 
+#   geometricObjectCount - integer >0
+#################################################################
+em:geometricObjectCount(v:_, v:a) --> es:gt(v:a, 0)
+
+
+#################################################################
+# MD_ImageDescription 
+#   compressionGenerationQuantity - no requirement on value
+#     - if value provided isn't a number it will become a zero
+#################################################################
+em:compressionGenerationQuantity(v:_, v:a) --> es:number(v:a)
+
+
+#################################################################
+# MD_Band
+#   bitsPerValue, toneGradation, 
+#     - for all, no requirement on value
+#     - if value provided isn't a number it will become a zero
+#################################################################
+em:bitsPerValue(v:_, v:a) --> es:number(v:a)
+em:toneGradation(v:_, v:a) --> es:number(v:a)
+
+
+#################################################################
+# MD_Medium 
+#   volumes - integer >0
+#################################################################
+em:volumes(v:_, v:a) --> es:gt(v:a, 0)
+
+
+#################################################################
+# MD_ExtendedElementInformation 
+#   domainCode - no requirement on value
+#     - if value provided isn't a number it will become a zero
+#################################################################
+em:domainCode(v:_, v:a) --> es:number(v:a)
+
+
+# REAL
+
+#################################################################
+# MD_ImageDescription 
+#   illuminationElevationAngle - real -90> x >90
+#   illuminationAziumuthAngle - real 0> x >360
+#   cloudCoverPercentage - real 0> x >100
+#################################################################
+em:illuminationElevationAngle(v:_, v:a) --> es:gte(v:a, -90), es:lte(v:a, 90)
+em:illuminationAzimuthAngle(v:_, v:a) --> es:gte(v:a, 0), es:lte(v:a, 360)
+em:cloudCoverPercentage(v:_, v:a) --> es:gte(v:a, 0), es:lte(v:a, 100)
+
+
+#################################################################
+# MD_Band
+#   maxValue, minValue, peakResponse, scaleFactor, offset
+#     - for all, no requirement on value
+#################################################################
+em:maxValue(v:_, v:a) --> es:number(v:a)
+em:minValue(v:_, v:a) --> es:number(v:a)
+em:peakResponse(v:_, v:a) --> es:number(v:a)
+em:scaleFactor(v:_, v:a) --> es:number(v:a)
+em:offset(v:_, v:a) --> es:number(v:a)
+
+
+#################################################################
+# MD_DigitalTransferOptions 
+#   transferSize - real >0
+#################################################################
+em:transferSize(v:_, v:a) --> es:gt(v:a, 0)
+
+
+#################################################################
+# MD_Medium 
+#   density - real >0
+#################################################################
+em:density(v:_, v:a) --> es:gt(v:a, 0)
+
+
+#################################################################
+# EX_VerticalExtent
+#   minimumValue, maximumValue
+#     - for all, no requirement on value
+#################################################################
+em:minimumValue(v:_, v:a) --> es:number(v:a)
+em:maximumValue(v:_, v:a) --> es:number(v:a)
+
+
+# DECIMAL
+#   condition for north > south not stated for east > west to account for international date line problems, but we require this
+
+#################################################################
+# EX_GeographicBoundingBox
+#   westBoundLongitude - decimal -180> x >180
+#   eastBoundLongitude - decimal -180> x >180 
+#   southBoundLatitude - decimal -90> x >90 and x <northBoundLatitude
+#   northBoundLatitude - decimal -90> x >90 and x >southBoundLatitude
+#     - handled in ESRI-ISO_model along with other conditions to support EX_GeographicBoundingBox
+#################################################################
+
+
+
+#----------------------------------------------------------------
+#
+# Strings
+#
+#----------------------------------------------------------------
+
+
+# CHECK THAT IF ELEMENTS THAT SHOULD CONTAIN CHARACTER STRINGS EXIST, THAT THEY ARE NOT EMPTY
+
+
+#################################################################
+# MD_Metadata
+#   fileIdentifier, language (see below), parentIdentifier, hierarchyLevelName, metadataStandardName, metadataStandardVersion, dataSetURI
+#   fileIdentifier
+#     9.3 and earlier we don't write this out because new document is not the same as existing and therefore needs a new one
+#       however, want to make sure during validation if element is present it has a value; tool may be run just for validation
+#     9.4 and NATO write this out because could be user-defined identifier provided outside ArcGIS and must be kept as-is when metadata is imported for round-trip integrity
+#################################################################
+em:fileIdentifier(v:_, v:a) --> es:nonEmptyString(v:a)
+em:parentFileIdentifier(v:_, v:a) --> es:nonEmptyString(v:a)
+# must test even though handled by minimum schema 
+#   if provided when not required, element won't be tested by minimum schema to ensure correct data
+em:hierarchyLevelName(v:_, v:a) --> es:nonEmptyString(v:a)
+# standard name and version not in template, values tested may not be written out or may be changed/removed when generating output
+em:metadataStandardName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:metadataStandardVersion(v:_, v:a) --> es:nonEmptyString(v:a)
+em:dataSetURI(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Identification
+#   abstract, purpose, credit
+#     - commented out elements whose values are tested in minimum schema
+#################################################################
+#em:abstract(v:_, v:a) --> es:nonEmptyString(v:a)
+em:purpose(v:_, v:a) --> es:nonEmptyString(v:a)
+em:credit(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_DataIdentification
+#   language (see below), environmentDescription, supplementalInformation
+#################################################################
+em:environmentDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:supplementalInformation(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# em:language accounts for the following language elements:
+#   MD_Metadata language
+#   MD_DataIdentification language
+#   MD_FeatureCatalogueDescription language
+#     - requirement is to use ISO 639-2 or other parts of ISO 639 -- language codes
+#     - comment out if handle this as a CODE instead of a string
+#     - can't comment this out even though handled in minimum schema because the same
+#       element is used in conjunction with several classes, must test them all
+#################################################################
+em:language(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Keywords
+#   keyword
+#################################################################
+em:keyword(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_BrowseGraphic
+#   fileName, fileDescription, fileType
+#################################################################
+em:fileName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:fileDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:fileType(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Usage
+#   specificUsage, userDeterminedLimitations
+#################################################################
+em:specificUsage(v:_, v:a) --> es:nonEmptyString(v:a)
+em:userDeterminedLimitations(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Constraints 
+#   useLimitation
+#################################################################
+em:useLimitation(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_LegalConstraints 
+#   otherConstraints
+#################################################################
+em:otherConstraints(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_SecurityConstraints
+#   userNote, classificationSystem, handlingDescription
+#################################################################
+em:note(v:_, v:a) --> es:nonEmptyString(v:a)
+em:classificationSystem(v:_, v:a) --> es:nonEmptyString(v:a)
+em:handlingDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# DQ_Element
+#   nameOfMeasure, measureDescription, evaluationMethodDescription
+#################################################################
+em:nameOfMeasure(v:_, v:a) --> es:nonEmptyString(v:a)
+em:measureDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:evaluationMethodDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# DQ_ConformanceResult 
+#   explanation
+#################################################################
+em:explanation(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# DQ_QuantitativeResult 
+#   errorStatistic
+#################################################################
+em:errorStatistic(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# LI_Lineage 
+#   statement
+#################################################################
+em:statement(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# em:rationale accounts for the following rationale elements:
+#   LI_ProcessStep rationale
+#   MD_ExtendedElementInformation rationale
+#################################################################
+em:rationale(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# em:description accounts for the following description elements:
+#   LI_Source description
+#   LI_ProcessStep description
+#   EX_Extent description
+#   CI_OnlineResource description
+#   also GML UnitDefinition
+#################################################################
+em:description(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_MaintenanceInformation 
+#   maintenanceNote
+#   userDefinedMaintenanceFrequency - TM_PeriodDuration, an XML
+#     Schema duration type, which is an ISO 8601 duration string, 
+#     e.g. P1Y6M or PT12H, handled as string
+#################################################################
+em:maintenanceNote(v:_, v:a) --> es:nonEmptyString(v:a)
+em:userDefinedMaintenanceFrequency(v:_, v:a) --> es:nonEmptyString(v:a), es:not(es:number(v:a))
+
+
+#################################################################
+# MD_ScopeDescription
+#   dataset, other
+#################################################################
+em:dataset(v:_, v:a) --> es:nonEmptyString(v:a)
+em:other(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Georectified
+#   checkPointDescription, transformationDimensionDescription, transformationDimensionMapping
+#################################################################
+em:checkPointDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:transformationDimensionDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:transformationDimensionMapping(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Georeferenceable 
+#   orientationParameterDescription
+#################################################################
+em:orientationParameterDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Identifier 
+#   code
+#     the following elements have the type MD_Identifier:
+#       MD_AggregateInformation aggregateDataSetIdentifier - em:aggregateDataSetIdentifier
+#       DQ_Element measureIdentification - em:identifier
+#       MD_ImageDescription imageQualityCode - em:imageQualityCode
+#       MD_ImageDescription processingLevelCode - em:processingLevelCode
+#       EX_GeographicDescription geographicIdentifier - em:identifier
+#       CI_Citation identifier - em:identifier
+#################################################################
+em:code(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# RS_Identifier
+#   codeSpace, version (see below)
+#################################################################
+em:codeSpace(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# em:version accounts for the following version elements, both CharacterStrings:
+#   RS_Identifier version
+#   MD_Format version
+#################################################################
+em:version(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_RangeDimension 
+#   descriptor
+#################################################################
+em:descriptor(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Format
+#   name (see above), version (see above), amendmentNumber, specification, fileDecompressionTechnique
+#   - em:specification when used in MD_Format is a CharacterString
+#      - when used in DQ_ConformanceResult is a CI_Citation
+#################################################################
+em:amendmentNumber(v:_, v:a) --> es:nonEmptyString(v:a)
+em:fileDecompressionTechnique(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# em:name used for many elements, not all the same data type; test from parent object for correct optionality, data type, and appropriate warnings provided when this em:name is invalid
+#   em:name in MD_Format, mandatory
+em:resourceFormat(v:_, v:a) --> em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:distributorFormat(v:_, v:a) --> em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:distributionFormat(v:_, v:a) --> em:name(v:a, v:b), es:nonEmptyString(v:b)
+
+# must test em:specification from parent object to make sure correct element is tested for correct data type and optionality
+#   em:specification in MD_Format, optional
+em:resourceFormat(v:_, v:a) --> es:not(em:specification(v:a, v:_)) ; em:specification(v:a, v:b), es:nonEmptyString(v:b)
+em:distributorFormat(v:_, v:a) --> es:not(em:specification(v:a, v:_)) ; em:specification(v:a, v:b), es:nonEmptyString(v:b)
+em:distributionFormat(v:_, v:a) --> es:not(em:specification(v:a, v:_)) ; em:specification(v:a, v:b), es:nonEmptyString(v:b)
+
+
+#################################################################
+# MD_StandardOrderProcess
+#   fees, orderingInstructions, turnaround
+#################################################################
+em:fees(v:_, v:a) --> es:nonEmptyString(v:a)
+em:orderingInstructions(v:_, v:a) --> es:nonEmptyString(v:a)
+em:turnaround(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_DigitalTransferOptions 
+#   unitsOfDistribution
+#################################################################
+em:unitsOfDistribution(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_Medium 
+#   densityUnits, mediumName (see above)
+#     final 19115 mediumName separate from name, which has value MD_MediumNameCode, mediumName is CharacterString
+#     19115 corrigendum, mediumName changed to mediumNote, mediumNote is CharacterString
+#################################################################
+em:densityUnits(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MD_ExtendedElementInformation
+#   name (see above), shortName, definition, condition, maximumOccurrence, domainValue, parentEntity, rule, rationale (see above)
+#     maximumOccurrence requirement is "N or any Integer", how to test?
+#################################################################
+em:shortName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:definition(v:_, v:a) --> es:nonEmptyString(v:a)
+em:condition(v:_, v:a) --> es:nonEmptyString(v:a)
+em:maximumOccurrence(v:_, v:a) --> es:nonEmptyString(v:a)
+em:domainValue(v:_, v:a) --> es:nonEmptyString(v:a)
+em:parentEntity(v:_, v:a) --> es:nonEmptyString(v:a)
+em:rule(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# em:name used for many elements, not all the same data type; test from parent object for correct optionality, data type, and appropriate warnings provided when this em:name is invalid
+#   em:name in MD_ExtendedElementInformation, mandatory
+em:extendedElementInformation(v:_, v:a) --> em:name(v:a, v:b), es:nonEmptyString(v:b)
+
+
+#################################################################
+# MD_ApplicationSchemaInformation
+#   schemaLanguage, constraintLanguage, schemaAscii, softwareDevelopmentFileFormat
+#     these languages are not specified as containing ISO language information; relates to computing and technology languages
+#################################################################
+em:schemaLanguage(v:_, v:a) --> es:nonEmptyString(v:a)
+em:constraintLanguage(v:_, v:a) --> es:nonEmptyString(v:a)
+em:schemaAscii(v:_, v:a) --> es:nonEmptyString(v:a)
+em:softwareDevelopmentFileFormat(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# CI_Citation
+#   title, alternateTitle, edition, otherCitationDetails, collectiveTitle, ISBN, ISSN
+#     identifier - MD_Identifier, no longer handled as a CharacterString
+#################################################################
+em:title(v:_, v:a) --> es:nonEmptyString(v:a)
+em:alternateTitle(v:_, v:a) --> es:nonEmptyString(v:a)
+em:edition(v:_, v:a) --> es:nonEmptyString(v:a)
+em:otherCitationDetails(v:_, v:a) --> es:nonEmptyString(v:a)
+em:collectiveTitle(v:_, v:a) --> es:nonEmptyString(v:a)
+em:ISBN(v:_, v:a) --> es:nonEmptyString(v:a)
+em:ISSN(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# CI_Series
+#   name (see above), issueIdentification, page
+#################################################################
+em:issueIdentification(v:_, v:a) --> es:nonEmptyString(v:a)
+em:page(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# em:name used for many elements, not all the same data type; test from parent object for correct optionality, data type, and appropriate warnings provided when this em:name is invalid
+#   em:name in CI_Series, optional
+em:series(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+
+
+#################################################################
+# CI_ResponsibleParty
+#   individualName, organisationName, positionName
+#################################################################
+em:individualName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:organisationName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:position(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# there is an em:name in CI_ResponsibleParty for translation from ambiguous FGDC sources only; test it here as character string?
+
+
+#################################################################
+# CI_Contact
+#   hoursOfService, contactInstructions
+#################################################################
+em:hours(v:_, v:a) --> es:nonEmptyString(v:a)
+em:instructions(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# CI_OnlineResource
+#   URL, protocol, applicationProfile, name (see above), description (see above)
+#     - linkage is URL (IETF RFC 1738 IETF RFC2056 ??)
+#       if add test that looks for recognized URL patterns, comment out here 
+#################################################################
+em:linkage(v:_, v:a) --> es:nonEmptyString(v:a)
+em:protocol(v:_, v:a) --> es:nonEmptyString(v:a)
+em:applicationProfile(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# em:name used for many elements, not all the same data type; test from parent object for correct optionality, data type, and appropriate warnings provided when this em:name is invalid
+#   em:name in CI_OnlineResource, optional
+em:onLine(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:onlineResource(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:onLineDescription(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:extensionOnLineResource(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+em:connectPoint(v:_, v:a) --> es:not(em:name(v:a, v:_)) ; em:name(v:a, v:b), es:nonEmptyString(v:b)
+
+
+#################################################################
+# CI_Address
+#   deliveryPoint, city, administrativeArea, postalCode, country, electronicMailAddress
+#     - country requirement to use codes from ISO 3166-3 or other parts removed in 19115 corrigendum
+#     - em:country here CharacterString, em:country in PT_Locale is code list
+#################################################################
+em:deliveryPoint(v:_, v:a) --> es:nonEmptyString(v:a)
+em:city(v:_, v:a) --> es:nonEmptyString(v:a)
+em:administrativeArea(v:_, v:a) --> es:nonEmptyString(v:a)
+em:postalCode(v:_, v:a) --> es:nonEmptyString(v:a)
+#address and locale country currently handled the same, so no need to distinguish here
+em:country(v:_, v:a) --> es:nonEmptyString(v:a)
+em:electronicMailAddress(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# CI_Telephone
+#   voice, facsimile
+#################################################################
+em:voiceNum(v:_, v:a) --> es:nonEmptyString(v:a)
+em:faxNum(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# SV_ServiceIdentification 
+#   serviceTypeVersion, serviceType (GenericName)
+#################################################################
+em:serviceTypeVersion(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# handled by minimum schema
+#   for serviceType's codespace attribute, can't check value
+#em:serviceType(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# SV_OperationMetadata
+#   operationName, operationDescription, invocationName
+#################################################################
+# this operation name handled by minimum schema
+#em:operationName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:operationDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:invocationName(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# SV_Parameter
+#   description, optionality, valueType (TypeName)
+#################################################################
+em:paramDescription(v:_, v:a) --> es:nonEmptyString(v:a)
+em:optionality(v:_, v:a) --> es:nonEmptyString(v:a)
+em:paramValueType(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# SV_CoupledResource
+#   identifier, operationName
+#################################################################
+# this operation name must be tested separately 
+#   handles optional coupledResource instances that would not be tested by minimum schema
+em:operationName(v:_, v:a) --> es:nonEmptyString(v:a)
+em:resourceIdentifier(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# MemberName
+#   aName
+#################################################################
+em:aName(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# TypeName
+#   aName
+#################################################################
+em:attributeTypeName(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# Binary
+#   binarySource, binaryFile
+#################################################################
+em:binarySource(v:_, v:a) --> es:nonEmptyString(v:a)
+em:binaryFile(v:_, v:a) --> es:nonEmptyString(v:a)
+
+
+#################################################################
+# GML doubleList
+#   a simple data type defined as a list of double values
+#   lists of values are defined in XML schema as being space-separated
+#
+# GM_Point elements
+#   MD_Georectified centerPoint - em:centerPoint
+#   MD_Georectified cornerPoints - em:cornerPoints
+#
+# GML LinearRing elements
+#   GML LinearRing pos - em:pos
+#   GML LinearRing posList - em:posList
+#################################################################
+
+# GML Point contains only the gml:pos position element
+#   put DoubleList value directly in GML Point elements cornerPoints and centerPoint
+em:centerPoint(v:_, v:a) --> es:nonEmptyString(v:a)
+em:cornerPoints(v:_, v:a) --> es:nonEmptyString(v:a)
+
+# GML LinearRing contains either gml:pos or gml:posList
+#   both pos (DirectPositionType) and posList (DirectPositionListType) have the data type gml:doubleList
+em:pos(v:_, v:a) --> es:nonEmptyString(v:a)
+em:posList(v:_, v:a) --> es:nonEmptyString(v:a)
+
