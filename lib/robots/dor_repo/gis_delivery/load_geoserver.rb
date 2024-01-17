@@ -22,7 +22,7 @@ module Robots
           format = GisRobotSuite.determine_file_format_from_mods modsfn
           raise "load-geoserver: #{bare_druid} cannot determine file format from MODS" if format.nil?
 
-          rights = GisRobotSuite.determine_rights(bare_druid).downcase
+          rights = GisRobotSuite.determine_rights(cocina_object)
           # reproject based on file format information
           if GisRobotSuite.vector?(format)
             layertype = 'PostGIS'

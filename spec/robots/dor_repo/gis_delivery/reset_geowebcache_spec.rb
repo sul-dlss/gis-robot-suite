@@ -6,10 +6,12 @@ RSpec.describe Robots::DorRepo::GisDelivery::ResetGeowebcache do
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:druid) { 'druid:fx392st8577' }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, find: instance_double(Cocina::Models::DRO)) }
 
   before do
     allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-    allow(GisRobotSuite).to receive(:determine_rights).and_return 'Public'
+    allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    allow(GisRobotSuite).to receive(:determine_rights).and_return 'public'
   end
 
   describe '#perform' do

@@ -5,16 +5,18 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, find: instance_double(Cocina::Models::DRO)) }
 
   before do
     allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
+    allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid')
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
 
   describe '#perform' do
     before do
-      allow(GisRobotSuite).to receive(:determine_rights).and_return 'Public'
+      allow(GisRobotSuite).to receive(:determine_rights).and_return 'public'
     end
 
     describe 'loading a vector dataset' do

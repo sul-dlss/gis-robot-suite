@@ -22,48 +22,20 @@ RSpec.describe 'utilities' do
   end
 
   describe '.determine_rights' do
-    subject { GisRobotSuite.determine_rights(druid) }
+    subject { GisRobotSuite.determine_rights(cocina_object) }
 
-    let(:object_client) do
-      instance_double(Dor::Services::Client::Object, find: cocina_model)
-    end
-    let(:druid) { 'fx392st8577' }
-    let(:cocina_model) do
-      Cocina::Models.build({
-                             'externalIdentifier' => 'druid:fx392st8577',
-                             'label' => 'GIS object',
-                             'version' => 1,
-                             'type' => Cocina::Models::ObjectType.object,
-                             'description' => {
-                               'title' => [{ 'value' => 'GIS object' }],
-                               'purl' => 'https://purl.stanford.edu/fx392st8577'
-                             },
-                             'access' => {
-                               'view' => access,
-                               'download' => access
-                             },
-                             'structural' => {},
-                             identification: { sourceId: 'sul:1234' },
-                             'administrative' => {
-                               'hasAdminPolicy' => 'druid:xx999xx9999'
-                             }
-                           })
-    end
-
-    before do
-      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-    end
+    let(:cocina_object) { build(:dro).new(access: { view: access, download: access }) }
 
     context 'when public' do
       let(:access) { 'world' }
 
-      it { is_expected.to be 'Public' }
+      it { is_expected.to be 'public' }
     end
 
     context 'when restricted' do
       let(:access) { 'stanford' }
 
-      it { is_expected.to be 'Restricted' }
+      it { is_expected.to be 'restricted' }
     end
   end
 end
