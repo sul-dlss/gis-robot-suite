@@ -31,29 +31,28 @@ module Robots
           mods_filename = "#{rootdir}/metadata/descMetadata.xml"
           raise "normalize-data: #{bare_druid} is missing MODS metadata" unless File.size?(mods_filename)
 
-          format = GisRobotSuite.determine_file_format_from_mods mods_filename
-          raise "normalize-data: #{bare_druid} cannot determine file format from MODS" if format.nil?
+          raise "normalize-data: #{bare_druid} cannot determine file format" unless GisRobotSuite.media_type(cocina_object)
 
           # reproject based on file format information
-          if GisRobotSuite.vector?(format)
+          if GisRobotSuite.vector?(cocina_object)
             reproject_shapefile(filename, mods_filename, flags)
-          elsif GisRobotSuite.raster?(format)
+          elsif GisRobotSuite.raster?(cocina_object)
             projection = GisRobotSuite.determine_projection_from_mods mods_filename
             projection.gsub!('ESRI', 'EPSG')
             logger.debug "Projection = #{projection}"
-            filetype = format.split('format=')[1]
-            raise "normalize-data: #{bare_druid} cannot locate filetype from MODS format: #{format}" if filetype.nil?
 
-            case filetype
+            case GisRobotSuite.data_format(cocina_object)
             when 'GeoTIFF'
               reproject_geotiff(filename, projection, flags)
             when 'ArcGRID'
               reproject_arcgrid(filename, projection, flags)
+            when nil
+              raise "normalize-data: #{bare_druid} cannot locate data type"
             else
-              raise "normalize-data: #{bare_druid} has unsupported Raster file format: #{format}"
+              raise "normalize-data: #{bare_druid} has unsupported Raster data type: #{GisRobotSuite.data_type(cocina_object)}"
             end
           else
-            raise "normalize-data: #{bare_druid} has unsupported file format: #{format}"
+            raise "normalize-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
           end
         end
 

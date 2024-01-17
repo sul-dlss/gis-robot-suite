@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GisRobotSuite
+module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
@@ -53,13 +53,26 @@ module GisRobotSuite
     end
   end
 
-  def self.vector?(mimetype)
-    %w[application/x-esri-shapefile].include? mimetype.split(';').first.strip
+  def self.vector?(cocina_object)
+    media_type(cocina_object) == 'application/x-esri-shapefile'
   end
 
-  def self.raster?(mimetype)
-    %w[image/tiff application/x-ogc-aig].include? mimetype.split(';').first.strip
+  def self.raster?(cocina_object)
+    %w[image/tiff application/x-ogc-aig].include? media_type(cocina_object)
   end
+
+  def self.media_type(cocina_object)
+    geographic_form(cocina_object, 'media type')
+  end
+
+  def self.data_format(cocina_object)
+    geographic_form(cocina_object, 'data format')
+  end
+
+  def self.geographic_form(cocina_object, type)
+    cocina_object.description.geographic&.first&.form&.find { |form| form.type == type }&.value
+  end
+  private_class_method :geographic_form
 
   def self.locate_druid_path(druid, opts = {})
     rootdir = '.'
