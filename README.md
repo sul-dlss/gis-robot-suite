@@ -12,6 +12,7 @@ Robot code for accessioning and delivery of GIS resources.
 These robots require several dependencies needed to perform the GIS workflow steps. These are often shelled out to using `system` calls.
 
  - [GDAL](https://gdal.org/) Needed for several geospatial tasks. Also needed on servers are the utils and clients
+ - `xsltproc` and `xmllint` for transforming XML files
  - rsync also used as part of the robot process and is needed
 
 # Documentation
