@@ -20,7 +20,6 @@ module Robots
             content/data_EPSG_4326.zip
             content/preview.jpg
             metadata/contentMetadata.xml
-            metadata/descMetadata.xml
             metadata/geoMetadata.xml
           ].each do |f|
             fn = File.join(rootdir, f)
