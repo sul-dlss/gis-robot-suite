@@ -22,7 +22,7 @@ module Robots
           generate_iso19139
           generate_fgdc
 
-          # Only generate ISO 19110 if it's a Shapfile, which has a feature catalog
+          # Only generate ISO 19110 if it's a Shapefile, which has a feature catalog
           generate_iso19110 if data_type == 'Shapefile'
         end
 

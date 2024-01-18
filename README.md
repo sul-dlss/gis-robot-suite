@@ -20,7 +20,6 @@ These robots require several dependencies needed to perform the GIS workflow ste
 `gisAssemblyWF`
 ---------------
 
-* `author-metadata` :: Author metadata using ArcCatalog
 * `extract-thumbnail` :: Extract thumbnail preview from ArcCatalog metadata
 * `extract-iso19139` :: Transform ISO 19139 metadata from ArcCatalog metadata
 * `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
