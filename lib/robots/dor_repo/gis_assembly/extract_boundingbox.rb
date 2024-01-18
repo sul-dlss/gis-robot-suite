@@ -14,31 +14,20 @@ module Robots
         def perform_work
           logger.debug "extract-boundingbox working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
+          raise "extract-boundingbox: #{bare_druid} cannot locate normalized data: #{zip_filename}" unless File.size?(zip_filename)
 
-          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "extract-boundingbox: #{bare_druid} cannot locate MODS: #{mods_filename}" unless File.size?(mods_filename)
-
-          projection = '4326' # always use EPSG:4326 derivative
-          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          raise "extract-boundingbox: #{bare_druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
-
-          tmpdir = extract_data_from_zip(zipfn, Settings.geohydra.tmpdir)
+          extract_data_from_zip
           raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            ulx, uly, lrx, lry = determine_extent(tmpdir)
+            ulx, uly, lrx, lry = determine_extent
+            check_extent(ulx, uly, lrx, lry)
 
-            # Check that we have a valid bounding box
-            # rubocop:disable Style/IfUnlessModifier
-            # due to line length
-            unless ulx <= lrx && uly >= lry
-              raise "extract-boundingbox: #{bare_druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
-            end
-            # rubocop:enable Style/IfUnlessModifier
+            add_geo_extension_to_mods(ulx, uly, lrx, lry)
 
-            add_geo_extension_to_mods(mods_filename, ulx, uly, lrx, lry)
-            raise "extract-boundingbox: #{bare_druid} corrupted MODS: #{mods_filename}" unless File.size?(mods_filename)
+            description_props = Cocina::Models::Mapping::FromMods::Description.props(mods: mods_doc, druid:,
+                                                                                     label: cocina_object.label)
+            object_client.update(params: cocina_object.new(description: description_props))
           ensure
             logger.debug "Cleaning: #{tmpdir}"
             FileUtils.rm_rf tmpdir
@@ -47,24 +36,34 @@ module Robots
 
         private
 
-        # unpacks a ZIP file into the given tmpdir
-        # @return [String] tmpdir the folder in which to extract files
-        def extract_data_from_zip(zipfn, tmpdir)
-          logger.info "extract-boundingbox: #{bare_druid} is extracting data: #{zipfn}"
+        def rootdir
+          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+        end
 
-          tmpdir = File.join(tmpdir, "extractboundingbox_#{bare_druid}")
+        def zip_filename
+          # always use EPSG:4326 derivative
+          @zip_filename ||= File.join(rootdir, 'content', 'data_EPSG_4326.zip')
+        end
+
+        def tmpdir
+          @tmpdir ||= File.join(Settings.geohydra.tmpdir, "extractboundingbox_#{bare_druid}")
+        end
+
+        # unpacks a ZIP file into the given tmpdir
+        def extract_data_from_zip
+          logger.info "extract-boundingbox: #{bare_druid} is extracting data: #{zip_filename}"
+
           FileUtils.rm_rf(tmpdir) if File.directory? tmpdir
           FileUtils.mkdir_p(tmpdir)
-          system("unzip -o '#{zipfn}' -d '#{tmpdir}'", exception: true)
-          tmpdir
+          system("unzip -o '#{zip_filename}' -d '#{tmpdir}'", exception: true)
         end
 
         # Reads the shapefile to determine extent
         #
         # @return [Array#Float] ulx uly lrx lry
-        def extent_shapefile(shpfn)
-          logger.debug "extract-boundingbox: working on Shapefile: #{shpfn}"
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shpfn}'") do |file|
+        def extent_shapefile(shape_filename)
+          logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |file|
             file.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
@@ -82,9 +81,9 @@ module Robots
         # Reads the GeoTIFF to determine extent
         #
         # @return [Array#Float] ulx uly lrx lry
-        def extent_geotiff(tiffn)
-          logger.debug "extract-boundingbox: working on GeoTIFF: #{tiffn}"
-          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiffn}'") do |file|
+        def extent_geotiff(tiff_filename)
+          logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
+          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiff_filename}'") do |file|
             ulx = 0
             uly = 0
             lrx = 0
@@ -147,17 +146,18 @@ module Robots
           "#{w}--#{e}/#{n}--#{s}"
         end
 
-        # adds the geo extension to the MODS record
-        def add_geo_extension_to_mods(mods_filename, ulx, uly, lrx, lry)
-          logger.debug "extract-boundingbox: #{bare_druid} reading #{mods_filename}"
-          doc = Nokogiri::XML(File.binread(mods_filename))
+        def mods_doc
+          @mods_doc ||= Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid)
+        end
 
+        # adds the geo extension to the MODS record
+        def add_geo_extension_to_mods(ulx, uly, lrx, lry)
           # Update geo extension
           logger.debug "extract-boundingbox: #{bare_druid} updating geo extension..."
-          doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
-                    'xmlns:mods' => 'http://www.loc.gov/mods/v3',
-                    'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-                    'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |node|
+          mods_doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
+                         'xmlns:mods' => 'http://www.loc.gov/mods/v3',
+                         'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                         'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |node|
             node['gml:srsName'] = 'EPSG:4326'
             node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
               logger.debug "extract-boundingbox: #{bare_druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
@@ -170,7 +170,7 @@ module Robots
           end
 
           # Check to see whether the current native projection is WGS84
-          cartos = doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
+          cartos = mods_doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
           raise "extract-boundingbox: #{bare_druid} is missing subject/cartographics!" if cartos.nil?
 
           logger.debug "extract-boundingbox: #{bare_druid} has #{cartos.size} subject/cartographics elements"
@@ -189,11 +189,11 @@ module Robots
             logger.debug "extract-boundingbox: #{bare_druid} has non-native WGS84 projection: #{proj.content}"
 
             # Add subject/cartographics for WGS84 projection
-            subj = Nokogiri::XML::Node.new('subject', doc)
-            carto = Nokogiri::XML::Node.new('cartographics', doc)
-            scale = Nokogiri::XML::Node.new('scale', doc)
-            projection = Nokogiri::XML::Node.new('projection', doc)
-            coordinates = Nokogiri::XML::Node.new('coordinates', doc)
+            subj = Nokogiri::XML::Node.new('subject', mods_doc)
+            carto = Nokogiri::XML::Node.new('cartographics', mods_doc)
+            scale = Nokogiri::XML::Node.new('scale', mods_doc)
+            projection = Nokogiri::XML::Node.new('projection', mods_doc)
+            coordinates = Nokogiri::XML::Node.new('coordinates', mods_doc)
 
             subj['authority'] = 'EPSG'
             subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
@@ -204,38 +204,38 @@ module Robots
 
             carto << scale << projection << coordinates
             subj << carto
-            doc.root << subj
+            mods_doc.root << subj
 
             # Add note
-            note = Nokogiri::XML::Node.new 'note', doc
+            note = Nokogiri::XML::Node.new 'note', mods_doc
             note['displayLabel'] = 'WGS84 Cartographics'
             note.content = 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.'
-            doc.root << note
-          end
-
-          # Save
-          logger.debug "extract-boundingbox: #{bare_druid} saving updated MODS to #{mods_filename}"
-          File.open(mods_filename, 'wb') do |line|
-            doc.write_xml_to(line, indent: 2, encoding: 'UTF-8')
+            mods_doc.root << note
           end
         end
 
         # gets the bounding box for the normalize data in tmpdir
         #
-        # @param [String] datadir directory that holds data files
         # @return [Array] ulx uly lrx lry for the bounding box
-        def determine_extent(datadir)
-          Dir.chdir(datadir) do
-            shpfn = Dir.glob('*.shp').first
-            if shpfn.nil?
-              tiffn = Dir.glob('*.tif').first
-              ulx, uly, lrx, lry = extent_geotiff tiffn # normalized version only
+        def determine_extent
+          Dir.chdir(tmpdir) do
+            shape_filename = Dir.glob('*.shp').first
+            if shape_filename.nil?
+              tiff_filename = Dir.glob('*.tif').first
+              ulx, uly, lrx, lry = extent_geotiff tiff_filename # normalized version only
             else
-              ulx, uly, lrx, lry = extent_shapefile shpfn
+              ulx, uly, lrx, lry = extent_shapefile shape_filename
             end
             logger.debug [ulx, uly, lrx, lry].join(' -- ')
             return [ulx, uly, lrx, lry]
           end
+        end
+
+        def check_extent(ulx, uly, lrx, lry)
+          # Check that we have a valid bounding box
+          return if ulx <= lrx && uly >= lry
+
+          raise "extract-boundingbox: #{bare_druid} has invalid bounding box: is not (#{ulx} <= #{lrx} and #{uly} >= #{lry})"
         end
       end
     end
