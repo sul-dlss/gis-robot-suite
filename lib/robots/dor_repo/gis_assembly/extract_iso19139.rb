@@ -11,13 +11,6 @@ module Robots
         def perform_work
           logger.debug "extract-iso19139 working on #{bare_druid}"
 
-          # See if generation is needed
-          geo_metadata_filename = File.join(staging_dir, 'metadata', 'geoMetadata.xml')
-          if File.size?(geo_metadata_filename)
-            logger.info "extract-iso19139: #{bare_druid} found #{geo_metadata_filename}"
-            return
-          end
-
           # Generate ISO 19139 and FGDC for all data types
           generate_iso19139
           generate_fgdc
