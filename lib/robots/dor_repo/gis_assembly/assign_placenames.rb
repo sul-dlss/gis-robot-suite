@@ -11,15 +11,30 @@ module Robots
         def perform_work
           logger.debug "assign-placenames working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
-          mods_filename = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "assign-placenames: #{bare_druid} is missing MODS metadata" unless File.size?(mods_filename)
+          resolve_placenames
 
-          resolve_placenames(mods_filename)
-          raise "assign-placenames: #{bare_druid} corrupted MODS metadata" unless File.size?(mods_filename)
+          description_props = Cocina::Models::Mapping::FromMods::Description.props(mods: mods_doc, druid:,
+                                                                                   label: cocina_object.label)
+          object_client.update(params: cocina_object.new(description: description_props))
         end
 
         private
+
+        def mods_doc
+          @mods_doc ||= Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid)
+        end
+
+        def gazetteer
+          @gazetteer ||= GisRobotSuite::Gazetteer.new
+        end
+
+        def geographic_nodes
+          mods_doc.xpath('//mods:geographic', 'mods' => 'http://www.loc.gov/mods/v3')
+        end
+
+        def coverage_nodes
+          mods_doc.xpath('//mods:extension//dc:coverage', 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/')
+        end
 
         #
         # Resolves placenames using local gazetteer
@@ -28,55 +43,45 @@ module Robots
         #   * Adds correct rdf:resource to geo extension
         #   * Adds a LCSH or LCNAF keyword if needed
         #
-        def resolve_placenames(mods_filename)
-          logger.debug "assign-placenames: #{bare_druid} is processing #{mods_filename}"
-          g = GisRobotSuite::Gazetteer.new
-          mods = Nokogiri::XML(File.binread(mods_filename))
-          r = mods.xpath('//mods:geographic', 'mods' => 'http://www.loc.gov/mods/v3')
-          r.each do |i|
-            k = i.content
+        def resolve_placenames
+          geographic_nodes.each do |node|
+            content = node.content
 
             # Verify Gazetteer keyword
-            uri = g.find_placename_uri(k)
+            uri = gazetteer.find_placename_uri(content)
             if uri.nil?
-              logger.warn "assign-placenames: #{bare_druid} is missing gazetteer entry for '#{k}'" unless g.blank?(k)
+              logger.warn "assign-placenames: #{bare_druid} is missing gazetteer entry for '#{content}'" unless gazetteer.blank?(content)
               next
             end
 
             # Ensure correct valueURI for subject/geographic for GeoNames
-            i['valueURI'] = uri
-            i['authority'] = 'geonames'
-            i['authorityURI'] = 'http://www.geonames.org/ontology#'
+            node['valueURI'] = uri
+            node['authority'] = 'geonames'
+            node['authorityURI'] = 'http://www.geonames.org/ontology#'
 
             # Correct any linkages for placenames in the geo extension
-            coverages = mods.xpath('//mods:extension//dc:coverage', 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/')
-            coverages.each do |j|
-              if j['dc:title'] == k
-                logger.debug "assign-placenames: #{bare_druid} correcting dc:coverage@rdf:resource for #{k}"
-                j['rdf:resource'] = uri
+            coverage_nodes.each do |coverage_node|
+              if coverage_node['dc:title'] == content
+                logger.debug "assign-placenames: #{bare_druid} correcting dc:coverage@rdf:resource for #{content}"
+                coverage_node['rdf:resource'] = uri
               end
             end
 
             # Add a LC heading if needed
-            lc = g.find_loc_keyword(k)
-            next if lc.nil? || k == lc
+            lc = gazetteer.find_loc_keyword(content)
+            next if lc.nil? || content == lc
 
             logger.debug "assign-placenames: #{bare_druid} adding Library of Congress entry to end of MODS record"
-            lcauth = g.find_loc_authority(k)
-            next if lcauth.nil?
+            lc_auth = gazetteer.find_loc_authority(content)
+            next if lc_auth.nil?
 
-            lcuri = g.find_loc_authority(k)
-            lcuri = " valueURI='#{lcuri}'" unless lcuri.nil?
-            i.parent.parent << Nokogiri::XML("
+            lc_uri = gazetteer.find_loc_authority(content)
+            lc_uri = " valueURI='#{lc_uri}'" unless lc_uri.nil?
+            node.parent.parent << Nokogiri::XML("
                   <subject>
-                    <geographic authority='#{lcauth}'#{lcuri}>#{lc}</geographic>
+                    <geographic authority='#{lc_auth}'#{lc_uri}>#{lc}</geographic>
                   </subject>
                   ").root
-          end
-
-          # Save XML tree
-          File.open(mods_filename, 'wb') do |f|
-            mods.write_to(f, encoding: 'UTF-8', indent: 2)
           end
         end
       end
