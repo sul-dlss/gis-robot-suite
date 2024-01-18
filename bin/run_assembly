@@ -6,7 +6,6 @@ export PATH=./bin:$PATH
 druid="$1"
 
 for s in \
-  author-metadata \
   extract-thumbnail \
   extract-iso19139 \
   generate-geo-metadata \
