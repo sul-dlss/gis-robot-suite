@@ -167,7 +167,7 @@ module Robots
             fileFormat: file_format,
             zipName: 'data.zip'
           }
-          Nokogiri::XSLT.quote_params(params.to_h { |(k, v)| [k.to_s, v] }.to_a.flatten)
+          Nokogiri::XSLT.quote_params(params.transform_keys(&:to_s).to_a.flatten)
         end
       end
     end
