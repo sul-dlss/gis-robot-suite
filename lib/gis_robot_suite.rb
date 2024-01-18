@@ -114,28 +114,44 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     format
   end
 
-  # <extension displayLabel="geo">
-  #   <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  #     <rdf:Description rdf:about="http://purl.stanford.edu/dd452vk1873">
-  #       <dc:format>image/tiff; format=ArcGRID</dc:format>
-  #       <dc:type>Dataset#Raster</dc:type>
-  #       <gml:boundedBy>
-  #         <gml:Envelope gml:srsName="EPSG:4326">
-  #           <gml:lowerCorner>-180 -90</gml:lowerCorner>
-  #           <gml:upperCorner>180 84</gml:upperCorner>
-  #         </gml:Envelope>
-  #       </gml:boundedBy>
-  #       <dc:coverage rdf:resource="http://sws.geonames.org/6295630/" dc:language="eng" dc:title="Earth"/>
-  #     </rdf:Description>
-  #   </rdf:RDF>
+  #   geographic: [
+  #     {
+  #       subject: [
+  #         {
+  #           structuredValue: [
+  #             {
+  #               value: '-119.667',
+  #               type: 'west'
+  #             },
+  #             {
+  #               value: '-89.8842',
+  #               type: 'south'
+  #             },
+  #             {
+  #               value: '168.463',
+  #               type: 'east'
+  #             },
+  #             {
+  #               value: '-66.6497',
+  #               type: 'north'
+  #             }
+  #           ],
+  #           type: 'bounding box coordinates',
+  #           encoding: {
+  #             value: 'decimal'
+  #           },
+  #           standard: {
+  #             code: 'EPSG:4326'
+  #           }
+  #         }
+  #       ]
+  #     }
+  #   ]
+  # }
 
-  def self.determine_projection_from_mods(modsfn)
-    doc = Nokogiri::XML(File.read(modsfn))
-    proj = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/gml:boundedBy/gml:Envelope',
-                     'mods' => 'http://www.loc.gov/mods/v3',
-                     'gml' => 'http://www.opengis.net/gml/3.2/').first
-    proj = proj['gml:srsName'] unless proj.nil?
-    proj.to_s.upcase
+  def self.determine_projection(cocina_object)
+    cocina_object.description.geographic.first&.subject
+                 &.find { |subject| subject.type == 'bounding box coordinates' }&.standard&.code&.upcase
   end
 
   def self.determine_rights(cocina_model)

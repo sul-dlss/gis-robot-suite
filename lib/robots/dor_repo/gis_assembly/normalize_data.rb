@@ -37,7 +37,7 @@ module Robots
           if GisRobotSuite.vector?(cocina_object)
             reproject_shapefile(filename, mods_filename, flags)
           elsif GisRobotSuite.raster?(cocina_object)
-            projection = GisRobotSuite.determine_projection_from_mods mods_filename
+            projection = GisRobotSuite.determine_projection(cocina_object)
             projection.gsub!('ESRI', 'EPSG')
             logger.debug "Projection = #{projection}"
 
