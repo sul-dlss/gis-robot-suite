@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Run a robot listed below for a provided list of druids
+# druids should be one per line in a text file with no header and no other columns
+# [run_workflow_step] $ ROBOT_ENVIRONMENT=production FILENAME=tmp/reset_druids.csv ./bin/run_workflow_step
+
+require File.expand_path("#{File.dirname(__FILE__)}/../config/boot")
+filename = ENV.fetch('FILENAME', nil)
+
+# set workflow/process/robot to be run here
+workflow = 'gisDeliveryWF'
+process = 'reset-geowebcache'
+robot = Robots::DorRepo::GisDelivery::ResetGeowebcache.new
+
+raise 'file not found' unless File.exist?(filename)
+
+druids = CSV.read(filename).flatten # CSV file is a single column with only druids and no header
+num_druids = druids.size
+
+workflow_service = LyberCore::WorkflowClientFactory.build(logger: nil)
+steps_run = 0
+
+druids.each.with_index(1) do |druid, index|
+  druid = "druid:#{druid}" unless druid.starts_with?('druid:')
+  current_status = workflow_service.workflow_status(druid:, workflow:, process:)
+
+  puts "#{index} of #{num_druids} : #{druid} : currently in #{current_status}"
+  next unless current_status == 'waiting' # double check we are still in waiting state, should be based on input druid file
+
+  workflow_service.update_status(druid:, workflow:, process:, status: 'queued')
+  robot.perform druid
+
+  # make sure step is now marked as completed
+  current_status = workflow_service.workflow_status(druid:, workflow:, process:)
+  workflow_service.update_status(druid:, workflow:, process:, status: 'completed') if current_status == 'queued'
+
+  steps_run += 1
+
+  sleep 2 # a pause between each run to avoid overwhelming geoserver
+end
+
+puts "#{num_druids} found; #{steps_run} run"
