@@ -66,11 +66,6 @@ RSpec/DescribeClass:
 RSpec/MultipleExpectations:
   Max: 4
 
-# Offense count: 2
-# Configuration parameters: AllowSubject.
-RSpec/MultipleMemoizedHelpers:
-  Max: 8
-
 # Offense count: 32
 # Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
 # SupportedStyles: always, named_only
@@ -78,12 +73,6 @@ RSpec/NamedSubject:
   Exclude:
     - 'spec/robots/dor_repo/gis_assembly/generate_mods_spec.rb'
     - 'spec/gis_robot_suite/gazetteer_spec.rb'
-
-# Offense count: 1
-# Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
-RSpec/VerifiedDoubles:
-  Exclude:
-    - 'spec/robots/dor_repo/gis_assembly/load_geo_metadata_spec.rb'
 
 # Offense count: 26
 # Configuration parameters: AllowedConstants.

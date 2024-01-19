@@ -20,7 +20,6 @@ module Robots
             content/data_EPSG_4326.zip
             content/preview.jpg
             metadata/contentMetadata.xml
-            metadata/geoMetadata.xml
           ].each do |f|
             fn = File.join(rootdir, f)
             raise "finish-gis-assembly-workflow: #{bare_druid} is missing required file: #{fn}" unless File.size?(fn)

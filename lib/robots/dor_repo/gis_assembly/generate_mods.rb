@@ -13,8 +13,6 @@ module Robots
         def perform_work
           logger.debug "generate-mods working on #{bare_druid}"
 
-          raise "generate-mods: #{bare_druid} cannot locate #{geo_metadata_file}" unless File.size?(geo_metadata_file)
-
           description_props = Cocina::Models::Mapping::FromMods::Description.props(mods: mods_ng, druid: cocina_object.externalIdentifier,
                                                                                    label: cocina_object.label)
           object_client.update(params: cocina_object.new(description: description_props))
@@ -26,13 +24,9 @@ module Robots
           @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
         end
 
-        def geo_metadata_file
-          @geo_metadata_file ||= File.join(rootdir, 'metadata', 'geoMetadata.xml')
-        end
-
         def geo_metadata_rdf_xml
-          # parse geometadata as input to MODS transform
-          @geo_metadata_rdf_xml ||= Nokogiri::XML(File.read(geo_metadata_file))
+          # parse cocina geographic as input to MODS transform
+          @geo_metadata_rdf_xml ||= Nokogiri::XML(cocina_object.geographic.iso19139)
         end
 
         def purl

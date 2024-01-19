@@ -18,7 +18,6 @@ for s in \
   extract-boundingbox \
   finish-data \
   generate-content-metadata \
-  load-geo-metadata \
   finish-gis-assembly-workflow \
   ; do
   bundle exec run_robot dor:gisAssemblyWF:$s -d $druid

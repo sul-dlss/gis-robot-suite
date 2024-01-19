@@ -11,7 +11,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
     let(:object_client) do
       instance_double(Dor::Services::Client::Object, update: nil, find: object)
     end
-    let(:object) { build(:dro, id: druid) }
+
+    let(:object) { build(:dro, id: druid).new(geographic: { iso19139: geographic_xml }) }
+    let(:geographic_xml) { read_fixture('bh432xr2264-iso19139.xml') }
 
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
@@ -106,6 +108,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
 
     context 'when a shapefile' do
       let(:druid) { 'druid:mx245jd3310' }
+      let(:geographic_xml) { read_fixture('mx245jd3310-iso19139.xml') }
 
       # rubocop:disable Layout/LineLength
       let(:description_props) do
