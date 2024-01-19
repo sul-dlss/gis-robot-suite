@@ -74,7 +74,6 @@ look like this in the workspace:
     zv925hd6723/
       metadata/
         contentMetadata.xml
-        descMetadata.xml
         geoMetadata.xml
       content/
         data.zip
