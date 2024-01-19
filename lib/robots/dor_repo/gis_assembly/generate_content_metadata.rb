@@ -30,11 +30,7 @@ module Robots
             end
           end
 
-          # extract the MODS extension cleanly
-          modsfn = "#{rootdir}/metadata/descMetadata.xml"
-          raise "generate-content-metadata: #{bare_druid} is missing MODS metadata" unless File.size?(modsfn)
-
-          doc = Nokogiri::XML(File.read(modsfn))
+          doc = Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid)
           ns = {
             'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             'mods' => 'http://www.loc.gov/mods/v3'
