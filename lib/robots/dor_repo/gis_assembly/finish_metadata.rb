@@ -13,12 +13,10 @@ module Robots
 
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
-          %w[descMetadata.xml geoMetadata.xml].each do |f|
-            fn = File.join(rootdir, 'metadata', f)
-            raise "finish-metadata: #{bare_druid} is missing metadata: #{fn}" unless File.size?(fn)
+          fn = File.join(rootdir, 'metadata', 'geoMetadata.xml')
+          raise "finish-metadata: #{bare_druid} is missing metadata: #{fn}" unless File.size?(fn)
 
-            logger.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
-          end
+          logger.info "finish-metadata found #{fn} #{File.size(fn)} bytes"
 
           %w[preview.jpg].each do |f|
             fn = File.join(rootdir, 'content', f)
