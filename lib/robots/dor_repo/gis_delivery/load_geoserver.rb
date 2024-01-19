@@ -13,26 +13,25 @@ module Robots
         def perform_work
           logger.debug "load-geoserver working on #{bare_druid}"
 
+          raise "load-geoserver: #{bare_druid} cannot determine media type" unless GisRobotSuite.media_type(cocina_object)
+
+          rights = GisRobotSuite.determine_rights(cocina_object)
+          # reproject based on file format information
+          if GisRobotSuite.vector?(cocina_object)
+            layertype = 'PostGIS'
+          elsif GisRobotSuite.raster?(cocina_object)
+            layertype = 'GeoTIFF'
+          else
+            raise "load-geoserver: #{bare_druid} unknown format: #{GisRobotSuite.media_type(cocina_object)}"
+          end
+
+          # Obtain layer details
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :workspace
 
           # determine whether we have a Shapefile/vector or Raster to load
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           raise "load-geoserver: #{bare_druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
-          format = GisRobotSuite.determine_file_format_from_mods modsfn
-          raise "load-geoserver: #{bare_druid} cannot determine file format from MODS" if format.nil?
-
-          rights = GisRobotSuite.determine_rights(cocina_object)
-          # reproject based on file format information
-          if GisRobotSuite.vector?(format)
-            layertype = 'PostGIS'
-          elsif GisRobotSuite.raster?(format)
-            layertype = 'GeoTIFF'
-          else
-            raise "load-geoserver: #{bare_druid} unknown format: #{format}"
-          end
-
-          # Obtain layer details
           layer = layer_from_druid modsfn, (layertype == 'GeoTIFF')
           layer[(layertype == 'GeoTIFF' ? 'raster' : 'vector')]['format'] = layertype
 

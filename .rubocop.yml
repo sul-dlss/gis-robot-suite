@@ -91,6 +91,9 @@ Naming/FileName:
 RSpec/ExampleLength:
   Enabled: false
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
 # --- Style ---
 
 Style/ArgumentsForwarding: # (new in 1.1)

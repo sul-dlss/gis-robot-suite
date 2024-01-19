@@ -3,22 +3,61 @@
 require 'spec_helper'
 
 RSpec.describe 'utilities' do
-  it 'can type vectors' do
-    expect(GisRobotSuite).to be_vector('application/x-esri-shapefile')
-    expect(GisRobotSuite).to be_vector('application/x-esri-shapefile; format=Shapefile')
+  let(:cocina_object) do
+    dro = build(:dro)
+    dro.new(description: dro.description.new(geographic: [
+                                               { form: [{ type: 'media type', value: media_type }, { type: 'data format', value: data_format }] }
+                                             ]))
+  end
+  let(:media_type) { 'application/x-ogc-aig' }
+  let(:data_format) { 'GeoTIFF' }
+
+  describe '.media_type' do
+    it 'returns media type' do
+      expect(GisRobotSuite.media_type(cocina_object)).to eq(media_type)
+    end
   end
 
-  it 'can type rasters' do
-    expect(GisRobotSuite).to be_raster('image/tiff')
-    expect(GisRobotSuite).to be_raster('image/tiff; format=GeoTIFF')
-    expect(GisRobotSuite).to be_raster('application/x-ogc-aig')
+  describe '.data_format' do
+    it 'returns data format' do
+      expect(GisRobotSuite.data_format(cocina_object)).to eq(data_format)
+    end
   end
 
-  it 'can handle bogus types' do
-    expect(GisRobotSuite).not_to be_vector('image/tiff')
-    expect(GisRobotSuite).not_to be_vector('application/unknown')
-    expect(GisRobotSuite).not_to be_raster('application/x-esri-shapefile')
-    expect(GisRobotSuite).not_to be_raster('application/unknown')
+  describe '.vector?' do
+    context 'when a vector' do
+      let(:media_type) { 'application/x-esri-shapefile' }
+
+      it 'returns true' do
+        expect(GisRobotSuite).to be_vector(cocina_object)
+      end
+    end
+
+    context 'when not a vector' do
+      let(:media_type) { 'image/tiff' }
+
+      it 'returns false' do
+        expect(GisRobotSuite).not_to be_vector(cocina_object)
+      end
+    end
+  end
+
+  describe '.raster?' do
+    context 'when a raster' do
+      let(:media_type) { 'image/tiff' }
+
+      it 'returns true' do
+        expect(GisRobotSuite).to be_raster(cocina_object)
+      end
+    end
+
+    context 'when not a raster' do
+      let(:media_type) { 'application/x-esri-shapefile' }
+
+      it 'returns false' do
+        expect(GisRobotSuite).not_to be_raster(cocina_object)
+      end
+    end
   end
 
   describe '.determine_rights' do

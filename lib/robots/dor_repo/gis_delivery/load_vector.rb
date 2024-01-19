@@ -17,11 +17,10 @@ module Robots
           modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
           raise "load-vector: #{bare_druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
 
-          format = GisRobotSuite.determine_file_format_from_mods modsfn
-          raise "load-vector: #{bare_druid} cannot determine file format from MODS" if format.nil?
+          raise "load-vector: #{bare_druid} cannot determine media type" unless GisRobotSuite.media_type(cocina_object)
 
           # perform based on file format information
-          unless GisRobotSuite.vector?(format)
+          unless GisRobotSuite.vector?(cocina_object)
             logger.info "load-vector: #{bare_druid} is not a vector, skipping"
             return
           end

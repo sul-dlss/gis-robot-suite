@@ -5,7 +5,14 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
-  let(:object_client) { instance_double(Dor::Services::Client::Object, find: instance_double(Cocina::Models::DRO)) }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }
+  let(:cocina_object) do
+    dro = build(:dro)
+    dro.new(
+      description: dro.description.new(geographic: [{ form: [type: 'media type', value: media_type] }]),
+      access: { view: 'world', download: 'world' }
+    )
+  end
 
   before do
     allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
@@ -15,15 +22,12 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   end
 
   describe '#perform' do
-    before do
-      allow(GisRobotSuite).to receive(:determine_rights).and_return 'public'
-    end
-
     describe 'loading a vector dataset' do
       let(:druid) { 'bb338jh0716' }
       let(:post_body) do
         '{"featureType":{"name":"bb338jh0716","title":"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999","enabled":true,"abstract":"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.","keywords":{"string":["Hydrology","Watersheds","Boundaries","Inland Waters","Sonoma County (Calif.)","Mendocino County (Calif.)","Russian River Watershed (Calif.)"]},"metadata_links":[],"metadata":{"cacheAgeMax":86400,"cachingEnabled":true}}}' # rubocop:disable Layout/LineLength
       end
+      let(:media_type) { 'application/x-esri-shapefile' }
 
       before do
         stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/datastores/postgis_druid')
@@ -62,6 +66,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
       let(:layer_put_body) do
         '{"layer":{"name":"dg548ft1892","path":"","type":"RASTER","defaultStyle":"raster","resource":{"@class":"coverage","name":"druid:dg548ft1892","href":"http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.json"},"queryable":false,"opaque":false}}' # rubocop:disable Layout/LineLength
       end
+      let(:media_type) { 'image/tiff' }
 
       before do
         stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892')
