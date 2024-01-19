@@ -7,9 +7,9 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }
   let(:cocina_object) do
-    dro = build(:dro)
+    dro = build(:dro, id: "druid:#{druid}")
     dro.new(
-      description: dro.description.new(geographic: [{ form: [type: 'media type', value: media_type] }]),
+      description:,
       access: { view: 'world', download: 'world' }
     )
   end
@@ -24,8 +24,379 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
   describe '#perform' do
     describe 'loading a vector dataset' do
       let(:druid) { 'bb338jh0716' }
+
+      # rubocop:disable Layout/LineLength
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999'
+            }
+          ],
+          contributor: [
+            {
+              name: [
+                {
+                  value: 'Circuit Rider Productions'
+                }
+              ],
+              type: 'organization',
+              role: [
+                {
+                  value: 'creator',
+                  source: {
+                    code: 'marcrelator'
+                  }
+                }
+              ]
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '2002',
+                  type: 'publication',
+                  status: 'primary',
+                  encoding: {
+                    code: 'w3cdtf'
+                  }
+                },
+                {
+                  value: '1999',
+                  type: 'validity',
+                  encoding: {
+                    code: 'w3cdtf'
+                  }
+                }
+              ],
+              contributor: [
+                {
+                  name: [
+                    {
+                      value: 'Circuit Rider Productions'
+                    }
+                  ],
+                  type: 'organization',
+                  role: [
+                    {
+                      value: 'publisher',
+                      code: 'pbl',
+                      uri: 'http://id.loc.gov/vocabulary/relators/pbl',
+                      source: {
+                        code: 'marcrelator',
+                        uri: 'http://id.loc.gov/vocabulary/relators/'
+                      }
+                    }
+                  ]
+                }
+              ],
+              location: [
+                {
+                  value: 'Windsor, California, US'
+                }
+              ]
+            }
+          ],
+          form: [
+            {
+              value: 'Geospatial data',
+              type: 'genre',
+              uri: 'http://id.loc.gov/authorities/genreForms/gf2011026297',
+              source: {
+                code: 'lcgft'
+              }
+            },
+            {
+              value: 'cartographic dataset',
+              type: 'genre',
+              uri: 'http://rdvocab.info/termList/RDAContentType/1001',
+              source: {
+                code: 'rdacontent'
+              }
+            },
+            {
+              value: 'cartographic',
+              type: 'resource type',
+              source: {
+                value: 'MODS resource types'
+              }
+            },
+            {
+              value: 'software, multimedia',
+              type: 'resource type',
+              source: {
+                value: 'MODS resource types'
+              }
+            },
+            {
+              value: 'Shapefile',
+              type: 'form'
+            },
+            {
+              value: '0.3',
+              type: 'extent'
+            },
+            {
+              value: 'born digital',
+              type: 'digital origin',
+              source: {
+                value: 'MODS digital origin terms'
+              }
+            },
+            {
+              value: 'Scale not given.',
+              type: 'map scale'
+            },
+            {
+              value: 'EPSG::26910',
+              type: 'map projection'
+            },
+            {
+              value: 'EPSG::4326',
+              type: 'map projection',
+              uri: 'http://opengis.net/def/crs/EPSG/0/4326',
+              source: {
+                code: 'EPSG'
+              },
+              displayLabel: 'WGS84'
+            }
+          ],
+          geographic: [
+            {
+              form: [
+                {
+                  value: 'application/x-esri-shapefile',
+                  type: 'media type',
+                  source: {
+                    value: 'IANA media type terms'
+                  }
+                },
+                {
+                  value: 'Shapefile',
+                  type: 'data format'
+                },
+                {
+                  value: 'Dataset#Polygon',
+                  type: 'type'
+                }
+              ],
+              subject: [
+                {
+                  structuredValue: [
+                    {
+                      value: '-123.387626',
+                      type: 'west'
+                    },
+                    {
+                      value: '38.298673',
+                      type: 'south'
+                    },
+                    {
+                      value: '-122.528843',
+                      type: 'east'
+                    },
+                    {
+                      value: '39.399103',
+                      type: 'north'
+                    }
+                  ],
+                  type: 'bounding box coordinates',
+                  standard: {
+                    code: 'EPSG:4326'
+                  },
+                  encoding: {
+                    value: 'decimal'
+                  }
+                }
+              ]
+            }
+          ],
+          language: [
+            {
+              code: 'eng',
+              source: {
+                code: 'iso639-2b'
+              }
+            }
+          ],
+          note: [
+            {
+              value: 'This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC).',
+              displayLabel: 'Abstract',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'This shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.',
+              type: 'abstract',
+              displayLabel: 'Purpose',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Circuit Rider Productions and National Oceanic and Atmospheric Administration (2002). Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999. Circuit Rider Productions. Available at: http://purl.stanford.edu/bb338jh0716',
+              displayLabel: 'Preferred citation',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
+              displayLabel: 'WGS84 Cartographics'
+            }
+          ],
+          subject: [
+            {
+              value: 'Hydrology',
+              type: 'topic',
+              source: {
+                code: 'lcsh',
+                uri: 'http://id.loc.gov/authorities/subjects.html'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Watersheds',
+              type: 'topic',
+              source: {
+                code: 'lcsh',
+                uri: 'http://id.loc.gov/authorities/subjects.html'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Sonoma County (Calif.)',
+              type: 'place',
+              uri: 'http://sws.geonames.org/5397100/',
+              source: {
+                code: 'geonames',
+                uri: 'http://www.geonames.org/ontology#'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Mendocino County (Calif.)',
+              type: 'place',
+              uri: 'http://sws.geonames.org/5372163/',
+              source: {
+                code: 'geonames',
+                uri: 'http://www.geonames.org/ontology#'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Russian River Watershed (Calif.)',
+              type: 'place',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: '1999',
+              type: 'time',
+              encoding: {
+                code: 'w3cdtf'
+              }
+            },
+            {
+              value: 'Boundaries',
+              type: 'topic',
+              uri: 'boundaries',
+              source: {
+                code: 'ISO19115TopicCategory',
+                uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode'
+              }
+            },
+            {
+              value: 'Inland Waters',
+              type: 'topic',
+              uri: 'inlandWaters',
+              source: {
+                code: 'ISO19115TopicCategory',
+                uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode'
+              }
+            },
+            {
+              value: 'W 123°23ʹ16ʺ--W 122°31ʹ22ʺ/N 39°23ʹ57ʺ--N 38°17ʹ53ʺ',
+              type: 'map coordinates'
+            },
+            {
+              value: 'W 123°23ʹ15ʺ--W 122°31ʹ44ʺ/N 39°23ʹ57ʺ--N 38°17ʹ55ʺ',
+              type: 'map coordinates'
+            }
+          ],
+          adminMetadata: {
+            contributor: [
+              {
+                name: [
+                  {
+                    value: 'Stanford'
+                  }
+                ]
+              }
+            ],
+            language: [
+              {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            ],
+            note: [
+              {
+                value: 'This record was translated from ISO 19139 to MODS v.3 using an xsl transformation.',
+                type: 'record origin'
+              }
+            ],
+            identifier: [
+              {
+                value: 'edu.stanford.purl:bb338jh0716'
+              }
+            ]
+          },
+          purl: "https://purl.stanford.edu/#{druid}"
+        }
+      end
+      # rubocop:enable Layout/LineLength
+
       let(:post_body) do
-        '{"featureType":{"name":"bb338jh0716","title":"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999","enabled":true,"abstract":"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC). \\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.","keywords":{"string":["Hydrology","Watersheds","Boundaries","Inland Waters","Sonoma County (Calif.)","Mendocino County (Calif.)","Russian River Watershed (Calif.)"]},"metadata_links":[],"metadata":{"cacheAgeMax":86400,"cachingEnabled":true}}}' # rubocop:disable Layout/LineLength
+        '{"featureType":{"name":"bb338jh0716","title":"Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999","enabled":true,"abstract":"This polygon dataset represents the Hydrologic Sub-Area boundaries for the Russian River basin, as defined by the Calwater 2.2a watershed boundaries. The original CALWATER22 layer (Calwater 2.2a watershed boundaries) was developed as a coverage named calw22a and is administered by the Interagency California Watershed Mapping Committee (ICWMC).\\nThis shapefile can be used to map and analyze data at the Hydrologic Sub-Area scale.","keywords":{"string":["Hydrology","Watersheds","Boundaries","Inland Waters","Sonoma County (Calif.)","Mendocino County (Calif.)","Russian River Watershed (Calif.)"]},"metadata_links":[],"metadata":{"cacheAgeMax":86400,"cachingEnabled":true}}}' # rubocop:disable Layout/LineLength
       end
       let(:media_type) { 'application/x-esri-shapefile' }
 
@@ -57,6 +428,382 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
     describe 'loading a raster dataset' do
       let(:druid) { 'dg548ft1892' }
+
+      # rubocop:disable Layout/LineLength
+      let(:description) do
+        {
+          title: [
+            {
+              value: '1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998'
+            }
+          ],
+          contributor: [
+            {
+              name: [
+                {
+                  value: 'Circuit Rider Productions'
+                }
+              ],
+              type: 'organization',
+              role: [
+                {
+                  value: 'creator',
+                  source: {
+                    code: 'marcrelator'
+                  }
+                }
+              ]
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '2002',
+                  type: 'publication',
+                  status: 'primary',
+                  encoding: {
+                    code: 'w3cdtf'
+                  }
+                },
+                {
+                  structuredValue: [
+                    {
+                      value: '1999',
+                      type: 'start'
+                    },
+                    {
+                      value: '2002',
+                      type: 'end'
+                    }
+                  ],
+                  type: 'validity',
+                  encoding: {
+                    code: 'w3cdtf'
+                  }
+                }
+              ],
+              contributor: [
+                {
+                  name: [
+                    {
+                      value: 'Circuit Rider Productions'
+                    }
+                  ],
+                  type: 'organization',
+                  role: [
+                    {
+                      value: 'publisher',
+                      code: 'pbl',
+                      uri: 'http://id.loc.gov/vocabulary/relators/pbl',
+                      source: {
+                        code: 'marcrelator',
+                        uri: 'http://id.loc.gov/vocabulary/relators/'
+                      }
+                    }
+                  ]
+                }
+              ],
+              location: [
+                {
+                  value: 'Windsor, California, US'
+                }
+              ]
+            }
+          ],
+          form: [
+            {
+              value: 'Geospatial data',
+              type: 'genre',
+              uri: 'http://id.loc.gov/authorities/genreForms/gf2011026297',
+              source: {
+                code: 'lcgft'
+              }
+            },
+            {
+              value: 'cartographic dataset',
+              type: 'genre',
+              uri: 'http://rdvocab.info/termList/RDAContentType/1001',
+              source: {
+                code: 'rdacontent'
+              }
+            },
+            {
+              value: 'cartographic',
+              type: 'resource type',
+              source: {
+                value: 'MODS resource types'
+              }
+            },
+            {
+              value: 'software, multimedia',
+              type: 'resource type',
+              source: {
+                value: 'MODS resource types'
+              }
+            },
+            {
+              value: 'Raster Dataset',
+              type: 'form'
+            },
+            {
+              value: 'born digital',
+              type: 'digital origin',
+              source: {
+                value: 'MODS digital origin terms'
+              }
+            },
+            {
+              value: 'Scale not given.',
+              type: 'map scale'
+            },
+            {
+              value: 'EPSG::26910',
+              type: 'map projection'
+            },
+            {
+              value: 'EPSG::4326',
+              type: 'map projection',
+              uri: 'http://opengis.net/def/crs/EPSG/0/4326',
+              source: {
+                code: 'EPSG'
+              },
+              displayLabel: 'WGS84'
+            }
+          ],
+          geographic: [
+            {
+              form: [
+                {
+                  value: 'image/tiff',
+                  type: 'media type',
+                  source: {
+                    value: 'IANA media type terms'
+                  }
+                },
+                {
+                  value: 'GeoTIFF',
+                  type: 'data format'
+                },
+                {
+                  value: 'Dataset#Raster',
+                  type: 'type'
+                }
+              ],
+              subject: [
+                {
+                  structuredValue: [
+                    {
+                      value: '-134.3282944',
+                      type: 'west'
+                    },
+                    {
+                      value: '-6.0466073',
+                      type: 'south'
+                    },
+                    {
+                      value: '-124.8979013',
+                      type: 'east'
+                    },
+                    {
+                      value: '4.5480319',
+                      type: 'north'
+                    }
+                  ],
+                  type: 'bounding box coordinates',
+                  standard: {
+                    code: 'EPSG:4326'
+                  },
+                  encoding: {
+                    value: 'decimal'
+                  }
+                }
+              ]
+            }
+          ],
+          language: [
+            {
+              code: 'eng',
+              source: {
+                code: 'iso639-2b'
+              }
+            }
+          ],
+          note: [
+            {
+              value: "Eez1000 is a 1000 meter resolution statewide bathymetric dataset that generally covers the Exclusive Economic Zone (EEZ), an area extending 200 nautical miles from all United States possessions and trust territories. The data was adapted from isobath values ranging from 200 meters to 4800 meters below sea level; therefore nearshore depictions ARE NOT ACCURATE and \"flatten out\" between 200 meter depths and the coastline. The data is intended only for general portrayals of offshore features and depths. The Department of Fish and Game (DFG), Technical Services Branch (TSB) GIS Unit received the source data in the form of a line contour coverage (known as DFG's eezbath) from the United States Geological Survey (USGS). The contour data was converted to a TIN (triangulated irregular network) using ArcView 3D Analyst and then converted to a grid. The contour data was previously reprojected by TSB to Albers conic equal-area using standard Teale Data Center parameters. Some minor aesthetic editing was performed on peripheral areas using the ARC/INFO Grid EXPAND function. The image version was created using the ARC/INFO GRIDIMAGE function. Please see the attached metadata file \"eezbatcall.doc\" or the DFG coverage metadata \"eezbath.txt\" for further source data information.",
+              displayLabel: 'Abstract',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'This layer can be used for watershed analysis and planning in the Russian River region of California.',
+              type: 'abstract',
+              displayLabel: 'Purpose',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Circuit Rider Productions and National Oceanic and Atmospheric Administration (2002). 1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998. Circuit Rider Productions. Available at: http://purl.stanford.edu/dg548ft1892',
+              displayLabel: 'Preferred citation',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
+              displayLabel: 'WGS84 Cartographics'
+            }
+          ],
+          subject: [
+            {
+              value: 'Hydrography',
+              type: 'topic',
+              source: {
+                code: 'lcsh',
+                uri: 'http://id.loc.gov/authorities/subjects.html'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Watersheds',
+              type: 'topic',
+              source: {
+                code: 'lcsh',
+                uri: 'http://id.loc.gov/authorities/subjects.html'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Sonoma County (Calif.)',
+              type: 'place',
+              uri: 'http://sws.geonames.org/5397100/',
+              source: {
+                code: 'geonames',
+                uri: 'http://www.geonames.org/ontology#'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Mendocino County (Calif.)',
+              type: 'place',
+              uri: 'http://sws.geonames.org/5372163/',
+              source: {
+                code: 'geonames',
+                uri: 'http://www.geonames.org/ontology#'
+              },
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              value: 'Russian River Watershed (Calif.)',
+              type: 'place',
+              valueLanguage: {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            },
+            {
+              structuredValue: [
+                {
+                  value: '1999',
+                  type: 'start'
+                },
+                {
+                  value: '2002',
+                  type: 'end'
+                }
+              ],
+              type: 'time',
+              encoding: {
+                code: 'w3cdtf'
+              }
+            },
+            {
+              value: 'Inland Waters',
+              type: 'topic',
+              uri: 'inlandWaters',
+              source: {
+                code: 'ISO19115TopicCategory',
+                uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode'
+              }
+            },
+            {
+              value: 'W 134°19ʹ42ʺ--W 124°53ʹ44ʺ/N 4°32ʹ53ʺ--S 6°2ʹ57ʺ',
+              type: 'map coordinates'
+            },
+            {
+              value: 'W 134°19ʹ42ʺ--W 124°53ʹ52ʺ/N 4°32ʹ53ʺ--S 6°2ʹ48ʺ',
+              type: 'map coordinates'
+            }
+          ],
+          adminMetadata: {
+            contributor: [
+              {
+                name: [
+                  {
+                    value: 'Stanford'
+                  }
+                ]
+              }
+            ],
+            language: [
+              {
+                code: 'eng',
+                source: {
+                  code: 'iso639-2b'
+                }
+              }
+            ],
+            note: [
+              {
+                value: 'This record was translated from ISO 19139 to MODS v.3 using an xsl transformation.',
+                type: 'record origin'
+              }
+            ],
+            identifier: [
+              {
+                value: 'edu.stanford.purl:dg548ft1892'
+              }
+            ]
+          },
+          purl: "https://purl.stanford.edu/#{druid}"
+        }
+      end
+      # rubocop:enable Layout/LineLength
+
       let(:store_post_body) do
         '{"coverageStore":{"name":"dg548ft1892","url":"file:/geotiff/dg548ft1892.tif","enabled":true,"workspace":{"name":"druid"},"type":"GeoTIFF","_default":false,"description":"1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998"}}' # rubocop:disable Layout/LineLength
       end
