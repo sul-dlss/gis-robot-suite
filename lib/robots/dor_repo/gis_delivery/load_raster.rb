@@ -14,14 +14,7 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :workspace
 
           # determine whether we have a Raster to load
-          modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "load-raster: #{bare_druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-
-          format = GisRobotSuite.determine_file_format_from_mods modsfn
-          raise "load-raster: #{bare_druid} cannot determine file format from MODS: #{modsfn}" if format.nil?
-
-          # perform based on file format information
-          unless GisRobotSuite.raster?(format)
+          unless GisRobotSuite.raster?(cocina_object)
             logger.info "load-raster: #{bare_druid} is not a raster, skipping"
             return
           end
