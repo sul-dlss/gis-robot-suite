@@ -66,23 +66,23 @@ module Robots
         end
 
         # XXX: need to verify whether raster data are continous or discrete to choose the correct resampling method
-        def reproject(input_filename, output_filename, srid, tiffname, projection, resample = 'bilinear')
+        def reproject(input_filename, output_filename, tiffname, projection, resample = 'bilinear')
           FileUtils.mkdir_p(File.dirname(output_filename)) unless File.directory?(File.dirname(output_filename))
-          if projection == "EPSG:#{srid}"
+          if projection == 'EPSG:4326'
             # just compress with gdal_translate
             logger.info "normalize-data: #{bare_druid} is compressing original #{projection}"
-            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:#{srid} #{input_filename} #{output_filename} -co 'COMPRESS=LZW'")
+            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{input_filename} #{output_filename} -co 'COMPRESS=LZW'")
           else
             temp_filename = "#{File.dirname(output_filename)}/#{tiffname}_uncompressed.tif"
 
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             logger.info "normalize-data: #{bare_druid} projecting #{File.basename(input_filename)} from #{projection}"
-            system_with_check "#{Settings.gdal_path}gdalwarp -r #{resample} -t_srs EPSG:#{srid} #{input_filename} #{temp_filename} -co 'COMPRESS=NONE'"
+            system_with_check "#{Settings.gdal_path}gdalwarp -r #{resample} -t_srs EPSG:4326 #{input_filename} #{temp_filename} -co 'COMPRESS=NONE'"
             raise "normalize-data: #{bare_druid} gdalwarp failed to create #{temp_filename}" unless File.size?(temp_filename)
 
             # compress temp_filename with gdal_translate
             logger.info "normalize-data: #{bare_druid} is compressing reprojection to #{projection}"
-            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:#{srid} #{temp_filename} #{output_filename} -co 'COMPRESS=LZW'")
+            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{temp_filename} #{output_filename} -co 'COMPRESS=LZW'")
             FileUtils.rm_f(temp_filename)
           end
           raise "normalize-data: #{bare_druid} gdal_translate failed to create #{output_filename}" unless File.size?(output_filename)
@@ -118,7 +118,7 @@ module Robots
           system_with_check("zip -Dj '#{output_zip}' '#{tiff_filename}'*")
         end
 
-        def reproject_geotiff(zip_filename, projection, srid = 4326)
+        def reproject_geotiff(zip_filename, projection)
           tmpdir = extract_data_from_zip(zip_filename)
 
           # sniff out GeoTIFF file
@@ -133,8 +133,8 @@ module Robots
           end
 
           input_filename = "#{tmpdir}/#{tiffname}.tif"
-          output_filename = "#{tmpdir}/EPSG_#{srid}/#{tiffname}.tif"
-          reproject(input_filename, output_filename, srid, tiffname, projection)
+          output_filename = "#{tmpdir}/EPSG_4326/#{tiffname}.tif"
+          reproject(input_filename, output_filename, tiffname, projection)
 
           # if using 8-bit color palette, convert into RGB
           convert_8bit_to_rgb(output_filename, tmpdir)
@@ -144,7 +144,7 @@ module Robots
           compute_statistics(output_filename)
 
           # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), "data_EPSG_#{srid}.zip")
+          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
           zip_up(output_zip, output_filename)
 
           # cleanup
@@ -152,7 +152,7 @@ module Robots
           FileUtils.rm_rf(tmpdir)
         end
 
-        def reproject_arcgrid(zip_filename, projection, srid = 4326)
+        def reproject_arcgrid(zip_filename, projection)
           tmpdir = extract_data_from_zip(zip_filename)
 
           # Sniff out ArcGRID location
@@ -169,7 +169,7 @@ module Robots
           # reproject
           grid_filename = "#{tmpdir}/#{gridname}"
           tiff_filename = "#{tmpdir}/#{gridname}.tif"
-          reproject(grid_filename, tiff_filename, srid, gridname, projection)
+          reproject(grid_filename, tiff_filename, gridname, projection)
 
           # if using 8-bit color palette, convert into RGB
           convert_8bit_to_rgb(tiff_filename, tmpdir)
@@ -179,7 +179,7 @@ module Robots
           compute_statistics(tiff_filename)
 
           # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), "data_EPSG_#{srid}.zip")
+          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
           zip_up(output_zip, tiff_filename)
 
           # cleanup
@@ -188,7 +188,7 @@ module Robots
         end
 
         # @param zip_filename [String] ZIP file
-        def reproject_shapefile(zip_filename, srid = 4326)
+        def reproject_shapefile(zip_filename)
           tmpdir = extract_data_from_zip(zip_filename)
 
           # Sniff out Shapefile location
@@ -203,11 +203,11 @@ module Robots
           end
 
           # setup
-          wkt = URI.open("https://spatialreference.org/ref/epsg/#{srid}/prettywkt/").read
+          wkt = URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
           input_filename = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise "normalize-data: #{bare_druid} is missing Shapefile: #{input_filename}" unless File.exist? input_filename
 
-          odr = File.join(tmpdir, "EPSG_#{srid}") # output directory
+          odr = File.join(tmpdir, 'EPSG_4326') # output directory
           output_filename = File.join(odr, "#{shpname}.shp") # output shapefile
 
           # Verify source projection
@@ -226,7 +226,7 @@ module Robots
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
           FileUtils.mkdir_p(odr) unless File.directory?(odr)
-          logger.info "normalize-data: #{bare_druid} is projecting #{File.basename(input_filename)} to EPSG:#{srid}"
+          logger.info "normalize-data: #{bare_druid} is projecting #{File.basename(input_filename)} to EPSG:4326"
           system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filename}' '#{input_filename}'") # prevent recoding
           raise "normalize-data: #{bare_druid} failed to reproject #{input_filename}" unless File.size?(output_filename)
 
@@ -238,7 +238,7 @@ module Robots
           end
 
           # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), "data_EPSG_#{srid}.zip")
+          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
           FileUtils.rm_f(output_zip) if File.size?(output_zip)
           system_with_check("zip -Dj '#{output_zip}' \"#{odr}/#{shpname}\".*")
 
