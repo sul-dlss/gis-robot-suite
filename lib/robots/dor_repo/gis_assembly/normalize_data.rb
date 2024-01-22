@@ -203,7 +203,6 @@ module Robots
           end
 
           # setup
-          wkt = URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
           input_filename = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise "normalize-data: #{bare_druid} is missing Shapefile: #{input_filename}" unless File.exist? input_filename
 
@@ -231,11 +230,9 @@ module Robots
           raise "normalize-data: #{bare_druid} failed to reproject #{input_filename}" unless File.size?(output_filename)
 
           # normalize prj file
-          if wkt
-            projection_filename = output_filename.gsub('.shp', '.prj')
-            logger.debug "normalize-data: #{bare_druid} overwriting #{projection_filename}"
-            File.write(projection_filename, wkt)
-          end
+          projection_filename = output_filename.gsub('.shp', '.prj')
+          logger.debug "normalize-data: #{bare_druid} overwriting #{projection_filename}"
+          File.write(projection_filename, wkt)
 
           # package up reprojection
           output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
@@ -249,6 +246,11 @@ module Robots
 
         def projection_from_cocina
           @projection_from_cocina ||= cocina_object.description.form.find { |form| form.type == 'map projection' && form.source.nil? }&.value
+        end
+
+        def wkt
+          # Well Known Text. It’s a text markup language for expressing geometries in vector data.
+          @wkt ||= URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
         end
       end
     end
