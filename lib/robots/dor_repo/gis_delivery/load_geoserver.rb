@@ -5,7 +5,7 @@ require 'druid-tools'
 module Robots
   module DorRepo
     module GisDelivery
-      class LoadGeoserver < Base
+      class LoadGeoserver < Base # rubocop:disable Metrics/ClassLength
         def initialize
           super('gisDeliveryWF', 'load-geoserver')
         end
@@ -16,24 +16,6 @@ module Robots
           raise "load-geoserver: #{bare_druid} cannot determine media type" unless GisRobotSuite.media_type(cocina_object)
 
           rights = GisRobotSuite.determine_rights(cocina_object)
-          # reproject based on file format information
-          if GisRobotSuite.vector?(cocina_object)
-            layertype = 'PostGIS'
-          elsif GisRobotSuite.raster?(cocina_object)
-            layertype = 'GeoTIFF'
-          else
-            raise "load-geoserver: #{bare_druid} unknown format: #{GisRobotSuite.media_type(cocina_object)}"
-          end
-
-          # Obtain layer details
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :workspace
-
-          # determine whether we have a Shapefile/vector or Raster to load
-          modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "load-geoserver: #{bare_druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-
-          layer = layer_from_druid modsfn, (layertype == 'GeoTIFF')
-          layer[(layertype == 'GeoTIFF' ? 'raster' : 'vector')]['format'] = layertype
 
           # Connect to GeoServer
           logger.debug "GeoServer options: #{Settings.geoserver[rights][:primary]}"
@@ -62,18 +44,38 @@ module Robots
           end
         end
 
-        # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
-        def layer_from_druid(modsfn, is_raster = false)
-          mods = Mods::Record.new
-          mods.from_str(File.read(modsfn))
+        def mods
+          @mods ||= Mods::Record.new.from_nk_node(Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid).root)
+        end
 
-          {
-            (is_raster ? 'raster' : 'vector') => {
+        def raster?
+          @raster ||= GisRobotSuite.raster?(cocina_object)
+        end
+
+        def vector?
+          @vector ||= GisRobotSuite.vector?(cocina_object)
+        end
+
+        def layertype
+          @layertype ||= if vector?
+                           'PostGIS'
+                         elsif raster?
+                           'GeoTIFF'
+                         else
+                           raise "load-geoserver: #{bare_druid} unknown format: #{GisRobotSuite.media_type(cocina_object)}"
+                         end
+        end
+
+        # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
+        def layer
+          @layer ||= {
+            (raster? ? 'raster' : 'vector') => {
               'druid' => bare_druid,
               'title' => mods.full_titles.first,
               'abstract' => mods.term_values(:abstract).compact.join("\n"),
               'keywords' => [mods.term_values([:subject, 'topic']),
-                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip)
+                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip),
+              'format' => layertype
             }
           }
         end
