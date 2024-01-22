@@ -27,15 +27,9 @@ module Robots
           filename = "#{rootdir}/content/data.zip" # original content
           logger.debug "Processing #{bare_druid} #{filename}"
 
-          # Determine file format
-          mods_filename = "#{rootdir}/metadata/descMetadata.xml"
-          raise "normalize-data: #{bare_druid} is missing MODS metadata" unless File.size?(mods_filename)
-
-          raise "normalize-data: #{bare_druid} cannot determine file format" unless GisRobotSuite.media_type(cocina_object)
-
           # reproject based on file format information
           if GisRobotSuite.vector?(cocina_object)
-            reproject_shapefile(filename, mods_filename, flags)
+            reproject_shapefile(filename, flags)
           elsif GisRobotSuite.raster?(cocina_object)
             projection = GisRobotSuite.determine_projection(cocina_object)
             projection.gsub!('ESRI', 'EPSG')
@@ -198,7 +192,7 @@ module Robots
         end
 
         # @param zip_filename [String] ZIP file
-        def reproject_shapefile(zip_filename, mods_filename, flags, srid = 4326)
+        def reproject_shapefile(zip_filename, flags, srid = 4326)
           tmpdir = extract_data_from_zip(zip_filename, flags[:tmpdir])
 
           # Sniff out Shapefile location
@@ -224,21 +218,10 @@ module Robots
           projection_filename = File.join(tmpdir, "#{shpname}.prj")
           unless File.size?(projection_filename)
             logger.warn "normalize-data: #{bare_druid} is missing projection #{projection_filename}"
+            raise "normalize-data: #{bare_druid} has no native projection information in MODS" if projection_from_cocina.nil?
 
-            # Read correct projection from MODS or geoMetadata
-            # <subject>
-            #   <cartographics>
-            #     <scale>Scale not given.</scale>
-            #     <projection>EPSG::26910</projection>
-            doc = Nokogiri::XML(File.binread(mods_filename))
-            p = doc.xpath('/mods:mods/mods:subject/mods:cartographics[not(@authority)]/mods:projection',
-                          'xmlns:mods' => 'http://www.loc.gov/mods/v3')
-            raise "normalize-data: #{bare_druid} has no native projection information in MODS" if p.nil?
-
-            p = p.first
-
-            logger.debug "normalize-data: #{bare_druid} reports native projection: #{p.content}"
-            src_srid = p.content.gsub(/EPSG:+/, '').strip.to_i
+            logger.debug "normalize-data: #{bare_druid} reports native projection: #{projection_from_cocina}"
+            src_srid = projection_from_cocina.gsub(/EPSG:+/, '').strip.to_i
 
             logger.info "normalize-data: #{bare_druid} has native projection of #{src_srid}, overwriting #{projection_filename}"
             prj = open("http://spatialreference.org/ref/epsg/#{src_srid}/prj/").read
@@ -266,6 +249,10 @@ module Robots
           # cleanup
           logger.debug "normalize-data: #{bare_druid} removing #{tmpdir}"
           FileUtils.rm_rf(tmpdir)
+        end
+
+        def projection_from_cocina
+          @projection_from_cocina ||= cocina_object.description.form.find { |form| form.type == 'map projection' && form.source.nil? }&.value
         end
       end
     end
