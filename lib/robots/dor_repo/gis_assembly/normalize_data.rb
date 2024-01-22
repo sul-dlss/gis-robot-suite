@@ -66,7 +66,7 @@ module Robots
         end
 
         # XXX: need to verify whether raster data are continous or discrete to choose the correct resampling method
-        def reproject(input_filename, output_filename, tiffname, projection, resample = 'bilinear')
+        def reproject(input_filename, output_filename, tiffname, projection)
           FileUtils.mkdir_p(File.dirname(output_filename)) unless File.directory?(File.dirname(output_filename))
           if projection == 'EPSG:4326'
             # just compress with gdal_translate
@@ -77,7 +77,7 @@ module Robots
 
             # reproject with gdalwarp (must uncompress here to prevent bloat)
             logger.info "normalize-data: #{bare_druid} projecting #{File.basename(input_filename)} from #{projection}"
-            system_with_check "#{Settings.gdal_path}gdalwarp -r #{resample} -t_srs EPSG:4326 #{input_filename} #{temp_filename} -co 'COMPRESS=NONE'"
+            system_with_check "#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 #{input_filename} #{temp_filename} -co 'COMPRESS=NONE'"
             raise "normalize-data: #{bare_druid} gdalwarp failed to create #{temp_filename}" unless File.size?(temp_filename)
 
             # compress temp_filename with gdal_translate
