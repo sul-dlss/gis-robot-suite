@@ -206,8 +206,8 @@ module Robots
           input_filename = File.join(tmpdir, "#{shpname}.shp") # input shapefile
           raise "normalize-data: #{bare_druid} is missing Shapefile: #{input_filename}" unless File.exist? input_filename
 
-          odr = File.join(tmpdir, 'EPSG_4326') # output directory
-          output_filename = File.join(odr, "#{shpname}.shp") # output shapefile
+          output_dir = File.join(tmpdir, 'EPSG_4326')
+          output_filename = File.join(output_dir, "#{shpname}.shp") # output shapefile
 
           # Verify source projection
           projection_filename = File.join(tmpdir, "#{shpname}.prj")
@@ -224,7 +224,7 @@ module Robots
           end
 
           # reproject, @see http://www.gdal.org/ogr2ogr.html
-          FileUtils.mkdir_p(odr) unless File.directory?(odr)
+          FileUtils.mkdir_p(output_dir) unless File.directory?(output_dir)
           logger.info "normalize-data: #{bare_druid} is projecting #{File.basename(input_filename)} to EPSG:4326"
           system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filename}' '#{input_filename}'") # prevent recoding
           raise "normalize-data: #{bare_druid} failed to reproject #{input_filename}" unless File.size?(output_filename)
@@ -237,7 +237,7 @@ module Robots
           # package up reprojection
           output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
           FileUtils.rm_f(output_zip) if File.size?(output_zip)
-          system_with_check("zip -Dj '#{output_zip}' \"#{odr}/#{shpname}\".*")
+          system_with_check("zip -Dj '#{output_zip}' \"#{output_dir}/#{shpname}\".*")
 
           # cleanup
           logger.debug "normalize-data: #{bare_druid} removing #{tmpdir}"
