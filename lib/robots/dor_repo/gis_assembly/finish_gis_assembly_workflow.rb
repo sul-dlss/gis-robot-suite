@@ -6,6 +6,8 @@ module Robots
   module DorRepo
     module GisAssembly
       class FinishGisAssemblyWorkflow < Base
+        EXPECTED_FILES = %w[content/data.zip content/data_EPSG_4326.zip content/preview.jpg].freeze
+
         def initialize
           super('gisAssemblyWF', 'finish-gis-assembly-workflow')
         end
@@ -15,11 +17,7 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # first ensure all files are ready
-          %w[
-            content/data.zip
-            content/data_EPSG_4326.zip
-            content/preview.jpg
-          ].each do |f|
+          EXPECTED_FILES.each do |f|
             fn = File.join(rootdir, f)
             raise "finish-gis-assembly-workflow: #{bare_druid} is missing required file: #{fn}" unless File.size?(fn)
           end
