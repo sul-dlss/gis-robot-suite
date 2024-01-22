@@ -65,8 +65,7 @@ module Robots
           tmpdir
         end
 
-        # XXX: need to verify whether raster data are continous or discrete to choose the correct resampling method
-        def reproject(input_filename, output_filename, tiffname, projection)
+        def reproject_raster(input_filename, output_filename, tiffname, projection)
           FileUtils.mkdir_p(File.dirname(output_filename)) unless File.directory?(File.dirname(output_filename))
           if projection == 'EPSG:4326'
             # just compress with gdal_translate
@@ -134,7 +133,7 @@ module Robots
 
           input_filename = "#{tmpdir}/#{tiffname}.tif"
           output_filename = "#{tmpdir}/EPSG_4326/#{tiffname}.tif"
-          reproject(input_filename, output_filename, tiffname, projection)
+          reproject_raster(input_filename, output_filename, tiffname, projection)
 
           # if using 8-bit color palette, convert into RGB
           convert_8bit_to_rgb(output_filename, tmpdir)
@@ -169,7 +168,7 @@ module Robots
           # reproject
           grid_filename = "#{tmpdir}/#{gridname}"
           tiff_filename = "#{tmpdir}/#{gridname}.tif"
-          reproject(grid_filename, tiff_filename, gridname, projection)
+          reproject_raster(grid_filename, tiff_filename, gridname, projection)
 
           # if using 8-bit color palette, convert into RGB
           convert_8bit_to_rgb(tiff_filename, tmpdir)
