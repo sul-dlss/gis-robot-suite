@@ -19,17 +19,13 @@ module Robots
           end
 
           File.umask(002)
-          flags = {
-            overwrite_prj: true,
-            tmpdir: Settings.geohydra.tmpdir
-          }
 
           filename = "#{rootdir}/content/data.zip" # original content
           logger.debug "Processing #{bare_druid} #{filename}"
 
           # reproject based on file format information
           if GisRobotSuite.vector?(cocina_object)
-            reproject_shapefile(filename, flags)
+            reproject_shapefile(filename)
           elsif GisRobotSuite.raster?(cocina_object)
             projection = GisRobotSuite.determine_projection(cocina_object)
             projection.gsub!('ESRI', 'EPSG')
@@ -37,9 +33,9 @@ module Robots
 
             case GisRobotSuite.data_format(cocina_object)
             when 'GeoTIFF'
-              reproject_geotiff(filename, projection, flags)
+              reproject_geotiff(filename, projection)
             when 'ArcGRID'
-              reproject_arcgrid(filename, projection, flags)
+              reproject_arcgrid(filename, projection)
             when nil
               raise "normalize-data: #{bare_druid} cannot locate data type"
             else
@@ -58,11 +54,11 @@ module Robots
           success
         end
 
-        def extract_data_from_zip(zip_filename, tmpdir)
+        def extract_data_from_zip(zip_filename)
           logger.debug "Extracting #{bare_druid} data from #{zip_filename}"
           raise "normalize-data: #{bare_druid} cannot locate packaged data: #{zip_filename}" unless File.size?(zip_filename)
 
-          tmpdir = File.join(tmpdir, "normalize_#{bare_druid}")
+          tmpdir = File.join(Settings.geohydra.tmpdir, "normalize_#{bare_druid}")
           FileUtils.rm_rf(tmpdir) if File.directory?(tmpdir)
           FileUtils.mkdir_p(tmpdir)
           system_with_check("unzip -o '#{zip_filename}' -d '#{tmpdir}'")
@@ -122,8 +118,8 @@ module Robots
           system_with_check("zip -Dj '#{output_zip}' '#{tiff_filename}'*")
         end
 
-        def reproject_geotiff(zip_filename, projection, flags, srid = 4326)
-          tmpdir = extract_data_from_zip(zip_filename, flags[:tmpdir])
+        def reproject_geotiff(zip_filename, projection, srid = 4326)
+          tmpdir = extract_data_from_zip(zip_filename)
 
           # sniff out GeoTIFF file
           tiffname = nil
@@ -156,8 +152,8 @@ module Robots
           FileUtils.rm_rf(tmpdir)
         end
 
-        def reproject_arcgrid(zip_filename, projection, flags, srid = 4326)
-          tmpdir = extract_data_from_zip(zip_filename, flags[:tmpdir])
+        def reproject_arcgrid(zip_filename, projection, srid = 4326)
+          tmpdir = extract_data_from_zip(zip_filename)
 
           # Sniff out ArcGRID location
           gridname = nil
@@ -192,8 +188,8 @@ module Robots
         end
 
         # @param zip_filename [String] ZIP file
-        def reproject_shapefile(zip_filename, flags, srid = 4326)
-          tmpdir = extract_data_from_zip(zip_filename, flags[:tmpdir])
+        def reproject_shapefile(zip_filename, srid = 4326)
+          tmpdir = extract_data_from_zip(zip_filename)
 
           # Sniff out Shapefile location
           shpname = nil
@@ -235,7 +231,7 @@ module Robots
           raise "normalize-data: #{bare_druid} failed to reproject #{input_filename}" unless File.size?(output_filename)
 
           # normalize prj file
-          if flags[:overwrite_prj] && wkt
+          if wkt
             projection_filename = output_filename.gsub('.shp', '.prj')
             logger.debug "normalize-data: #{bare_druid} overwriting #{projection_filename}"
             File.write(projection_filename, wkt)
