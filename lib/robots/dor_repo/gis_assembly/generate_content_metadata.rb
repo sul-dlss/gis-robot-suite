@@ -38,6 +38,9 @@ module Robots
           geo_data_xml = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
 
           xml = create_content_metadata(objects, geo_data_xml)
+          # metadata dir was not created upstream because no more writing geoMetadata.xml or descMetadata.xml
+          metadatadir = "#{rootdir}/metadata"
+          FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
           fn = "#{rootdir}/metadata/contentMetadata.xml"
           File.binwrite(fn, xml)
           raise "generate-content-metadata: #{bare_druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)

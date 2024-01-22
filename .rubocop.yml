@@ -482,3 +482,5 @@ Capybara/RSpec/PredicateMatcher: # new in 2.19
   Enabled: true
 FactoryBot/IdSequence: # new in <<next>>
   Enabled: true
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false

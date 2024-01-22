@@ -38,7 +38,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
 * `finish-data` :: Finalize the data preparation (validity check)
 * `generate-content-metadata` :: Generate contentMetadata manifest
-* `load-geo-metadata` :: Accession geoMetadata xml into SDR
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
 
@@ -80,7 +79,6 @@ look like this in the workspace:
     zv925hd6723/
       metadata/
         contentMetadata.xml
-        geoMetadata.xml
       content/
         data.zip
         data_ESRI_4326.zip
