@@ -11,7 +11,6 @@ module Robots
         def perform_work
           logger.debug "normalize-data working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
           data_filename = "#{rootdir}/content/data_EPSG_4326.zip"
           if File.size?(data_filename)
             logger.info "normalize-data: #{bare_druid} found existing normalized data: #{File.basename(data_filename)}"
@@ -44,6 +43,10 @@ module Robots
           else
             raise "normalize-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
           end
+        end
+
+        def rootdir
+          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
         end
 
         def system_with_check(cmd)
