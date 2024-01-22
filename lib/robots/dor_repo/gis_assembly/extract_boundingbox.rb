@@ -218,17 +218,15 @@ module Robots
         #
         # @return [Array] ulx uly lrx lry for the bounding box
         def determine_extent
-          Dir.chdir(tmpdir) do
-            shape_filename = Dir.glob('*.shp').first
-            if shape_filename.nil?
-              tiff_filename = Dir.glob('*.tif').first
-              ulx, uly, lrx, lry = extent_geotiff tiff_filename # normalized version only
-            else
-              ulx, uly, lrx, lry = extent_shapefile shape_filename
-            end
-            logger.debug [ulx, uly, lrx, lry].join(' -- ')
-            return [ulx, uly, lrx, lry]
+          shape_filename = Dir.glob("#{tmpdir}/*.shp").first
+          if shape_filename.nil?
+            tiff_filename = Dir.glob("#{tmpdir}/*.tif").first
+            ulx, uly, lrx, lry = extent_geotiff tiff_filename # normalized version only
+          else
+            ulx, uly, lrx, lry = extent_shapefile shape_filename
           end
+          logger.debug [ulx, uly, lrx, lry].join(' -- ')
+          [ulx, uly, lrx, lry]
         end
 
         def check_extent(ulx, uly, lrx, lry)
