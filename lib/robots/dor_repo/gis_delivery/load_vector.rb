@@ -13,10 +13,6 @@ module Robots
 
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :workspace
 
-          # determine whether we have a Shapefile to load
-          modsfn = File.join(rootdir, 'metadata', 'descMetadata.xml')
-          raise "load-vector: #{bare_druid} cannot locate MODS: #{modsfn}" unless File.size?(modsfn)
-
           raise "load-vector: #{bare_druid} cannot determine media type" unless GisRobotSuite.media_type(cocina_object)
 
           # perform based on file format information
