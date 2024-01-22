@@ -17,6 +17,12 @@ These robots require several dependencies needed to perform the GIS workflow ste
 
 # Documentation
 
+GIS data has its own set of names, standards and conventions that can be difficult for newcomers. To better understand some of these please see the [Geo4LibCamp Glossary](https://geo5libcamp.org/glossary/) as well as the following article which describes the initial goals for supporting GIS in SDR:
+
+Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of Geospatial Data Using Hydra, Journal of Map &amp; Geography Libraries, 11:2, 123-154, DOI: [10.1080/15420353.2015.1041630](https://doi.org/10.1080/15420353.2015.1041630).
+
+*gis-robot-suite* services two workflows: *gisAssemblyWF* and *gisDeliveryWF*.
+
 `gisAssemblyWF`
 ---------------
 
