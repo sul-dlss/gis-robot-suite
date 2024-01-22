@@ -58,7 +58,9 @@ module Robots
 
         # Directory where XSL transforms are located
         def xslt_path
-          File.join(Dir.pwd, 'config', 'ArcGIS', 'Transforms')
+          # Root of the project.  This is needed to find the XSLT files.
+          basepath = File.absolute_path("#{__FILE__}/../../../../..")
+          File.join(basepath, 'config', 'ArcGIS', 'Transforms')
         end
 
         # Comand to invoke xsltproc to transform XML
@@ -73,8 +75,8 @@ module Robots
 
         # Apply an XSL transform to the ESRI metadata file
         def transform_arcgis_metadata(output_file, xslt_name)
-          logger.info "generating #{output_file}"
           xslt_file = File.join(xslt_path, xslt_name)
+          logger.info("generating #{output_file} using #{xslt_file}")
           system("#{xslt_command} #{xslt_file} '#{esri_metadata_file}' | #{xml_lint_command} -o '#{output_file}' -", exception: true)
         end
 
