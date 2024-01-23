@@ -34,6 +34,7 @@ end
 
 group :test do
   gem 'byebug'
+  gem 'rubyzip'
   gem 'webmock'
   gem 'rspec_junit_formatter' # For circleCI
   gem 'simplecov', require: 'false'

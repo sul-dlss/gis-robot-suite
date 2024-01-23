@@ -17,6 +17,7 @@ require 'pry'
 require 'byebug'
 require 'rspec'
 require 'cocina/rspec'
+require 'zip'
 include LyberCore::Rspec # rubocop:disable Style/MixinUsage
 
 def read_fixture(fname)
