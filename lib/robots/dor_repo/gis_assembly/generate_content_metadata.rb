@@ -23,23 +23,21 @@ module Robots
 
           rootdir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
 
-          objects = {
+          object_files = {
             Data: [],
             Preview: [],
             Metadata: []
           }
 
           # Process files
-          objects.each_key do |k|
-            Dir.glob("#{rootdir}/content/#{PATTERNS[k]}").each do |fn|
-              objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
+          object_files.each_key do |file_category|
+            Dir.glob("#{rootdir}/content/#{PATTERNS[file_category]}").each do |file_name|
+              object_files[file_category] << Assembly::ObjectFile.new(file_name, label: file_category.to_s)
             end
           end
 
-          object_client = Dor::Services::Client.object("druid:#{bare_druid}")
-          cocina_model = object_client.find
-          structural = GisRobotSuite::StructuralMetadataBuilder.build(cocina_model, bare_druid, objects)
-          updated = cocina_model.new(structural:)
+          structural = GisRobotSuite::StructuralMetadataBuilder.build(cocina_object, bare_druid, object_files)
+          updated = cocina_object.new(structural:)
           object_client.update(params: updated)
         end
       end

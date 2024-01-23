@@ -320,7 +320,6 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-shared_configs
-  cocina-models
   config (~> 3.1)
   debug
   dlss-capistrano

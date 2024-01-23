@@ -52,7 +52,7 @@ module GisRobotSuite
                                else
                                  'master'
                                end
-                             end || nil
+                             end
     end
   end
 end

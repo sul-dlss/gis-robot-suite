@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 
 # stanford dlss specific gems
 gem 'assembly-objectfile'
-gem 'cocina-models'
 gem 'dor-services-client', '~> 14.0'
 gem 'dor-workflow-client', '~> 7.0'
 gem 'druid-tools'
