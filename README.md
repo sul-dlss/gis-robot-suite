@@ -31,12 +31,9 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
 * `generate-mods` :: Convert geoMetadata into MODS
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
-* `finish-metadata` :: Finalize the metadata preparation (validity check)
-* `wrangle-data` :: Wrangle the data into the digital work (manual step)
 * `package-data` :: Package the digital work
 * `normalize-data` :: Reproject the data into common SRS projection and/or file format
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
-* `finish-data` :: Finalize the data preparation (validity check)
 * `generate-content-metadata` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
