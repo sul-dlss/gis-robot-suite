@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'fastimage'
-require 'mime/types'
 require 'assembly-objectfile'
 
 module Robots
@@ -15,127 +14,184 @@ module Robots
         def perform_work
           logger.debug "generate-content-metadata working on #{bare_druid}"
 
-          rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
-
-          objects = {
-            Data: [],
-            Preview: [],
-            Metadata: []
-          }
-
-          # Process files
-          objects.each_key do |k|
-            Dir.glob("#{rootdir}/content/#{PATTERNS[k]}").each do |fn|
-              objects[k] << Assembly::ObjectFile.new(fn, label: k.to_s)
-            end
-          end
-
-          doc = Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid)
-          ns = {
-            'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-            'mods' => 'http://www.loc.gov/mods/v3'
-          }
-          geo_data_xml = doc.dup.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
-
-          xml = create_content_metadata(objects, geo_data_xml)
-          # metadata dir was not created upstream because no more writing geoMetadata.xml or descMetadata.xml
-          metadatadir = "#{rootdir}/metadata"
-          FileUtils.mkdir(metadatadir) unless File.directory?(metadatadir)
-          fn = "#{rootdir}/metadata/contentMetadata.xml"
-          File.binwrite(fn, xml)
-          raise "generate-content-metadata: #{bare_druid} cannot create contentMetadata: #{fn}" unless File.size?(fn)
+          updated = cocina_object.new(structural: cocina_object.structural.new(contains: contains_params))
+          object_client.update(params: updated)
         end
 
         private
 
-        # @param [Hash<Symbol,Assembly::ObjectFile>] objects
-        # @param [Nokogiri::XML::DocumentFragment] geo_data_xml
-        # @return [Nokogiri::XML::Document]
-        # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-        def create_content_metadata(objects, geo_data_xml)
-          Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-            xml.contentMetadata(objectId: bare_druid, type: 'geo') do
-              seq = 1
-              objects.each do |k, v|
-                next if v.nil? || v.empty?
-
-                resource_type = case k
-                                when :Data
-                                  :object
-                                when :Preview
-                                  :preview
-                                else
-                                  :attachment
-                                end
-                xml.resource(
-                  id: "#{bare_druid}_#{seq}",
-                  sequence: seq,
-                  type: resource_type
-                ) do
-                  xml.label k.to_s
-                  v.each do |o|
-                    raise ArgumentError unless o.is_a? Assembly::ObjectFile
-
-                    mimetype = o.image? ? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
-
-                    roletype = if mimetype == 'application/zip'
-                                 if o.path =~ /_(EPSG_\d+)/i # derivative
-                                   'derivative'
-                                 else
-                                   'master'
-                                 end
-                               elsif o.image?
-                                 if o.path =~ /_small.png$/
-                                   'derivative'
-                                 else
-                                   'master'
-                                 end
-                               end || nil
-
-                    o.file_attributes ||= {}
-                    [:publish, :shelve].each { |t| o.file_attributes[t] = 'yes' }
-                    o.file_attributes[:preserve] = if roletype == 'master'
-                                                     'yes'
-                                                   else
-                                                     'no'
-                                                   end
-
-                    xml.file o.file_attributes.merge(
-                      id: o.filename,
-                      mimetype:,
-                      size: o.filesize,
-                      role: roletype || 'master'
-                    ) do
-                      if resource_type == :object
-                        if roletype == 'master' && !geo_data_xml.nil?
-                          xml.geoData do
-                            xml.parent.add_child geo_data_xml
-                          end
-                          geo_data_xml = nil # only once
-                        elsif o.filename =~ /_EPSG_(\d+)\.zip/i
-                          xml.geoData srsName: "EPSG:#{Regexp.last_match(1)}"
-                        end
-                      end
-                      xml.checksum(o.sha1, type: 'sha1')
-                      xml.checksum(o.md5, type: 'md5')
-                      if o.image?
-                        wh = FastImage.size(o.path)
-                        xml.imageData width: wh[0], height: wh[1]
-                      end
-                    end
-                  end
-                  seq += 1
-                end
-              end
-            end
-          end.doc.to_xml(indent: 2)
+        def contains_params
+          [
+            {
+              type: 'https://cocina.sul.stanford.edu/models/resources/object',
+              externalIdentifier: "#{bare_druid}_1",
+              label: 'Data',
+              version: cocina_object.version,
+              structural: {
+                contains: data_files_params
+              }
+            },
+            {
+              type: 'https://cocina.sul.stanford.edu/models/resources/preview',
+              externalIdentifier: "#{bare_druid}_2",
+              label: 'Preview',
+              version: cocina_object.version,
+              structural: {
+                contains: [
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+                    label: 'preview.jpg',
+                    filename: 'preview.jpg',
+                    size: preview_objectfile.filesize,
+                    version: cocina_object.version,
+                    hasMimeType: 'image/jpeg',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: preview_objectfile.sha1
+                      },
+                      {
+                        type: 'md5',
+                        digest: preview_objectfile.md5
+                      }
+                    ],
+                    access: file_access_params,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    },
+                    presentation: preview_presentation_params
+                  }
+                ]
+              }
+            }
+          ]
         end
 
-        PATTERNS = {
-          Data: '*.{zip,TAB,tab,dat,bin,xls,xlsx,tar,tgz,csv,tif,json,geojson,topojson,dbf}',
-          Preview: '*.{png,jpg,gif,jp2}',
-          Metadata: '*.{xml,txt,pdf}'
-        }.freeze
+        def rootdir
+          @rootdir ||= GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+        end
+
+        def data_zip_objectfile
+          @data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data.zip")
+        end
+
+        def epsg_data_zip_objectfile
+          @epsg_data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data_EPSG_4326.zip")
+        end
+
+        def preview_objectfile
+          @preview_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/preview.jpg")
+        end
+
+        def index_map_objectfile
+          @index_map_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/index_map.json")
+        end
+
+        def preview_presentation_params
+          wh = FastImage.size(preview_objectfile.path)
+          { width: wh[0], height: wh[1] }
+        end
+
+        def file_access_params
+          @file_access_params ||= cocina_object.access.to_h
+                                               .slice(:view, :download, :location, :controlledDigitalLending)
+                                               .tap do |access|
+            access[:view] = 'dark' if access[:view] == 'citation-only'
+          end
+        end
+
+        def data_files_params
+          [
+            {
+              type: 'https://cocina.sul.stanford.edu/models/file',
+              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+              label: 'data.zip',
+              filename: 'data.zip',
+              size: data_zip_objectfile.filesize,
+              version: cocina_object.version,
+              hasMimeType: 'application/zip',
+              use: 'master',
+              hasMessageDigests: [
+                {
+                  type: 'sha1',
+                  digest: data_zip_objectfile.sha1
+                },
+                {
+                  type: 'md5',
+                  digest: data_zip_objectfile.md5
+                }
+              ],
+              access: file_access_params,
+              administrative: {
+                publish: true,
+                sdrPreserve: true,
+                shelve: true
+              }
+            },
+            {
+              type: 'https://cocina.sul.stanford.edu/models/file',
+              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+              label: 'data_EPSG_4326.zip',
+              filename: 'data_EPSG_4326.zip',
+              size: epsg_data_zip_objectfile.filesize,
+              version: cocina_object.version,
+              hasMimeType: 'application/zip',
+              use: 'derivative',
+              hasMessageDigests: [
+                {
+                  type: 'sha1',
+                  digest: epsg_data_zip_objectfile.sha1
+                },
+                {
+                  type: 'md5',
+                  digest: epsg_data_zip_objectfile.md5
+                }
+              ],
+              access: file_access_params,
+              administrative: {
+                publish: true,
+                sdrPreserve: false,
+                shelve: true
+              }
+            }
+          ].tap do |params|
+            # Add index_map.json if it exists
+            params << index_map_params if index_map_objectfile.file_exists?
+          end
+        end
+
+        def index_map_params
+          {
+            type: 'https://cocina.sul.stanford.edu/models/file',
+            externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+            label: 'index_map.json',
+            filename: 'index_map.json',
+            size: index_map_objectfile.filesize,
+            version: cocina_object.version,
+            hasMimeType: 'application/json',
+            use: 'master',
+            hasMessageDigests: [
+              {
+                type: 'sha1',
+                digest: index_map_objectfile.sha1
+              },
+              {
+                type: 'md5',
+                digest: index_map_objectfile.md5
+              }
+            ],
+            access: file_access_params,
+            administrative: {
+              publish: true,
+              sdrPreserve: true,
+              shelve: true
+            }
+          }
+        end
       end
     end
   end

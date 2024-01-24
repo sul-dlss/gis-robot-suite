@@ -70,6 +70,10 @@ is *pre-stage*:
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
+      content/
+        index_map.json
+
+Note that `content/index_map.json` is optional.
 
 
 Step 2: Assembly
@@ -85,7 +89,9 @@ look like this in the workspace:
         data.zip
         data_ESRI_4326.zip
         preview.jpg
-        some-other-file.ext (optionally)
+        index_map.json
+
+Note that `content/index_map.json` is optional.
 
 # Reset Process (for QA/Stage)
 
