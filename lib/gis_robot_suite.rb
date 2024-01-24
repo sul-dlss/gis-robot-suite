@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GisRobotSuite # rubocop:disable Metrics/ModuleLength
+module GisRobotSuite
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
@@ -112,46 +112,6 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
                        'dc' => 'http://purl.org/dc/elements/1.1/').first
     format = format.text unless format.nil?
     format
-  end
-
-  #   geographic: [
-  #     {
-  #       subject: [
-  #         {
-  #           structuredValue: [
-  #             {
-  #               value: '-119.667',
-  #               type: 'west'
-  #             },
-  #             {
-  #               value: '-89.8842',
-  #               type: 'south'
-  #             },
-  #             {
-  #               value: '168.463',
-  #               type: 'east'
-  #             },
-  #             {
-  #               value: '-66.6497',
-  #               type: 'north'
-  #             }
-  #           ],
-  #           type: 'bounding box coordinates',
-  #           encoding: {
-  #             value: 'decimal'
-  #           },
-  #           standard: {
-  #             code: 'EPSG:4326'
-  #           }
-  #         }
-  #       ]
-  #     }
-  #   ]
-  # }
-
-  def self.determine_projection(cocina_object)
-    cocina_object.description.geographic.first&.subject
-                 &.find { |subject| subject.type == 'bounding box coordinates' }&.standard&.code&.upcase
   end
 
   def self.determine_rights(cocina_model)

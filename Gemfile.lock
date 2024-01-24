@@ -273,6 +273,7 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
     scanf (1.0.0)
     sidekiq (7.2.1)
       concurrent-ruby (< 2)
@@ -336,6 +337,7 @@ DEPENDENCIES
   rspec_junit_formatter
   rubocop
   rubocop-rspec
+  rubyzip
   scanf
   sidekiq (~> 7.0)
   sidekiq-pro!

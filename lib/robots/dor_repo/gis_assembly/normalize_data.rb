@@ -11,248 +11,268 @@ module Robots
         def perform_work
           logger.debug "normalize-data working on #{bare_druid}"
 
-          data_filename = "#{rootdir}/content/data_EPSG_4326.zip"
-          if File.size?(data_filename)
-            logger.info "normalize-data: #{bare_druid} found existing normalized data: #{File.basename(data_filename)}"
-            return
-          end
-
           File.umask(002)
 
-          filename = "#{rootdir}/content/data.zip" # original content
-          logger.debug "Processing #{bare_druid} #{filename}"
+          normalizer_class = if GisRobotSuite.vector?(cocina_object)
+                               ShapefileNormalizer
+                             elsif GisRobotSuite.raster?(cocina_object)
+                               RasterNormalizer
+                             else
+                               raise "normalize-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
+                             end
+          normalizer_class.new(robot: self).call
+        end
 
-          # reproject based on file format information
-          if GisRobotSuite.vector?(cocina_object)
-            reproject_shapefile(filename)
-          elsif GisRobotSuite.raster?(cocina_object)
-            projection = GisRobotSuite.determine_projection(cocina_object)
-            projection.gsub!('ESRI', 'EPSG')
-            logger.debug "Projection = #{projection}"
+        class BaseNormalizer
+          def initialize(robot:)
+            @robot = robot
+          end
 
-            case GisRobotSuite.data_format(cocina_object)
-            when 'GeoTIFF'
-              reproject_geotiff(filename, projection)
-            when 'ArcGRID'
-              reproject_arcgrid(filename, projection)
-            when nil
-              raise "normalize-data: #{bare_druid} cannot locate data type"
-            else
-              raise "normalize-data: #{bare_druid} has unsupported Raster data type: #{GisRobotSuite.data_type(cocina_object)}"
+          def call
+            logger.debug "Processing #{bare_druid} #{data_zip_filepath}"
+            extract_to_tmpdir
+            setup_output_dir
+
+            begin
+              raise "normalize-data: #{bare_druid} cannot locate geo object in #{tmpdir}" unless geo_object_name
+
+              normalize
+              cleanup_output_zip
+              zip_output
+            ensure
+              cleanup_tmpdir
+              cleanup_output_dir
             end
-          else
-            raise "normalize-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
+          end
+
+          protected
+
+          attr_reader :robot
+
+          delegate :logger, :bare_druid, :cocina_object, to: :robot
+
+          def system_with_check(cmd)
+            logger.debug "normalize-data: running: #{cmd}"
+            success = Kernel.system(cmd)
+            raise "normalize-data: could not execute command successfully: #{success}: #{cmd}" unless success
+
+            success
+          end
+
+          def tmpdir
+            @tmpdir ||= File.join(Settings.geohydra.tmpdir, "normalize_#{bare_druid}")
+          end
+
+          def output_dir
+            @output_dir ||= File.join(tmpdir, 'EPSG_4326')
+          end
+
+          def geo_object_name
+            # For example, "sanluisobispo1996" given a data.zip containing "sanluisobispo1996.dbf".
+            raise NotImplementedError
+          end
+
+          def normalize
+            raise NotImplementedError
+          end
+
+          def zip_output
+            raise NotImplementedError
+          end
+
+          def cleanup_tmpdir
+            logger.debug "normalize-data: #{bare_druid} removing #{tmpdir}"
+            FileUtils.rm_rf(tmpdir)
+          end
+
+          def cleanup_output_dir
+            return unless File.directory?(output_dir)
+
+            logger.debug "normalize-data: #{bare_druid} removing #{output_dir}"
+            FileUtils.rm_rf(tmpdir)
+          end
+
+          def cleanup_output_zip
+            FileUtils.rm_f(output_zip) if File.size?(output_zip)
+          end
+
+          def output_zip
+            @output_zip ||= "#{rootdir}/content/data_EPSG_4326.zip"
+          end
+
+          private
+
+          def rootdir
+            @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+          end
+
+          def data_zip_filepath
+            @data_zip_filepath ||= "#{rootdir}/content/data.zip"
+          end
+
+          def extract_to_tmpdir
+            logger.debug "Extracting #{bare_druid} data from #{data_zip_filepath}"
+            raise "normalize-data: #{bare_druid} cannot locate packaged data: #{data_zip_filepath}" unless File.size?(data_zip_filepath)
+
+            FileUtils.rm_rf(tmpdir) if File.directory?(tmpdir)
+            FileUtils.mkdir_p(tmpdir)
+            system_with_check("unzip -o '#{data_zip_filepath}' -d '#{tmpdir}'")
+          end
+
+          def setup_output_dir
+            FileUtils.rm_rf(output_dir) if File.directory?(output_dir)
+            FileUtils.mkdir_p(output_dir)
           end
         end
 
-        def rootdir
-          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+        class ShapefileNormalizer < BaseNormalizer
+          def normalize
+            reproject
+            normalize_prj_file
+          end
+
+          def zip_output
+            system_with_check("zip -Dj '#{output_zip}' \"#{output_dir}/#{geo_object_name}\".*")
+          end
+
+          def geo_object_name
+            @geo_object_name ||= shp_filepath ? File.basename(shp_filepath, '.shp') : nil
+          end
+
+          private
+
+          def shp_filepath
+            @shp_filepath ||= Dir.glob("#{tmpdir}/*.shp").first
+          end
+
+          def wkt
+            # Well Known Text. It’s a text markup language for expressing geometries in vector data.
+            @wkt ||= URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
+          end
+
+          def reproject
+            # See http://www.gdal.org/ogr2ogr.html
+            output_filepath = File.join(output_dir, "#{geo_object_name}.shp") # output shapefile
+            logger.info "normalize-data: #{bare_druid} is projecting #{geo_object_name} to EPSG:4326"
+            system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{shp_filepath}'") # prevent recoding
+            raise "normalize-data: #{bare_druid} failed to reproject #{shp_filepath}" unless File.size?(output_filepath)
+          end
+
+          def normalize_prj_file
+            output_filepath = File.join(output_dir, "#{geo_object_name}.prj")
+            logger.debug "normalize-data: #{bare_druid} overwriting #{output_filepath}"
+            File.write(output_filepath, wkt)
+          end
         end
 
-        def system_with_check(cmd)
-          logger.debug "normalize-data: running: #{cmd}"
-          success = system(cmd)
-          raise "normalize-data: could not execute command successfully: #{success}: #{cmd}" unless success
+        class RasterNormalizer < BaseNormalizer
+          def normalize
+            raise "normalize-data: #{bare_druid} cannot locate data type" unless data_format
+            raise "normalize-data: #{bare_druid} has unsupported Raster data type: #{data_format}" unless geotiff? || arcgrid?
 
-          success
-        end
+            if epsg4326_projection?
+              reproject_and_compress
+            else
+              compress_only
+            end
 
-        def extract_data_from_zip(zip_filename)
-          logger.debug "Extracting #{bare_druid} data from #{zip_filename}"
-          raise "normalize-data: #{bare_druid} cannot locate packaged data: #{zip_filename}" unless File.size?(zip_filename)
+            # if using 8-bit color palette, convert into RGB
+            convert_8bit_to_rgb if eight_bit?
 
-          tmpdir = File.join(Settings.geohydra.tmpdir, "normalize_#{bare_druid}")
-          FileUtils.rm_rf(tmpdir) if File.directory?(tmpdir)
-          FileUtils.mkdir_p(tmpdir)
-          system_with_check("unzip -o '#{zip_filename}' -d '#{tmpdir}'")
-          tmpdir
-        end
+            compute_statistics
+          end
 
-        def reproject_raster(input_filename, output_filename, tiffname, projection)
-          FileUtils.mkdir_p(File.dirname(output_filename)) unless File.directory?(File.dirname(output_filename))
-          if projection == 'EPSG:4326'
-            # just compress with gdal_translate
-            logger.info "normalize-data: #{bare_druid} is compressing original #{projection}"
-            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{input_filename} #{output_filename} -co 'COMPRESS=LZW'")
-          else
-            temp_filename = "#{File.dirname(output_filename)}/#{tiffname}_uncompressed.tif"
+          def geo_object_name
+            @geo_object_name = if arcgrid?
+                                 filepath = Dir.glob("#{tmpdir}/*/metadata.xml").first
+                                 filepath ? File.basename(File.dirname(filepath)) : nil
+                               else # GeoTIFF
+                                 filepath = Dir.glob("#{tmpdir}/*.tif.xml").first
+                                 filepath ? File.basename(filepath, '.tif.xml') : nil
+                               end
+          end
+
+          def zip_output
+            system_with_check("zip -Dj '#{output_zip}' '#{output_filepath}'*")
+          end
+
+          private
+
+          def data_format
+            @data_format ||= GisRobotSuite.data_format(cocina_object)
+          end
+
+          def geotiff?
+            data_format == 'GeoTIFF'
+          end
+
+          def arcgrid?
+            data_format == 'ArcGRID'
+          end
+
+          def reproject_and_compress
+            temp_filepath = "#{output_dir}/#{geo_object_name}_uncompressed.tif"
 
             # reproject with gdalwarp (must uncompress here to prevent bloat)
-            logger.info "normalize-data: #{bare_druid} projecting #{File.basename(input_filename)} from #{projection}"
-            system_with_check "#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 #{input_filename} #{temp_filename} -co 'COMPRESS=NONE'"
-            raise "normalize-data: #{bare_druid} gdalwarp failed to create #{temp_filename}" unless File.size?(temp_filename)
+            logger.info "normalize-data: #{bare_druid} projecting #{geo_object_name} from #{projection_from_cocina_subject}"
+            system_with_check "#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 #{input_filepath} #{temp_filepath} -co 'COMPRESS=NONE'"
+            raise "normalize-data: #{bare_druid} gdalwarp failed to create #{temp_filepath}" unless File.size?(temp_filepath)
 
-            # compress temp_filename with gdal_translate
-            logger.info "normalize-data: #{bare_druid} is compressing reprojection to #{projection}"
-            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{temp_filename} #{output_filename} -co 'COMPRESS=LZW'")
-            FileUtils.rm_f(temp_filename)
+            compress(temp_filepath, output_filepath)
+            FileUtils.rm_f(temp_filepath)
           end
-          raise "normalize-data: #{bare_druid} gdal_translate failed to create #{output_filename}" unless File.size?(output_filename)
-        end
 
-        def convert_8bit_to_rgb(tiff_filename, tmpdir)
-          # if using 8-bit color palette, convert into RGB
-          cmd = "#{Settings.gdal_path}gdalinfo -norat -noct '#{tiff_filename}'"
-          infotxt = IO.popen(cmd, &:readlines)
-          uses_palette = false
-          infotxt.each do |line|
-            # Band 1 Block=4063x2 Type=Byte, ColorInterp=Palette
-            if line =~ /^Band (.+) Block=(.+) Type=Byte, ColorInterp=Palette\s*$/
-              uses_palette = true
-              break
+          def compress_only
+            compress(input_filepath, output_filepath)
+          end
+
+          def epsg4326_projection?
+            projection_from_cocina_subject == 'EPSG:4326'
+          end
+
+          def projection_from_cocina_subject
+            @projection_from_cocina_subject ||= cocina_object.description.geographic.first&.subject
+                                                             &.find { |subject| subject.type == 'bounding box coordinates' }&.standard&.code&.upcase&.gsub('ESRI', 'EPSG')
+          end
+
+          def compress(input_filepath, output_filepath)
+            logger.info "normalize-data: #{bare_druid} is compressing to #{projection_from_cocina_subject}"
+            system_with_check("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{input_filepath} #{output_filepath} -co 'COMPRESS=LZW'")
+            raise "normalize-data: #{bare_druid} gdal_translate failed to create #{output_filepath}" unless File.size?(output_filepath)
+          end
+
+          def input_filepath
+            @input_filepath ||= if arcgrid?
+                                  "#{tmpdir}/#{geo_object_name}"
+                                else # GeoTIFF
+                                  "#{tmpdir}/#{geo_object_name}.tif"
+                                end
+          end
+
+          def output_filepath
+            @output_filepath ||= "#{output_dir}/#{geo_object_name}.tif"
+          end
+
+          def convert_8bit_to_rgb
+            logger.info "normalize-data: expanding color palette into rgb for #{output_filepath}"
+            temp_filename = "#{tmpdir}/raw8bit.tif"
+            system_with_check("mv #{output_filepath} #{temp_filename}")
+            system_with_check("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'")
+          end
+
+          def eight_bit?
+            cmd = "#{Settings.gdal_path}gdalinfo -norat -noct '#{output_filepath}'"
+            infotxt = IO.popen(cmd, &:readlines)
+            infotxt.each do |line|
+              # Band 1 Block=4063x2 Type=Byte, ColorInterp=Palette
+              return true if line.match?(/^Band (.+) Block=(.+) Type=Byte, ColorInterp=Palette\s*$/)
             end
-          end
-          return unless uses_palette
-
-          logger.info "normalize-data: expanding color palette into rgb for #{tiff_filename}"
-          temp_filename = "#{tmpdir}/raw8bit.tif"
-          system_with_check("mv #{tiff_filename} #{temp_filename}")
-          system_with_check("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{tiff_filename} -co 'COMPRESS=LZW'")
-        end
-
-        def compute_statistics(tiff_filename)
-          system_with_check("#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{tiff_filename}")
-        end
-
-        def zip_up(output_zip, tiff_filename)
-          FileUtils.rm_f(output_zip) if File.size?(output_zip)
-          logger.debug "Repacking #{output_zip}"
-          system_with_check("zip -Dj '#{output_zip}' '#{tiff_filename}'*")
-        end
-
-        def reproject_geotiff(zip_filename, projection)
-          tmpdir = extract_data_from_zip(zip_filename)
-
-          # sniff out GeoTIFF file
-          tiffname = nil
-          Dir.glob("#{tmpdir}/*.tif.xml") do |fn|
-            tiffname = File.basename(fn, '.tif.xml')
-          end
-          if tiffname.nil?
-            logger.debug "Removing #{tmpdir}"
-            FileUtils.rm_rf(tmpdir)
-            raise ArgumentError, "normalize-data: #{bare_druid} cannot locate GeoTIFF in #{tmpdir}"
+            false
           end
 
-          input_filename = "#{tmpdir}/#{tiffname}.tif"
-          output_filename = "#{tmpdir}/EPSG_4326/#{tiffname}.tif"
-          reproject_raster(input_filename, output_filename, tiffname, projection)
-
-          # if using 8-bit color palette, convert into RGB
-          convert_8bit_to_rgb(output_filename, tmpdir)
-
-          # compute statistics
-          logger.info "normalize-data: #{bare_druid} computing statistics"
-          compute_statistics(output_filename)
-
-          # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
-          zip_up(output_zip, output_filename)
-
-          # cleanup
-          logger.debug "Removing #{tmpdir}"
-          FileUtils.rm_rf(tmpdir)
-        end
-
-        def reproject_arcgrid(zip_filename, projection)
-          tmpdir = extract_data_from_zip(zip_filename)
-
-          # Sniff out ArcGRID location
-          gridname = nil
-          Dir.glob("#{tmpdir}/*/metadata.xml") do |fn|
-            gridname = File.basename(File.dirname(fn))
+          def compute_statistics
+            system_with_check("#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{output_filepath}")
           end
-          if gridname.nil?
-            logger.debug "Removing #{tmpdir}"
-            FileUtils.rm_rf(tmpdir)
-            raise ArgumentError, "normalize-data: #{bare_druid} cannot locate ArcGRID in #{tmpdir}"
-          end
-
-          # reproject
-          grid_filename = "#{tmpdir}/#{gridname}"
-          tiff_filename = "#{tmpdir}/#{gridname}.tif"
-          reproject_raster(grid_filename, tiff_filename, gridname, projection)
-
-          # if using 8-bit color palette, convert into RGB
-          convert_8bit_to_rgb(tiff_filename, tmpdir)
-
-          # compute statistics
-          logger.info "normalize-data: #{bare_druid} computing statistics"
-          compute_statistics(tiff_filename)
-
-          # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
-          zip_up(output_zip, tiff_filename)
-
-          # cleanup
-          logger.debug "Removing #{tmpdir}"
-          FileUtils.rm_rf(tmpdir)
-        end
-
-        # @param zip_filename [String] ZIP file
-        def reproject_shapefile(zip_filename)
-          tmpdir = extract_data_from_zip(zip_filename)
-
-          # Sniff out Shapefile location
-          shpname = nil
-          Dir.glob("#{tmpdir}/*.shp") do |fn|
-            shpname = File.basename(fn, '.shp')
-          end
-          if shpname.nil?
-            logger.debug "Removing #{tmpdir}"
-            FileUtils.rm_rf(tmpdir)
-            raise "normalize-data: #{bare_druid} cannot locate Shapefile in #{tmpdir}"
-          end
-
-          # setup
-          input_filename = File.join(tmpdir, "#{shpname}.shp") # input shapefile
-          raise "normalize-data: #{bare_druid} is missing Shapefile: #{input_filename}" unless File.exist? input_filename
-
-          output_dir = File.join(tmpdir, 'EPSG_4326')
-          output_filename = File.join(output_dir, "#{shpname}.shp") # output shapefile
-
-          # Verify source projection
-          projection_filename = File.join(tmpdir, "#{shpname}.prj")
-          unless File.size?(projection_filename)
-            logger.warn "normalize-data: #{bare_druid} is missing projection #{projection_filename}"
-            raise "normalize-data: #{bare_druid} has no native projection information in MODS" if projection_from_cocina.nil?
-
-            logger.debug "normalize-data: #{bare_druid} reports native projection: #{projection_from_cocina}"
-            src_srid = projection_from_cocina.gsub(/EPSG:+/, '').strip.to_i
-
-            logger.info "normalize-data: #{bare_druid} has native projection of #{src_srid}, overwriting #{projection_filename}"
-            prj = open("http://spatialreference.org/ref/epsg/#{src_srid}/prj/").read
-            File.open(projection_filename, 'wb') { |f| f << prj }
-          end
-
-          # reproject, @see http://www.gdal.org/ogr2ogr.html
-          FileUtils.mkdir_p(output_dir) unless File.directory?(output_dir)
-          logger.info "normalize-data: #{bare_druid} is projecting #{File.basename(input_filename)} to EPSG:4326"
-          system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filename}' '#{input_filename}'") # prevent recoding
-          raise "normalize-data: #{bare_druid} failed to reproject #{input_filename}" unless File.size?(output_filename)
-
-          # normalize prj file
-          projection_filename = output_filename.gsub('.shp', '.prj')
-          logger.debug "normalize-data: #{bare_druid} overwriting #{projection_filename}"
-          File.write(projection_filename, wkt)
-
-          # package up reprojection
-          output_zip = File.join(File.dirname(zip_filename), 'data_EPSG_4326.zip')
-          FileUtils.rm_f(output_zip) if File.size?(output_zip)
-          system_with_check("zip -Dj '#{output_zip}' \"#{output_dir}/#{shpname}\".*")
-
-          # cleanup
-          logger.debug "normalize-data: #{bare_druid} removing #{tmpdir}"
-          FileUtils.rm_rf(tmpdir)
-        end
-
-        def projection_from_cocina
-          @projection_from_cocina ||= cocina_object.description.form.find { |form| form.type == 'map projection' && form.source.nil? }&.value
-        end
-
-        def wkt
-          # Well Known Text. It’s a text markup language for expressing geometries in vector data.
-          @wkt ||= URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
         end
       end
     end
