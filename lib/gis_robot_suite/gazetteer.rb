@@ -18,16 +18,10 @@ module GisRobotSuite
         keyword.strip!
         @registry[keyword] = {
           geonames_placename: row[1],
-          geonames_id: row[2].to_i,
-          # rubocop:disable Style/TernaryParentheses
-          loc_keyword: (row[3].nil? || row[3].empty?) ? nil : row[3],
-          loc_id: (row[4].nil? || row[4].empty?) ? nil : row[4]
-          # rubocop:enable Style/TernaryParentheses
+          geonames_id: row[2].to_i
+          # For legacy reasons, CSV contains loc keyword in row[3] and loc id in row[4]
         }
-        if @registry[keyword][:geonames_placename].nil? &&
-           @registry[keyword][:loc_keyword].nil?
-          @registry[keyword] = nil
-        end
+        @registry[keyword] = nil if @registry[keyword][:geonames_placename].nil?
       end
     end
 
@@ -43,35 +37,6 @@ module GisRobotSuite
     # @return <Integer> geonames id
     def find_id(keyword)
       _get(keyword, :geonames_id)
-    end
-
-    # @return <String> library of congress name
-    def find_loc_keyword(keyword)
-      _get(keyword, :loc_keyword)
-    end
-
-    # @return <String> library of congress valueURI
-    def find_loc_uri(keyword)
-      lcid = _get(keyword, :loc_id)
-      case lcid
-      when /^lcsh:(\d+)$/, /^sh(\d+)$/
-        "http://id.loc.gov/authorities/subjects/sh#{Regexp.last_match(1)}"
-      when /^lcnaf:(\d+)$/, /^n(\d+)$/
-        "http://id.loc.gov/authorities/names/n#{Regexp.last_match(1)}"
-      when /^no(\d+)$/
-        "http://id.loc.gov/authorities/names/no#{Regexp.last_match(1)}"
-      end
-    end
-
-    # @return <String> authority name
-    def find_loc_authority(keyword)
-      lcid = _get(keyword, :loc_id)
-      return Regexp.last_match(1) if lcid =~ /^(lcsh|lcnaf):/
-      return 'lcsh' if lcid =~ /^sh\d+$/
-      return 'lcnaf' if lcid =~ /^(n|no)\d+$/
-      return 'lcsh' unless find_loc_keyword(keyword).nil? # default to lcsh if present
-
-      nil
     end
 
     # @see http://www.geonames.org/ontology/documentation.html
