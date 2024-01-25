@@ -35,17 +35,13 @@ module Robots
 
           logger.debug "Workspace: #{workspace_name} ready"
 
-          if layer['vector'] && layer['vector']['format'] == 'PostGIS'
-            create_vector(connection, layer['vector'], workspace_name)
-          elsif layer['raster'] && layer['raster']['format'] == 'GeoTIFF'
-            create_raster(connection, layer['raster'], workspace_name)
+          if vector? && layertype == 'PostGIS'
+            create_vector(connection, workspace_name)
+          elsif raster? && layertype == 'GeoTIFF'
+            create_raster(connection, workspace_name)
           else
-            raise "load-geoserver: #{bare_druid} has unknown layer format: #{layer}"
+            raise "load-geoserver: #{bare_druid} has unknown layer format: #{layertype}"
           end
-        end
-
-        def mods
-          @mods ||= Mods::Record.new.from_nk_node(Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid).root)
         end
 
         def raster?
@@ -66,23 +62,24 @@ module Robots
                          end
         end
 
-        # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
-        def layer
-          @layer ||= {
-            (raster? ? 'raster' : 'vector') => {
-              'druid' => bare_druid,
-              'title' => mods.full_titles.first,
-              'abstract' => mods.term_values(:abstract).compact.join("\n"),
-              'keywords' => [mods.term_values([:subject, 'topic']),
-                             mods.term_values([:subject, 'geographic'])].flatten.compact.collect(&:strip),
-              'format' => layertype
-            }
-          }
+        def title
+          @title ||= Cocina::Models::Builders::TitleBuilder.full_title(cocina_object.description.title).first
         end
 
-        def create_vector(connection, layer, workspace_name, dsname = 'postgis_druid')
+        def abstract
+          @abstract ||= cocina_object.description.note.select { |note| note.type == 'abstract' || note.displayLabel&.downcase == 'abstract' }.map(&:value).join("\n")
+        end
+
+        def keywords
+          @keywords ||= (
+            cocina_object.description.subject.select { |subject| subject.type == 'topic' } + \
+            cocina_object.description.subject.select { |subject| subject.type == 'place' })
+                        .map(&:value).compact.uniq
+        end
+
+        def create_vector(connection, workspace_name, dsname = 'postgis_druid')
           %w[title abstract keywords].each do |i|
-            raise ArgumentError, "load-geoserver: #{bare_druid} layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{i}" if send(i).empty?
           end
 
           logger.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
@@ -107,9 +104,9 @@ module Robots
           feature_type = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
           ft = feature_type.new
           ft.enabled = true
-          ft.title = layer['title']
-          ft.abstract = layer['abstract']
-          ft.keywords = { string: [layer['keywords']].flatten.compact.uniq }
+          ft.title = title
+          ft.abstract = abstract
+          ft.keywords = { string: keywords }
           ft.metadata_links = []
           ft.metadata = ft.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
@@ -121,7 +118,7 @@ module Robots
               workspace_name:,
               data_store_name: dsname,
               feature_type_name: bare_druid,
-              title: layer['title'],
+              title:,
               additional_payload: ft.to_h
             )
           rescue Geoserver::Publish::Error => e
@@ -130,9 +127,9 @@ module Robots
         end
 
         # rubocop:disable Metrics/AbcSize
-        def create_raster(connection, layer, workspace_name)
+        def create_raster(connection, workspace_name)
           %w[title abstract keywords].each do |i|
-            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{i}" unless layer.include?(i) && !layer[i].empty?
+            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{i}" if send(i).empty?
           end
 
           # create coverage store
@@ -151,7 +148,7 @@ module Robots
                 url: "file:#{Settings.geohydra.geotiff.dir}/#{bare_druid}.tif",
                 type: 'GeoTIFF',
                 additional_payload: {
-                  description: layer['title']
+                  description: title
                 }
               )
             rescue Geoserver::Publish::Error => e
@@ -178,9 +175,9 @@ module Robots
           coverage_struct = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
           cv = coverage_struct.new
           cv.enabled = true
-          cv.title = layer['title']
-          cv.abstract = layer['abstract']
-          cv.keywords = { string: [layer['keywords']].flatten.compact.uniq }
+          cv.title = title
+          cv.abstract = abstract
+          cv.keywords = { string: keywords }
           cv.metadata_links = []
           cv.metadata = cv.metadata || {}.merge!(
             'cacheAgeMax' => 86400,
@@ -191,7 +188,7 @@ module Robots
               workspace_name:,
               coverage_store_name: bare_druid,
               coverage_name: bare_druid,
-              title: layer['title'],
+              title:,
               additional_payload: cv.to_h
             )
           rescue Geoserver::Publish::Error => e
