@@ -31,14 +31,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
     end
 
     context 'without an index map file' do
-      let(:druid) { 'druid:bb033gt0615' }
+      let(:druid) { 'druid:cc044gt0726' }
 
       let(:expected_structural) do
         {
           contains: [
             {
               type: 'https://cocina.sul.stanford.edu/models/resources/object',
-              externalIdentifier: 'bb033gt0615_1',
+              externalIdentifier: 'cc044gt0726_1',
               label: 'Data',
               version: 1,
               structural: {
@@ -108,7 +108,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
             },
             {
               type: 'https://cocina.sul.stanford.edu/models/resources/preview',
-              externalIdentifier: 'bb033gt0615_2',
+              externalIdentifier: 'cc044gt0726_2',
               label: 'Preview',
               version: 1,
               structural: {
