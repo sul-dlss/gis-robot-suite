@@ -11,12 +11,9 @@ for s in \
   generate-geo-metadata \
   generate-mods \
   assign-placenames \
-  finish-metadata \
-  wrangle-data \
   package-data \
   normalize-data \
   extract-boundingbox \
-  finish-data \
   generate-content-metadata \
   finish-gis-assembly-workflow \
   ; do
