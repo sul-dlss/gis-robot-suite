@@ -37,35 +37,7 @@ module Robots
               label: 'Preview',
               version: cocina_object.version,
               structural: {
-                contains: [
-                  {
-                    type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-                    label: 'preview.jpg',
-                    filename: 'preview.jpg',
-                    size: preview_objectfile.filesize,
-                    version: cocina_object.version,
-                    hasMimeType: 'image/jpeg',
-                    use: 'master',
-                    hasMessageDigests: [
-                      {
-                        type: 'sha1',
-                        digest: preview_objectfile.sha1
-                      },
-                      {
-                        type: 'md5',
-                        digest: preview_objectfile.md5
-                      }
-                    ],
-                    access: file_access_params,
-                    administrative: {
-                      publish: true,
-                      sdrPreserve: true,
-                      shelve: true
-                    },
-                    presentation: preview_presentation_params
-                  }
-                ]
+                contains: preview_file_params
               }
             }
           ]
@@ -191,6 +163,38 @@ module Robots
               shelve: true
             }
           }
+        end
+
+        def preview_file_params
+          [
+            {
+              type: 'https://cocina.sul.stanford.edu/models/file',
+              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+              label: 'preview.jpg',
+              filename: 'preview.jpg',
+              size: preview_objectfile.filesize,
+              version: cocina_object.version,
+              hasMimeType: 'image/jpeg',
+              use: 'master',
+              hasMessageDigests: [
+                {
+                  type: 'sha1',
+                  digest: preview_objectfile.sha1
+                },
+                {
+                  type: 'md5',
+                  digest: preview_objectfile.md5
+                }
+              ],
+              access: file_access_params,
+              administrative: {
+                publish: true,
+                sdrPreserve: true,
+                shelve: true
+              },
+              presentation: preview_presentation_params
+            }
+          ]
         end
       end
     end
