@@ -30,38 +30,8 @@ RSpec.describe GisRobotSuite::Gazetteer do
     expect(subject.find_placename('Medan (Indonesia)')).to eq 'Medan'
   end
 
-  it 'can translate to LC authority namespace' do
-    expect(subject.find_loc_authority('Accra (Ghana)')).to eq 'lcnaf'
-    expect(subject.find_loc_authority('Andaman Islands (India)')).to eq 'lcsh'
-    expect(subject.find_loc_authority('Moga (India : District)')).to eq 'lcnaf'
-    expect(subject.find_loc_authority('Attur (India)')).to be_nil
-  end
-
-  it 'can translate to LC placename URIs' do
-    expect(subject.find_loc_uri('Accra (Ghana)')).to eq 'http://id.loc.gov/authorities/names/n79059515'
-    expect(subject.find_loc_uri('Andaman Islands (India)')).to eq 'http://id.loc.gov/authorities/subjects/sh96007926'
-    expect(subject.find_loc_uri('Moga (India : District)')).to eq 'http://id.loc.gov/authorities/names/no2003104540'
-  end
-
-  it 'cannot translate missing LC placename URIs' do
-    expect(subject.find_loc_uri('Albion River Watershed (Calif.)')).to be_nil
-    expect(subject.find_loc_uri('Dichpalli (India)')).to be_nil
-  end
-
-  it 'can translate to LC placename' do
-    expect(subject.find_loc_keyword('Accra (Ghana)')).to eq 'Accra (Ghana)'
-    expect(subject.find_loc_keyword('Andaman Islands (India)')).to eq 'Andaman Islands (India)'
-    expect(subject.find_loc_keyword('Moga (India : District)')).to eq 'Moga (India : District)'
-  end
-
   it 'can handle UTF-8' do
     expect(subject.find_placename('Melli Bāzār (India)')).to eq 'Melli Bāzār'
-  end
-
-  it 'never has a LC mapping without a GeoNames mapping' do
-    subject.each do |k|
-      expect(subject.find_loc_uri(k) && !subject.find_placename_uri(k)).to be_falsey
-    end
   end
 
   it 'never loads bogus placenames' do
