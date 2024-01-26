@@ -85,7 +85,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
       end
     end
 
-    context 'when an 8-bit GeoTIFF' do
+    context 'when an 8-bit GeoTIFF already in EPSG:4326' do
       let(:bare_druid) { 'bb021mm7809' }
 
       let(:description) do
@@ -165,13 +165,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
           zip_file.get_entry('MCE_FI2G_2014.tif')
           zip_file.get_entry('MCE_FI2G_2014.tif.aux.xml')
         end
-        # Reproject
-        expect(Kernel).to have_received(:system).with(
+        # Does not reproject
+        expect(Kernel).not_to have_received(:system).with(
           "gdalwarp -r bilinear -t_srs EPSG:4326 /tmp/normalize_bb021mm7809/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014_uncompressed.tif -co 'COMPRESS=NONE'"
         )
         # Compress
         expect(Kernel).to have_received(:system).with(
-          "gdal_translate -a_srs EPSG:4326 /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014_uncompressed.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'" # rubocop:disable Layout/LineLength
+          "gdal_translate -a_srs EPSG:4326 /tmp/normalize_bb021mm7809/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
         )
         # Convert to RGB
         expect(Kernel).to have_received(:system).with(
@@ -235,7 +235,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
                   ],
                   type: 'bounding box coordinates',
                   standard: {
-                    code: 'EPSG:4326'
+                    code: 'EPSG:4327'
                   },
                   encoding: {
                     value: 'decimal'
@@ -257,7 +257,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
           zip_file.get_entry('h_shade.tif')
           zip_file.get_entry('h_shade.tif.aux.xml')
         end
-        # Reproject
+        # Reprojects
         expect(Kernel).to have_received(:system).with(
           "gdalwarp -r bilinear -t_srs EPSG:4326 /tmp/normalize_vh469wk7989/h_shade /tmp/normalize_vh469wk7989/EPSG_4326/h_shade_uncompressed.tif -co 'COMPRESS=NONE'"
         )

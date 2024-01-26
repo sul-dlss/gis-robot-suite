@@ -171,9 +171,9 @@ module Robots
             raise "normalize-data: #{bare_druid} has unsupported Raster data type: #{data_format}" unless geotiff? || arcgrid?
 
             if epsg4326_projection?
-              reproject_and_compress
-            else
               compress_only
+            else
+              reproject_and_compress
             end
 
             # if using 8-bit color palette, convert into RGB
