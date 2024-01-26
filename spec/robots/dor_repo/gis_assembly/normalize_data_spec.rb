@@ -177,6 +177,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           "gdal_translate -expand rgb /tmp/normalize_bb021mm7809/raw8bit.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
         )
+        # Adds an alpha channel
+        expect(Kernel).to have_received(:system).with(
+          'gdalwarp -dstalpha /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014_alpha.tif'
+        )
         # Stats
         expect(Kernel).to have_received(:system).with(
           'gdalinfo -mm -stats -norat -noct /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif'

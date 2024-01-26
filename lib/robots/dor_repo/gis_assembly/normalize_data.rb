@@ -179,6 +179,8 @@ module Robots
             # if using 8-bit color palette, convert into RGB
             convert_8bit_to_rgb if eight_bit?
 
+            add_alpha_channel
+
             compute_statistics
           end
 
@@ -268,6 +270,17 @@ module Robots
               return true if line.match?(/^Band (.+) Block=(.+) Type=Byte, ColorInterp=Palette\s*$/)
             end
             false
+          end
+
+          def add_alpha_channel
+            # NOTE: gdalwarp is smart enough not to add a new alpha channel (band) if one is already there.
+            # If we want to improve the performance of the normalize step, and many GeoTIFFs already
+            # have alpha channels, then we could introspect on the GeoTIFF file with gdalinfo and skip
+            # this call to gdalwarp if one is already present.
+            logger.info "normalize-data: adding alpha channel for #{output_filepath}"
+            temp_filepath = "#{output_dir}/#{geo_object_name}_alpha.tif"
+            system_with_check("#{Settings.gdal_path}gdalwarp -dstalpha #{output_filepath} #{temp_filepath}")
+            FileUtils.mv(temp_filepath, output_filepath)
           end
 
           def compute_statistics
