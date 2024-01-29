@@ -82,7 +82,7 @@ look like this in the workspace:
     zv925hd6723/
       content/
         #{druid}.zip
-        data_ESRI_4326.zip
+        #{druid}_normalized.zip
         preview.jpg
         index_map.json
 
