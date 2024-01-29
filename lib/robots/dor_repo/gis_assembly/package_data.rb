@@ -12,20 +12,20 @@ module Robots
           logger.debug "package-data working on #{bare_druid}"
 
           rootdir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+          data_zip_filepath = GisRobotSuite.data_zip_filepath(rootdir, bare_druid)
 
-          data_zip_filename = "#{rootdir}/content/data.zip"
-          if File.size?(data_zip_filename)
-            logger.info "package-data: #{bare_druid} found existing packaged data: #{File.basename(data_zip_filename)}"
+          if File.size?(data_zip_filepath)
+            logger.info "package-data: #{bare_druid} found existing packaged data: #{File.basename(data_zip_filepath)}"
             return
           end
 
-          generate_data_zip(rootdir)
+          generate_data_zip(rootdir, data_zip_filepath)
         end
 
         private
 
-        # Create data.zip for all digital work files
-        def generate_data_zip(rootdir)
+        # Create zip for all digital work files
+        def generate_data_zip(rootdir, data_zip_filepath)
           tmpdir = File.join(rootdir, 'temp')
           logger.debug "Changing to #{tmpdir}"
           raise "package-data: #{bare_druid} is missing #{tmpdir}" unless File.directory?(tmpdir)
@@ -66,12 +66,11 @@ module Robots
             end
           end
 
-          zipfn = File.join(rootdir, 'content', 'data.zip')
-          FileUtils.mkdir_p(File.dirname(zipfn)) unless File.directory?(File.dirname(zipfn))
-          FileUtils.rm_f(zipfn) if File.size?(zipfn)
+          FileUtils.mkdir_p(File.dirname(data_zip_filepath)) unless File.directory?(File.dirname(data_zip_filepath))
+          FileUtils.rm_f(data_zip_filepath) if File.size?(data_zip_filepath)
 
-          logger.debug "Compressing #{bare_druid} into #{zipfn}"
-          system("zip -v#{recurse_flag ? 'r' : ''} '#{zipfn}' #{fns.join(' ')}")
+          logger.debug "Compressing #{bare_druid} into #{data_zip_filepath}"
+          system("zip -v#{recurse_flag ? 'r' : ''} '#{data_zip_filepath}' #{fns.join(' ')}")
         end
       end
     end

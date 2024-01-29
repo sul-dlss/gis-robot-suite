@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ModuleLength
 module GisRobotSuite
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
@@ -74,6 +75,16 @@ module GisRobotSuite
   end
   private_class_method :geographic_form
 
+  # the path to the zip file containing all of the object content
+  def self.data_zip_filepath(rootdir, druid)
+    "#{rootdir}/content/#{druid}.zip"
+  end
+
+  # the path to the zip file containing all of the normalized object content
+  def self.normalized_data_zip_filepath(rootdir, druid)
+    "#{rootdir}/content/#{druid}_normalized.zip"
+  end
+
   def self.locate_druid_path(druid, opts = {})
     rootdir = '.'
     pid = druid.gsub(/^druid:/, '')
@@ -120,3 +131,4 @@ module GisRobotSuite
     'restricted'
   end
 end
+# rubocop:enable Metrics/ModuleLength
