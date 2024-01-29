@@ -111,31 +111,6 @@ module Robots
           end
         end
 
-        # Convert DD.DD to DD MM SS
-        # e.g.,
-        # * -109.758319 => 109°45ʹ30ʺ
-        # * 48.999336 => 48°59ʹ58ʺ
-        E = 1
-        QSEC = 'ʺ'
-        QMIN = 'ʹ'
-        QDEG = "\u00B0"
-        def dd2ddmmss_abs(orig_val)
-          orig_val_abs_float = orig_val.to_f.abs
-          degrees = orig_val_abs_float.floor
-          minutes_float = ((orig_val_abs_float - degrees) * 60)
-          minutes = minutes_float.floor
-          seconds = ((minutes_float - minutes) * 60).round
-          if seconds >= 60
-            minutes += 1
-            seconds = 0
-          end
-          if minutes >= 60
-            degrees += 1
-            minutes = 0
-          end
-          "#{degrees}#{QDEG}" + (minutes > 0 ? "#{minutes}#{QMIN}" : '') + (seconds > 0 ? "#{seconds}#{QSEC}" : '')
-        end
-
         def add_extent_to_geographic_subject
           bounding_box_geographic_subjects.each do |subject|
             subject.clear
