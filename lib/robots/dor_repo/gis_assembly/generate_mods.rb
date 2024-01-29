@@ -159,7 +159,7 @@ module Robots
           params = {
             geometryType: geometry_type || 'Polygon',
             fileFormat: file_format,
-            zipName: 'data.zip'
+            zipName: "#{bare_druid}.zip"
           }
           Nokogiri::XSLT.quote_params(params.transform_keys(&:to_s).to_a.flatten)
         end

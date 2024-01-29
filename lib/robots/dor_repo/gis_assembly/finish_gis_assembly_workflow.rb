@@ -15,10 +15,10 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # first ensure all files are ready
-          %w[
-            content/data.zip
-            content/data_EPSG_4326.zip
-            content/preview.jpg
+          [
+            "content/#{bare_druid}.zip",
+            "content/#{bare_druid}_normalized.zip",
+            'content/preview.jpg'
           ].each do |f|
             fn = File.join(rootdir, f)
             raise "finish-gis-assembly-workflow: #{bare_druid} is missing required file: #{fn}" unless File.size?(fn)

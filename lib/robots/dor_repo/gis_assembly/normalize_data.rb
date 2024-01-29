@@ -68,7 +68,7 @@ module Robots
           end
 
           def geo_object_name
-            # For example, "sanluisobispo1996" given a data.zip containing "sanluisobispo1996.dbf".
+            # For example, "sanluisobispo1996" given a #{druid}.zip containing "sanluisobispo1996.dbf".
             raise NotImplementedError
           end
 
@@ -97,7 +97,7 @@ module Robots
           end
 
           def output_zip
-            @output_zip ||= "#{rootdir}/content/data_EPSG_4326.zip"
+            @output_zip ||= GisRobotSuite.normalized_data_zip_filepath(rootdir, bare_druid)
           end
 
           private
@@ -107,7 +107,7 @@ module Robots
           end
 
           def data_zip_filepath
-            @data_zip_filepath ||= "#{rootdir}/content/data.zip"
+            @data_zip_filepath ||= GisRobotSuite.data_zip_filepath(rootdir, bare_druid)
           end
 
           def extract_to_tmpdir

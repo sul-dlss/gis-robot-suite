@@ -17,7 +17,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
     end
 
     let(:druid) { "druid:#{bare_druid}" }
-    let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/data_EPSG_4326.zip" }
+    let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/#{bare_druid}_normalized.zip" }
 
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')

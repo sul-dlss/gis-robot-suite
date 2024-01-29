@@ -32,6 +32,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
 
     context 'without an index map file' do
       let(:druid) { 'druid:cc044gt0726' }
+      let(:bare_druid) { druid.delete_prefix('druid:') }
 
       let(:expected_structural) do
         {
@@ -46,8 +47,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
                     externalIdentifier: 'https://cocina.sul.stanford.edu/file/8222376b-861f-4cb1-8ebb-c2ae6b112b4e',
-                    label: 'data.zip',
-                    filename: 'data.zip',
+                    label: "#{bare_druid}.zip",
+                    filename: "#{bare_druid}.zip",
                     size: 1763115,
                     version: 1,
                     hasMimeType: 'application/zip',
@@ -76,8 +77,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
                     externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
-                    label: 'data_EPSG_4326.zip',
-                    filename: 'data_EPSG_4326.zip',
+                    label: "#{bare_druid}_normalized.zip",
+                    filename: "#{bare_druid}_normalized.zip",
                     size: 2031104,
                     version: 1,
                     hasMimeType: 'application/zip',

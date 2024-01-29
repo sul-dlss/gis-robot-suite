@@ -48,11 +48,11 @@ module Robots
         end
 
         def data_zip_objectfile
-          @data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data.zip")
+          @data_zip_objectfile ||= Assembly::ObjectFile.new(GisRobotSuite.data_zip_filepath(rootdir, bare_druid))
         end
 
         def epsg_data_zip_objectfile
-          @epsg_data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data_EPSG_4326.zip")
+          @epsg_data_zip_objectfile ||= Assembly::ObjectFile.new(GisRobotSuite.normalized_data_zip_filepath(rootdir, bare_druid))
         end
 
         def preview_objectfile
@@ -81,8 +81,8 @@ module Robots
             {
               type: 'https://cocina.sul.stanford.edu/models/file',
               externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: 'data.zip',
-              filename: 'data.zip',
+              label: "#{bare_druid}.zip",
+              filename: "#{bare_druid}.zip",
               size: data_zip_objectfile.filesize,
               version: cocina_object.version,
               hasMimeType: 'application/zip',
@@ -107,8 +107,8 @@ module Robots
             {
               type: 'https://cocina.sul.stanford.edu/models/file',
               externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: 'data_EPSG_4326.zip',
-              filename: 'data_EPSG_4326.zip',
+              label: "#{bare_druid}_normalized.zip",
+              filename: "#{bare_druid}_normalized.zip",
               size: epsg_data_zip_objectfile.filesize,
               version: cocina_object.version,
               hasMimeType: 'application/zip',

@@ -42,7 +42,7 @@ module Robots
 
         def zip_filename
           # always use EPSG:4326 derivative
-          @zip_filename ||= File.join(rootdir, 'content', 'data_EPSG_4326.zip')
+          @zip_filename ||= GisRobotSuite.normalized_data_zip_filepath(rootdir, bare_druid)
         end
 
         def tmpdir
