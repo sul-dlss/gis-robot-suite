@@ -23,10 +23,10 @@ module Robots
 
           # extract derivative 4326 nomalized content
           projection = '4326' # always use EPSG:4326 derivative
-          zipfn = File.join(rootdir, 'content', "data_EPSG_#{projection}.zip")
-          raise "load-vector: #{bare_druid} cannot locate normalized data: #{zipfn}" unless File.size?(zipfn)
+          data_zipe_filepath = GisRobotSuite.normalized_data_zip_filepath(rootdir, bare_druid)
+          raise "load-vector: #{bare_druid} cannot locate normalized data: #{data_zipe_filepath}" unless File.size?(data_zipe_filepath)
 
-          tmpdir = extract_data_from_zip zipfn, Settings.geohydra.tmpdir
+          tmpdir = extract_data_from_zip data_zipe_filepath, Settings.geohydra.tmpdir
           raise "load-vector: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
@@ -66,13 +66,13 @@ module Robots
 
         private
 
-        def extract_data_from_zip(zipfn, tmpdir)
-          logger.info "load-vector: #{bare_druid} is extracting data: #{zipfn}"
+        def extract_data_from_zip(data_zipe_filepath, tmpdir)
+          logger.info "load-vector: #{bare_druid} is extracting data: #{data_zipe_filepath}"
 
           tmpdir = File.join(tmpdir, "loadvector_#{bare_druid}")
           FileUtils.rm_rf tmpdir if File.directory? tmpdir
           FileUtils.mkdir_p tmpdir
-          system("unzip '#{zipfn}' -d '#{tmpdir}'", exception: true)
+          system("unzip '#{data_zipe_filepath}' -d '#{tmpdir}'", exception: true)
           tmpdir
         end
 
