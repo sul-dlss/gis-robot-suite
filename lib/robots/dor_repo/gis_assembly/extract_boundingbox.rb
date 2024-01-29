@@ -20,13 +20,12 @@ module Robots
           raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            ulx, uly, lrx, lry = determine_extent
-            check_extent(ulx, uly, lrx, lry)
+            @ulx, @uly, @lrx, @lry = determine_extent
+            check_extent
 
-            add_geo_extension_to_mods(ulx, uly, lrx, lry)
+            add_extent_to_geographic_subject
+            add_extent_to_project_form
 
-            description_props = Cocina::Models::Mapping::FromMods::Description.props(mods: mods_doc, druid:,
-                                                                                     label: cocina_object.label)
             object_client.update(params: cocina_object.new(description: description_props))
           ensure
             logger.debug "Cleaning: #{tmpdir}"
@@ -35,6 +34,8 @@ module Robots
         end
 
         private
+
+        attr_reader :ulx, :uly, :lrx, :lry
 
         def rootdir
           @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
@@ -47,6 +48,10 @@ module Robots
 
         def tmpdir
           @tmpdir ||= File.join(Settings.geohydra.tmpdir, "extractboundingbox_#{bare_druid}")
+        end
+
+        def description_props
+          @description_props ||= cocina_object.description.to_h
         end
 
         # unpacks a ZIP file into the given tmpdir
@@ -106,112 +111,105 @@ module Robots
           end
         end
 
-        # Convert DD.DD to DD MM SS
-        # e.g.,
-        # * -109.758319 => 109°45ʹ30ʺ
-        # * 48.999336 => 48°59ʹ58ʺ
-        E = 1
-        QSEC = 'ʺ'
-        QMIN = 'ʹ'
-        QDEG = "\u00B0"
-        def dd2ddmmss_abs(orig_val)
-          orig_val_abs_float = orig_val.to_f.abs
-          degrees = orig_val_abs_float.floor
-          minutes_float = ((orig_val_abs_float - degrees) * 60)
-          minutes = minutes_float.floor
-          seconds = ((minutes_float - minutes) * 60).round
-          if seconds >= 60
-            minutes += 1
-            seconds = 0
+        def add_extent_to_geographic_subject
+          bounding_box_geographic_subjects.each do |subject|
+            subject.clear
+            subject[:structuredValue] =
+              [
+                {
+                  value: ulx.to_s,
+                  type: 'west'
+                },
+                {
+                  value: lry.to_s,
+                  type: 'south'
+                },
+                {
+                  value: lrx.to_s,
+                  type: 'east'
+                },
+                {
+                  value: uly.to_s,
+                  type: 'north'
+                }
+              ]
+            subject[:type] = 'bounding box coordinates'
+            subject[:encoding] = {
+              value: 'decimal'
+            }
+            subject[:standard] = {
+              code: 'EPSG:4326'
+            }
           end
-          if minutes >= 60
-            degrees += 1
-            minutes = 0
-          end
-          "#{degrees}#{QDEG}" + (minutes > 0 ? "#{minutes}#{QMIN}" : '') + (seconds > 0 ? "#{seconds}#{QSEC}" : '')
         end
 
-        # Convert to MARC 255 DD into DDMMSS
-        # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
-        # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
-        def to_coordinates_ddmmss(orig_val)
-          w, e, n, s = orig_val.to_s.scanf('%f -- %f/%f -- %f')
-          raise ArgumentError, "generate-mods: Out of bounds latitude: #{n} #{s}" unless n >= -90 && n <= 90 && s >= -90 && s <= 90
-          raise ArgumentError, "generate-mods: Out of bounds longitude: #{w} #{e}" unless w >= -180 && w <= 180 && e >= -180 && e <= 180
-
-          w = "#{w < 0 ? 'W' : 'E'} #{dd2ddmmss_abs w}"
-          e = "#{e < 0 ? 'W' : 'E'} #{dd2ddmmss_abs e}"
-          n = "#{n < 0 ? 'S' : 'N'} #{dd2ddmmss_abs n}"
-          s = "#{s < 0 ? 'S' : 'N'} #{dd2ddmmss_abs s}"
-          "#{w}--#{e}/#{n}--#{s}"
-        end
-
-        def mods_doc
-          @mods_doc ||= Cocina::Models::Mapping::ToMods::Description.transform(cocina_object.description, druid)
-        end
-
-        # adds the geo extension to the MODS record
-        def add_geo_extension_to_mods(ulx, uly, lrx, lry)
-          # Update geo extension
-          logger.debug "extract-boundingbox: #{bare_druid} updating geo extension..."
-          mods_doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope',
-                         'xmlns:mods' => 'http://www.loc.gov/mods/v3',
-                         'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-                         'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |node|
-            node['gml:srsName'] = 'EPSG:4326'
-            node.xpath('gml:upperCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
-              logger.debug "extract-boundingbox: #{bare_druid} replacing upperCorner #{x.content} with #{lrx} #{uly}"
-              x.content = [lrx, uly].join(' ') # NE
-            end
-            node.xpath('gml:lowerCorner', 'xmlns:gml' => 'http://www.opengis.net/gml/3.2/').each do |x|
-              logger.debug "extract-boundingbox: #{bare_druid} replacing lowerCorner #{x.content} with #{ulx} #{lry}"
-              x.content = [ulx, lry].join(' ') # SW
-            end
+        def bounding_box_geographic_subjects
+          Array(description_props[:geographic]).flat_map do |geo|
+            Array(geo[:subject]).select { |subject| subject[:type] == 'bounding box coordinates' }
           end
+        end
 
+        def add_extent_to_project_form
           # Check to see whether the current native projection is WGS84
-          cartos = mods_doc.xpath('/mods:mods/mods:subject/mods:cartographics', 'xmlns:mods' => 'http://www.loc.gov/mods/v3')
-          raise "extract-boundingbox: #{bare_druid} is missing subject/cartographics!" if cartos.nil?
+          raise "extract-boundingbox: #{bare_druid} is missing map projection!" if projection_forms.empty?
+          raise "extract-boundingbox: #{bare_druid} has too many map projections: #{projection_forms.size}" unless projection_forms.size == 1
 
-          logger.debug "extract-boundingbox: #{bare_druid} has #{cartos.size} subject/cartographics elements"
-          raise "extract-boundingbox: #{bare_druid} has too many subject/cartographics elements: #{cartos.size}" unless cartos.size == 1
+          return update_projection_form_epsg if projection_form_epsg_4326?
 
-          carto = cartos.first
-          proj = carto.xpath('mods:projection', 'xmlns:mods' => 'http://www.loc.gov/mods/v3').first
+          logger.debug "extract-boundingbox: #{bare_druid} has non-native WGS84 projection: #{projection_form[:value]}"
 
-          if proj.content =~ /EPSG:+4326\s*$/
-            logger.debug "extract-boundingbox: #{bare_druid} has native WGS84 projection: #{proj.content}"
-            subj = carto.parent
-            subj['authority'] = 'EPSG'
-            subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
-            subj['displayLabel'] = 'WGS84'
-          else
-            logger.debug "extract-boundingbox: #{bare_druid} has non-native WGS84 projection: #{proj.content}"
-
-            # Add subject/cartographics for WGS84 projection
-            subj = Nokogiri::XML::Node.new('subject', mods_doc)
-            carto = Nokogiri::XML::Node.new('cartographics', mods_doc)
-            scale = Nokogiri::XML::Node.new('scale', mods_doc)
-            projection = Nokogiri::XML::Node.new('projection', mods_doc)
-            coordinates = Nokogiri::XML::Node.new('coordinates', mods_doc)
-
-            subj['authority'] = 'EPSG'
-            subj['valueURI'] = 'http://opengis.net/def/crs/EPSG/0/4326'
-            subj['displayLabel'] = 'WGS84'
-            scale.content = 'Scale not given.'
-            projection.content = 'EPSG::4326'
-            coordinates.content = to_coordinates_ddmmss("#{ulx} -- #{lrx}/#{uly} -- #{lry}")
-
-            carto << scale << projection << coordinates
-            subj << carto
-            mods_doc.root << subj
-
-            # Add note
-            note = Nokogiri::XML::Node.new 'note', mods_doc
-            note['displayLabel'] = 'WGS84 Cartographics'
-            note.content = 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.'
-            mods_doc.root << note
+          unless scale_not_given_form?
+            description_props[:form] << {
+              value: 'Scale not given.',
+              type: 'map scale'
+            }
           end
+
+          description_props[:form] << {
+            value: 'EPSG::4326',
+            type: 'map projection',
+            uri: 'http://opengis.net/def/crs/EPSG/0/4326',
+            source: {
+              code: 'EPSG'
+            },
+            displayLabel: 'WGS84'
+          }
+
+          return if wgs84_note?
+
+          description_props[:note] << {
+            value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
+            displayLabel: 'WGS84 Cartographics'
+          }
+        end
+
+        def projection_forms
+          @projection_forms ||= description_props[:form].select { |form| form[:type] == 'map projection' }
+        end
+
+        def projection_form
+          @projection_form ||= projection_forms.first
+        end
+
+        def projection_form_epsg_4326?
+          projection_form[:value] =~ /EPSG:+4326\s*$/
+        end
+
+        def scale_not_given_form?
+          description_props[:form].any? { |form| form[:value] == 'Scale not given.' && form[:type] == 'map scale' }
+        end
+
+        def wgs84_note?
+          description_props[:note].any? { |note| note[:displayLabel] == 'WGS84 Cartographics' }
+        end
+
+        def update_projection_form_epsg
+          logger.debug "extract-boundingbox: #{bare_druid} has native WGS84 projection: #{projection_form[:value]}"
+          projection_form[:uri] = 'http://opengis.net/def/crs/EPSG/0/4326'
+          projection_form[:source] = {
+            code: 'EPSG'
+          }
+          projection_form[:displayLabel] = 'WGS84'
         end
 
         # gets the bounding box for the normalize data in tmpdir
@@ -229,7 +227,7 @@ module Robots
           [ulx, uly, lrx, lry]
         end
 
-        def check_extent(ulx, uly, lrx, lry)
+        def check_extent
           # Check that we have a valid bounding box
           return if ulx <= lrx && uly >= lry
 
