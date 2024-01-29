@@ -3,13 +3,13 @@
 module Robots
   module DorRepo
     module GisAssembly
-      class ExtractIso19139 < Base
+      class ExtractIsoData < Base
         def initialize
-          super('gisAssemblyWF', 'extract-iso19139')
+          super('gisAssemblyWF', 'extract-iso-data')
         end
 
         def perform_work
-          logger.debug "extract-iso19139 working on #{bare_druid}"
+          logger.debug "extract-iso-data working on #{bare_druid}"
 
           # Generate ISO 19139 and FGDC for all data types
           generate_iso19139

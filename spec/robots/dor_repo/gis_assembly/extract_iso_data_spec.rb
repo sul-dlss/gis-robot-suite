@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
+RSpec.describe Robots::DorRepo::GisAssembly::ExtractIsoData do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:staging_dir) { File.join(fixture_dir, 'stage', druid, 'temp') }
 
