@@ -15,7 +15,7 @@ gem 'config', '~> 3.1'
 gem 'fastimage', '~> 2.2' # to get mimetype in GenerateContentMetadata
 gem 'pry', '~> 0.10' # for console
 gem 'rake', '~> 13.0'
-gem 'slop', '~> 3.6' # for bin/run_robot
+gem 'slop' # for bin/run_robot
 gem 'honeybadger'
 gem 'scanf'
 gem 'sidekiq', '~> 7.0'
