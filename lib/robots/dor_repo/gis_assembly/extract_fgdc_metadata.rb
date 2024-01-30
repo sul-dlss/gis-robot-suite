@@ -11,7 +11,7 @@ module Robots
         def perform_work
           logger.debug "extract-fgdc working on #{bare_druid}"
 
-          GisRobotSuite::ArcgisMetadataTransformer.transform(bare_druid, 'FGDC', logger:)
+          GisRobotSuite::ArcgisMetadataTransformer.transform(bare_druid, 'ArcGIS2FGDC.xsl', 'fgdc.xml', logger:)
         end
       end
     end

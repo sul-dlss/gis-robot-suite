@@ -2,50 +2,42 @@
 
 module GisRobotSuite
   class ArcgisMetadataTransformer
-    VALID_FORMATS = {
-      'ISO19139' => {
-        xslt: 'ArcGIS2ISO19139.xsl',
-        output: 'iso19139.xml'
-      },
-      'ISO19110' => {
-        xslt: 'arcgis_to_iso19110.xsl',
-        output: 'iso19110.xml'
-      },
-      'FGDC' => {
-        xslt: 'ArcGIS2FGDC.xsl',
-        output: 'fgdc.xml'
-      }
-    }.freeze
-
-    def self.transform(druid, format, logger: nil)
-      new(druid, format, logger).transform
+    def self.transform(druid, xslt, output, logger: nil)
+      new(druid, xslt, output, logger).transform
     end
 
-    def initialize(druid, format, logger)
+    def initialize(druid, xslt, output, logger)
       @druid = druid
-      @format = format.upcase
+      @xslt = xslt
+      @output = output
       @logger = logger
-
-      raise "ArcgisMetadataTransformer: #{format} is not a valid format" unless VALID_FORMATS.key?(format)
     end
 
     def transform
-      logger&.info("extract-#{format}-metadata: generating #{output_file} using #{xslt_file}")
-      return if format == 'ISO19110' && data_type != 'Shapefile'
-
+      logger&.info("extracting metadata: generating #{output_file} using #{xslt_file}")
       system("#{xslt_command} #{xslt_file} '#{esri_metadata_file}' | #{xml_lint_command} -o '#{output_file}' -", exception: true)
     end
 
-    attr_reader :druid, :format, :logger
+    # Type of GIS data for this object
+    def data_type
+      file_name = File.basename(esri_metadata_file)
+      return 'ArcGRID' if file_name == 'metadata.xml'
+      return 'Shapefile' if file_name.end_with?('.shp.xml')
+      return 'GeoTIFF' if file_name.end_with?('.tif.xml')
+
+      raise "extracting metadata: #{bare_druid} has unknown GIS data type"
+    end
+
+    attr_reader :druid, :xslt, :output, :logger
 
     private
 
     def xslt_file
-      File.join(xslt_path, VALID_FORMATS[format][:xslt]) if VALID_FORMATS.key?(format)
+      File.join(xslt_path, xslt)
     end
 
     def output_file
-      File.join(staging_dir, 'temp', "#{layer_name}-#{VALID_FORMATS[format][:output]}") if VALID_FORMATS.key?(format)
+      File.join(staging_dir, 'temp', "#{layer_name}-#{output}")
     end
 
     # Staging directory for this object
@@ -59,16 +51,6 @@ module GisRobotSuite
     rescue RuntimeError => e
       logger&.error "extract-#{format}-metadata: #{bare_druid} is missing ESRI metadata file"
       raise e
-    end
-
-    # Type of GIS data for this object
-    def data_type
-      file_name = File.basename(esri_metadata_file)
-      return 'ArcGRID' if file_name == 'metadata.xml'
-      return 'Shapefile' if file_name.end_with?('.shp.xml')
-      return 'GeoTIFF' if file_name.end_with?('.tif.xml')
-
-      raise "extract-#{format}-metadata: #{bare_druid} has unknown GIS data type"
     end
 
     # Filename of the original GIS metadata without any extensions
