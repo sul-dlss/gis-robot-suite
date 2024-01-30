@@ -2,14 +2,13 @@
 
 require 'spec_helper'
 
-RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
+RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:staging_dir) { File.join(fixture_dir, 'stage', druid, 'temp') }
 
   # Get rid of any generated XML files
   def cleanup
     Dir.glob("#{staging_dir}/*-iso*.xml").each { |f| File.delete(f) }
-    Dir.glob("#{staging_dir}/*-fgdc.xml").each { |f| File.delete(f) }
   end
 
   before do
@@ -27,14 +26,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
     let(:druid) { 'cv676dy5796' }
     let(:esri_filename) { 'WATER_BODY.shp.xml' }
 
-    it 'generates an ISO 19139 XML document' do
-      expect(File).to exist(File.join(staging_dir, 'WATER_BODY-iso19139.xml'))
-    end
-
-    it 'generates an FGDC XML document' do
-      expect(File).to exist(File.join(staging_dir, 'WATER_BODY-fgdc.xml'))
-    end
-
     it 'generates an ISO 19110 XML document' do
       expect(File).to exist(File.join(staging_dir, 'WATER_BODY-iso19110.xml'))
     end
@@ -43,14 +34,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139 do
   context 'with ESRI metadata for a geoTIFF' do
     let(:druid) { 'qt609tt2964' }
     let(:esri_filename) { '26257_e.tif.xml' }
-
-    it 'generates an ISO 19139 XML document' do
-      expect(File).to exist(File.join(staging_dir, '26257_e-iso19139.xml'))
-    end
-
-    it 'generates an FGDC XML document' do
-      expect(File).to exist(File.join(staging_dir, '26257_e-fgdc.xml'))
-    end
 
     it 'does not generate an ISO 19110 XML document' do
       expect(File).not_to exist(File.join(staging_dir, '26257_e-iso19110.xml'))
