@@ -7,7 +7,9 @@ druid="$1"
 
 for s in \
   extract-thumbnail \
-  extract-iso-data \
+  extract-iso19139-metadata \
+  extract-iso19110-metadata \
+  extract-fgdc-metadata \
   generate-geo-metadata \
   generate-mods \
   assign-placenames \
