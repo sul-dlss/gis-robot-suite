@@ -167,7 +167,7 @@ GEM
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
-    lyber-core (7.4.1)
+    lyber-core (7.4.2)
       activesupport
       config
       dor-services-client (~> 14.0)
