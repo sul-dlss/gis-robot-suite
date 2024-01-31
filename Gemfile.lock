@@ -167,7 +167,7 @@ GEM
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
-    lyber-core (7.4.1)
+    lyber-core (7.4.2)
       activesupport
       config
       dor-services-client (~> 14.0)
@@ -286,7 +286,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    slop (3.6.0)
+    slop (4.10.1)
     sshkit (1.22.0)
       mutex_m
       net-scp (>= 1.1.2)
@@ -342,7 +342,7 @@ DEPENDENCIES
   sidekiq (~> 7.0)
   sidekiq-pro!
   simplecov
-  slop (~> 3.6)
+  slop
   stanford-mods
   webmock
   zeitwerk (~> 2.1)
