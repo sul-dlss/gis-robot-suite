@@ -9,7 +9,7 @@ RSpec.describe 'utilities' do
                                                { form: [{ type: 'media type', value: media_type }, { type: 'data format', value: data_format }] }
                                              ]))
   end
-  let(:media_type) { 'application/x-ogc-aig' }
+  let(:media_type) { 'image/tiff ' }
   let(:data_format) { 'GeoTIFF' }
 
   describe '.media_type' do
@@ -58,6 +58,14 @@ RSpec.describe 'utilities' do
         expect(GisRobotSuite).not_to be_raster(cocina_object)
       end
     end
+
+    context 'when an ArcGrid raster' do
+      let(:media_type) { 'application/x-ogc-aig' }
+
+      it 'raises' do
+        expect { GisRobotSuite.raster?(cocina_object) }.to raise_error(RuntimeError, "druid:bc234fg5678 is ArcGrid format: 'application/x-ogc-aig'")
+      end
+    end
   end
 
   describe '.determine_rights' do
@@ -75,6 +83,39 @@ RSpec.describe 'utilities' do
       let(:access) { 'stanford' }
 
       it { is_expected.to eq 'restricted' }
+    end
+  end
+
+  describe '.layertype' do
+    let(:cocina_object) do
+      dro = build(:dro)
+      dro.new(description: dro.description.new(geographic: [
+                                                 { form: [{ type: 'media type', value: media_type }, { type: 'data format', value: data_format }] }
+                                               ]))
+    end
+
+    context 'when an unknown media type' do
+      let(:media_type) { 'something/else' }
+
+      it 'raises' do
+        expect { GisRobotSuite.layertype(cocina_object) }.to raise_error(RuntimeError, 'druid:bc234fg5678 has unknown format: something/else')
+      end
+    end
+
+    context 'when a vector' do
+      let(:media_type) { 'application/x-esri-shapefile' }
+
+      it 'has layertype PostGIS' do
+        expect(GisRobotSuite.layertype(cocina_object)).to eq 'PostGIS'
+      end
+    end
+
+    context 'when a raster' do
+      let(:media_type) { 'image/tiff' }
+
+      it 'has layertype GeoTIFF' do
+        expect(GisRobotSuite.layertype(cocina_object)).to eq 'GeoTIFF'
+      end
     end
   end
 end
