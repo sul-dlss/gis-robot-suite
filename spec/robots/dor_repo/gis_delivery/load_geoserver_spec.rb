@@ -826,21 +826,65 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
           .to_return(status: 200, body: '{"layer":{"name":"dg548ft1892","path":"","type":"RASTER","defaultStyle":{"name":"raster_rgb8","href":"http://example.com/geoserver/rest/styles/raster_rgb8.json"},"resource":{"@class":"coverage","name":"druid:dg548ft1892","href":"http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.json"},"queryable":false,"opaque":false}}') # rubocop:disable Layout/LineLength
       end
 
-      it 'runs without error' do
-        stubbed_store_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores')
-                             .with(headers: { 'Content-Type' => 'application/json' }, body: store_post_body)
-                             .to_return(status: 201)
-        stubbed_coverage_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages')
-                                .with(headers: { 'Content-Type' => 'application/json' }, body: coverage_post_body)
-                                .to_return(status: 201)
-        stubbed_layer_put = stub_request(:put, 'http://example.com/geoserver/rest/layers/dg548ft1892')
-                            .with(headers: { 'Content-Type' => 'application/json' }, body: layer_put_body)
-                            .to_return(status: 201)
-        test_perform(robot, druid)
-        expect(stubbed_store_post).to have_been_requested
-        expect(stubbed_coverage_post).to have_been_requested
-        expect(stubbed_layer_put).to have_been_requested
+      # rubocop:disable RSpec/NestedGroups
+      context 'when a new coverage' do
+        it 'runs without error' do
+          stubbed_store_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores')
+                               .with(headers: { 'Content-Type' => 'application/json' }, body: store_post_body)
+                               .to_return(status: 201)
+          stubbed_coverage_post = stub_request(:post, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages')
+                                  .with(headers: { 'Content-Type' => 'application/json' }, body: coverage_post_body)
+                                  .to_return(status: 201)
+          stubbed_layer_put = stub_request(:put, 'http://example.com/geoserver/rest/layers/dg548ft1892')
+                              .with(headers: { 'Content-Type' => 'application/json' }, body: layer_put_body)
+                              .to_return(status: 201)
+          test_perform(robot, druid)
+          expect(stubbed_store_post).to have_been_requested
+          expect(stubbed_coverage_post).to have_been_requested
+          expect(stubbed_layer_put).to have_been_requested
+        end
       end
+
+      context 'when updating an existing coverage' do
+        let(:coverage_store_response) do
+          {
+            coverageStore: {
+              name: 'dg548ft1892',
+              coverages: 'http://example.com/geoserver/restng/workspaces/druid/coveragestores/dg548ft1892/coverages.json'
+            }
+          }.to_json
+        end
+        let(:coverage_response) do
+          {
+            coverage: {
+              abstract: 'Eez1000 is a 1000 meter resolution statewide bathymetric dataset that generally covers the Exclusive Economic Zone (EEZ)',
+              description: '1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998'
+            }
+          }.to_json
+        end
+
+        before do
+          stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892')
+            .to_return(status: 200, body: coverage_store_response)
+          stub_request(:get, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892')
+            .to_return(status: 200, body: coverage_response)
+          stub_request(:get, 'http://example.com/geoserver/rest/layers/dg548ft1892')
+            .to_return(status: 200, body: '{"layer":{"name":"dg548ft1892","path":"","type":"RASTER","defaultStyle":{"name":"raster_rgb8","href":"http://example.com/geoserver/rest/styles/raster_rgb8.json"},"resource":{"@class":"coverage","name":"druid:dg548ft1892","href":"http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892.json"},"queryable":false,"opaque":false}}') # rubocop:disable Layout/LineLength
+        end
+
+        it 'runs without error' do
+          stubbed_coverage_put = stub_request(:put, 'http://example.com/geoserver/rest/workspaces/druid/coveragestores/dg548ft1892/coverages/dg548ft1892')
+                                 .with(headers: { 'Content-Type' => 'application/json' })
+                                 .to_return(status: 201)
+          stubbed_layer_put = stub_request(:put, 'http://example.com/geoserver/rest/layers/dg548ft1892')
+                              .with(headers: { 'Content-Type' => 'application/json' }, body: layer_put_body)
+                              .to_return(status: 201)
+          test_perform(robot, druid)
+          expect(stubbed_coverage_put).to have_been_requested
+          expect(stubbed_layer_put).to have_been_requested
+        end
+      end
+      # rubocop:enable RSpec/NestedGroups
     end
   end
 end

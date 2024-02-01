@@ -27,17 +27,17 @@ module Robots
             }
           )
 
-          # Obtain a handle to the workspace and clean it up.
-          ws = Geoserver::Publish::Workspace.new(connection)
+          # Obtain a handle to the workspace
+          workspace = Geoserver::Publish::Workspace.new(connection)
           workspace_name = 'druid'
 
-          raise "load-geoserver: #{bare_druid}: No such workspace: #{workspace_name}" unless ws.find(workspace_name:)
+          raise "load-geoserver: #{bare_druid}: No such workspace: #{workspace_name}" unless workspace.find(workspace_name:)
 
           logger.debug "Workspace: #{workspace_name} ready"
 
-          if vector? && layertype == 'PostGIS'
+          if vector?
             create_vector(connection, workspace_name)
-          elsif raster? && layertype == 'GeoTIFF'
+          elsif raster?
             create_raster(connection, workspace_name)
           else
             raise "load-geoserver: #{bare_druid} has unknown layer format: #{layertype}"
@@ -53,13 +53,7 @@ module Robots
         end
 
         def layertype
-          @layertype ||= if vector?
-                           'PostGIS'
-                         elsif raster?
-                           'GeoTIFF'
-                         else
-                           raise "load-geoserver: #{bare_druid} unknown format: #{GisRobotSuite.media_type(cocina_object)}"
-                         end
+          @layertype ||= GisRobotSuite.layertype(cocina_object)
         end
 
         def title
@@ -77,18 +71,18 @@ module Robots
                         .map(&:value).compact.uniq
         end
 
-        def create_vector(connection, workspace_name, dsname = 'postgis_druid')
-          %w[title abstract keywords].each do |i|
-            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{i}" if send(i).empty?
+        def create_vector(connection, workspace_name, datastore_name = 'postgis_druid')
+          %w[title abstract keywords].each do |field|
+            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{field}" if send(field).empty?
           end
 
-          logger.debug "Retrieving DataStore: #{workspace_name}/#{dsname}"
-          ds = Geoserver::Publish::DataStore.new(connection)
-          raise "load-geoserver: #{bare_druid}: Datastore #{dsname} not found" unless ds.find(workspace_name:, data_store_name: dsname)
+          logger.debug "Retrieving DataStore: #{workspace_name}/#{datastore_name}"
+          datastore = Geoserver::Publish::DataStore.new(connection)
+          raise "load-geoserver: #{bare_druid}: Datastore #{datastore_name} not found" unless datastore.find(workspace_name:, data_store_name: datastore_name)
 
           feature_type_exists = Geoserver::Publish::FeatureType.new(connection).find(
             workspace_name:,
-            data_store_name: dsname,
+            data_store_name: datastore_name,
             feature_type_name: bare_druid
           )
 
@@ -116,7 +110,7 @@ module Robots
             Geoserver::Publish::FeatureType.new(connection).send(
               resource_action,
               workspace_name:,
-              data_store_name: dsname,
+              data_store_name: datastore_name,
               feature_type_name: bare_druid,
               title:,
               additional_payload: ft.to_h
@@ -128,8 +122,8 @@ module Robots
 
         # rubocop:disable Metrics/AbcSize
         def create_raster(connection, workspace_name)
-          %w[title abstract keywords].each do |i|
-            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{i}" if send(i).empty?
+          %w[title abstract keywords].each do |field|
+            raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{field}" if send(field).empty?
           end
 
           # create coverage store
@@ -146,7 +140,7 @@ module Robots
                 workspace_name:,
                 coverage_store_name: bare_druid,
                 url: "file:#{Settings.geohydra.geotiff.dir}/#{bare_druid}.tif",
-                type: 'GeoTIFF',
+                type: layertype,
                 additional_payload: {
                   description: title
                 }
@@ -167,30 +161,26 @@ module Robots
             workspace_name:
           )
 
-          if coverage_exists.nil?
-            logger.debug "Creating Coverage #{bare_druid}"
-          else
-            logger.debug "Found existing Coverage #{bare_druid}"
-          end
-          coverage_struct = Struct.new(:enabled, :title, :abstract, :keywords, :metadata_links, :metadata)
-          cv = coverage_struct.new
-          cv.enabled = true
-          cv.title = title
-          cv.abstract = abstract
-          cv.keywords = { string: keywords }
-          cv.metadata_links = []
-          cv.metadata = cv.metadata || {}.merge!(
-            'cacheAgeMax' => 86400,
-            'cachingEnabled' => true
-          )
           begin
-            coverage.create(
-              workspace_name:,
-              coverage_store_name: bare_druid,
-              coverage_name: bare_druid,
-              title:,
-              additional_payload: cv.to_h
-            )
+            if coverage_exists.nil?
+              logger.debug "Creating Coverage #{bare_druid}"
+              coverage.create(
+                workspace_name:,
+                coverage_store_name: bare_druid,
+                coverage_name: bare_druid,
+                title:,
+                additional_payload: coverage_metadata
+              )
+            else
+              logger.debug "Found existing Coverage #{bare_druid}. Updating Coverage."
+              coverage.update(
+                workspace_name:,
+                coverage_store_name: bare_druid,
+                coverage_name: bare_druid,
+                title:,
+                additional_payload: coverage_metadata
+              )
+            end
           rescue Geoserver::Publish::Error => e
             raise "load-geoserver: #{bare_druid} cannot save Coverage: #{e.message}"
           end
@@ -274,6 +264,18 @@ module Robots
           rescue Geoserver::Publish::Error => e
             raise "load-geoserver: #{bare_druid} cannot save Layer: #{e.message}"
           end
+        end
+
+        def coverage_metadata
+          { enabled: true,
+            title:,
+            abstract:,
+            keywords: { string: keywords },
+            metadata_links: [],
+            metadata: {
+              cacheAgeMax: 86400,
+              cachingEnabled: true
+            } }
         end
         # rubocop:enable Metrics/AbcSize
       end

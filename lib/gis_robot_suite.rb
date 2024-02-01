@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GisRobotSuite
+module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
     # execute gdalinfo command
@@ -57,12 +57,26 @@ module GisRobotSuite
     media_type(cocina_object) == 'application/x-esri-shapefile'
   end
 
+  RASTER_TYPES = %w[image/tiff].freeze
+
   def self.raster?(cocina_object)
-    %w[image/tiff application/x-ogc-aig].include? media_type(cocina_object)
+    raise "#{cocina_object.externalIdentifier} is ArcGrid format: 'application/x-ogc-aig'" if media_type(cocina_object) == 'application/x-ogc-aig'
+
+    RASTER_TYPES.include?(media_type(cocina_object))
   end
 
   def self.media_type(cocina_object)
     geographic_form(cocina_object, 'media type')
+  end
+
+  def self.layertype(cocina_object)
+    if vector?(cocina_object)
+      'PostGIS'
+    elsif raster?(cocina_object)
+      'GeoTIFF'
+    else
+      raise "#{cocina_object.externalIdentifier} has unknown format: #{media_type(cocina_object)}"
+    end
   end
 
   def self.data_format(cocina_object)
