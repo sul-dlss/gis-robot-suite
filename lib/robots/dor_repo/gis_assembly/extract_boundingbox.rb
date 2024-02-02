@@ -68,8 +68,8 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def extent_shapefile(shape_filename)
           logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |file|
-            file.readlines.each do |line|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |ogrinfo_io|
+            ogrinfo_io.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
 
@@ -88,12 +88,12 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def extent_geotiff(tiff_filename)
           logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
-          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiff_filename}'") do |file|
+          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiff_filename}'") do |gdalinfo_io|
             ulx = 0
             uly = 0
             lrx = 0
             lry = 0
-            file.readlines.each do |line|
+            gdalinfo_io.readlines.each do |line|
               # Corner Coordinates:
               # Upper Left  (-122.2846400,  35.9770286) (122d17' 4.70"W, 35d58'37.30"N)
               # Lower Left  (-122.2846400,  35.5581835) (122d17' 4.70"W, 35d33'29.46"N)

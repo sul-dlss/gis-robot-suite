@@ -7,7 +7,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     cmd = "#{Settings.gdal_path}gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
     infotxt = IO.popen(cmd, &:readlines)
 
-    # parse gdalinfo
+    # parse gdalinfo output
     info = {
       nbands: 0,
       type: 'Byte',

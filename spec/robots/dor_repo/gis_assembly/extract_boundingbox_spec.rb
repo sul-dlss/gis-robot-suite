@@ -195,16 +195,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       }
     end
     let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object, update: nil) }
-    let(:file) do
-      instance_double(File, readlines: [
-                        "Upper Left  (56.2499964,  38.16636) (122d17' 4.70\"W, 35d58'37.30\"N)",
-                        "Lower Right (72.368695, 30.1199748) (121d54'34.12\"W, 35d33'29.46\"N)"
-                      ])
-    end
 
     before do
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(IO).to receive(:popen).and_yield(file)
+      allow(IO).to receive(:popen).and_call_original
     end
 
     it 'updates the cocina with the bounding box' do
@@ -387,16 +381,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       }
     end
     let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object, update: nil) }
-    let(:file) do
-      instance_double(File, readlines: [
-                        "Upper Left  (56.2499964,  38.16636) (122d17' 4.70\"W, 35d58'37.30\"N)",
-                        "Lower Right (72.368695, 30.1199748) (121d54'34.12\"W, 35d33'29.46\"N)"
-                      ])
-    end
 
     before do
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(IO).to receive(:popen).and_yield(file)
+      allow(IO).to receive(:popen).and_call_original
     end
 
     it 'updates the cocina with the bounding box' do
