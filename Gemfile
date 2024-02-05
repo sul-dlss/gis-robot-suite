@@ -11,7 +11,7 @@ gem 'geoserver-publish', '>= 0.5.0' # samvera labs
 gem 'lyber-core', '~> 7.1'
 gem 'stanford-mods' # for GisDelivery::LoadGeoserver
 
-gem 'config', '~> 3.1' # Naomi thinks the version restriction can be removed
+gem 'config'
 gem 'fastimage', '~> 2.2' # to get mimetype in GenerateContentMetadata
 gem 'honeybadger'
 gem 'pry' # for console
