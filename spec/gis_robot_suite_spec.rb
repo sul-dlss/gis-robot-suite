@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'utilities' do
+RSpec.describe GisRobotSuite do
   let(:cocina_object) do
     dro = build(:dro)
     dro.new(description: dro.description.new(geographic: [
@@ -14,13 +14,13 @@ RSpec.describe 'utilities' do
 
   describe '.media_type' do
     it 'returns media type' do
-      expect(GisRobotSuite.media_type(cocina_object)).to eq(media_type)
+      expect(described_class.media_type(cocina_object)).to eq(media_type)
     end
   end
 
   describe '.data_format' do
     it 'returns data format' do
-      expect(GisRobotSuite.data_format(cocina_object)).to eq(data_format)
+      expect(described_class.data_format(cocina_object)).to eq(data_format)
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'application/x-esri-shapefile' }
 
       it 'returns true' do
-        expect(GisRobotSuite).to be_vector(cocina_object)
+        expect(described_class).to be_vector(cocina_object)
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'image/tiff' }
 
       it 'returns false' do
-        expect(GisRobotSuite).not_to be_vector(cocina_object)
+        expect(described_class).not_to be_vector(cocina_object)
       end
     end
   end
@@ -47,7 +47,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'image/tiff' }
 
       it 'returns true' do
-        expect(GisRobotSuite).to be_raster(cocina_object)
+        expect(described_class).to be_raster(cocina_object)
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'application/x-esri-shapefile' }
 
       it 'returns false' do
-        expect(GisRobotSuite).not_to be_raster(cocina_object)
+        expect(described_class).not_to be_raster(cocina_object)
       end
     end
 
@@ -63,13 +63,13 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'application/x-ogc-aig' }
 
       it 'raises' do
-        expect { GisRobotSuite.raster?(cocina_object) }.to raise_error(RuntimeError, "druid:bc234fg5678 is ArcGrid format: 'application/x-ogc-aig'")
+        expect { described_class.raster?(cocina_object) }.to raise_error(RuntimeError, "druid:bc234fg5678 is ArcGrid format: 'application/x-ogc-aig'")
       end
     end
   end
 
   describe '.determine_rights' do
-    subject { GisRobotSuite.determine_rights(cocina_object) }
+    subject { described_class.determine_rights(cocina_object) }
 
     let(:cocina_object) { build(:dro).new(access: { view: access, download: access }) }
 
@@ -98,7 +98,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'something/else' }
 
       it 'raises' do
-        expect { GisRobotSuite.layertype(cocina_object) }.to raise_error(RuntimeError, 'druid:bc234fg5678 has unknown format: something/else')
+        expect { described_class.layertype(cocina_object) }.to raise_error(RuntimeError, 'druid:bc234fg5678 has unknown format: something/else')
       end
     end
 
@@ -106,7 +106,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'application/x-esri-shapefile' }
 
       it 'has layertype PostGIS' do
-        expect(GisRobotSuite.layertype(cocina_object)).to eq 'PostGIS'
+        expect(described_class.layertype(cocina_object)).to eq 'PostGIS'
       end
     end
 
@@ -114,7 +114,7 @@ RSpec.describe 'utilities' do
       let(:media_type) { 'image/tiff' }
 
       it 'has layertype GeoTIFF' do
-        expect(GisRobotSuite.layertype(cocina_object)).to eq 'GeoTIFF'
+        expect(described_class.layertype(cocina_object)).to eq 'GeoTIFF'
       end
     end
   end
