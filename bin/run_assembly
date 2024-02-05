@@ -6,7 +6,6 @@ export PATH=./bin:$PATH
 druid="$1"
 
 for s in \
-  extract-thumbnail \
   extract-iso19139-metadata \
   extract-iso19110-metadata \
   extract-fgdc-metadata \

@@ -26,7 +26,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 `gisAssemblyWF`
 ---------------
 
-* `extract-thumbnail` :: Extract thumbnail preview from ArcCatalog metadata
 * `extract-iso19139-metadata` :: Transform ISO 19139 metadata from ArcCatalog metadata
 * `extract-iso19110-metadata` :: Transform ISO 19110metadata from ArcCatalog metadata
 * `extract-fgdc-metadata` :: Transform FGDC metadata from ArcCatalog metadata
@@ -69,6 +68,7 @@ is *pre-stage*:
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
+        preview.jpg
       content/
         index_map.json
 

@@ -55,8 +55,19 @@ module Robots
           @epsg_data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data_EPSG_4326.zip")
         end
 
+        def preview_objectfile_path
+          thumbnail_file = File.join(rootdir, 'content', 'preview.jpg')
+          return thumbnail_file if File.size?(thumbnail_file)
+
+          temp_thumbnail_file = File.join(rootdir, 'temp', 'preview.jpg')
+          raise "generate_content_metadata: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
+
+          FileUtils.cp(temp_thumbnail_file, thumbnail_file)
+          thumbnail_file
+        end
+
         def preview_objectfile
-          @preview_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/preview.jpg")
+          @preview_objectfile ||= Assembly::ObjectFile.new(preview_objectfile_path)
         end
 
         def index_map_objectfile
