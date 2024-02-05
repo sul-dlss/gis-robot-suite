@@ -332,8 +332,8 @@ DEPENDENCIES
   geoserver-publish (>= 0.5.0)
   honeybadger
   lyber-core (~> 7.1)
-  pry (~> 0.10)
-  rake (~> 13.0)
+  pry
+  rake
   rspec
   rspec_junit_formatter
   rubocop
