@@ -33,45 +33,45 @@ module Robots
           Dir.chdir(tmpdir)
           File.umask(002)
 
-          fns = []
+          filenames = []
           recurse_flag = false
-          fn = Dir.glob('*.shp.xml').first
-          if fn.nil?
-            fn = Dir.glob('*/metadata.xml').first
-            if fn.nil?
-              fn = Dir.glob('*.tif.xml').first
-              raise "package-data: #{bare_druid} cannot locate metadata in temp" if fn.nil?
+          filename = Dir.glob('*.shp.xml').first
+          if filename.nil?
+            filename = Dir.glob('*/metadata.xml').first
+            if filename.nil?
+              filename = Dir.glob('*.tif.xml').first
+              raise "package-data: #{bare_druid} cannot locate metadata in temp" if filename.nil?
 
               # GeoTIFF
-              basename = File.basename(fn, '.tif.xml')
-              Dir.glob("#{basename}.*").each do |x|
-                fns << x
-                recurse_flag = true if File.directory?(x)
+              basename = File.basename(filename, '.tif.xml')
+              Dir.glob("#{basename}.*").each do |fname|
+                filenames << fname
+                recurse_flag = true if File.directory?(fname)
               end
-              Dir.glob("#{basename}-*.xml").each do |x|
-                fns << x
+              Dir.glob("#{basename}-*.xml").each do |xml_fname|
+                filenames << xml_fname
               end
             else # ArcGRID
-              fns << File.basename(File.dirname(fn))
+              filenames << File.basename(File.dirname(filename))
               recurse_flag = true
             end
           else # Shapefile
-            basename = File.basename(fn, '.shp.xml')
-            Dir.glob("#{basename}.*").each do |x|
-              fns << x
-              recurse_flag = true if File.directory?(x)
+            basename = File.basename(filename, '.shp.xml')
+            Dir.glob("#{basename}.*").each do |fname|
+              filenames << fname
+              recurse_flag = true if File.directory?(fname)
             end
-            Dir.glob("#{basename}-*.xml").each do |x|
-              fns << x
+            Dir.glob("#{basename}-*.xml").each do |xml_fname|
+              filenames << xml_fname
             end
           end
 
-          zipfn = File.join(rootdir, 'content', 'data.zip')
-          FileUtils.mkdir_p(File.dirname(zipfn)) unless File.directory?(File.dirname(zipfn))
-          FileUtils.rm_f(zipfn) if File.size?(zipfn)
+          zip_filename = File.join(rootdir, 'content', 'data.zip')
+          FileUtils.mkdir_p(File.dirname(zip_filename)) unless File.directory?(File.dirname(zip_filename))
+          FileUtils.rm_f(zip_filename) if File.size?(zip_filename)
 
-          logger.debug "Compressing #{bare_druid} into #{zipfn}"
-          system("zip -v#{recurse_flag ? 'r' : ''} '#{zipfn}' #{fns.join(' ')}")
+          logger.debug "Compressing #{bare_druid} into #{zip_filename}"
+          system("zip -v#{recurse_flag ? 'r' : ''} '#{zip_filename}' #{filenames.join(' ')}")
         end
       end
     end
