@@ -148,6 +148,120 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   }
                 ]
               }
+            },
+            {
+              type: 'https://cocina.sul.stanford.edu/models/resources/object',
+              externalIdentifier: 'cc044gt0726_3',
+              label: 'Metadata',
+              version: 1,
+              structural: {
+                contains: [
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    label: 'sanluisobispo1996.shp.xml',
+                    filename: 'sanluisobispo1996.shp.xml',
+                    size: 24684,
+                    version: 1,
+                    hasMimeType: 'application/xml',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '085bc84d3663505c9226ec51f612de5e7ca78d1d'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '65269731824353b3ca3fab67ebdfd744'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    label: 'sanluisobispo1996-iso19139.xml',
+                    filename: 'sanluisobispo1996-iso19139.xml',
+                    size: 29062,
+                    version: 1,
+                    hasMimeType: 'application/xml',
+                    use: 'derivative',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: 'e98a64922c138b1119de35e9b7543896e59596cb'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '54200e1ae282abce87446ae64b8765b5'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: false,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    label: 'sanluisobispo1996-iso19110.xml',
+                    filename: 'sanluisobispo1996-iso19110.xml',
+                    size: 10664,
+                    version: 1,
+                    hasMimeType: 'application/xml',
+                    use: 'derivative',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '1876a5fc23a1bd3daf358b462adf0eef7875ba98'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '74370eaaaa0f9bb8dc5999d2085700ac'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: false,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    label: 'sanluisobispo1996-fgdc.xml',
+                    filename: 'sanluisobispo1996-fgdc.xml',
+                    size: 7623,
+                    version: 1,
+                    hasMimeType: 'application/xml',
+                    use: 'derivative',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '30c5b696df09f9374179c68e41b1b86374238071'
+                      },
+                      {
+                        type: 'md5',
+                        digest: 'f88eeb259276b419a8c5f73a7fc8c1b3'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: false,
+                      shelve: true
+                    }
+                  }
+                ]
+              }
             }
           ],
           hasMemberOrders: [],
@@ -234,7 +348,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) do |args|
           structural = args[:params].structural
-          expect(structural.contains.length).to eq(2)
+          expect(structural.contains.length).to eq(3)
           fileset = structural.contains.first
           expect(fileset.structural.contains.length).to eq(3)
           expect(fileset.structural.contains.last.to_h).to match(expected_file)
@@ -262,7 +376,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
           test_perform(robot, druid)
           expect(object_client).to have_received(:update) do |args|
             structural = args[:params].structural
-            expect(structural.contains.length).to eq(2)
+            expect(structural.contains.length).to eq(3)
             fileset = structural.contains.first
             expect(fileset.structural.contains.length).to eq(3)
             expect(fileset.structural.contains.last.to_h).to match(expected_file)

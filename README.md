@@ -88,6 +88,10 @@ look like this in the workspace:
         data_ESRI_4326.zip
         preview.jpg
         index_map.json
+        layer-iso19110.xml
+        layer-iso19139.xml
+        layer-fgdc.xml
+        layer.shp.xml
 
 Note that `content/index_map.json` is optional.
 

@@ -18,6 +18,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
     let(:druid) { "druid:#{bare_druid}" }
     let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/data_EPSG_4326.zip" }
+    let(:output_xml_files) { Dir.glob("spec/fixtures/stage/#{bare_druid}/content/*.xml") }
 
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
@@ -29,7 +30,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
     end
 
     after do
-      FileUtils.rm_f(output_zip)
+      FileUtils.rm_f([output_zip, output_xml_files])
     end
 
     context 'when a Shapefile' do
@@ -82,6 +83,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_bb033gt0615/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_bb033gt0615/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
         )
+        expect(output_xml_files.size).to eq 4
       end
     end
 
@@ -185,6 +187,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           'gdalinfo -mm -stats -norat -noct /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif'
         )
+        expect(output_xml_files.size).to eq 3
       end
     end
 
@@ -277,6 +280,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           'gdalinfo -mm -stats -norat -noct /tmp/normalize_vh469wk7989/EPSG_4326/h_shade.tif'
         )
+        expect(output_xml_files.size).to eq 1
       end
     end
   end
