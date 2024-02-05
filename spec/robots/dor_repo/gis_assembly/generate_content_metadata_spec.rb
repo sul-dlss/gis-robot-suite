@@ -12,12 +12,15 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
           hasMemberOrders: [],
           isMemberOf: ['druid:rz415nf2825']
         },
-        access: {
-          view: 'world',
-          download: 'world',
-          controlledDigitalLending: false
-        }
+        access: cocina_object_access
       )
+    end
+    let(:cocina_object_access) do
+      {
+        view: 'world',
+        download: 'world',
+        controlledDigitalLending: false
+      }
     end
 
     let(:object_client) do
@@ -32,6 +35,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
 
     context 'without an index map file' do
       let(:druid) { 'druid:cc044gt0726' }
+
+      let(:expected_file_access) do
+        {
+          view: 'world',
+          download: 'world',
+          controlledDigitalLending: false
+        }
+      end
 
       let(:expected_structural) do
         {
@@ -62,11 +73,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                         digest: '86b7905d67d84e5750c2e7f3aa473ba9'
                       }
                     ],
-                    access: {
-                      view: 'world',
-                      download: 'world',
-                      controlledDigitalLending: false
-                    },
+                    access: expected_file_access,
                     administrative: {
                       publish: true,
                       sdrPreserve: true,
@@ -92,11 +99,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                         digest: 'e0cc2902a0265e12ab688c396f29b546'
                       }
                     ],
-                    access: {
-                      view: 'world',
-                      download: 'world',
-                      controlledDigitalLending: false
-                    },
+                    access: expected_file_access,
                     administrative: {
                       publish: true,
                       sdrPreserve: false,
@@ -132,11 +135,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                         digest: 'e60d57074eb3add590985781fdc8cf0c'
                       }
                     ],
-                    access: {
-                      view: 'world',
-                      download: 'world',
-                      controlledDigitalLending: false
-                    },
+                    access: expected_file_access,
                     administrative: {
                       publish: true,
                       sdrPreserve: true,
@@ -164,10 +163,43 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
           expect(args[:params].structural.to_h).to match(expected_structural)
         end
       end
+
+      context 'with citation-only view rights and no download on the containing cocina object' do # rubocop:disable RSpec/NestedGroups
+        let(:cocina_object_access) do
+          {
+            view: 'citation-only',
+            download: 'none',
+            controlledDigitalLending: false
+          }
+        end
+
+        let(:expected_file_access) do
+          {
+            view: 'dark',
+            download: 'none',
+            controlledDigitalLending: false
+          }
+        end
+
+        it 'creates structural with the expected file rights' do
+          test_perform(robot, druid)
+          expect(object_client).to have_received(:update) do |args|
+            expect(args[:params].structural.to_h).to match(expected_structural)
+          end
+        end
+      end
     end
 
     context 'with an index map file' do
       let(:druid) { 'druid:wf887zc4874' }
+
+      let(:expected_file_access) do
+        {
+          view: 'world',
+          download: 'world',
+          controlledDigitalLending: false
+        }
+      end
 
       let(:expected_file) do
         {
@@ -189,11 +221,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
               digest: '52378794a017c0a10d718c9b08987680'
             }
           ],
-          access: {
-            view: 'world',
-            download: 'world',
-            controlledDigitalLending: false
-          },
+          access: expected_file_access,
           administrative: {
             publish: true,
             sdrPreserve: true,
@@ -210,6 +238,35 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
           fileset = structural.contains.first
           expect(fileset.structural.contains.length).to eq(3)
           expect(fileset.structural.contains.last.to_h).to match(expected_file)
+        end
+      end
+
+      context 'with citation-only view rights and no download on the containing cocina object' do # rubocop:disable RSpec/NestedGroups
+        let(:cocina_object_access) do
+          {
+            view: 'citation-only',
+            download: 'none',
+            controlledDigitalLending: false
+          }
+        end
+
+        let(:expected_file_access) do
+          {
+            view: 'dark',
+            download: 'none',
+            controlledDigitalLending: false
+          }
+        end
+
+        it 'creates structural with the expected file rights' do
+          test_perform(robot, druid)
+          expect(object_client).to have_received(:update) do |args|
+            structural = args[:params].structural
+            expect(structural.contains.length).to eq(2)
+            fileset = structural.contains.first
+            expect(fileset.structural.contains.length).to eq(3)
+            expect(fileset.structural.contains.last.to_h).to match(expected_file)
+          end
         end
       end
     end
