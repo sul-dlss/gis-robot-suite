@@ -33,12 +33,34 @@ module Robots
           @purl ||= Settings.purl.url + "/#{bare_druid}"
         end
 
-        def shp_file
-          @shp_file ||= Dir.glob("#{rootdir}/temp/*.shp").first
+        def vector_file
+          @vector_file ||= Dir.glob(["#{rootdir}/temp/*.shp", "#{rootdir}/temp/*.geojson"]).first
+        end
+
+        def vector_file_format
+          if vector_file.end_with?('.shp')
+            'Shapefile'
+          elsif vector_file.end_with?('.geojson')
+            'GeoJSON'
+          else
+            raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{vector_file}"
+          end
         end
 
         def raster?
-          shp_file.nil?
+          vector_file.nil?
+        end
+
+        def raster_file_format
+          tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
+          if tif_file.nil?
+            metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
+            raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+
+            'ArcGRID'
+          else
+            'GeoTIFF'
+          end
         end
 
         def geometry_type
@@ -53,17 +75,9 @@ module Robots
 
         def file_format
           @file_format ||= if raster?
-                             tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
-                             if tif_file.nil?
-                               metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-                               raise "generate-mods: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
-
-                               'ArcGRID'
-                             else
-                               'GeoTIFF'
-                             end
+                             raster_file_format
                            else
-                             'Shapefile'
+                             vector_file_format
                            end
         end
 
@@ -75,7 +89,7 @@ module Robots
         end
 
         def find_geometry_type_ogrinfo
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shp_file}'") do |file|
+          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{vector_file}'") do |file|
             file.readlines.each do |line|
               next unless line =~ /^Geometry:\s+(.*)\s*$/
 
