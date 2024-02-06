@@ -39,4 +39,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
       expect(File).not_to exist(File.join(staging_dir, '26257_e-iso19110.xml'))
     end
   end
+
+  context 'with ESRI metadata for a geoJSON' do
+    let(:druid) { 'vx812cc5548' }
+    let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
+
+    it 'does not generate an ISO 19110 XML document' do
+      expect(File).to exist(File.join(staging_dir, 'CLOWNS_OF_AMERICA-iso19110.xml'))
+    end
+  end
 end
