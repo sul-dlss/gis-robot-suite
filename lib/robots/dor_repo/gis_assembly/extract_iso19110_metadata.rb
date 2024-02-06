@@ -18,7 +18,7 @@ module Robots
         private
 
         def generate_for_datatype(data_type)
-          return false unless %w(Shapefile GeoJSON).include? data_type
+          return false unless %w[Shapefile GeoJSON].include? data_type
 
           true
         end
