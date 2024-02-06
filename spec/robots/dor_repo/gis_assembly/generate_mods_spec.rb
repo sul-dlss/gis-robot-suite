@@ -189,7 +189,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
       let(:description_props) do
         { title: [{ value: 'Clowns of America, International Membership Point GeoJSON (anonymized)' }],
           purl: 'https://purl.stanford.edu/vx812cc5548',
-          note: [{ value: "This point GeoJSON was created from the Clowns of America International Membership Database (anonymized) obtained in 2007 from Clowns of America, International, for use in teaching. It was created by geocoding the ZipCode field of the original table, using OpenRefine and the Geonames.org PostalCodes API. Attributes include those from the original data table (\"City\", \"ZipCode\", \"Clown_Name\", and \"Country\"), as well attributes added during the geocoding process (\"admname1\",\"adm1\",\"adm2\",\"placname\",\"longitude\",\"latitude\") and an attribute \"Clown-Na_1\" which represents the values in the \"Clown_Name\" attribute field after a \"Cluster and Edit\" operation, performed in OpenRefine to collapse values so that \"Co Co\" or \"Co-Co\" both are clustered and edited to become \"CoCo\" for use in name frequency analysis. This layer is intended to be used for teaching and instruction at Stanford\"s Geospatial Center. ",
+          note: [{ value: 'This point GeoJSON was created from the Clowns of America International Membership Database (anonymized) obtained in 2007 from Clowns of America, International, for use in teaching. It was created by geocoding the ZipCode field of the original table, using OpenRefine and the Geonames.org PostalCodes API. Attributes include those from the original data table ("City", "ZipCode", "Clown_Name", and "Country"), as well attributes added during the geocoding process ("admname1","adm1","adm2","placname","longitude","latitude") and an attribute "Clown-Na_1" which represents the values in the "Clown_Name" attribute field after a "Cluster and Edit" operation, performed in OpenRefine to collapse values so that "Co Co" or "Co-Co" both are clustered and edited to become "CoCo" for use in name frequency analysis. This layer is intended to be used for teaching and instruction at Stanford"s Geospatial Center. ',
                    displayLabel: 'Abstract',
                    valueLanguage: { code: 'eng', source: { code: 'iso639-2b' } } }],
           language: [{ code: 'eng', source: { code: 'iso639-2b' } }],
@@ -236,10 +236,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
                                    { value: 'United States', type: 'coverage', valueLanguage: { code: 'eng' } }] }],
           access: {
             note: [{
-              value: "User agrees that, where applicable, content will not be used to identify or to otherwise infringe the privacy or confidentiality rights of individuals. Content distributed via the Stanford Digital Repository may be subject to additional license and use restrictions applied by the depositor.",
-              type: "use and reproduction"
+              value: 'User agrees that, where applicable, content will not be used to identify or to otherwise infringe the privacy or confidentiality rights of individuals. Content distributed via the Stanford Digital Repository may be subject to additional license and use restrictions applied by the depositor.',
+              type: 'use and reproduction'
             }]
-          }}
+          } }
       end
       # rubocop:enable Layout/LineLength
 

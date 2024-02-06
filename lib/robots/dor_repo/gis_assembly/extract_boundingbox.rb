@@ -216,7 +216,7 @@ module Robots
         #
         # @return [Array] ulx uly lrx lry for the bounding box
         def determine_extent
-          shape_filename = Dir.glob("#{tmpdir}/*.shp").first
+          shape_filename = Dir.glob(["#{tmpdir}/*.shp", "#{tmpdir}/*.geojson"]).first
           if shape_filename.nil?
             tiff_filename = Dir.glob("#{tmpdir}/*.tif").first
             ulx, uly, lrx, lry = extent_geotiff tiff_filename # normalized version only
