@@ -35,7 +35,7 @@ module Robots
 
           filenames = []
           recurse_flag = false
-          filename = Dir.glob('*.shp.xml').first
+          filename = Dir.glob(['*.shp.xml', '*.geojson.xml']).first
           if filename.nil?
             filename = Dir.glob('*/metadata.xml').first
             if filename.nil?
@@ -56,7 +56,7 @@ module Robots
               recurse_flag = true
             end
           else # Shapefile
-            basename = File.basename(filename, '.shp.xml')
+            basename = File.basename(filename.gsub(/.shp|.geojson/, ''), '.xml')
             Dir.glob("#{basename}.*").each do |fname|
               filenames << fname
               recurse_flag = true if File.directory?(fname)
