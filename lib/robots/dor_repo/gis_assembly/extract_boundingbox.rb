@@ -88,24 +88,25 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def extent_geotiff(tiff_filename)
           logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
-          IO.popen("#{Settings.gdal_path}gdalinfo '#{tiff_filename}'") do |gdalinfo_io|
+          IO.popen("#{Settings.gdal_path}gdalinfo -json '#{tiff_filename}'") do |gdalinfo_io|
             ulx = 0
             uly = 0
             lrx = 0
             lry = 0
-            gdalinfo_io.readlines.each do |line|
-              # Corner Coordinates:
-              # Upper Left  (-122.2846400,  35.9770286) (122d17' 4.70"W, 35d58'37.30"N)
-              # Lower Left  (-122.2846400,  35.5581835) (122d17' 4.70"W, 35d33'29.46"N)
-              # Upper Right (-121.9094764,  35.9770286) (121d54'34.12"W, 35d58'37.30"N)
-              # Lower Right (-121.9094764,  35.5581835) (121d54'34.12"W, 35d33'29.46"N)
-              # Center      (-122.0970582,  35.7676061) (122d 5'49.41"W, 35d46' 3.38"N)
-              case line
-              when /^Upper Left\s+\((.*)\)\s+\(/
-                ulx, uly = Regexp.last_match(1).split(',')
-              when /^Lower Right\s+\((.*)\)\s+\(/
-                lrx, lry = Regexp.last_match(1).split(',')
-              end
+            # {
+            #   "cornerCoordinates":{
+            #     "upperLeft":[-32.3338761, 40.5004267], "lowerLeft":[-32.3338761, 36.0005087],
+            #     "lowerRight":[-23.8337056, 36.0005087], "upperRight":[-23.8337056, 40.5004267],
+            #     "center":[-28.0837908, 38.2504677]
+            #   }
+            # } # plus many other sibling keys for cornerCoordinates
+            gdalinfo_io.read.tap do |gdalinfo_json_str|
+              gdalinfo_json = JSON.parse(gdalinfo_json_str)
+              corner_coordinates = gdalinfo_json['cornerCoordinates']
+              next unless corner_coordinates # everything else depends on a hash nested in the cornerCoordinates field
+
+              ulx, uly = corner_coordinates['upperLeft']
+              lrx, lry = corner_coordinates['lowerRight']
             end
             return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
           end

@@ -204,7 +204,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
     it 'updates the cocina with the bounding box' do
       test_perform(robot, druid)
       expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-      expect(IO).to have_received(:popen).with("gdalinfo '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
+      expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
     end
   end
 
@@ -390,7 +390,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
     it 'updates the cocina with the bounding box' do
       test_perform(robot, druid)
       expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-      expect(IO).to have_received(:popen).with("gdalinfo '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
+      expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
     end
   end
 end
