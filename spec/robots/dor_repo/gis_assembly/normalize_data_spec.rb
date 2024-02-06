@@ -87,6 +87,59 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
       end
     end
 
+    context 'when GeoJSON' do
+      let(:bare_druid) { 'vx812cc5548' }
+
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Important Farmland, San Luis Obispo County, California, 1996'
+            }
+          ],
+          geographic: [
+            {
+              form: [
+                {
+                  value: 'application/geo+json',
+                  type: 'media type',
+                  source: {
+                    value: 'IANA media type terms'
+                  }
+                },
+                {
+                  value: 'Shapefile',
+                  type: 'data format'
+                },
+                {
+                  value: 'Dataset#Polygon',
+                  type: 'type'
+                }
+              ]
+            }
+          ],
+          purl: 'https://purl.stanford.edu/vx812cc5548'
+        }
+      end
+
+      it 'normalizes the data' do
+        test_perform(robot, druid)
+        expect(File.exist?(output_zip)).to be true
+        Zip::File.open(output_zip) do |zip_file|
+          expect(zip_file.entries.size).to eq 4
+          # Will raise if not present
+          zip_file.get_entry('sanluisobispo1996.dbf')
+          zip_file.get_entry('sanluisobispo1996.prj')
+          zip_file.get_entry('sanluisobispo1996.shp')
+          zip_file.get_entry('sanluisobispo1996.shx')
+        end
+        # Reproject
+        expect(Kernel).to have_received(:system).with(
+          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_vx812cc5548/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_vx812cc5548/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
+        )
+      end
+    end
+
     context 'when an 8-bit GeoTIFF already in EPSG:4326' do
       let(:bare_druid) { 'bb021mm7809' }
 

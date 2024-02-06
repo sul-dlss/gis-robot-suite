@@ -54,7 +54,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   end
 
   def self.vector?(cocina_object)
-    media_type(cocina_object) == 'application/x-esri-shapefile'
+    ['application/x-esri-shapefile', 'application/geo+json'].include? media_type(cocina_object)
   end
 
   RASTER_TYPES = %w[image/tiff].freeze
