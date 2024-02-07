@@ -3,25 +3,38 @@
 module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
   def self.determine_raster_style(tifffn)
-    # execute gdalinfo command
-    cmd = "#{Settings.gdal_path}gdalinfo -stats -norat -noct -nomd '#{tifffn}'"
-    infotxt = IO.popen(cmd, &:readlines)
-
-    # parse gdalinfo output
     info = {
       nbands: 0,
       type: 'Byte',
       min: Float::MAX,
       max: 0
     }
-    infotxt.each do |line|
-      case line
-      when /^Band\s+(\d+)\s+Block=(.+)\s+Type=(.+),.*$/
-        info[:nbands] = [Regexp.last_match(1).to_i, info[:nbands]].max
-        info[:type] = Regexp.last_match(3).to_s
-      when /^\s+Minimum=(.+),\s+Maximum=(.+),.*$/ # Minimum=1.000, Maximum=3322.000
-        info[:min] = [Regexp.last_match(1).to_f, info[:min]].min
-        info[:max] = [Regexp.last_match(2).to_f, info[:max]].max
+
+    # execute gdalinfo command
+    IO.popen("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tifffn}'") do |gdalinfo_io|
+      # gdalinfo output:
+      # a grayscale8 example:
+      # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
+      #
+      # an rgb8 example:
+      # {
+      #   "bands":[
+      #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
+      #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
+      #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
+      #     ]
+      # } # plus many other keys at each level
+      gdalinfo_io.read.tap do |gdalinfo_json_str|
+        gdalinfo_json = JSON.parse(gdalinfo_json_str)
+        bands = gdalinfo_json['bands']
+
+        info[:nbands] = bands.size
+        info[:type] = bands.last['type']
+
+        min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
+        info[:min] = min_from_bands if min_from_bands
+        max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
+        info[:max] = max_from_bands if max_from_bands
       end
     end
 
