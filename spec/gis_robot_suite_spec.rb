@@ -118,4 +118,20 @@ RSpec.describe GisRobotSuite do
       end
     end
   end
+
+  describe '.determine_raster_style' do
+    let(:rgb8_file) { File.join(fixture_dir, 'tif_files/MCE_AF2G_2010.tif') }
+    let(:grayscale8_file) { File.join(fixture_dir, 'stage/bh432xr2264/temp/51002.tif') }
+
+    after do
+      # the *.aux.xml files are written by gdalinfo when it computes image statistics (will be regenerated if not present)
+      FileUtils.rm_rf("#{rgb8_file}.aux.xml")
+      FileUtils.rm_rf("#{grayscale8_file}.aux.xml")
+    end
+
+    it 'determines the correct raster style' do
+      expect(described_class.determine_raster_style(rgb8_file)).to eq('rgb8')
+      expect(described_class.determine_raster_style(grayscale8_file)).to eq('grayscale8')
+    end
+  end
 end
