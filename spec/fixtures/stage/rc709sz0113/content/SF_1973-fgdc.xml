@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin/>
+        <pubdate>20171214</pubdate>
+        <title>San Francisco Redevelopment Areas, 1973 (Raster Image)</title>
+        <geoform>raster digital data</geoform>
+        <pubinfo>
+          <publish>Stanford University. Center for Spatial and Textual Analysis</publish>
+        </pubinfo>
+        <onlink>http://purl.stanford.edu/rc709sz0113</onlink>
+        <lworkcit>
+          <citeinfo>
+            <title>Imagined San Francisco</title>
+          </citeinfo>
+        </lworkcit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This layer is a georeferenced image of a map showing parts of San Francisco that were categorized as redevelopment areas by the San Francisco Redevelopment Agency in January of 1973. A scanned version of this map was georeferenced as part of the Imagined San Francisco project. </abstract>
+      <purpose>This project traces the history of urban planning in San Francisco, placing special emphasis on unrealized schemes. Rather than using visual material simply to illustrate outcomes, Imagined San Francisco uses historical plans, maps, architectural renderings, and photographs to show what might have been. By enabling users to layer a series of urban plans, the project presents the city not only as a sequence of material changes, but also as a contingent process and a battleground for political power. Savvy institutional actors--like banks, developers, and many public officials--understood that in some cases to clearly articulate their interests would be to invite challenges. That means that textual sources like newspapers and municipal reports are limited in what they can tell researchers about the shape of political power. Urban plans, however, often speak volumes about interests and dynamics upon which textual sources remain silent. Mortgage lenders, for example, apparently thought it unwise to state that they wished to see a poor neighborhood cleared, to be replaced with a freeway onramp. Yet visual analysis of planning proposals makes that interest plain. So in the process of showing how the city might have looked, Imagined San Francisco also shows how political power actually was negotiated and exercised.</purpose>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <sngdate>
+          <caldate>19730101</caldate>
+        </sngdate>
+      </timeinfo>
+      <current>ground condition</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>None planned</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-122.523081</westbc>
+        <eastbc>-122.355327</eastbc>
+        <northbc>37.825512</northbc>
+        <southbc>37.641315</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>None</themekt>
+        <themekey>Urban renewal</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>imageryBaseMapsEarthCover</themekey>
+      </theme>
+      <place>
+        <placekt>lcsh</placekt>
+        <placekey>San Francisco (Calif.)</placekey>
+      </place>
+    </keywords>
+    <accconst>You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.</accconst>
+    <useconst>None</useconst>
+    <datacred>San Francisco Redevelopment Agency (2017). San Francisco Redevelopment Areas, 1973 (Raster Image). Stanford University Center for Spatial and Textual Analysis. Available at: http://purl.stanford.edu/rc709sz0113.</datacred>
+    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.4.1.5686</native>
+  </idinfo>
+  <dataqual>
+    <lineage>
+      <srcinfo>
+        <srccite>
+          <citeinfo>
+            <title>San Francisco Redevelopment Areas</title>
+            <onlink>https://www.flickr.com/photos/walkingsf/4995350850/in/album-72157622518464203/</onlink>
+          </citeinfo>
+        </srccite>
+        <typesrc>None</typesrc>
+        <srccitea>San Francisco Redevelopment Areas</srccitea>
+        <srccontr>Original map scanned by Eric Fisher.</srccontr>
+      </srcinfo>
+    </lineage>
+  </dataqual>
+  <spdoinfo>
+    <direct>Raster</direct>
+    <rastinfo>
+      <rasttype>Grid Cell</rasttype>
+      <rowcount>2935</rowcount>
+      <colcount>2673</colcount>
+    </rastinfo>
+  </spdoinfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>Mitchell Bldg. 2nd floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </distrib>
+    <distliab>See access and use constraints information.</distliab>
+  </distinfo>
+  <metainfo>
+    <metd>20180112</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford University. Center for Spatial and Textual Analysis</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>unknown</addrtype>
+          <city>Stanford</city>
+          <state>CA</state>
+          <postal>94305</postal>
+        </cntaddr>
+        <cntvoice>650-721-1385</cntvoice>
+        <cntemail>cesta_stanford@stanford.edu</cntemail>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <mettc>local time</mettc>
+  </metainfo>
+</metadata>
