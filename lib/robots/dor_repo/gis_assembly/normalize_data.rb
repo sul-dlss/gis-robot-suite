@@ -39,6 +39,7 @@ module Robots
               normalize
               cleanup_output_zip
               zip_output
+              output_xml_metadata
             ensure
               cleanup_tmpdir
               cleanup_output_dir
@@ -98,6 +99,18 @@ module Robots
 
           def output_zip
             @output_zip ||= "#{rootdir}/content/data_EPSG_4326.zip"
+          end
+
+          def output_xml_metadata
+            # Copy metadata files to the content directory
+            iso19139_xml_file = Dir.glob("#{tmpdir}/*-iso19139.xml").first
+            iso19110_xml_file = Dir.glob("#{tmpdir}/*-iso19110.xml").first
+            fgdc_xml_file = Dir.glob("#{tmpdir}/*-fgdc.xml").first
+            esri_xml_file = GisRobotSuite.locate_esri_metadata(tmpdir)
+
+            [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file, esri_xml_file].compact.map do |file|
+              FileUtils.cp(file, "#{rootdir}/content/#{File.basename(file)}")
+            end
           end
 
           private
