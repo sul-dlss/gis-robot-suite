@@ -143,32 +143,6 @@ module Robots
                 sdrPreserve: true,
                 shelve: true
               }
-            },
-            {
-              type: 'https://cocina.sul.stanford.edu/models/file',
-              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: 'data_EPSG_4326.zip',
-              filename: 'data_EPSG_4326.zip',
-              size: epsg_data_zip_objectfile.filesize,
-              version: cocina_object.version,
-              hasMimeType: 'application/zip',
-              use: 'derivative',
-              hasMessageDigests: [
-                {
-                  type: 'sha1',
-                  digest: epsg_data_zip_objectfile.sha1
-                },
-                {
-                  type: 'md5',
-                  digest: epsg_data_zip_objectfile.md5
-                }
-              ],
-              access: file_access_params,
-              administrative: {
-                publish: true,
-                sdrPreserve: false,
-                shelve: true
-              }
             }
           ].tap do |params|
             # Add index_map.json if it exists
