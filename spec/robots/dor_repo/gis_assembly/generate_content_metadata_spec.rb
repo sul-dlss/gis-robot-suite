@@ -29,8 +29,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
 
     before do
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(SecureRandom).to receive(:uuid).and_return('8222376b-861f-4cb1-8ebb-c2ae6b112b4e', 'ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60', '0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
-                                                       'd665cf1c-9914-45bc-82e7-bbf946a614d8')
+      allow(SecureRandom).to receive(:uuid).and_return('8222376b-861f-4cb1-8ebb-c2ae6b112b4e', 'ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60', '0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a')
     end
 
     context 'without an index map file' do
@@ -79,32 +78,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                       sdrPreserve: true,
                       shelve: true
                     }
-                  },
-                  {
-                    type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
-                    label: 'data_EPSG_4326.zip',
-                    filename: 'data_EPSG_4326.zip',
-                    size: 2031104,
-                    version: 1,
-                    hasMimeType: 'application/zip',
-                    use: 'derivative',
-                    hasMessageDigests: [
-                      {
-                        type: 'sha1',
-                        digest: '4786e61d6230370dfa2841fde3876a49e7e90dcc'
-                      },
-                      {
-                        type: 'md5',
-                        digest: 'e0cc2902a0265e12ab688c396f29b546'
-                      }
-                    ],
-                    access: expected_file_access,
-                    administrative: {
-                      publish: true,
-                      sdrPreserve: false,
-                      shelve: true
-                    }
                   }
                 ]
               }
@@ -118,7 +91,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
                     label: 'preview.jpg',
                     filename: 'preview.jpg',
                     size: 5298,
@@ -158,7 +131,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'sanluisobispo1996.shp.xml',
                     filename: 'sanluisobispo1996.shp.xml',
                     size: 24684,
@@ -184,7 +157,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   },
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'sanluisobispo1996-iso19139.xml',
                     filename: 'sanluisobispo1996-iso19139.xml',
                     size: 29062,
@@ -210,7 +183,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   },
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'sanluisobispo1996-iso19110.xml',
                     filename: 'sanluisobispo1996-iso19110.xml',
                     size: 10664,
@@ -236,7 +209,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   },
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'sanluisobispo1996-fgdc.xml',
                     filename: 'sanluisobispo1996-fgdc.xml',
                     size: 7623,
@@ -348,32 +321,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                       sdrPreserve: true,
                       shelve: true
                     }
-                  },
-                  {
-                    type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
-                    label: 'data_EPSG_4326.zip',
-                    filename: 'data_EPSG_4326.zip',
-                    size: 11_387_443,
-                    version: 1,
-                    hasMimeType: 'application/zip',
-                    use: 'derivative',
-                    hasMessageDigests: [
-                      {
-                        type: 'sha1',
-                        digest: '77b26642040b5a2064238f688b57597655201f4a'
-                      },
-                      {
-                        type: 'md5',
-                        digest: 'cd46edd6400d05752b3ac710c8e7d368'
-                      }
-                    ],
-                    access: expected_file_access,
-                    administrative: {
-                      publish: true,
-                      sdrPreserve: false,
-                      shelve: true
-                    }
                   }
                 ]
               }
@@ -387,7 +334,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
                     label: 'preview.jpg',
                     filename: 'preview.jpg',
                     size: 4934,
@@ -427,7 +374,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'SF_1973.tif.xml',
                     filename: 'SF_1973.tif.xml',
                     size: 17389,
@@ -453,7 +400,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   },
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'SF_1973-iso19139.xml',
                     filename: 'SF_1973-iso19139.xml',
                     size: 22729,
@@ -479,7 +426,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
                   },
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/d665cf1c-9914-45bc-82e7-bbf946a614d8',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'SF_1973-fgdc.xml',
                     filename: 'SF_1973-fgdc.xml',
                     size: 5801,
@@ -536,7 +483,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
       let(:expected_file) do
         {
           type: 'https://cocina.sul.stanford.edu/models/file',
-          externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+          externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
           label: 'index_map.json',
           filename: 'index_map.json',
           size: 13275,
@@ -568,7 +515,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
           structural = args[:params].structural
           expect(structural.contains.length).to eq(3)
           fileset = structural.contains.first
-          expect(fileset.structural.contains.length).to eq(3)
+          expect(fileset.structural.contains.length).to eq(2)
           expect(fileset.structural.contains.last.to_h).to match(expected_file)
         end
       end
@@ -596,7 +543,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
             structural = args[:params].structural
             expect(structural.contains.length).to eq(3)
             fileset = structural.contains.first
-            expect(fileset.structural.contains.length).to eq(3)
+            expect(fileset.structural.contains.length).to eq(2)
             expect(fileset.structural.contains.last.to_h).to match(expected_file)
           end
         end
