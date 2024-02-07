@@ -276,11 +276,12 @@ module Robots
           end
 
           def eight_bit?
-            cmd = "#{Settings.gdal_path}gdalinfo -norat -noct '#{output_filepath}'"
-            infotxt = IO.popen(cmd, &:readlines)
-            infotxt.each do |line|
-              # Band 1 Block=4063x2 Type=Byte, ColorInterp=Palette
-              return true if line.match?(/^Band (.+) Block=(.+) Type=Byte, ColorInterp=Palette\s*$/)
+            cmd = "#{Settings.gdal_path}gdalinfo -json -norat -noct '#{output_filepath}'"
+            IO.popen(cmd).read.tap do |gdalinfo_json_str|
+              gdalinfo_json = JSON.parse(gdalinfo_json_str)
+              bands = gdalinfo_json['bands']
+              # { "bands":[{ "band": 1, "block": [10503, 3], "type": "Byte", "colorInterpretation": "Palette" }] } # plus many other keys at each level
+              return true if bands.any? { |band| band.key?('block') && band['type'] == 'Byte' && band['colorInterpretation'] == 'Palette' }
             end
             false
           end
@@ -297,6 +298,9 @@ module Robots
           end
 
           def compute_statistics
+            # NOTE: other invocations of gdalinfo parse JSON output.  This produces an .aux.xml output file that
+            # is consumed (we think?) by the LoadRaster robot (which at the very least, rsyncs it to another location,
+            # as of Feb 2024).
             system_with_check("#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{output_filepath}")
           end
         end
