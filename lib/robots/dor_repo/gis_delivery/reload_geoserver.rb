@@ -26,7 +26,7 @@ module Robots
               }
             )
             begin
-              connection.post(path: '/reload', payload: nil)
+              connection.post(path: 'reload', payload: nil)
             rescue Geoserver::Publish::Error => e
               logger.warn(e.message)
               raise "reload-geoserver: GeoServer API call failed with #{e.message}"
