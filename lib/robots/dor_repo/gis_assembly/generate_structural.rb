@@ -6,13 +6,13 @@ require 'assembly-objectfile'
 module Robots
   module DorRepo
     module GisAssembly
-      class GenerateContentMetadata < Base # rubocop:disable Metrics/ClassLength
+      class GenerateStructural < Base # rubocop:disable Metrics/ClassLength
         def initialize
-          super('gisAssemblyWF', 'generate-content-metadata')
+          super('gisAssemblyWF', 'generate-structural')
         end
 
         def perform_work
-          logger.debug "generate-content-metadata working on #{bare_druid}"
+          logger.debug "generate-structural working on #{bare_druid}"
 
           updated = cocina_object.new(structural: cocina_object.structural.new(contains: contains_params))
           object_client.update(params: updated)

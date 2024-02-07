@@ -35,7 +35,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `package-data` :: Package the digital work
 * `normalize-data` :: Reproject the data into common SRS projection and/or file format
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
-* `generate-content-metadata` :: Generate structural metadata and update the Cocina data store accordingly
+* `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
 
@@ -48,7 +48,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `load-geoserver` :: Load layers into GeoServer
 * `reset-geowebcache` :: Reset GeoWebCache for the layer
 * `finish-gis-delivery-workflow` :: Connect to public and restricted GeoServers to verify layer
-* `reload-geoserver` :: Automatically reload the GeoServer 
+* `reload-geoserver` :: Automatically reload the GeoServer
 * `start-accession-workflow` :: Start accessionWF
 
 Data Wrangling

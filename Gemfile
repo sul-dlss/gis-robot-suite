@@ -12,7 +12,7 @@ gem 'lyber-core', '~> 7.1'
 gem 'stanford-mods' # for GisDelivery::LoadGeoserver
 
 gem 'config'
-gem 'fastimage', '~> 2.2' # to get mimetype in GenerateContentMetadata
+gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
 gem 'honeybadger'
 gem 'pry' # for console
 gem 'rake'

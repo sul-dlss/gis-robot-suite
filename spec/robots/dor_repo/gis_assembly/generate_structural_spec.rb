@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Robots::DorRepo::GisAssembly::GenerateContentMetadata do
+RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
   describe '#perform_work' do
     let(:robot) { described_class.new }
     let(:cocina_model) do
