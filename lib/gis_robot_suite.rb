@@ -108,11 +108,11 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   end
 
   def self.locate_esri_metadata(dir, _opts = {})
-    extensions = ['shp.xml', 'tif.xml', 'metadata.xml', 'geojson.xml']
+    extensions = ['.shp.xml', '.tif.xml', '/metadata.xml', '.geojson.xml']
 
     filename = nil
     extensions.each do |ext|
-      filename = Dir.glob("#{dir}/**/*.#{ext}").first
+      filename = Dir.glob("#{dir}/**/*#{ext}").first
       break if filename && !File.empty?(filename)
     end
 
