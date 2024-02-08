@@ -35,32 +35,32 @@ module Robots
           Dir.chdir(tmpdir)
           File.umask(002)
 
-          filename = find_metadata_file
-          raise "package-data: #{bare_druid} cannot locate metadata in temp" if filename.nil?
+          metadata_filename = find_metadata_file
+          raise "package-data: #{bare_druid} cannot locate metadata in temp" if metadata_filename.nil?
 
-          filenames = build_file_list(filename)
+          filenames_to_zip = build_file_list(metadata_filename)
 
           zip_filename = File.join(rootdir, 'content', 'data.zip')
           FileUtils.mkdir_p(File.dirname(zip_filename)) unless File.directory?(File.dirname(zip_filename))
           FileUtils.rm_f(zip_filename) if File.size?(zip_filename)
 
           logger.debug "Compressing #{bare_druid} into #{zip_filename}"
-          system("zip -v#{recurse_flag ? 'r' : ''} '#{zip_filename}' #{filenames.join(' ')}")
+          system("zip -v#{recurse_flag ? 'r' : ''} '#{zip_filename}' #{filenames_to_zip.join(' ')}")
         end
 
         def find_metadata_file
-          filename = Dir.glob(['*.shp.xml', '*.geojson.xml']).first
-          filename ||= Dir.glob('*/metadata.xml').first
-          filename ||= Dir.glob('*.tif.xml').first
-          filename
+          metadata_filename = Dir.glob(['*.shp.xml', '*.geojson.xml']).first
+          metadata_filename ||= Dir.glob('*/metadata.xml').first
+          metadata_filename ||= Dir.glob('*.tif.xml').first
+          metadata_filename
         end
 
-        def build_file_list(filename)
+        def build_file_list(metadata_filename)
           filenames = []
           recurse_flag = false
 
           ['.shp.xml', '.geojson.xml', '.tif.xml'].each do |ext|
-            basename = File.basename(filename, ext)
+            basename = File.basename(metadata_filename, ext)
             Dir.glob("#{basename}.*").each do |fname|
               filenames << fname
               recurse_flag = true if File.directory?(fname)
@@ -73,7 +73,7 @@ module Robots
           end
 
           recurse_flag = true
-          [File.basename(File.dirname(filename))]
+          [File.basename(File.dirname(metadata_filename))]
         end
       end
     end
