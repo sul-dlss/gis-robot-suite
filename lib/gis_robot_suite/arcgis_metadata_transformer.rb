@@ -24,6 +24,7 @@ module GisRobotSuite
       return 'ArcGRID' if file_name == 'metadata.xml'
       return 'Shapefile' if file_name.end_with?('.shp.xml')
       return 'GeoTIFF' if file_name.end_with?('.tif.xml')
+      return 'GeoJSON' if file_name.end_with?('.geojson.xml')
 
       raise "extracting metadata: #{bare_druid} has unknown GIS data type"
     end
@@ -62,6 +63,8 @@ module GisRobotSuite
         File.basename(esri_metadata_file, '.tif.xml')
       when 'ArcGRID'
         File.basename(File.dirname(esri_metadata_file))
+      when 'GeoJSON'
+        File.basename(esri_metadata_file, '.geojson.xml')
       end
     end
 

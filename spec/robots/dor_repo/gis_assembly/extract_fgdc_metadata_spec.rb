@@ -39,4 +39,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
       expect(File).to exist(File.join(staging_dir, '26257_e-fgdc.xml'))
     end
   end
+
+  context 'with ESRI metadata for a geoJSON' do
+    let(:druid) { 'vx812cc5548' }
+    let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
+
+    it 'generates an FGDC XML document' do
+      expect(File).to exist(File.join(staging_dir, 'CLOWNS_OF_AMERICA-fgdc.xml'))
+    end
+  end
 end

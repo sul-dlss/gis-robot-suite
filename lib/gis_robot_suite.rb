@@ -67,7 +67,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   end
 
   def self.vector?(cocina_object)
-    media_type(cocina_object) == 'application/x-esri-shapefile'
+    ['application/x-esri-shapefile', 'application/geo+json'].include? media_type(cocina_object)
   end
 
   RASTER_TYPES = %w[image/tiff].freeze
@@ -121,14 +121,16 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   end
 
   def self.locate_esri_metadata(dir, _opts = {})
-    filename = Dir.glob("#{dir}/*.shp.xml").first # Shapefile
-    if filename.nil? || File.empty?(filename)
-      filename = Dir.glob("#{dir}/*.tif.xml").first # GeoTIFF
-      if filename.nil? || File.empty?(filename)
-        filename = Dir.glob("#{dir}/*/metadata.xml").first # ArcGRID
-        raise "Missing ESRI metadata files in #{dir}" if filename.nil? || File.empty?(filename)
-      end
+    extensions = ['.shp.xml', '.tif.xml', '/metadata.xml', '.geojson.xml']
+
+    filename = nil
+    extensions.each do |ext|
+      filename = Dir.glob("#{dir}/**/*#{ext}").first
+      break if filename && !File.empty?(filename)
     end
+
+    raise "Missing ESRI metadata files in #{dir}" if filename.nil? || File.empty?(filename)
+
     filename
   end
 

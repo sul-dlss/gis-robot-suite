@@ -180,6 +180,74 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
         expect(object_client).to have_received(:update).with(params: object.new(description: description_props))
       end
     end
+
+    context 'when a GeoJSON file' do
+      let(:druid) { 'druid:vx812cc5548' }
+      let(:geographic_xml) { read_fixture('CLOWNS_OF_AMERICA-iso19139.xml') }
+
+      # rubocop:disable Layout/LineLength
+      let(:description_props) do
+        { title: [{ value: 'Clowns of America, International Membership Point GeoJSON (anonymized)' }],
+          purl: 'https://purl.stanford.edu/vx812cc5548',
+          note: [{ value: 'This point GeoJSON was created from the Clowns of America International Membership Database (anonymized) obtained in 2007 from Clowns of America, International, for use in teaching. It was created by geocoding the ZipCode field of the original table, using OpenRefine and the Geonames.org PostalCodes API. Attributes include those from the original data table ("City", "ZipCode", "Clown_Name", and "Country"), as well attributes added during the geocoding process ("admname1","adm1","adm2","placname","longitude","latitude") and an attribute "Clown-Na_1" which represents the values in the "Clown_Name" attribute field after a "Cluster and Edit" operation, performed in OpenRefine to collapse values so that "Co Co" or "Co-Co" both are clustered and edited to become "CoCo" for use in name frequency analysis. This layer is intended to be used for teaching and instruction at Stanford"s Geospatial Center. ',
+                   displayLabel: 'Abstract',
+                   valueLanguage: { code: 'eng', source: { code: 'iso639-2b' } } }],
+          language: [{ code: 'eng', source: { code: 'iso639-2b' } }],
+          contributor: [{ name: [{ value: 'Maples, Stacey D.' }],
+                          type: 'person',
+                          role: [{ source: { code: 'marcrelator' }, value: 'creator' }] }],
+          event: [{ location: [{ value: 'US' }],
+                    date: [{ value: '2007', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }] }],
+          subject: [{ source: { code: 'lcsh', uri: 'http://id.loc.gov/authorities/subjects.html' },
+                      valueLanguage: { code: 'eng', source: { code: 'iso639-2b' } },
+                      value: 'Clowns',
+                      type: 'topic' },
+                    { valueLanguage: { code: 'eng', source: { code: 'iso639-2b' } },
+                      value: 'United States',
+                      type: 'place' },
+                    { encoding: { code: 'w3cdtf' }, value: '2007', type: 'time' },
+                    { source: { code: 'ISO19115TopicCategory', uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode' },
+                      uri: 'location',
+                      value: 'Location',
+                      type: 'topic' },
+                    { value: 'W 158°1ʹ3ʺ--W 65°35ʹ41ʺ/N 64°51ʹ16ʺ--N 18°7ʺ', type: 'map coordinates' }],
+          form: [{ type: 'genre', value: 'Geospatial data', uri: 'http://id.loc.gov/authorities/genreForms/gf2011026297', source: { code: 'lcgft' } },
+                 { type: 'genre', value: 'cartographic dataset', uri: 'http://rdvocab.info/termList/RDAContentType/1001', source: { code: 'rdacontent' } },
+                 { value: 'cartographic', type: 'resource type', source: { value: 'MODS resource types' } },
+                 { value: 'software, multimedia', type: 'resource type', source: { value: 'MODS resource types' } },
+                 { value: 'GeoJSON', type: 'form' },
+                 { value: 'born digital', type: 'digital origin', source: { value: 'MODS digital origin terms' } },
+                 { value: 'Scale not given.', type: 'map scale' },
+                 { value: 'Custom projection', type: 'map projection' }],
+          adminMetadata: { language: [{ code: 'eng', source: { code: 'iso639-2b' } }],
+                           contributor: [{ name: [{ value: 'Stanford' }] }],
+                           note: [{ type: 'record origin', value: 'This record was translated from ISO 19139 to MODS v.3 using an xsl transformation.' }],
+                           identifier: [{ value: 'edu.stanford.purl:vx812cc5548' }] },
+          geographic: [{ form: [{ value: 'application/geo+json', type: 'media type', source: { value: 'IANA media type terms' } },
+                                { value: 'GeoJSON', type: 'data format' },
+                                { value: 'Dataset#Polygon', type: 'type' }],
+                         subject: [{ structuredValue: [{ value: '-158.017379', type: 'west' },
+                                                       { value: '18.001995', type: 'south' },
+                                                       { value: '-65.594769', type: 'east' },
+                                                       { value: '64.85437', type: 'north' }],
+                                     type: 'bounding box coordinates',
+                                     encoding: { value: 'decimal' },
+                                     standard: { code: 'EPSG:4326' } },
+                                   { value: 'United States', type: 'coverage', valueLanguage: { code: 'eng' } }] }],
+          access: {
+            note: [{
+              value: 'User agrees that, where applicable, content will not be used to identify or to otherwise infringe the privacy or confidentiality rights of individuals. Content distributed via the Stanford Digital Repository may be subject to additional license and use restrictions applied by the depositor.',
+              type: 'use and reproduction'
+            }]
+          } }
+      end
+      # rubocop:enable Layout/LineLength
+
+      it 'generates cocina descriptive metadata' do
+        perform
+        expect(object_client).to have_received(:update).with(params: object.new(description: description_props))
+      end
+    end
   end
 
   describe '.dd2ddmmss_abs' do

@@ -149,13 +149,25 @@ module Robots
           end
 
           def geo_object_name
-            @geo_object_name ||= shp_filepath ? File.basename(shp_filepath, '.shp') : nil
+            @geo_object_name ||= vector_filepath ? File.basename(vector_filepath, vector_file_extention) : nil
           end
 
           private
 
-          def shp_filepath
-            @shp_filepath ||= Dir.glob("#{tmpdir}/*.shp").first
+          def data_format
+            @data_format ||= GisRobotSuite.data_format(cocina_object)
+          end
+
+          def geojson?
+            data_format == 'GeoJSON'
+          end
+
+          def vector_file_extention
+            @vector_file_extention ||= geojson? ? '.geojson' : '.shp'
+          end
+
+          def vector_filepath
+            @vector_filepath ||= Dir.glob("#{tmpdir}/*#{vector_file_extention}").first
           end
 
           def wkt
@@ -167,8 +179,8 @@ module Robots
             # See http://www.gdal.org/ogr2ogr.html
             output_filepath = File.join(output_dir, "#{geo_object_name}.shp") # output shapefile
             logger.info "normalize-data: #{bare_druid} is projecting #{geo_object_name} to EPSG:4326"
-            system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{shp_filepath}'") # prevent recoding
-            raise "normalize-data: #{bare_druid} failed to reproject #{shp_filepath}" unless File.size?(output_filepath)
+            system_with_check("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{vector_filepath}'") # prevent recoding
+            raise "normalize-data: #{bare_druid} failed to reproject #{vector_filepath}" unless File.size?(output_filepath)
           end
 
           def normalize_prj_file
