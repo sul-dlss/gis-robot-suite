@@ -45,7 +45,7 @@ module Robots
           FileUtils.rm_f(zip_filename) if File.size?(zip_filename)
 
           logger.debug "Compressing #{bare_druid} into #{zip_filename}"
-          system("zip -v#{@recurse_flag ? 'r' : ''} '#{zip_filename}' #{filenames.join(' ')}")
+          system("zip -v#{recurse_flag ? 'r' : ''} '#{zip_filename}' #{filenames.join(' ')}")
         end
 
         def find_metadata_file
@@ -57,13 +57,13 @@ module Robots
 
         def build_file_list(filename)
           filenames = []
-          @recurse_flag = false
+          recurse_flag = false
 
           ['.shp.xml', '.geojson.xml', '.tif.xml'].each do |ext|
             basename = File.basename(filename, ext)
             Dir.glob("#{basename}.*").each do |fname|
               filenames << fname
-              @recurse_flag = true if File.directory?(fname)
+              recurse_flag = true if File.directory?(fname)
             end
             Dir.glob("#{basename}-*.xml").each do |xml_fname|
               filenames << xml_fname
@@ -72,7 +72,7 @@ module Robots
             return filenames unless filenames.empty?
           end
 
-          @recurse_flag = true
+          recurse_flag = true
           [File.basename(File.dirname(filename))]
         end
       end
