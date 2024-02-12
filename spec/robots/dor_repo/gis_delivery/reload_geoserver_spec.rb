@@ -111,5 +111,46 @@ RSpec.describe Robots::DorRepo::GisDelivery::ReloadGeoserver do
         expect(geoserver_conn_restricted_replica).to have_received(:post).with(path: 'reload', payload: nil)
       end
     end
+
+    context 'when the geoserver connection times out' do
+      before do
+        allow(Geoserver::Publish::Connection).to receive(:new).with(conn_public_primary_params).and_return(geoserver_conn_public_primary)
+        allow(Geoserver::Publish::Connection).to receive(:new).with(conn_public_replica_params).and_return(geoserver_conn_public_replica)
+        allow(geoserver_conn_public_primary).to receive(:post)
+        allow(geoserver_conn_public_replica).to receive(:post)
+      end
+
+      context 'when the retry limit is not exceeded' do # rubocop:disable RSpec/NestedGroups
+        before do
+          call_count = 0
+          allow(geoserver_conn_public_replica).to receive(:post) do
+            call_count += 1
+            raise(Faraday::TimeoutError) if call_count < Settings.connection_error_max_retries
+          end
+        end
+
+        it 'posts to the public geoserver instances' do
+          expect { reload_geoserver }.not_to raise_error
+          expect(Geoserver::Publish::Connection).to have_received(:new).with(conn_public_primary_params)
+          expect(geoserver_conn_public_primary).to have_received(:post).with(path: 'reload', payload: nil).once
+          expect(Geoserver::Publish::Connection).to have_received(:new).with(conn_public_replica_params)
+          expect(geoserver_conn_public_replica).to have_received(:post).with(path: 'reload', payload: nil).exactly(3).times
+        end
+      end
+
+      context 'when the retry limit is reached' do # rubocop:disable RSpec/NestedGroups
+        before do
+          allow(geoserver_conn_public_replica).to receive(:post).and_raise(Faraday::TimeoutError)
+        end
+
+        it 'lets the connection failure bubble up' do
+          expect { reload_geoserver }.to raise_error(Faraday::TimeoutError)
+          expect(Geoserver::Publish::Connection).to have_received(:new).with(conn_public_primary_params)
+          expect(geoserver_conn_public_primary).to have_received(:post).with(path: 'reload', payload: nil).once
+          expect(Geoserver::Publish::Connection).to have_received(:new).with(conn_public_replica_params)
+          expect(geoserver_conn_public_replica).to have_received(:post).with(path: 'reload', payload: nil).exactly(3).times
+        end
+      end
+    end
   end
 end

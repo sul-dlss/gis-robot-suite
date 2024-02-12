@@ -1,3 +1,5 @@
+connection_error_max_retries: 3
+
 dor_services:
   url:  'https://dor-services-test.stanford.test'
   token: secret-token
