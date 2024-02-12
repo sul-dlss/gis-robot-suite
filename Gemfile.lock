@@ -233,6 +233,7 @@ GEM
     regexp_parser (2.9.0)
     reline (0.4.2)
       io-console (~> 0.5)
+    retries (0.0.5)
     rexml (3.2.6)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
@@ -334,6 +335,7 @@ DEPENDENCIES
   lyber-core (~> 7.1)
   pry
   rake
+  retries
   rspec
   rspec_junit_formatter
   rubocop

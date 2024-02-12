@@ -26,7 +26,11 @@ module Robots
               }
             )
             begin
-              connection.post(path: 'reload', payload: nil)
+              with_retries(max_tries: Settings.connection_error_max_retries,
+                           handler: retries_handler("Reloading #{setting} Geoserver for #{druid} (#{setting[:url]})"),
+                           rescue: Faraday::TimeoutError) do
+                connection.post(path: 'reload', payload: nil)
+              end
             rescue Geoserver::Publish::Error => e
               logger.warn(e.message)
               raise "reload-geoserver: GeoServer API call failed with #{e.message}"
