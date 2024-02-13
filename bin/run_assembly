@@ -10,6 +10,7 @@ for s in \
   extract-iso19110-metadata \
   extract-fgdc-metadata \
   generate-geo-metadata \
+  generate-tag \
   generate-mods \
   assign-placenames \
   package-data \
