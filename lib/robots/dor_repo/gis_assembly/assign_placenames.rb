@@ -34,7 +34,6 @@ module Robots
               next
             end
             add_uri_to_subject(subject, uri)
-            add_uri_to_coverage(value, uri)
           end
         end
 
@@ -48,18 +47,6 @@ module Robots
             code: 'geonames',
             uri: 'http://www.geonames.org/ontology#'
           }
-        end
-
-        def coverage_subjects_for(value)
-          description_props[:geographic].flat_map do |geographic|
-            geographic[:subject].select { |subject| subject[:value] == value && subject[:type] == 'coverage' }
-          end
-        end
-
-        def add_uri_to_coverage(value, uri)
-          coverage_subjects_for(value).each do |subject|
-            subject[:uri] = uri
-          end
         end
       end
     end

@@ -37,6 +37,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
               value: 'Important Farmland, San Luis Obispo County, California, 1996'
             }
           ],
+          form: [
+            { value: 'EPSC::3309', type: 'map projection' }
+          ],
           geographic: [
             {
               form: [
@@ -91,6 +94,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
             {
               value: 'Important Farmland, San Luis Obispo County, California, 1996'
             }
+          ],
+          form: [
+            { value: 'EPSG::4326', type: 'map projection' }
           ],
           geographic: [
             {
@@ -156,6 +162,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
               value: 'Finland 2G Mobile Coverage Explorer, 2014'
             }
           ],
+          form: [
+            { value: 'EPSG::4326', type: 'map projection' }
+          ],
           geographic: [
             {
               form: [
@@ -176,33 +185,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
                 }
               ],
               subject: [
-                {
-                  structuredValue: [
-                    {
-                      value: '16.1179474',
-                      type: 'west'
-                    },
-                    {
-                      value: '59.2022116',
-                      type: 'south'
-                    },
-                    {
-                      value: '32.2367687',
-                      type: 'east'
-                    },
-                    {
-                      value: '70.6126121',
-                      type: 'north'
-                    }
-                  ],
-                  type: 'bounding box coordinates',
-                  standard: {
-                    code: 'EPSG:4326'
-                  },
-                  encoding: {
-                    value: 'decimal'
-                  }
-                },
                 {
                   value: 'Finland',
                   type: 'coverage',
@@ -242,6 +224,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
               value: '10-Meter Hillshade Grid: Albion River Watershed, California, 2004'
             }
           ],
+          form: [
+            { value: 'EPSG::4327', type: 'map projection' }
+          ],
           geographic: [
             {
               form: [
@@ -261,35 +246,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
                   type: 'type'
                 }
               ],
-              subject: [
-                {
-                  structuredValue: [
-                    {
-                      value: '-123.7787444',
-                      type: 'west'
-                    },
-                    {
-                      value: '39.2053384',
-                      type: 'south'
-                    },
-                    {
-                      value: '-123.5370228',
-                      type: 'east'
-                    },
-                    {
-                      value: '39.3055103',
-                      type: 'north'
-                    }
-                  ],
-                  type: 'bounding box coordinates',
-                  standard: {
-                    code: 'EPSG:4327'
-                  },
-                  encoding: {
-                    value: 'decimal'
-                  }
-                }
-              ]
+              subject: []
             }
           ],
           purl: 'https://purl.stanford.edu/vh469wk7989'

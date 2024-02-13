@@ -114,13 +114,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::AssignPlacenames do
               standard: {
                 code: 'EPSG:4326'
               }
-            },
-            {
-              value: 'Afghanistan',
-              type: 'coverage',
-              valueLanguage: {
-                code: 'eng'
-              }
             }
           ]
         }
@@ -237,14 +230,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::AssignPlacenames do
               },
               standard: {
                 code: 'EPSG:4326'
-              }
-            },
-            {
-              value: 'Afghanistan',
-              type: 'coverage',
-              uri: 'http://sws.geonames.org/1149361/',
-              valueLanguage: {
-                code: 'eng'
               }
             }
           ]

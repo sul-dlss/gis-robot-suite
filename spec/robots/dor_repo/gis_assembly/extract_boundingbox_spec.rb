@@ -37,22 +37,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               value: 'GeoTIFF',
               type: 'form'
             },
-            # {
-            #   value: 'Scale not given.',
-            #   type: 'map scale'
-            # },
-            # {
-            #   value: 'Custom projection',
-            #   type: 'map projection'
-            # },
             {
               value: 'EPSG::4326',
               type: 'map projection'
-              # uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-              # source: {
-              #   code: 'EPSG'
-              # },
-              # displayLabel: 'WGS84'
             }
           ],
           geographic: [
@@ -76,30 +63,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               ],
               subject: [
                 {
-                  structuredValue: [
-                    {
-                      value: '56.249996',
-                      type: 'west'
-                    },
-                    {
-                      value: '30.119975',
-                      type: 'south'
-                    },
-                    {
-                      value: '72.368695',
-                      type: 'east'
-                    },
-                    {
-                      value: '38.16636',
-                      type: 'north'
-                    }
-                  ],
-                  type: 'bounding box coordinates',
-                  encoding: {
-                    value: 'decimal'
-                  },
-                  standard: {
-                    code: 'EPSG:4326'
+                  value: 'Afghanistan',
+                  type: 'coverage',
+                  uri: 'http://sws.geonames.org/1149361/',
+                  valueLanguage: {
+                    code: 'eng'
                   }
                 }
               ]
@@ -120,22 +88,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               value: 'GeoTIFF',
               type: 'form'
             },
-            # {
-            #   value: 'Scale not given.',
-            #   type: 'map scale'
-            # },
-            # {
-            #   value: 'Custom projection',
-            #   type: 'map projection'
-            # },
             {
               value: 'EPSG::4326',
-              type: 'map projection',
-              uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-              source: {
-                code: 'EPSG'
-              },
-              displayLabel: 'WGS84'
+              type: 'map projection'
             }
           ],
           geographic: [
@@ -158,6 +113,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
                 }
               ],
               subject: [
+                {
+                  value: 'Afghanistan',
+                  type: 'coverage',
+                  uri: 'http://sws.geonames.org/1149361/',
+                  valueLanguage: {
+                    code: 'eng'
+                  }
+                },
                 {
                   structuredValue: [
                     {
@@ -187,12 +150,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
                 }
               ]
             }
-          ],
-          note: [
-            # {
-            #   value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-            #   displayLabel: 'WGS84 Cartographics'
-            # }
           ],
           subject: [
             # {
@@ -226,10 +183,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               value: 'GeoTIFF',
               type: 'form'
             },
-            # {
-            #   value: 'Scale not given.',
-            #   type: 'map scale'
-            # },
             {
               value: 'Custom projection',
               type: 'map projection'
@@ -254,36 +207,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
                   type: 'type'
                 }
               ],
-              subject: [
-                # Note that this is not EPSG:4326
-                {
-                  structuredValue: [
-                    {
-                      value: '156.249996',
-                      type: 'west'
-                    },
-                    {
-                      value: '130.119975',
-                      type: 'south'
-                    },
-                    {
-                      value: '172.368695',
-                      type: 'east'
-                    },
-                    {
-                      value: '138.16636',
-                      type: 'north'
-                    }
-                  ],
-                  type: 'bounding box coordinates',
-                  encoding: {
-                    value: 'decimal'
-                  },
-                  standard: {
-                    code: 'EPSG:4327'
-                  }
-                }
-              ]
+              subject: []
             }
           ] }
       end
@@ -303,19 +227,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
             {
               value: 'Custom projection',
               type: 'map projection'
-            },
-            {
-              value: 'Scale not given.',
-              type: 'map scale'
-            },
-            {
-              value: 'EPSG::4326',
-              type: 'map projection',
-              uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-              source: {
-                code: 'EPSG'
-              },
-              displayLabel: 'WGS84'
             }
           ],
           geographic: [
@@ -368,12 +279,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               ]
             }
           ],
-          note: [
-            {
-              value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-              displayLabel: 'WGS84 Cartographics'
-            }
-          ],
           subject: [
             {
               value: 'E 56°15ʹ--E 72°22ʹ7ʺ/N 38°9ʹ59ʺ--N 30°7ʹ12ʺ',
@@ -385,6 +290,164 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       end
 
       it 'updates the cocina with the bounding box' do
+        test_perform(robot, druid)
+        expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
+        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
+      end
+    end
+
+    context 'when a previous bounding box exists' do
+      let(:original_description) do
+        {
+          title: [
+            {
+              value: 'Afghanistan 2G Mobile Coverage Explorer, 2010'
+            }
+          ],
+          purl: 'https://purl.stanford.edu/nj441df9572',
+          subject: [],
+          form: [
+            {
+              value: 'GeoTIFF',
+              type: 'form'
+            },
+            {
+              value: 'EPSG::4326',
+              type: 'map projection'
+            }
+          ],
+          geographic: [
+            {
+              form: [
+                {
+                  value: 'image/tiff',
+                  type: 'media type',
+                  source: {
+                    value: 'IANA media type terms'
+                  }
+                },
+                {
+                  value: 'GeoTIFF',
+                  type: 'data format'
+                },
+                {
+                  value: 'Dataset#',
+                  type: 'type'
+                }
+              ],
+              subject: [
+                {
+                  structuredValue: [
+                    {
+                      value: '50',
+                      type: 'west'
+                    },
+                    {
+                      value: '10',
+                      type: 'south'
+                    },
+                    {
+                      value: '40',
+                      type: 'east'
+                    },
+                    {
+                      value: '20',
+                      type: 'north'
+                    }
+                  ],
+                  type: 'bounding box coordinates',
+                  standard: {
+                    code: 'EPSG:4326'
+                  },
+                  encoding: {
+                    value: 'decimal'
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      let(:expected_description) do
+        {
+          title: [
+            {
+              value: 'Afghanistan 2G Mobile Coverage Explorer, 2010'
+            }
+          ],
+          form: [
+            {
+              value: 'GeoTIFF',
+              type: 'form'
+            },
+            {
+              value: 'EPSG::4326',
+              type: 'map projection'
+            }
+          ],
+          geographic: [
+            {
+              form: [
+                {
+                  value: 'image/tiff',
+                  type: 'media type',
+                  source: {
+                    value: 'IANA media type terms'
+                  }
+                },
+                {
+                  value: 'GeoTIFF',
+                  type: 'data format'
+                },
+                {
+                  value: 'Dataset#',
+                  type: 'type'
+                }
+              ],
+              subject: [
+                {
+                  structuredValue: [
+                    {
+                      value: '56.2499964',
+                      type: 'west'
+                    },
+                    {
+                      value: '30.1199748',
+                      type: 'south'
+                    },
+                    {
+                      value: '72.368695',
+                      type: 'east'
+                    },
+                    {
+                      value: '38.16636',
+                      type: 'north'
+                    }
+                  ],
+                  type: 'bounding box coordinates',
+                  standard: {
+                    code: 'EPSG:4326'
+                  },
+                  encoding: {
+                    value: 'decimal'
+                  }
+                }
+              ]
+            }
+          ],
+          note: [],
+          subject: [
+            # {
+            #   value: 'E 56°15ʹ--E 72°22ʹ7ʺ/N 38°9ʹ59ʺ--N 30°7ʹ12ʺ',
+            #   type: 'map coordinates'
+            # }
+          ],
+          purl: 'https://purl.stanford.edu/nj441df9572'
+        }
+      end
+
+      it 'updates the cocina with the new bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
         expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
@@ -492,21 +555,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
             }
           },
           {
-            value: 'Scale not given.',
-            type: 'map scale'
-          },
-          {
             value: 'Custom projection',
             type: 'map projection'
-          },
-          {
-            value: 'EPSG::4326',
-            type: 'map projection',
-            uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-            source: {
-              code: 'EPSG'
-            },
-            displayLabel: 'WGS84'
           }
         ],
         geographic: [
@@ -530,6 +580,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
             ],
             subject: [
               {
+                value: 'San Luis Obispo County (Calif.)',
+                type: 'coverage',
+                valueLanguage: {
+                  code: 'eng'
+                }
+              },
+              {
                 structuredValue: bounding_box,
                 type: 'bounding box coordinates',
                 standard: {
@@ -538,21 +595,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
                 encoding: {
                   value: 'decimal'
                 }
-              },
-              {
-                value: 'San Luis Obispo County (Calif.)',
-                type: 'coverage',
-                valueLanguage: {
-                  code: 'eng'
-                }
               }
             ]
-          }
-        ],
-        note: [
-          {
-            value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-            displayLabel: 'WGS84 Cartographics'
           }
         ],
         purl: 'https://purl.stanford.edu/cc044gt0726'
@@ -612,10 +656,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
             }
           },
           {
-            value: 'Scale not given.',
-            type: 'map scale'
-          },
-          {
             value: 'Custom projection',
             type: 'map projection'
           }
@@ -640,33 +680,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
               }
             ],
             subject: [
-              {
-                structuredValue: [
-                  {
-                    value: '-120',
-                    type: 'west'
-                  },
-                  {
-                    value: '35',
-                    type: 'south'
-                  },
-                  {
-                    value: '-119',
-                    type: 'east'
-                  },
-                  {
-                    value: '36',
-                    type: 'north'
-                  }
-                ],
-                type: 'bounding box coordinates',
-                standard: {
-                  code: 'EPSG:4326'
-                },
-                encoding: {
-                  value: 'decimal'
-                }
-              },
               {
                 value: 'San Luis Obispo County (Calif.)',
                 type: 'coverage',

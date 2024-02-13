@@ -31,11 +31,11 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `extract-fgdc-metadata` :: Transform FGDC metadata from ArcCatalog metadata
 * `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
 * `generate-tag` :: Apply Geo tag to object
-* `generate-mods` :: Convert geoMetadata into MODS
+* `generate-descriptive` :: Convert ISO 19139 into Cocina descriptive
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `package-data` :: Package the digital work
 * `normalize-data` :: Move files from temp to content directory.
-* `extract-boundingbox` :: Extract bounding box from data for MODS record
+* `extract-boundingbox` :: Extract bounding box from data for Cocina descriptive
 * `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
 * `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
