@@ -31,15 +31,16 @@ module Robots
           def call
             logger.debug "Processing #{bare_druid} #{data_zip_filepath}"
             extract_to_tmpdir
-            setup_output_dir
+            setup_output_dir # Output dir contains files for data_EPSG_4326.zip
 
             begin
               raise "normalize-data: #{bare_druid} cannot locate geo object in #{tmpdir}" unless geo_object_name
 
               normalize
-              cleanup_output_zip
-              zip_output
-              output_xml_metadata
+              cleanup_output_zip # Delete data_EPSG_4326.zip
+              zip_output # Create data_EPSG_4326.zip
+              copy_metadata # Copy metadata files to the content directory
+              copy_thumbnail # Copy thumbnail to the content directory
             ensure
               cleanup_tmpdir
               cleanup_output_dir
@@ -101,7 +102,7 @@ module Robots
             @output_zip ||= "#{rootdir}/content/data_EPSG_4326.zip"
           end
 
-          def output_xml_metadata
+          def copy_metadata
             # Copy metadata files to the content directory
             iso19139_xml_file = Dir.glob("#{tmpdir}/*-iso19139.xml").first
             iso19110_xml_file = Dir.glob("#{tmpdir}/*-iso19110.xml").first
@@ -111,6 +112,16 @@ module Robots
             [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file, esri_xml_file].compact.map do |file|
               FileUtils.cp(file, "#{rootdir}/content/#{File.basename(file)}")
             end
+          end
+
+          def copy_thumbnail
+            thumbnail_file = File.join(rootdir, 'content', 'preview.jpg')
+            return thumbnail_file if File.size?(thumbnail_file)
+
+            temp_thumbnail_file = File.join(rootdir, 'temp', 'preview.jpg')
+            raise "normalize_data: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
+
+            FileUtils.cp(temp_thumbnail_file, thumbnail_file)
           end
 
           private

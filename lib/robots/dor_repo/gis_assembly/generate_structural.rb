@@ -65,14 +65,7 @@ module Robots
         end
 
         def preview_objectfile_path
-          thumbnail_file = File.join(rootdir, 'content', 'preview.jpg')
-          return thumbnail_file if File.size?(thumbnail_file)
-
-          temp_thumbnail_file = File.join(rootdir, 'temp', 'preview.jpg')
-          raise "generate_content_metadata: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
-
-          FileUtils.cp(temp_thumbnail_file, thumbnail_file)
-          thumbnail_file
+          @preview_objectfile_path ||= File.join(rootdir, 'content', 'preview.jpg')
         end
 
         def preview_objectfile
