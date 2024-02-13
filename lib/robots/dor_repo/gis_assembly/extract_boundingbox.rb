@@ -24,7 +24,7 @@ module Robots
             check_extent
 
             add_extent_to_geographic_subject
-            add_extent_to_project_form
+            add_extent_to_projection_form
 
             object_client.update(params: cocina_object.new(description: description_props))
           ensure
@@ -150,7 +150,7 @@ module Robots
           end
         end
 
-        def add_extent_to_project_form
+        def add_extent_to_projection_form
           # Check to see whether the current native projection is WGS84
           raise "extract-boundingbox: #{bare_druid} is missing map projection!" if projection_forms.empty?
           raise "extract-boundingbox: #{bare_druid} has too many map projections: #{projection_forms.size}" unless projection_forms.size == 1
