@@ -23,6 +23,7 @@ module GisRobotSuite
 
       epsg4326_projection? ? compress_only : reproject_and_compress
       convert_8bit_to_rgb if eight_bit?
+      add_alpha_channel
       tmpdir
     end
 
@@ -74,6 +75,28 @@ module GisRobotSuite
       GisRobotSuite.run_system_command("mv #{output_filepath} #{temp_filename}", logger:)
       GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'", logger:)
       File.delete(temp_filename)
+    end
+
+    def add_alpha_channel
+      # NOTE: gdalwarp is smart enough not to add a new alpha channel (band) if one is already there.
+      # If we want to improve the performance of the normalize step, and many GeoTIFFs already
+      # have alpha channels, then we could introspect on the GeoTIFF file with gdalinfo and skip
+      # this call to gdalwarp if one is already present.
+
+      # NOTE: the roundabout approach of outputting the alpha channel add to a vrt, and piping that
+      # gdalwarp result to gdal_translate to create an actual compressed tif is an attempt to workaround
+      # a known issue with the compression option being provided directly to gdalwarp.  See:
+      #   https://trac.osgeo.org/gdal/wiki/UserDocs/GdalWarp#GeoTIFFoutput-coCOMPRESSisbroken
+      #   https://gdal.org/programs/gdalwarp.html#compressed-output
+      #   https://gdal.org/user/virtual_file_systems.html#vsistdout-standard-output-streaming
+      #   https://gis.stackexchange.com/questions/89444/file-size-inflation-normal-with-gdalwarp
+
+      logger.info "load-raster: adding alpha channel for #{output_filepath}"
+      temp_filepath = "#{tmpdir}/#{geo_object_name}_alpha.tif"
+      gdalwarp_cmd = "#{Settings.gdal_path}gdalwarp -dstalpha -of vrt #{output_filepath} /vsistdout/"
+      gdal_translate_cmd = "#{Settings.gdal_path}gdal_translate -co 'compress=LZW' /vsistdin/ #{temp_filepath}"
+      GisRobotSuite.run_system_command("#{gdalwarp_cmd} | #{gdal_translate_cmd}", logger:)
+      FileUtils.mv(temp_filepath, output_filepath)
     end
 
     def tmpdir
