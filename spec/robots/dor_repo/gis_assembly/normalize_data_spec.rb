@@ -19,6 +19,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
     let(:druid) { "druid:#{bare_druid}" }
     let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/data_EPSG_4326.zip" }
     let(:output_xml_files) { Dir.glob("spec/fixtures/stage/#{bare_druid}/content/*.xml") }
+    let(:output_thumbnail) { "spec/fixtures/stage/#{bare_druid}/content/preview.jpg" }
 
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
@@ -211,9 +212,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         }
       end
 
+      after do
+        FileUtils.rm_f(output_thumbnail)
+      end
+
       it 'normalizes the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_zip)).to be true
+        expect(File.exist?(output_thumbnail)).to be true # Thumbnail is copied.
         Zip::File.open(output_zip) do |zip_file|
           expect(zip_file.entries.size).to eq 2
           # Will raise if not present
@@ -311,6 +317,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
       it 'normalizes the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_zip)).to be true
+        expect(File.exist?(output_thumbnail)).to be true # Thumbnail is already in content directory.
         Zip::File.open(output_zip) do |zip_file|
           expect(zip_file.entries.size).to eq 2
           # Will raise if not present
