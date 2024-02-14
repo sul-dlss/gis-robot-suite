@@ -20,6 +20,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
     let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/data_EPSG_4326.zip" }
     let(:output_xml_files) { Dir.glob("spec/fixtures/stage/#{bare_druid}/content/*.xml") }
     let(:output_thumbnail) { "spec/fixtures/stage/#{bare_druid}/content/preview.jpg" }
+    let(:output_data_files) { [] }
 
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
@@ -32,6 +33,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
     after do
       FileUtils.rm_f([output_zip, output_xml_files])
+      FileUtils.rm_f(output_data_files)
     end
 
     context 'when a Shapefile' do
@@ -69,6 +71,16 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         }
       end
 
+      let(:output_data_files) do
+        [
+          'spec/fixtures/stage/bb033gt0615/content/sanluisobispo1996.dbf',
+          'spec/fixtures/stage/bb033gt0615/content/sanluisobispo1996.prj',
+          'spec/fixtures/stage/bb033gt0615/content/sanluisobispo1996.sbn',
+          'spec/fixtures/stage/bb033gt0615/content/sanluisobispo1996.shp',
+          'spec/fixtures/stage/bb033gt0615/content/sanluisobispo1996.shx'
+        ]
+      end
+
       it 'normalizes the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_zip)).to be true
@@ -85,6 +97,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
           "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_bb033gt0615/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_bb033gt0615/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
         )
         expect(output_xml_files.size).to eq 4
+        # Copies the data files
+        output_data_files.each do |file|
+          expect(File.exist?(file)).to be true
+        end
       end
     end
 
@@ -123,6 +139,16 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         }
       end
 
+      let(:output_data_files) do
+        [
+          'spec/fixtures/stage/vx812cc5548/content/sanluisobispo1996.dbf',
+          'spec/fixtures/stage/vx812cc5548/content/sanluisobispo1996.prj',
+          'spec/fixtures/stage/vx812cc5548/content/sanluisobispo1996.sbn',
+          'spec/fixtures/stage/vx812cc5548/content/sanluisobispo1996.shp',
+          'spec/fixtures/stage/vx812cc5548/content/sanluisobispo1996.shx'
+        ]
+      end
+
       it 'normalizes the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_zip)).to be true
@@ -138,11 +164,25 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_vx812cc5548/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_vx812cc5548/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
         )
+        # Copies the data files
+        output_data_files.each do |file|
+          expect(File.exist?(file)).to be true
+        end
       end
     end
 
     context 'when an 8-bit GeoTIFF already in EPSG:4326' do
       let(:bare_druid) { 'bb021mm7809' }
+
+      let(:output_data_files) do
+        [
+          'spec/fixtures/stage/bb021mm7809/content/MCE_FI2G_2014.tfw',
+          'spec/fixtures/stage/bb021mm7809/content/MCE_FI2G_2014.tif',
+          'spec/fixtures/stage/bb021mm7809/content/MCE_FI2G_2014.tif.ovr',
+          'spec/fixtures/stage/bb021mm7809/content/MCE_FI2G_2014.tif.vat.cpg',
+          'spec/fixtures/stage/bb021mm7809/content/MCE_FI2G_2014.tif.vat.dbf'
+        ]
+      end
 
       let(:description) do
         {
@@ -246,7 +286,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         expect(Kernel).to have_received(:system).with(
           'gdalinfo -mm -stats -norat -noct /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif'
         )
-        expect(output_xml_files.size).to eq 3
+        expect(output_xml_files.size).to eq 4
+        # Copies the data files
+        output_data_files.each do |file|
+          expect(File.exist?(file)).to be true
+        end
       end
     end
 

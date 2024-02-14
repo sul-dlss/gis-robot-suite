@@ -1,0 +1,50 @@
+<PAMDataset>
+  <Metadata domain="Esri">
+    <MDI key="PyramidResamplingType">NEAREST</MDI>
+  </Metadata>
+  <Metadata domain="xml:XMP" format="xml">
+    <?xpacket begin="&#xFEFF;" id="W5M0MpCehiHzreSzNTczkc9d"?>
+    <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 4.4.0-Exiv2">
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:GIMP="http://www.gimp.org/xmp/" xmlns:tiff="http://ns.adobe.com/tiff/1.0/" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmpMM:DocumentID="gimp:docid:gimp:cc473de4-09fa-4cd2-876b-b7f627dbf58e" xmpMM:InstanceID="xmp.iid:da8e792b-a27b-481b-8657-c3c34d5c0f65" xmpMM:OriginalDocumentID="xmp.did:8579cf4c-51ca-4497-9bf7-0900c999bb7e" dc:Format="image/tiff" GIMP:API="2.0" GIMP:Platform="Windows" GIMP:TimeStamp="1625518443014432" GIMP:Version="2.10.24" tiff:DateTime="2021:07:05 13:53:57" tiff:ImageLength="2935" tiff:ImageWidth="2673" tiff:Orientation="1" xmp:CreatorTool="GIMP 2.10">
+          <xmpMM:History>
+            <rdf:Seq>
+              <rdf:li stEvt:action="saved" stEvt:changed="/" stEvt:instanceID="xmp.iid:d9ef6b63-1032-4b7b-84c3-60252b103989" stEvt:softwareAgent="Gimp 2.10 (Windows)" stEvt:when="2021-07-05T13:54:03" />
+            </rdf:Seq>
+          </xmpMM:History>
+        </rdf:Description>
+      </rdf:RDF>
+    </x:xmpmeta>
+    <?xpacket end="w"?>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <Metadata>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">255</MDI>
+      <MDI key="STATISTICS_MEAN">188.68817934783</MDI>
+      <MDI key="STATISTICS_MINIMUM">0</MDI>
+      <MDI key="STATISTICS_STDDEV">84.064957230616</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="2">
+    <Metadata>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">251</MDI>
+      <MDI key="STATISTICS_MEAN">190.26421087807</MDI>
+      <MDI key="STATISTICS_MINIMUM">2</MDI>
+      <MDI key="STATISTICS_STDDEV">86.121920595005</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="3">
+    <Metadata>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">253</MDI>
+      <MDI key="STATISTICS_MEAN">193.55184269391</MDI>
+      <MDI key="STATISTICS_MINIMUM">4</MDI>
+      <MDI key="STATISTICS_STDDEV">86.505122539536</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

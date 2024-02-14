@@ -40,6 +40,7 @@ module Robots
               cleanup_output_zip # Delete data_EPSG_4326.zip
               zip_output # Create data_EPSG_4326.zip
               copy_metadata # Copy metadata files to the content directory
+              copy_data # Copy data files to the content directory
               copy_thumbnail # Copy thumbnail to the content directory
             ensure
               cleanup_tmpdir
@@ -103,15 +104,11 @@ module Robots
           end
 
           def copy_metadata
-            # Copy metadata files to the content directory
-            iso19139_xml_file = Dir.glob("#{tmpdir}/*-iso19139.xml").first
-            iso19110_xml_file = Dir.glob("#{tmpdir}/*-iso19110.xml").first
-            fgdc_xml_file = Dir.glob("#{tmpdir}/*-fgdc.xml").first
-            esri_xml_file = GisRobotSuite.locate_esri_metadata(tmpdir)
+            copy_files_to_content([GisRobotSuite.locate_esri_metadata(tmpdir)] + GisRobotSuite.locate_derivative_metadata_files(tmpdir))
+          end
 
-            [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file, esri_xml_file].compact.map do |file|
-              FileUtils.cp(file, "#{rootdir}/content/#{File.basename(file)}")
-            end
+          def copy_data
+            copy_files_to_content(GisRobotSuite.locate_data_files(tmpdir))
           end
 
           def copy_thumbnail
@@ -125,6 +122,12 @@ module Robots
           end
 
           private
+
+          def copy_files_to_content(files)
+            files.compact.map do |file|
+              FileUtils.cp(file, "#{rootdir}/content/#{File.basename(file)}")
+            end
+          end
 
           def rootdir
             @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
