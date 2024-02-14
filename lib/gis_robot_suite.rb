@@ -134,6 +134,35 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     filename
   end
 
+  def self.locate_data_files(dir)
+    # See https://github.com/sul-dlss/gis-robot-suite/wiki/GIS-SSDI-Data-input-formats-and-derivatives
+    geometry_shapefile = Dir.glob("#{dir}/*.shp").first
+    offsets_shapefile = Dir.glob("#{dir}/*.shx").first
+    table_file = Dir.glob("#{dir}/*.dbf").first
+    spatial_index_n_shapefile = Dir.glob("#{dir}/*.sbn").first
+    spatial_index_x_shapefile = Dir.glob("#{dir}/*.sbx").first
+    projection_file = Dir.glob("#{dir}/*.prj").first
+    coding_file = Dir.glob("#{dir}/*.cpg").first
+    geojson_file = Dir.glob("#{dir}/*.geojson").first
+    raster_file = Dir.glob("#{dir}/*.tif").first
+    world_raster_file = Dir.glob("#{dir}/*.tfw").first
+    pyramid_ovr_raster_file = Dir.glob("#{dir}/*.ovr").first
+    pyramid_rrd_raster_file = Dir.glob("#{dir}/*.rrd").first
+    auxiliary_stats_raster_file = Dir.glob("#{dir}/*.aux").first
+    auxiliary_stats_xml_raster_file = Dir.glob("#{dir}/*.aux.xml").first
+
+    [geometry_shapefile, offsets_shapefile, table_file, spatial_index_n_shapefile, spatial_index_x_shapefile, projection_file, coding_file,
+     geojson_file, raster_file, world_raster_file, pyramid_ovr_raster_file, pyramid_rrd_raster_file, auxiliary_stats_raster_file, auxiliary_stats_xml_raster_file].compact
+  end
+
+  def self.locate_derivative_metadata_files(dir)
+    iso19139_xml_file = Dir.glob("#{dir}/*-iso19139.xml").first
+    iso19110_xml_file = Dir.glob("#{dir}/*-iso19110.xml").first
+    fgdc_xml_file = Dir.glob("#{dir}/*-fgdc.xml").first
+
+    [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
+  end
+
   def self.determine_file_format_from_mods(modsfn)
     doc = Nokogiri::XML(File.read(modsfn))
     format = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/dc:format',

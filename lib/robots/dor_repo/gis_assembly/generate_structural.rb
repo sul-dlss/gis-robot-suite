@@ -6,7 +6,7 @@ require 'assembly-objectfile'
 module Robots
   module DorRepo
     module GisAssembly
-      class GenerateStructural < Base # rubocop:disable Metrics/ClassLength
+      class GenerateStructural < Base
         def initialize
           super('gisAssemblyWF', 'generate-structural')
         end
@@ -86,21 +86,6 @@ module Robots
           @esri_metadata_objectfile ||= Assembly::ObjectFile.new(esri_metadata_file)
         end
 
-        def iso19139_objectfile
-          iso19139 = Dir.glob("#{rootdir}/content/*-iso19139.xml").first
-          @iso19139_objectfile ||= Assembly::ObjectFile.new(iso19139) if iso19139
-        end
-
-        def iso19110_objectfile
-          iso19110 = Dir.glob("#{rootdir}/content/*-iso19110.xml").first
-          @iso19110_objectfile ||= Assembly::ObjectFile.new(iso19110) if iso19110
-        end
-
-        def fgdc_objectfile
-          fgdc = Dir.glob("#{rootdir}/content/*-fgdc.xml").first
-          @fgdc_objectfile ||= Assembly::ObjectFile.new(fgdc) if fgdc
-        end
-
         def file_access_params
           @file_access_params ||= cocina_object.access.to_h
                                                .slice(:view, :download, :location, :controlledDigitalLending)
@@ -110,160 +95,96 @@ module Robots
         end
 
         def data_files_params
-          [
-            {
-              type: 'https://cocina.sul.stanford.edu/models/file',
-              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: 'data.zip',
-              filename: 'data.zip',
-              size: data_zip_objectfile.filesize,
-              version: cocina_object.version,
-              hasMimeType: 'application/zip',
-              use: 'master',
-              hasMessageDigests: [
-                {
-                  type: 'sha1',
-                  digest: data_zip_objectfile.sha1
-                },
-                {
-                  type: 'md5',
-                  digest: data_zip_objectfile.md5
-                }
-              ],
-              access: file_access_params,
-              administrative: {
-                publish: true,
-                sdrPreserve: true,
-                shelve: true
-              }
-            }
-          ].tap do |params|
-            # Add index_map.json if it exists
-            params << index_map_params if index_map_objectfile.file_exists?
+          params = GisRobotSuite.locate_data_files(content_dir).map do |file|
+            objectfile = Assembly::ObjectFile.new(file)
+            build_file_params(objectfile:, mimetype: mimetype_for_data_file(objectfile))
           end
+          params << build_file_params(objectfile: data_zip_objectfile, mimetype: 'application/zip')
+          # Add index_map.json if it exists
+          params << index_map_params if index_map_objectfile.file_exists?
+          params
         end
 
         def index_map_params
-          {
-            type: 'https://cocina.sul.stanford.edu/models/file',
-            externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-            label: 'index_map.json',
-            filename: 'index_map.json',
-            size: index_map_objectfile.filesize,
-            version: cocina_object.version,
-            hasMimeType: 'application/json',
-            use: 'master',
-            hasMessageDigests: [
-              {
-                type: 'sha1',
-                digest: index_map_objectfile.sha1
-              },
-              {
-                type: 'md5',
-                digest: index_map_objectfile.md5
-              }
-            ],
-            access: file_access_params,
-            administrative: {
-              publish: true,
-              sdrPreserve: true,
-              shelve: true
-            }
-          }
+          build_file_params(objectfile: index_map_objectfile, mimetype: 'application/json')
         end
 
         def preview_file_params
           [
-            {
-              type: 'https://cocina.sul.stanford.edu/models/file',
-              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: 'preview.jpg',
-              filename: 'preview.jpg',
-              size: preview_objectfile.filesize,
-              version: cocina_object.version,
-              hasMimeType: 'image/jpeg',
-              use: 'master',
-              hasMessageDigests: [
-                {
-                  type: 'sha1',
-                  digest: preview_objectfile.sha1
-                },
-                {
-                  type: 'md5',
-                  digest: preview_objectfile.md5
-                }
-              ],
-              access: file_access_params,
-              administrative: {
-                publish: true,
-                sdrPreserve: true,
-                shelve: true
-              },
-              presentation: preview_presentation_params
-            }
+            build_file_params(objectfile: preview_objectfile, mimetype: 'image/jpeg', presentation: preview_presentation_params)
           ]
         end
 
         def metadata_file_params
           [
-            {
-              type: 'https://cocina.sul.stanford.edu/models/file',
-              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: esri_metadata_objectfile.filename,
-              filename: esri_metadata_objectfile.filename,
-              size: esri_metadata_objectfile.filesize,
-              version: cocina_object.version,
-              hasMimeType: 'application/xml',
-              use: 'master',
-              hasMessageDigests: [
-                {
-                  type: 'sha1',
-                  digest: esri_metadata_objectfile.sha1
-                },
-                {
-                  type: 'md5',
-                  digest: esri_metadata_objectfile.md5
-                }
-              ],
-              access: file_access_params,
-              administrative: {
-                publish: true,
-                sdrPreserve: true,
-                shelve: true
-              }
-            }
+            build_file_params(objectfile: esri_metadata_objectfile, mimetype: 'application/xml')
           ].tap do |params|
             params.concat(metadata_files)
           end
         end
 
+        def content_dir
+          @content_dir ||= "#{rootdir}/content"
+        end
+
         def metadata_files
-          [iso19139_objectfile, iso19110_objectfile, fgdc_objectfile].compact.map do |objectfile|
-            { type: 'https://cocina.sul.stanford.edu/models/file',
-              externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
-              label: objectfile.filename,
-              filename: objectfile.filename,
-              size: objectfile.filesize,
-              version: cocina_object.version,
-              hasMimeType: 'application/xml',
-              use: 'derivative',
-              hasMessageDigests: [
-                {
-                  type: 'sha1',
-                  digest: objectfile.sha1
-                },
-                {
-                  type: 'md5',
-                  digest: objectfile.md5
-                }
-              ],
-              access: file_access_params,
-              administrative: {
-                publish: true,
-                sdrPreserve: false,
-                shelve: true
-              } }
+          GisRobotSuite.locate_derivative_metadata_files(content_dir).map do |file|
+            objectfile = Assembly::ObjectFile.new(file)
+            build_file_params(objectfile:, mimetype: 'application/xml', use: 'derivative', preserve: false)
           end
+        end
+
+        def build_file_params(objectfile:, mimetype:, use: 'master', preserve: true, presentation: nil)
+          {
+            type: 'https://cocina.sul.stanford.edu/models/file',
+            externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
+            label: objectfile.filename,
+            filename: objectfile.filename,
+            size: objectfile.filesize,
+            version: cocina_object.version,
+            hasMimeType: mimetype || objectfile.mimetype,
+            use:,
+            hasMessageDigests: [
+              {
+                type: 'sha1',
+                digest: objectfile.sha1
+              },
+              {
+                type: 'md5',
+                digest: objectfile.md5
+              }
+            ],
+            access: file_access_params,
+            administrative: {
+              publish: true,
+              sdrPreserve: preserve,
+              shelve: true
+            }
+          }.tap do |params|
+            params[:presentation] = presentation if presentation
+          end
+        end
+
+        DATA_FILE_MIMETYPES =
+          [
+            ['.shp', 'application/vnd.shp'],
+            ['.shx', 'application/vnd.shx'],
+            ['.vat.dbf', 'application/octet-stream'],
+            ['.dbf', 'application/vnd.dbf'],
+            ['.prj', 'text/plain'],
+            ['.cpg', 'text/plain'],
+            ['.geojson', 'application/json'],
+            ['.tif', 'image/tiff'],
+            ['.tfw', 'text/plain'],
+            ['.xml', 'application/xml']
+          ].freeze
+
+        def mimetype_for_data_file(objectfile)
+          DATA_FILE_MIMETYPES.each do |ext, mimetype|
+            return mimetype if objectfile.filename.end_with?(ext)
+          end
+
+          'application/octet-stream'
         end
       end
     end

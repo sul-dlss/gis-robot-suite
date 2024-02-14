@@ -56,6 +56,136 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
                     externalIdentifier: 'https://cocina.sul.stanford.edu/file/8222376b-861f-4cb1-8ebb-c2ae6b112b4e',
+                    label: 'sanluisobispo1996.shp',
+                    filename: 'sanluisobispo1996.shp',
+                    size: 2951888,
+                    version: 1,
+                    hasMimeType: 'application/vnd.shp',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '9d2a6bb804485ecc5325d5abe95e62018a8d0ea6'
+                      },
+                      {
+                        type: 'md5',
+                        digest: 'cc6c2325c880aa9edcfde1634e4a336c'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
+                    label: 'sanluisobispo1996.shx',
+                    filename: 'sanluisobispo1996.shx',
+                    size: 21900,
+                    version: 1,
+                    hasMimeType: 'application/vnd.shx',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '2a7b1065200b47a6e5241bf68261661e1c79906e'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '89acab87c6ee451e7897b08f386c1d3a'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    label: 'sanluisobispo1996.dbf',
+                    filename: 'sanluisobispo1996.dbf',
+                    size: 270001,
+                    version: 1,
+                    hasMimeType: 'application/vnd.dbf',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '883c72c9eff436707e21d425e8950e95870d7151'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '727a2c1ca5401f8f38da75ca38abdf1d'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    label: 'sanluisobispo1996.sbn',
+                    filename: 'sanluisobispo1996.sbn',
+                    size: 27300,
+                    version: 1,
+                    hasMimeType: 'application/octet-stream',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: 'c07cb254d6f7b3f7a76397ffbdabe376a522279e'
+                      },
+                      {
+                        type: 'md5',
+                        digest: 'e2fe4c9d0478f5ef9923a3ec999521c2'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    label: 'sanluisobispo1996.prj',
+                    filename: 'sanluisobispo1996.prj',
+                    size: 469,
+                    version: 1,
+                    hasMimeType: 'text/plain',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '1732f86614fe403ef7079b59c822e8fe597d91b5'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '9188c653628e3ed3ecd731e71461dbd7'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'data.zip',
                     filename: 'data.zip',
                     size: 1763115,
@@ -91,7 +221,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'preview.jpg',
                     filename: 'preview.jpg',
                     size: 5298,
@@ -299,9 +429,95 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
                     externalIdentifier: 'https://cocina.sul.stanford.edu/file/8222376b-861f-4cb1-8ebb-c2ae6b112b4e',
+                    label: 'SF_1973.tif',
+                    filename: 'SF_1973.tif',
+                    size: 31_565_174,
+                    version: 1,
+                    hasMimeType: 'image/tiff',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: 'a1eef58b597dbd0f54ce4118c6872d62f9aa5c1d'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '9d4b28017012fa9f39c31699ea49e80d'
+                      }
+                    ],
+                    access: expected_file_access,
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
+                    label: 'SF_1973.tif.ovr',
+                    filename: 'SF_1973.tif.ovr',
+                    size: 1733109,
+                    version: 1,
+                    hasMimeType: 'application/octet-stream',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: 'ce3dddf4dd8be7bd4e3fe08cb41380e8b6282a98'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '0bfb35fd073103e891c801649a0cbe85'
+                      }
+                    ],
+                    access: {
+                      view: 'world',
+                      download: 'world',
+                      controlledDigitalLending: false
+                    },
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
+                    label: 'SF_1973.tif.aux.xml',
+                    filename: 'SF_1973.tif.aux.xml',
+                    size: 2685,
+                    version: 1,
+                    hasMimeType: 'application/xml',
+                    use: 'master',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '970a9dac559726e7e73c44fcb68ad0a3d1b6e8ed'
+                      },
+                      {
+                        type: 'md5',
+                        digest: 'c2daddd099948c5f36b0abf62d1b03c1'
+                      }
+                    ],
+                    access: {
+                      view: 'world',
+                      download: 'world',
+                      controlledDigitalLending: false
+                    },
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: 'https://cocina.sul.stanford.edu/models/file',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'data.zip',
                     filename: 'data.zip',
-                    size: 9_008_565,
+                    size: 9008565,
                     version: 1,
                     hasMimeType: 'application/zip',
                     use: 'master',
@@ -315,7 +531,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                         digest: 'b65ea0c759bd1525ca6f7bc8a74f9a29'
                       }
                     ],
-                    access: expected_file_access,
+                    access: {
+                      view: 'world',
+                      download: 'world',
+                      controlledDigitalLending: false
+                    },
                     administrative: {
                       publish: true,
                       sdrPreserve: true,
@@ -334,7 +554,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                 contains: [
                   {
                     type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
                     label: 'preview.jpg',
                     filename: 'preview.jpg',
                     size: 4934,
