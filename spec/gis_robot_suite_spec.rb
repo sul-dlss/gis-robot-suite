@@ -164,10 +164,10 @@ RSpec.describe GisRobotSuite do
   end
 
   describe '.determine_file_format_from_mods' do
-    let(:modsfn) { File.join(fixture_dir, 'mods_files/pc1504.mods') }
+    let(:modsfn) { File.join(fixture_dir, 'example.mods') }
 
     it 'determines the file format' do
-      expect(described_class.determine_file_format_from_mods(modsfn)).to eq('shapefile')
+      expect(described_class.determine_file_format_from_mods(modsfn)).to eq('image/tiff; format=GeoTIFF')
     end
   end
 end
