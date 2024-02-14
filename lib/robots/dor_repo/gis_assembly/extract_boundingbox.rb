@@ -6,6 +6,7 @@ require 'scanf'
 module Robots
   module DorRepo
     module GisAssembly
+      # Updates cocina description with bounding box information extracted from the data files.
       class ExtractBoundingbox < Base
         def initialize
           super('gisAssemblyWF', 'extract-boundingbox')
@@ -20,11 +21,11 @@ module Robots
           raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            @ulx, @uly, @lrx, @lry = determine_extent
-            check_extent
+            @ulx, @uly, @lrx, @lry = determine_bounding_box # from data files
+            check_bounding_box # bounding box is valid
 
-            add_extent_to_geographic_subject
-            add_extent_to_projection_form
+            add_bounding_box_to_geographic_subject
+            adding_bounding_box_to_projection_form
 
             object_client.update(params: cocina_object.new(description: description_props))
           ensure
@@ -63,12 +64,17 @@ module Robots
           system("unzip -o '#{zip_filename}' -d '#{tmpdir}'", exception: true)
         end
 
-        # Reads the shapefile to determine extent
+        # Reads the shapefile to determine bounding box
         #
         # @return [Array#Float] ulx uly lrx lry
-        def extent_shapefile(shape_filename)
+        def bounding_box_from_shapefile(shape_filename)
           logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
           IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |ogrinfo_io|
+            # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of parsing text.
+            # json = JSON.parse(ogrinfo_io.read)
+            # extent = json.dig('layers', 0, 'geometryFields', 0, 'extent')
+            # return [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
+
             ogrinfo_io.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
@@ -83,10 +89,10 @@ module Robots
           end
         end
 
-        # Reads the GeoTIFF to determine extent
+        # Reads the GeoTIFF to determine box
         #
         # @return [Array#Float] ulx uly lrx lry
-        def extent_geotiff(tiff_filename)
+        def bounding_box_from_geotiff(tiff_filename)
           logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
           IO.popen("#{Settings.gdal_path}gdalinfo -json '#{tiff_filename}'") do |gdalinfo_io|
             ulx = 0
@@ -112,7 +118,7 @@ module Robots
           end
         end
 
-        def add_extent_to_geographic_subject
+        def add_bounding_box_to_geographic_subject
           bounding_box_geographic_subjects.each do |subject|
             subject.clear
             subject[:structuredValue] =
@@ -150,7 +156,7 @@ module Robots
           end
         end
 
-        def add_extent_to_projection_form
+        def adding_bounding_box_to_projection_form
           # Check to see whether the current native projection is WGS84
           raise "extract-boundingbox: #{bare_druid} is missing map projection!" if projection_forms.empty?
           raise "extract-boundingbox: #{bare_druid} has too many map projections: #{projection_forms.size}" unless projection_forms.size == 1
@@ -216,19 +222,19 @@ module Robots
         # gets the bounding box for the normalize data in tmpdir
         #
         # @return [Array] ulx uly lrx lry for the bounding box
-        def determine_extent
+        def determine_bounding_box
           shape_filename = Dir.glob(["#{tmpdir}/*.shp", "#{tmpdir}/*.geojson"]).first
           if shape_filename.nil?
             tiff_filename = Dir.glob("#{tmpdir}/*.tif").first
-            ulx, uly, lrx, lry = extent_geotiff tiff_filename # normalized version only
+            ulx, uly, lrx, lry = bounding_box_from_geotiff tiff_filename # normalized version only
           else
-            ulx, uly, lrx, lry = extent_shapefile shape_filename
+            ulx, uly, lrx, lry = bounding_box_from_shapefile shape_filename
           end
           logger.debug [ulx, uly, lrx, lry].join(' -- ')
           [ulx, uly, lrx, lry]
         end
 
-        def check_extent
+        def check_bounding_box
           # Check that we have a valid bounding box
           return if ulx <= lrx && uly >= lry
 

@@ -90,6 +90,11 @@ module Robots
 
         def find_geometry_type_ogrinfo
           IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{vector_file}'") do |file|
+            # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of parsing text.
+            # json = JSON.parse(file.read)
+            # type = json.dig('layers', 0, 'geometryFields', 0, 'type')
+            # return type&.gsub('3D', '')&.gsub('Multi', '')&.strip
+
             file.readlines.each do |line|
               next unless line =~ /^Geometry:\s+(.*)\s*$/
 

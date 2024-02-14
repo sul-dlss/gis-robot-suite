@@ -18,7 +18,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(IO).to receive(:popen).and_return(nil)
+      # allow(IO).to receive(:popen).and_return(nil)
     end
 
     context 'when a raster (GeoTIFF)' do
@@ -225,7 +225,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
                            identifier: [{ value: 'edu.stanford.purl:vx812cc5548' }] },
           geographic: [{ form: [{ value: 'application/geo+json', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'GeoJSON', type: 'data format' },
-                                { value: 'Dataset#Polygon', type: 'type' }],
+                                { value: 'Dataset#Point', type: 'type' }],
                          subject: [{ structuredValue: [{ value: '-158.017379', type: 'west' },
                                                        { value: '18.001995', type: 'south' },
                                                        { value: '-65.594769', type: 'east' },
