@@ -2,12 +2,12 @@
 
 module GisRobotSuite
   class ArcgisMetadataTransformer
-    def self.transform(druid, xslt, output, logger: nil)
-      new(druid, xslt, output, logger).transform
+    def self.transform(bare_druid, xslt, output, logger: nil)
+      new(bare_druid, xslt, output, logger).transform
     end
 
-    def initialize(druid, xslt, output, logger)
-      @druid = druid
+    def initialize(bare_druid, xslt, output, logger)
+      @bare_druid = bare_druid
       @xslt = xslt
       @output = output
       @logger = logger
@@ -29,7 +29,7 @@ module GisRobotSuite
       raise "extracting metadata: #{bare_druid} has unknown GIS data type"
     end
 
-    attr_reader :druid, :xslt, :output, :logger
+    attr_reader :bare_druid, :xslt, :output, :logger
 
     private
 
@@ -43,7 +43,7 @@ module GisRobotSuite
 
     # Staging directory for this object
     def staging_dir
-      GisRobotSuite.locate_druid_path(druid, type: :stage)
+      GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
     end
 
     # XML metadata file exported from ArcGIS
