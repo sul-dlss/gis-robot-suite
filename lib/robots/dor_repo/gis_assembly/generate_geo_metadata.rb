@@ -35,8 +35,6 @@ module Robots
           )
           # Load geo metadata into DOR
           object_client.update(params: updated)
-
-          tag
         end
 
         # Converts a ISO 19139 into RDF-bundled document XML
@@ -58,18 +56,6 @@ module Robots
               </rdf:Description>
             </rdf:RDF>")
           geo_metadata.to_xml(indent: 2, encoding: 'UTF-8')
-        end
-
-        TAG_GIS = 'Dataset : GIS'
-        def tag
-          current_tags = tags_client.list
-          return if current_tags.include?(TAG_GIS)
-
-          tags_client.create(tags: [TAG_GIS])
-        end
-
-        def tags_client
-          object_client.administrative_tags
         end
       end
     end

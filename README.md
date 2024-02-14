@@ -30,6 +30,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `extract-iso19110-metadata` :: Transform ISO 19110metadata from ArcCatalog metadata
 * `extract-fgdc-metadata` :: Transform FGDC metadata from ArcCatalog metadata
 * `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
+* `generate-tag` :: Apply Geo tag to object
 * `generate-mods` :: Convert geoMetadata into MODS
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `package-data` :: Package the digital work
