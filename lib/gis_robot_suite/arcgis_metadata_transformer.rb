@@ -50,7 +50,7 @@ module GisRobotSuite
     def esri_metadata_file
       GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'temp'))
     rescue RuntimeError => e
-      logger&.error "extract-#{format}-metadata: #{bare_druid} is missing ESRI metadata file"
+      logger&.error "extract-#{output}-metadata: #{bare_druid} is missing ESRI metadata file"
       raise e
     end
 
