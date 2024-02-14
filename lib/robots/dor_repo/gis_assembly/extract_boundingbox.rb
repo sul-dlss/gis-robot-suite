@@ -6,6 +6,7 @@ require 'scanf'
 module Robots
   module DorRepo
     module GisAssembly
+      # Updates cocina description with bounding box information extracted from the data files.
       class ExtractBoundingbox < Base
         def initialize
           super('gisAssemblyWF', 'extract-boundingbox')
@@ -20,8 +21,8 @@ module Robots
           raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
 
           begin
-            @ulx, @uly, @lrx, @lry = determine_extent
-            check_extent
+            @ulx, @uly, @lrx, @lry = determine_extent # from data files
+            check_extent # extent is valid
 
             add_extent_to_geographic_subject
             add_extent_to_projection_form
@@ -69,6 +70,11 @@ module Robots
         def extent_shapefile(shape_filename)
           logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
           IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |ogrinfo_io|
+            # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of parsing text.
+            # json = JSON.parse(ogrinfo_io.read)
+            # extent = json.dig('layers', 0, 'geometryFields', 0, 'extent')
+            # return [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
+
             ogrinfo_io.readlines.each do |line|
               # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
               next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
