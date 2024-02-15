@@ -33,7 +33,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
     after do
       FileUtils.rm_f([output_zip, output_xml_files])
-      FileUtils.rm_f(output_data_files)
+      FileUtils.rm_rf("spec/fixtures/stage/#{bare_druid}/content")
     end
 
     context 'when a Shapefile' do
@@ -94,7 +94,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         end
         # Reproject
         expect(Kernel).to have_received(:system).with(
-          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_bb033gt0615/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_bb033gt0615/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
+          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_bb033gt0615/EPSG_4326/sanluisobispo1996.shp' 'spec/fixtures/stage/bb033gt0615/temp/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
         )
         expect(output_xml_files.size).to eq 4
         # Copies the data files
@@ -162,7 +162,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         end
         # Reproject
         expect(Kernel).to have_received(:system).with(
-          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_vx812cc5548/EPSG_4326/sanluisobispo1996.shp' '/tmp/normalize_vx812cc5548/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
+          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_vx812cc5548/EPSG_4326/sanluisobispo1996.shp' 'spec/fixtures/stage/vx812cc5548/temp/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
         )
         # Copies the data files
         output_data_files.each do |file|
@@ -272,11 +272,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         )
         # Compress
         expect(Kernel).to have_received(:system).with(
-          "gdal_translate -a_srs EPSG:4326 /tmp/normalize_bb021mm7809/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
+          "gdal_translate -a_srs EPSG:4326 spec/fixtures/stage/bb021mm7809/temp/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
         )
         # Convert to RGB
         expect(Kernel).to have_received(:system).with(
-          "gdal_translate -expand rgb /tmp/normalize_bb021mm7809/raw8bit.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
+          "gdal_translate -expand rgb spec/fixtures/stage/bb021mm7809/temp/raw8bit.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
         )
         # Adds an alpha channel
         expect(Kernel).to have_received(:system).with(
@@ -370,7 +370,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         end
         # Reprojects
         expect(Kernel).to have_received(:system).with(
-          "gdalwarp -r bilinear -t_srs EPSG:4326 /tmp/normalize_vh469wk7989/h_shade /tmp/normalize_vh469wk7989/EPSG_4326/h_shade_uncompressed.tif -co 'COMPRESS=NONE'"
+          "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/stage/vh469wk7989/temp/h_shade /tmp/normalize_vh469wk7989/EPSG_4326/h_shade_uncompressed.tif -co 'COMPRESS=NONE'"
         )
         # Compress
         expect(Kernel).to have_received(:system).with(
