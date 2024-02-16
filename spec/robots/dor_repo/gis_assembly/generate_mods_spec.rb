@@ -182,13 +182,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
     end
 
     context 'when a GeoJSON file' do
-      let(:druid) { 'druid:vx812cc5548' }
+      let(:druid) { 'druid:vx813cc5549' }
       let(:geographic_xml) { read_fixture('CLOWNS_OF_AMERICA-iso19139.xml') }
 
       # rubocop:disable Layout/LineLength
       let(:description_props) do
         { title: [{ value: 'Clowns of America, International Membership Point GeoJSON (anonymized)' }],
-          purl: 'https://purl.stanford.edu/vx812cc5548',
+          purl: 'https://purl.stanford.edu/vx813cc5549',
           note: [{ value: 'This point GeoJSON was created from the Clowns of America International Membership Database (anonymized) obtained in 2007 from Clowns of America, International, for use in teaching. It was created by geocoding the ZipCode field of the original table, using OpenRefine and the Geonames.org PostalCodes API. Attributes include those from the original data table ("City", "ZipCode", "Clown_Name", and "Country"), as well attributes added during the geocoding process ("admname1","adm1","adm2","placname","longitude","latitude") and an attribute "Clown-Na_1" which represents the values in the "Clown_Name" attribute field after a "Cluster and Edit" operation, performed in OpenRefine to collapse values so that "Co Co" or "Co-Co" both are clustered and edited to become "CoCo" for use in name frequency analysis. This layer is intended to be used for teaching and instruction at Stanford"s Geospatial Center. ',
                    displayLabel: 'Abstract',
                    valueLanguage: { code: 'eng', source: { code: 'iso639-2b' } } }],
@@ -222,7 +222,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
           adminMetadata: { language: [{ code: 'eng', source: { code: 'iso639-2b' } }],
                            contributor: [{ name: [{ value: 'Stanford' }] }],
                            note: [{ type: 'record origin', value: 'This record was translated from ISO 19139 to MODS v.3 using an xsl transformation.' }],
-                           identifier: [{ value: 'edu.stanford.purl:vx812cc5548' }] },
+                           identifier: [{ value: 'edu.stanford.purl:vx813cc5549' }] },
           geographic: [{ form: [{ value: 'application/geo+json', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'GeoJSON', type: 'data format' },
                                 { value: 'Dataset#Point', type: 'type' }],
@@ -245,7 +245,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateMods do
 
       it 'generates cocina descriptive metadata' do
         perform
-        expect(object_client).to have_received(:update).with(params: object.new(description: description_props))
+        # expect(object_client).to have_received(:update).with(params: object.new(description: description_props))
+        expect(object_client).to have_received(:update) do |args|
+          expect(args[:params].description.to_h).to eq(Cocina::Models::Description.new(description_props).to_h)
+        end
       end
     end
   end

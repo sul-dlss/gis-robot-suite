@@ -41,7 +41,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
   end
 
   context 'with ESRI metadata for a geoJSON' do
-    let(:druid) { 'vx812cc5548' }
+    let(:druid) { 'vx813cc5549' }
     let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
 
     it 'generates an FGDC XML document' do

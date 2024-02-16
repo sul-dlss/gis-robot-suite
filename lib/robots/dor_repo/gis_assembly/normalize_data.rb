@@ -30,20 +30,19 @@ module Robots
 
           def call
             logger.debug "Processing #{bare_druid} #{data_zip_filepath}"
-            extract_to_tmpdir
             setup_output_dir # Output dir contains files for data_EPSG_4326.zip
 
             begin
-              raise "normalize-data: #{bare_druid} cannot locate geo object in #{tmpdir}" unless geo_object_name
+              raise "normalize-data: #{bare_druid} cannot locate geo object in #{temp_dir}" unless geo_object_name
 
               normalize
               cleanup_output_zip # Delete data_EPSG_4326.zip
+              FileUtils.mkdir_p(content_dir)
               zip_output # Create data_EPSG_4326.zip
               copy_metadata # Copy metadata files to the content directory
               copy_data # Copy data files to the content directory
               copy_thumbnail # Copy thumbnail to the content directory
             ensure
-              cleanup_tmpdir
               cleanup_output_dir
             end
           end
@@ -62,12 +61,12 @@ module Robots
             success
           end
 
-          def tmpdir
-            @tmpdir ||= File.join(Settings.geohydra.tmpdir, "normalize_#{bare_druid}")
+          def temp_dir
+            @temp_dir ||= File.join(rootdir, 'temp')
           end
 
           def output_dir
-            @output_dir ||= File.join(tmpdir, 'EPSG_4326')
+            @output_dir ||= File.join(Settings.geohydra.tmpdir, "normalize_#{bare_druid}/EPSG_4326")
           end
 
           def geo_object_name
@@ -83,32 +82,31 @@ module Robots
             raise NotImplementedError
           end
 
-          def cleanup_tmpdir
-            logger.debug "normalize-data: #{bare_druid} removing #{tmpdir}"
-            FileUtils.rm_rf(tmpdir)
-          end
-
           def cleanup_output_dir
             return unless File.directory?(output_dir)
 
             logger.debug "normalize-data: #{bare_druid} removing #{output_dir}"
-            FileUtils.rm_rf(tmpdir)
+            FileUtils.rm_rf(File.dirname(output_dir))
           end
 
           def cleanup_output_zip
             FileUtils.rm_f(output_zip) if File.size?(output_zip)
           end
 
+          def content_dir
+            @content_dir ||= "#{rootdir}/content"
+          end
+
           def output_zip
-            @output_zip ||= "#{rootdir}/content/data_EPSG_4326.zip"
+            @output_zip ||= "#{content_dir}/data_EPSG_4326.zip"
           end
 
           def copy_metadata
-            copy_files_to_content([GisRobotSuite.locate_esri_metadata(tmpdir)] + GisRobotSuite.locate_derivative_metadata_files(tmpdir))
+            copy_files_to_content([GisRobotSuite.locate_esri_metadata(temp_dir)] + GisRobotSuite.locate_derivative_metadata_files(temp_dir))
           end
 
           def copy_data
-            copy_files_to_content(GisRobotSuite.locate_data_files(tmpdir))
+            copy_files_to_content(GisRobotSuite.locate_data_files(temp_dir))
           end
 
           def copy_thumbnail
@@ -135,15 +133,6 @@ module Robots
 
           def data_zip_filepath
             @data_zip_filepath ||= "#{rootdir}/content/data.zip"
-          end
-
-          def extract_to_tmpdir
-            logger.debug "Extracting #{bare_druid} data from #{data_zip_filepath}"
-            raise "normalize-data: #{bare_druid} cannot locate packaged data: #{data_zip_filepath}" unless File.size?(data_zip_filepath)
-
-            FileUtils.rm_rf(tmpdir) if File.directory?(tmpdir)
-            FileUtils.mkdir_p(tmpdir)
-            system_with_check("unzip -o '#{data_zip_filepath}' -d '#{tmpdir}'")
           end
 
           def setup_output_dir
@@ -181,7 +170,7 @@ module Robots
           end
 
           def vector_filepath
-            @vector_filepath ||= Dir.glob("#{tmpdir}/*#{vector_file_extention}").first
+            @vector_filepath ||= Dir.glob("#{temp_dir}/*#{vector_file_extention}").first
           end
 
           def wkt
@@ -225,10 +214,10 @@ module Robots
 
           def geo_object_name
             @geo_object_name = if arcgrid?
-                                 filepath = Dir.glob("#{tmpdir}/*/metadata.xml").first
+                                 filepath = Dir.glob("#{temp_dir}/*/metadata.xml").first
                                  filepath ? File.basename(File.dirname(filepath)) : nil
                                else # GeoTIFF
-                                 filepath = Dir.glob("#{tmpdir}/*.tif.xml").first
+                                 filepath = Dir.glob("#{temp_dir}/*.tif.xml").first
                                  filepath ? File.basename(filepath, '.tif.xml') : nil
                                end
           end
@@ -284,9 +273,9 @@ module Robots
 
           def input_filepath
             @input_filepath ||= if arcgrid?
-                                  "#{tmpdir}/#{geo_object_name}"
+                                  "#{temp_dir}/#{geo_object_name}"
                                 else # GeoTIFF
-                                  "#{tmpdir}/#{geo_object_name}.tif"
+                                  "#{temp_dir}/#{geo_object_name}.tif"
                                 end
           end
 
@@ -296,7 +285,7 @@ module Robots
 
           def convert_8bit_to_rgb
             logger.info "normalize-data: expanding color palette into rgb for #{output_filepath}"
-            temp_filename = "#{tmpdir}/raw8bit.tif"
+            temp_filename = "#{temp_dir}/raw8bit.tif"
             system_with_check("mv #{output_filepath} #{temp_filename}")
             system_with_check("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'")
           end

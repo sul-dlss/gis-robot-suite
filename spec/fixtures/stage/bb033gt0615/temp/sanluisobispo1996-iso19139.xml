@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <fileIdentifier>
-    <gco:CharacterString>edu.stanford.purl:vx813cc5549</gco:CharacterString>
+    <gco:CharacterString>edu.stanford.purl:bb033gt0615</gco:CharacterString>
   </fileIdentifier>
   <language>
     <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
@@ -10,7 +10,7 @@
     <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
   </characterSet>
   <parentIdentifier>
-    <gco:CharacterString>https://purl.stanford.edu/qx298gy3987.mods</gco:CharacterString>
+    <gco:CharacterString>http://purl.stanford.edu/rz415nf2825.mods</gco:CharacterString>
   </parentIdentifier>
   <hierarchyLevel>
     <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
@@ -65,7 +65,7 @@
     </CI_ResponsibleParty>
   </contact>
   <dateStamp>
-    <gco:Date>2019-09-28</gco:Date>
+    <gco:Date>2016-09-29</gco:Date>
   </dateStamp>
   <metadataStandardName>
     <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
@@ -74,7 +74,7 @@
     <gco:CharacterString>2007</gco:CharacterString>
   </metadataStandardVersion>
   <dataSetURI>
-    <gco:CharacterString>https://purl.stanford.edu/vx813cc5549</gco:CharacterString>
+    <gco:CharacterString>http://purl.stanford.edu/bb033gt0615</gco:CharacterString>
   </dataSetURI>
   <spatialRepresentationInfo>
     <MD_VectorSpatialRepresentation>
@@ -84,24 +84,10 @@
       <geometricObjects>
         <MD_GeometricObjects>
           <geometricObjectType>
-            <MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="point" codeSpace="ISOTC211/19115">point</MD_GeometricObjectTypeCode>
-          </geometricObjectType>
-        </MD_GeometricObjects>
-      </geometricObjects>
-    </MD_VectorSpatialRepresentation>
-  </spatialRepresentationInfo>
-  <spatialRepresentationInfo>
-    <MD_VectorSpatialRepresentation>
-      <topologyLevel>
-        <MD_TopologyLevelCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly" codeSpace="ISOTC211/19115">geometryOnly</MD_TopologyLevelCode>
-      </topologyLevel>
-      <geometricObjects>
-        <MD_GeometricObjects>
-          <geometricObjectType>
-            <MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="point" codeSpace="ISOTC211/19115">point</MD_GeometricObjectTypeCode>
+            <MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="composite" codeSpace="ISOTC211/19115">composite</MD_GeometricObjectTypeCode>
           </geometricObjectType>
           <geometricObjectCount>
-            <gco:Integer>4773</gco:Integer>
+            <gco:Integer>2725</gco:Integer>
           </geometricObjectCount>
         </MD_GeometricObjects>
       </geometricObjects>
@@ -112,13 +98,13 @@
       <referenceSystemIdentifier>
         <RS_Identifier>
           <code>
-            <gco:CharacterString>4326</gco:CharacterString>
+            <gco:CharacterString>3309</gco:CharacterString>
           </code>
           <codeSpace>
             <gco:CharacterString>EPSG</gco:CharacterString>
           </codeSpace>
           <version>
-            <gco:CharacterString>6.14(3.0.1)</gco:CharacterString>
+            <gco:CharacterString>8.6.2</gco:CharacterString>
           </version>
         </RS_Identifier>
       </referenceSystemIdentifier>
@@ -129,12 +115,12 @@
       <citation>
         <CI_Citation>
           <title>
-            <gco:CharacterString>Clowns of America, International Membership Point GeoJSON (anonymized)</gco:CharacterString>
+            <gco:CharacterString>Important Farmland, San Luis Obispo County, California, 1996</gco:CharacterString>
           </title>
           <date>
             <CI_Date>
               <date>
-                <gco:Date>2007-01-01</gco:Date>
+                <gco:Date>1996-01-01</gco:Date>
               </date>
               <dateType>
                 <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
@@ -144,16 +130,35 @@
           <identifier>
             <MD_Identifier>
               <code>
-                <gco:CharacterString>https://purl.stanford.edu/vx813cc5549</gco:CharacterString>
+                <gco:CharacterString>http://purl.stanford.edu/bb033gt0615</gco:CharacterString>
               </code>
             </MD_Identifier>
           </identifier>
           <citedResponsibleParty>
             <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+              </organisationName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+              </organisationName>
               <contactInfo>
                 <CI_Contact>
                   <address>
                     <CI_Address>
+                      <city>
+                        <gco:CharacterString>Sacramento</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>California</gco:CharacterString>
+                      </administrativeArea>
                       <country>
                         <gco:CharacterString>US</gco:CharacterString>
                       </country>
@@ -166,38 +171,63 @@
               </role>
             </CI_ResponsibleParty>
           </citedResponsibleParty>
-          <citedResponsibleParty>
-            <CI_ResponsibleParty>
-              <individualName>
-                <gco:CharacterString>Maples, Stacey D.</gco:CharacterString>
-              </individualName>
-              <role>
-                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
-              </role>
-            </CI_ResponsibleParty>
-          </citedResponsibleParty>
+          <presentationForm>
+            <CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115">mapDigital</CI_PresentationFormCode>
+          </presentationForm>
+          <otherCitationDetails>
+            <gco:CharacterString>These data were retrieved from the California Farmland Mapping and Monitoring ftp site &lt;ftp://ftpconsrv.ca.gov/pub/Dlrp/FMMP&gt; on July 13, 2016.</gco:CharacterString>
+          </otherCitationDetails>
           <collectiveTitle>
-            <gco:CharacterString>Stanford Geospatial Center Experimental Collectio</gco:CharacterString>
+            <gco:CharacterString>California Farmland Mapping and Monitoring Program 1996</gco:CharacterString>
           </collectiveTitle>
         </CI_Citation>
       </citation>
       <abstract>
-        <gco:CharacterString>This point GeoJSON was created from the Clowns of America International Membership Database (anonymized) obtained in 2007 from Clowns of America, International, for use in teaching. It was created by geocoding the ZipCode field of the original table, using OpenRefine and the Geonames.org PostalCodes API. Attributes include those from the original data table ("City", "ZipCode", "Clown_Name", and "Country"), as well attributes added during the geocoding process ("admname1","adm1","adm2","placname","longitude","latitude") and an attribute "Clown-Na_1" which represents the values in the "Clown_Name" attribute field after a "Cluster and Edit" operation, performed in OpenRefine to collapse values so that "Co Co" or "Co-Co" both are clustered and edited to become "CoCo" for use in name frequency analysis. This layer is intended to be used for teaching and instruction at Stanford"s Geospatial Center. </gco:CharacterString>
+        <gco:CharacterString>This polygon shapefile represents areas of important farmland in San Luis Obispo County, California for 1996. Established in 1982, Government Code Section 65570 mandates FMMP to biennially report on the conversion of farmland and grazing land, and to provide maps and data to local government and the public.</gco:CharacterString>
       </abstract>
+      <purpose>
+        <gco:CharacterString>The Farmland Mapping and Monitoring Program (FMMP) provides data to decision makers for use in planning for the present and future use of California's agricultural land resources. The data is a current inventory of agricultural resources. This data is for general planning purposes and has a minimum mapping unit of ten acres.</gco:CharacterString>
+      </purpose>
+      <credit>
+        <gco:CharacterString>California Farmland Mapping and Monitoring Program. (1996). Important Farmland, San Luis Obispo County, California, 1996. California Farmland Mapping and Monitoring Program. Available at: http://purl.stanford.edu/bb033gt0615.</gco:CharacterString>
+      </credit>
       <status>
         <MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" codeSpace="ISOTC211/19115">completed</MD_ProgressCode>
       </status>
-      <resourceMaintenance>
-        <MD_MaintenanceInformation>
-          <maintenanceAndUpdateFrequency>
-            <MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="unknown" codeSpace="ISOTC211/19115">unknown</MD_MaintenanceFrequencyCode>
-          </maintenanceAndUpdateFrequency>
-        </MD_MaintenanceInformation>
-      </resourceMaintenance>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <organisationName>
+            <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+          </organisationName>
+          <contactInfo>
+            <CI_Contact>
+              <address>
+                <CI_Address>
+                  <city>
+                    <gco:CharacterString>Sacramento</gco:CharacterString>
+                  </city>
+                  <administrativeArea>
+                    <gco:CharacterString>California</gco:CharacterString>
+                  </administrativeArea>
+                  <country>
+                    <gco:CharacterString>US</gco:CharacterString>
+                  </country>
+                  <electronicMailAddress>
+                    <gco:CharacterString>fmmp@conservation.ca.gov</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
       <descriptiveKeywords>
         <MD_Keywords>
           <keyword>
-            <gco:CharacterString>United States</gco:CharacterString>
+            <gco:CharacterString>San Luis Obispo County (Calif.)</gco:CharacterString>
           </keyword>
           <type>
             <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115">place</MD_KeywordTypeCode>
@@ -234,7 +264,16 @@
       <descriptiveKeywords>
         <MD_Keywords>
           <keyword>
-            <gco:CharacterString>Clowns</gco:CharacterString>
+            <gco:CharacterString>Farming</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Land use</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Urbanization</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Agriculture</gco:CharacterString>
           </keyword>
           <type>
             <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115">theme</MD_KeywordTypeCode>
@@ -267,11 +306,14 @@
       </descriptiveKeywords>
       <resourceConstraints>
         <MD_LegalConstraints>
+          <useLimitation>
+            <gco:CharacterString>This data does not reflect general plan or zoning designations, city limit lines, changing economic or market conditions, or other factors which may be taken into consideration when land use policies are determined. This data is not designed to be used for parcel specific planning purposes due to its scale and the size of the minimum mapping unit (10 acres). The Department of Conservation makes no warranties as to the suitability of this data for any particular purpose.</gco:CharacterString>
+          </useLimitation>
           <useConstraints>
             <MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" codeSpace="ISOTC211/19115">otherRestrictions</MD_RestrictionCode>
           </useConstraints>
           <otherConstraints>
-            <gco:CharacterString>User agrees that, where applicable, content will not be used to identify or to otherwise infringe the privacy or confidentiality rights of individuals. Content distributed via the Stanford Digital Repository may be subject to additional license and use restrictions applied by the depositor.</gco:CharacterString>
+            <gco:CharacterString>No restrictions on access or use. A citation for the Farmland Mapping and Monitoring Program on any map products, graphic media, or data analyses based on the data is appreciated.</gco:CharacterString>
           </otherConstraints>
         </MD_LegalConstraints>
       </resourceConstraints>
@@ -280,16 +322,45 @@
           <aggregateDataSetName>
             <CI_Citation>
               <title>
-                <gco:CharacterString>Stanford Geospatial Center Experimental Collectio</gco:CharacterString>
+                <gco:CharacterString>California Farmland Mapping and Monitoring Program 1996</gco:CharacterString>
               </title>
-              <date gco:nilReason="missing"/>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>1996-01-01</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
               <identifier>
                 <MD_Identifier>
                   <code>
-                    <gco:CharacterString>https://purl.stanford.edu/qx298gy3987</gco:CharacterString>
+                    <gco:CharacterString>http://purl.stanford.edu/rz415nf2825</gco:CharacterString>
                   </code>
                 </MD_Identifier>
               </identifier>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+                  </organisationName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+                  </organisationName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
             </CI_Citation>
           </aggregateDataSetName>
           <associationType>
@@ -300,6 +371,9 @@
           </initiativeType>
         </MD_AggregateInformation>
       </aggregationInfo>
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" codeSpace="ISOTC211/19115">vector</MD_SpatialRepresentationTypeCode>
+      </spatialRepresentationType>
       <language>
         <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
       </language>
@@ -307,8 +381,11 @@
         <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
       </characterSet>
       <topicCategory>
-        <MD_TopicCategoryCode>location</MD_TopicCategoryCode>
+        <MD_TopicCategoryCode>farming</MD_TopicCategoryCode>
       </topicCategory>
+      <environmentDescription>
+        <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.3.1.4959</gco:CharacterString>
+      </environmentDescription>
       <extent>
         <EX_Extent>
           <description>
@@ -317,9 +394,10 @@
           <temporalElement>
             <EX_TemporalExtent>
               <extent>
-                <gml:TimeInstant gml:id="id1">
-                  <gml:timePosition>2007-01-01T00:00:00</gml:timePosition>
-                </gml:TimeInstant>
+                <gml:TimePeriod gml:id="idm139628217745008">
+                  <gml:beginPosition>1996-01-01T00:00:00</gml:beginPosition>
+                  <gml:endPosition>1996-12-31T00:00:00</gml:endPosition>
+                </gml:TimePeriod>
               </extent>
             </EX_TemporalExtent>
           </temporalElement>
@@ -329,17 +407,20 @@
         <EX_Extent>
           <geographicElement>
             <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>true</gco:Boolean>
+              </extentTypeCode>
               <westBoundLongitude>
-                <gco:Decimal>-158.017379</gco:Decimal>
+                <gco:Decimal>-121.346875</gco:Decimal>
               </westBoundLongitude>
               <eastBoundLongitude>
-                <gco:Decimal>-65.594769</gco:Decimal>
+                <gco:Decimal>-119.465564</gco:Decimal>
               </eastBoundLongitude>
               <southBoundLatitude>
-                <gco:Decimal>18.001995</gco:Decimal>
+                <gco:Decimal>34.890872</gco:Decimal>
               </southBoundLatitude>
               <northBoundLatitude>
-                <gco:Decimal>64.85437</gco:Decimal>
+                <gco:Decimal>35.803031</gco:Decimal>
               </northBoundLatitude>
             </EX_GeographicBoundingBox>
           </geographicElement>
@@ -361,12 +442,12 @@
       <featureCatalogueCitation>
         <CI_Citation>
           <title>
-            <gco:CharacterString>Entity and Attribute Information</gco:CharacterString>
+            <gco:CharacterString>Feature catalog for Important Farmland, San Luis Obispo County, California, 1996</gco:CharacterString>
           </title>
           <date>
             <CI_Date>
               <date>
-                <gco:Date>2019-02-01</gco:Date>
+                <gco:Date>1996-01-01</gco:Date>
               </date>
               <dateType>
                 <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
@@ -376,10 +457,30 @@
           <identifier>
             <MD_Identifier>
               <code>
-                <gco:CharacterString>7dd763b5-3c28-485a-b1a0-bb1d86597gb1</gco:CharacterString>
+                <gco:CharacterString>bb4ea9bf-b08f-446a-80bc-8ffe6207ca06</gco:CharacterString>
               </code>
             </MD_Identifier>
           </identifier>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+              </organisationName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>California. Farmland Mapping and Monitoring Program</gco:CharacterString>
+              </organisationName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
         </CI_Citation>
       </featureCatalogueCitation>
     </MD_FeatureCatalogueDescription>
@@ -389,7 +490,7 @@
       <distributionFormat>
         <MD_Format>
           <name>
-            <gco:CharacterString>GeoJSON</gco:CharacterString>
+            <gco:CharacterString>Shapefile</gco:CharacterString>
           </name>
           <version gco:nilReason="missing"/>
         </MD_Format>
@@ -445,8 +546,48 @@
         </MD_Distributor>
       </distributor>
       <transferOptions>
-        <MD_DigitalTransferOptions/>
+        <MD_DigitalTransferOptions>
+          <transferSize>
+            <gco:Real>2.815</gco:Real>
+          </transferSize>
+          <onLine>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://purl.stanford.edu/bb033gt0615</URL>
+              </linkage>
+              <protocol>
+                <gco:CharacterString>http</gco:CharacterString>
+              </protocol>
+              <name>
+                <gco:CharacterString>sanluisobispo1996.shp</gco:CharacterString>
+              </name>
+              <function>
+                <CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download" codeSpace="ISOTC211/19115">download</CI_OnLineFunctionCode>
+              </function>
+            </CI_OnlineResource>
+          </onLine>
+        </MD_DigitalTransferOptions>
       </transferOptions>
     </MD_Distribution>
   </distributionInfo>
+  <dataQualityInfo>
+    <DQ_DataQuality>
+      <scope>
+        <DQ_Scope>
+          <level>
+            <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+          </level>
+        </DQ_Scope>
+      </scope>
+      <report>
+        <DQ_ConceptualConsistency>
+          <evaluationMethodDescription>
+            <gco:CharacterString>The Important Farmland survey area is based on Natural Resources Conservation Service (NRCS) modern soil surveys covering most non-governmental lands in California; 49 counties are fully or partially surveyed at this time. Soil surveys specific to National Forests or other government land units are not surveyed. Beginning in 2000, SSURGO digital soil information was incorporated into the Alameda County Important Farmland data. Data subsequent to 2000 may have acreage and soil line differences due to incorporation of newer NRCS-SSURGO editions. 
+Prior to the availability of SSURGO, soil information was hand-transferred from the paper soil surveys. Older versions of the data have not been modified. The land use minimum mapping unit of ten acres has not changed, but digital soil units of down to one acre occur in the SSURGO-enhanced Important Farmland data. Due to the interaction of land use and soil components of the data, incorporation of SSURGO may also result in units of less than ten acres for categories such as Other Land (or Nonagricultural and Natural Vegetation). For more information on SSURGO, contact the USDA-Natural Resources Conservation Service: &lt;http://www.nrcs.nrcs.usda.gov/wps/portal/nrcs/main/soils/survey/geo/&gt;</gco:CharacterString>
+          </evaluationMethodDescription>
+          <result gco:nilReason="missing"/>
+        </DQ_ConceptualConsistency>
+      </report>
+    </DQ_DataQuality>
+  </dataQualityInfo>
 </MD_Metadata>

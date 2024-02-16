@@ -41,7 +41,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
   end
 
   context 'with ESRI metadata for geoJSON' do
-    let(:druid) { 'vx812cc5548' }
+    let(:druid) { 'vx813cc5549' }
     let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
 
     it 'generates an ISO 19139 XML document' do
