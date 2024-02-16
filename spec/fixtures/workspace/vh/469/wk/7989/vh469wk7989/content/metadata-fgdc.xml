@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin/>
+        <pubdate>20041201</pubdate>
+        <title>10-Meter Hillshade Grid: Albion River Watershed, California, 2004</title>
+        <edition>1</edition>
+        <geoform>raster digital data</geoform>
+        <pubinfo>
+          <pubplace/>
+          <publish>California. Division of Mines and Geology</publish>
+        </pubinfo>
+        <onlink>http://purl.stanford.edu/vh469wk7989</onlink>
+        <lworkcit>
+          <citeinfo>
+            <origin/>
+            <pubdate>20041201</pubdate>
+            <title>Maps and GIS data for the Watersheds Mapping Series, map set 8, Albion River Watershed, Mendocinco County, California</title>
+            <edition>1</edition>
+            <serinfo>
+              <sername>Watersheds Mapping Series</sername>
+              <issue>map set 8</issue>
+            </serinfo>
+            <pubinfo>
+              <publish>California. Division of Mines and Geology</publish>
+            </pubinfo>
+          </citeinfo>
+        </lworkcit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This shaded relief map was derived from the digital elevation model (see "Digital Elevation Model: Albion River Watershed, California, 2004" raster file) file to more accurately depict landscape within the Albion River watershed predominantly located on the coastal side of the Mendocino Range, the western-most range of the northern California Coast Ranges Geomorphic Province. The Albion River drains 43 square miles of the Mendocino County coastline. The headwaters are approximately 12 miles inland. Data portrays landslides, geomorphic features related to landsliding, relative landslide potential, geology, and stream channel geomorphic conditions. The data is a product of the Department of Conservation, California Geological Survey’s (CGS) investigation of landslides and fluvial geomorphology of the Albion River watershed. The investigation was based on interpretation of 1984 and 2000 aerial photos, findings from CGS’s landslide mapping conducted in the early 1980s (Kilbourne, R.T. 1982-84, Manson, M. W. 1984), as well as other sources (McLaughlin, 1997 and Matthews, 2001).</abstract>
+      <purpose>This mapping began as part of the North Coast Watershed Assessment Program (NCWAP) which was de-funded by the Legislature in June 2003, the work was subsequently completed in late 2003 and early 2004. The California Geological Survey (CGS) evaluated the geology, fluvial geomorphic characteristics, relative slope stability and geomorphic characteristics within the watershed, and compiled the digital geospatial data described in this document. This mapping and compilation is geared toward providing baseline geologic and geomorphic data to aid in responsible land management, as well as the development of watershed restoration projects, watershed management strategies, and watershed plans.</purpose>
+      <supplinf>The Albion River watershed is predominantly located on the coastal side of the Mendocino Range, the western-most range of the northern California Coast Ranges Geomorphic Province. The Albion River drains 43 square miles of the Mendocino County coastline. The headwaters are approximately 12 miles inland. The data is a product of the Department of Conservation, California Geological Survey’s (CGS) investigation of landslides and fluvial geomorphology of the Albion River watershed. The investigation was based on interpretation of 1984 and 2000 aerial photos, findings from CGS’s landslide mapping conducted in the early 1980s (Kilbourne, R.T. 1982-84, Manson, M. W. 1984), as well as other sources (McLaughlin, 1997 and Matthews, 2001). Link to this dataset on the California Department of Conservation website as of November 2014: http://www.conservation.ca.gov/cgs/fwgp/Pages/albion.aspx</supplinf>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>19840101</begdate>
+          <enddate>20001231</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>ground condition</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>Irregular</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-123.778744</westbc>
+        <eastbc>-123.536992</eastbc>
+        <northbc>39.305510</northbc>
+        <southbc>39.205307</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>lcsh</themekt>
+        <themekey>Watersheds</themekey>
+        <themekey>Landslides</themekey>
+        <themekey>Geology</themekey>
+        <themekey>Geomorphology</themekey>
+        <themekey>Logging</themekey>
+        <themekey>Forest management</themekey>
+        <themekey>Faults (Geology)</themekey>
+        <themekey>Landslide hazard analysis</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>geoscientificInformation</themekey>
+        <themekey>inlandWaters</themekey>
+        <themekey>elevation</themekey>
+      </theme>
+      <place>
+        <placekt>geonames</placekt>
+        <placekey>California, Northern</placekey>
+        <placekey>Albion River Watershed (Calif.)</placekey>
+        <placekey>Mendocino County (Calif.)</placekey>
+      </place>
+      <temporal>
+        <tempkt>None</tempkt>
+        <tempkey>2000</tempkey>
+      </temporal>
+    </keywords>
+    <accconst>California Department of Conservation, California Geological Survey, © 2004. All rights reserved. No part of this dataset may be reproduced, transmitted, or distributed in any form or by any means, electronic or mechanical, for any purpose, without the express written permission of the California Geological Survey except as follows. Permission is granted to reproduce prints of all or part of the data under the following conditions: 
+(1) For personal use
+(2) For publication in a report in unmodified form, cite on figure or in text as "Reproduced with permission, California Geological Survey CD-ROM 2004-03 (2004), Watershed Mapping Series, Map Set 8, Albion River Watershed, Mendocino County, California."
+(3) For publication in a report in modified form, cite on figure or in text as "Modified from California Geological Survey from CD-ROM 2004-03 (2004), Watershed Mapping Series, Map Set 8, Albion River Watershed, Mendocino County, California."</accconst>
+    <useconst>The State of California and the Department of Conservation make no representations or warrantees regarding the accuracy of the data from which these maps were derived. Neither the State nor the Department shall be liable under any circumstances for any direct, indirect, special, incidental or consequential damages with respect to any claim by any user or any third party on account of or arising from the use of these maps.
+
+The identification and location of landslide hazard areas are based on review of limited aerial photographs that are listed on each specific map. In most cases, only two sets of aerial photographs were used to construct the landslide and geomorphic features maps. Due to time constraints all available data were not necessarily reviewed and used in construction of these maps. The quality of data used is varied. The information depicted on the maps has been drawn as accurately as possible at 1:24,000 scale. The maps and reports provided on this web site are subject to change without notice, and the latest available versions will be posted on this web site.
+
+Information on the maps are not sufficient to serve as a substitute for site specific geologic and geotechnical site investigations as required under the Chapters 7.5 and 7.8 of Division 2 of the Public Resources Code. </useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>California Geological Survey Library</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>801 K Street, MS 14-34 </address>
+          <city>Sacramento</city>
+          <state>California</state>
+          <postal>95814 </postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>(916) 327-1850</cntvoice>
+        <cntemail>cgslib@consrv.ca.gov</cntemail>
+      </cntinfo>
+    </ptcontac>
+    <datacred>California. Division of Mines and Geology. (2004). 10-Meter Hillshade Grid: Albion River Watershed, California, 2004. California Division of Mines and Geology. </datacred>
+    <native>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.2.2.3552</native>
+  </idinfo>
+  <spdoinfo>
+    <direct>Raster</direct>
+    <rastinfo>
+      <rasttype>Grid Cell</rasttype>
+      <rowcount>1097</rowcount>
+      <colcount>2078</colcount>
+    </rastinfo>
+  </spdoinfo>
+  <eainfo>
+    <detailed>
+      <enttyp>
+        <enttypl>h_shade.vat</enttypl>
+      </enttyp>
+      <attr>
+        <attrlabl>Rowid</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>Esri</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>VALUE</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>COUNT</attrlabl>
+      </attr>
+    </detailed>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>Branner Earth Sciences Library</address>
+          <address>Mitchell Building, 2nd Floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </distrib>
+    <distliab>The State of California and the Department of Conservation make no representations or warrantees regarding the accuracy of the data from which these maps were derived. Neither the State nor the Department shall be liable under any circumstances for any direct, indirect, special, incidental or consequential damages with respect to any claim by any user or any third party on account of or arising from the use of these maps.
+
+The identification and location of landslide hazard areas are based on review of limited aerial photographs that are listed on each specific map. In most cases, only two sets of aerial photographs were used to construct the landslide and geomorphic features maps. Due to time constraints all available data were not necessarily reviewed and used in construction of these maps. The quality of data used is varied. The information depicted on the maps has been drawn as accurately as possible at 1:24,000 scale. The maps and reports provided on this web site are subject to change without notice, and the latest available versions will be posted on this web site.
+
+Information on the maps are not sufficient to serve as a substitute for site specific geologic and geotechnical site investigations as required under the Chapters 7.5 and 7.8 of Division 2 of the Public Resources Code. </distliab>
+  </distinfo>
+  <metainfo>
+    <metd>20150424</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+          <cntper>Kate Dillon</cntper>
+        </cntorgp>
+        <cntpos>Metadata Intern</cntpos>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>Branner Earth Sciences Library</address>
+          <address>Mitchell Building, 2nd Floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <mettc>local time</mettc>
+  </metainfo>
+</metadata>

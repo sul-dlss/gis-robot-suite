@@ -15,12 +15,8 @@ module Robots
         def perform_work
           logger.debug "extract-boundingbox working on #{bare_druid}"
 
-          raise "extract-boundingbox: #{bare_druid} cannot locate normalized data: #{zip_filename}" unless File.size?(zip_filename)
-
-          extract_data_from_zip
-          raise "extract-boundingbox: #{bare_druid} cannot locate #{tmpdir}" unless File.directory?(tmpdir)
-
-          begin
+          normalizer.with_normalized do |tmpdir|
+            @tmpdir = tmpdir
             @ulx, @uly, @lrx, @lry = determine_bounding_box # from data files
             check_bounding_box # bounding box is valid
 
@@ -28,40 +24,27 @@ module Robots
             adding_bounding_box_to_projection_form
 
             object_client.update(params: cocina_object.new(description: description_props))
-          ensure
-            logger.debug "Cleaning: #{tmpdir}"
-            FileUtils.rm_rf tmpdir
           end
         end
 
         private
 
-        attr_reader :ulx, :uly, :lrx, :lry
+        attr_reader :ulx, :uly, :lrx, :lry, :tmpdir
+
+        def normalizer
+          if GisRobotSuite.vector?(cocina_object)
+            GisRobotSuite::VectorNormalizer.new(bare_druid:, logger:, rootdir:)
+          else
+            GisRobotSuite::RasterNormalizer.new(cocina_object:, logger:, rootdir:, skip_alpha_channel: true)
+          end
+        end
 
         def rootdir
           @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
         end
 
-        def zip_filename
-          # always use EPSG:4326 derivative
-          @zip_filename ||= File.join(rootdir, 'content', 'data_EPSG_4326.zip')
-        end
-
-        def tmpdir
-          @tmpdir ||= File.join(Settings.geohydra.tmpdir, "extractboundingbox_#{bare_druid}")
-        end
-
         def description_props
           @description_props ||= cocina_object.description.to_h
-        end
-
-        # unpacks a ZIP file into the given tmpdir
-        def extract_data_from_zip
-          logger.info "extract-boundingbox: #{bare_druid} is extracting data: #{zip_filename}"
-
-          FileUtils.rm_rf(tmpdir) if File.directory? tmpdir
-          FileUtils.mkdir_p(tmpdir)
-          system("unzip -o '#{zip_filename}' -d '#{tmpdir}'", exception: true)
         end
 
         # Reads the shapefile to determine bounding box

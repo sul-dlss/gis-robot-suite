@@ -17,7 +17,6 @@ module Robots
           # first ensure all files are ready
           %w[
             content/data.zip
-            content/data_EPSG_4326.zip
             content/preview.jpg
           ].each do |f|
             fn = File.join(rootdir, f)
