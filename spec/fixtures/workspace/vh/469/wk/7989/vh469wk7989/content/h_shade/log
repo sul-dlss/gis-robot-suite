@@ -1,0 +1,2 @@
+20040412 951   0     9     0ddixon d:\temp\hlshd1 = HILLSHADE(z:\lib\ws\albion_new\fin_covs\final_03-04\final\alb_dem,315,45,#,#)
+200404121602   0     1     0ddixon copy h_shade ..\for_cd\spatial_data\shapefiles\h_shade

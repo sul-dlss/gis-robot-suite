@@ -44,8 +44,18 @@ RSpec.describe Robots::DorRepo::GisAssembly::PackageData do
   end
 
   describe '#generate_data_zip' do
-    before { FileUtils.rm_f(data_zip_filepath) }
-    after { FileUtils.rm_f(data_zip_filepath) }
+    before do
+      FileUtils.rm_f(data_zip_filepath)
+      # The robot does not correctly reset the working directory.
+      # This prevents that from leaking to other tests.
+      # Reasonable attempts to fix this in the robot were unsuccessful.
+      @pwd = Dir.pwd
+    end
+
+    after do
+      FileUtils.rm_f(data_zip_filepath)
+      Dir.chdir(@pwd) # rubocop:disable RSpec/InstanceVariable
+    end
 
     it 'compresses files into data zip' do
       expect(File.exist?(data_zip_filepath)).to be false

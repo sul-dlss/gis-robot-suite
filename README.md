@@ -34,7 +34,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `generate-mods` :: Convert geoMetadata into MODS
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `package-data` :: Package the digital work
-* `normalize-data` :: Reproject the data into common SRS projection and/or file format, move files from temp to content directory, and generate data_EPSG_4326.zip.
+* `normalize-data` :: Move files from temp to content directory.
 * `extract-boundingbox` :: Extract bounding box from data for MODS record
 * `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)

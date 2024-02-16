@@ -60,10 +60,6 @@ module Robots
           @data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data.zip")
         end
 
-        def epsg_data_zip_objectfile
-          @epsg_data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data_EPSG_4326.zip")
-        end
-
         def preview_objectfile_path
           @preview_objectfile_path ||= File.join(rootdir, 'content', 'preview.jpg')
         end

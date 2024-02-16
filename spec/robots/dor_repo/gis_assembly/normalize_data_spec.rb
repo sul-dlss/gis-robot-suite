@@ -12,12 +12,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
     let(:cocina_object) { build(:dro, id: druid).new(description:) }
 
-    let(:wkt) do
-      'GEOGCS["WGS 84", DATUM["WGS_1984", SPHEROID["WGS 84",6378137,298.257223563, AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich",0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.0174532925199433, AUTHORITY["EPSG","9122"]], AUTHORITY["EPSG","4326"]]' # rubocop:disable Layout/LineLength
-    end
-
     let(:druid) { "druid:#{bare_druid}" }
-    let(:output_zip) { "spec/fixtures/stage/#{bare_druid}/content/data_EPSG_4326.zip" }
     let(:output_xml_files) { Dir.glob("spec/fixtures/stage/#{bare_druid}/content/*.xml") }
     let(:output_thumbnail) { "spec/fixtures/stage/#{bare_druid}/content/preview.jpg" }
     let(:output_data_files) { [] }
@@ -25,14 +20,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
     before do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(Kernel).to receive(:system).and_call_original
-
-      stub_request(:get, 'https://spatialreference.org/ref/epsg/4326/prettywkt/')
-        .to_return(status: 200, body: wkt, headers: {})
     end
 
     after do
-      FileUtils.rm_f([output_zip, output_xml_files])
+      FileUtils.rm_f(output_xml_files)
       FileUtils.rm_rf("spec/fixtures/stage/#{bare_druid}/content")
     end
 
@@ -83,19 +74,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
       it 'normalizes the data' do
         test_perform(robot, druid)
-        expect(File.exist?(output_zip)).to be true
-        Zip::File.open(output_zip) do |zip_file|
-          expect(zip_file.entries.size).to eq 4
-          # Will raise if not present
-          zip_file.get_entry('sanluisobispo1996.dbf')
-          zip_file.get_entry('sanluisobispo1996.prj')
-          zip_file.get_entry('sanluisobispo1996.shp')
-          zip_file.get_entry('sanluisobispo1996.shx')
-        end
-        # Reproject
-        expect(Kernel).to have_received(:system).with(
-          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_bb033gt0615/EPSG_4326/sanluisobispo1996.shp' 'spec/fixtures/stage/bb033gt0615/temp/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
-        )
         expect(output_xml_files.size).to eq 4
         # Copies the data files
         output_data_files.each do |file|
@@ -151,19 +129,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
       it 'normalizes the data' do
         test_perform(robot, druid)
-        expect(File.exist?(output_zip)).to be true
-        Zip::File.open(output_zip) do |zip_file|
-          expect(zip_file.entries.size).to eq 4
-          # Will raise if not present
-          zip_file.get_entry('sanluisobispo1996.dbf')
-          zip_file.get_entry('sanluisobispo1996.prj')
-          zip_file.get_entry('sanluisobispo1996.shp')
-          zip_file.get_entry('sanluisobispo1996.shx')
-        end
-        # Reproject
-        expect(Kernel).to have_received(:system).with(
-          "env SHAPE_ENCODING= ogr2ogr -progress -t_srs 'GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.0174532925199433, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]' '/tmp/normalize_vx812cc5548/EPSG_4326/sanluisobispo1996.shp' 'spec/fixtures/stage/vx812cc5548/temp/sanluisobispo1996.shp'" # rubocop:disable Layout/LineLength
-        )
         # Copies the data files
         output_data_files.each do |file|
           expect(File.exist?(file)).to be true
@@ -258,34 +223,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
       it 'normalizes the data' do
         test_perform(robot, druid)
-        expect(File.exist?(output_zip)).to be true
         expect(File.exist?(output_thumbnail)).to be true # Thumbnail is copied.
-        Zip::File.open(output_zip) do |zip_file|
-          expect(zip_file.entries.size).to eq 2
-          # Will raise if not present
-          zip_file.get_entry('MCE_FI2G_2014.tif')
-          zip_file.get_entry('MCE_FI2G_2014.tif.aux.xml')
-        end
-        # Does not reproject
-        expect(Kernel).not_to have_received(:system).with(
-          "gdalwarp -r bilinear -t_srs EPSG:4326 /tmp/normalize_bb021mm7809/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014_uncompressed.tif -co 'COMPRESS=NONE'"
-        )
-        # Compress
-        expect(Kernel).to have_received(:system).with(
-          "gdal_translate -a_srs EPSG:4326 spec/fixtures/stage/bb021mm7809/temp/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
-        )
-        # Convert to RGB
-        expect(Kernel).to have_received(:system).with(
-          "gdal_translate -expand rgb spec/fixtures/stage/bb021mm7809/temp/raw8bit.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'"
-        )
-        # Adds an alpha channel
-        expect(Kernel).to have_received(:system).with(
-          'gdalwarp -dstalpha /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014_alpha.tif'
-        )
-        # Stats
-        expect(Kernel).to have_received(:system).with(
-          'gdalinfo -mm -stats -norat -noct /tmp/normalize_bb021mm7809/EPSG_4326/MCE_FI2G_2014.tif'
-        )
         expect(output_xml_files.size).to eq 4
         # Copies the data files
         output_data_files.each do |file|
@@ -360,30 +298,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
 
       it 'normalizes the data' do
         test_perform(robot, druid)
-        expect(File.exist?(output_zip)).to be true
         expect(File.exist?(output_thumbnail)).to be true # Thumbnail is already in content directory.
-        Zip::File.open(output_zip) do |zip_file|
-          expect(zip_file.entries.size).to eq 2
-          # Will raise if not present
-          zip_file.get_entry('h_shade.tif')
-          zip_file.get_entry('h_shade.tif.aux.xml')
-        end
-        # Reprojects
-        expect(Kernel).to have_received(:system).with(
-          "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/stage/vh469wk7989/temp/h_shade /tmp/normalize_vh469wk7989/EPSG_4326/h_shade_uncompressed.tif -co 'COMPRESS=NONE'"
-        )
-        # Compress
-        expect(Kernel).to have_received(:system).with(
-          "gdal_translate -a_srs EPSG:4326 /tmp/normalize_vh469wk7989/EPSG_4326/h_shade_uncompressed.tif /tmp/normalize_vh469wk7989/EPSG_4326/h_shade.tif -co 'COMPRESS=LZW'"
-        )
-        # Not convert to RGB
-        expect(Kernel).not_to have_received(:system).with(
-          "gdal_translate -expand rgb /tmp/normalize_vh469wk7989/raw8bit.tif /tmp/normalize_vh469wk7989/EPSG_4326/h_shade.tif -co 'COMPRESS=LZW'"
-        )
-        # Stats
-        expect(Kernel).to have_received(:system).with(
-          'gdalinfo -mm -stats -norat -noct /tmp/normalize_vh469wk7989/EPSG_4326/h_shade.tif'
-        )
         expect(output_xml_files.size).to eq 1
       end
     end

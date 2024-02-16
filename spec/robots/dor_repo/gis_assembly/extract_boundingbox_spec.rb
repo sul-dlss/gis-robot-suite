@@ -8,9 +8,15 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
 
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object, update: nil) }
 
+  let(:wkt) do
+    'GEOGCS["WGS 84", DATUM["WGS_1984", SPHEROID["WGS 84",6378137,298.257223563, AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich",0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.0174532925199433, AUTHORITY["EPSG","9122"]], AUTHORITY["EPSG","4326"]]' # rubocop:disable Layout/LineLength
+  end
+
   before do
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(IO).to receive(:popen).and_call_original
+    stub_request(:get, 'https://spatialreference.org/ref/epsg/4326/prettywkt/')
+      .to_return(status: 200, body: wkt, headers: {})
   end
 
   context 'when raster' do
@@ -201,7 +207,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
+        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
       end
     end
 
@@ -381,13 +387,177 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/extractboundingbox_nj441df9572/MCE_AF2G_2010.tif'")
+        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
       end
     end
   end
 
   context 'when shapefile' do
     let(:druid) { 'druid:cc044gt0726' }
+    let(:bounding_box) do
+      # ogr2ogr produces slightly different bounding boxes depending on the version.
+      # CI and production have an older version; brew installs a newer version.
+      # Following accounts for this, but might break as versions change.
+      if ci?
+        [
+          {
+            value: '-121.347916',
+            type: 'west'
+          },
+          {
+            value: '34.897518',
+            type: 'south'
+          },
+          {
+            value: '-119.47262',
+            type: 'east'
+          },
+          {
+            value: '35.795222',
+            type: 'north'
+          }
+        ]
+      else
+        [
+          {
+            value: '-121.347916',
+            type: 'west'
+          },
+          {
+            value: '34.897517',
+            type: 'south'
+          },
+          {
+            value: '-119.472622',
+            type: 'east'
+          },
+          {
+            value: '35.795226',
+            type: 'north'
+          }
+        ]
+      end
+    end
+    let(:expected_description) do
+      {
+        title: [
+          {
+            value: 'Important Farmland, San Luis Obispo County, California, 1996'
+          }
+        ],
+        form: [
+          {
+            value: 'Geospatial data',
+            type: 'genre',
+            uri: 'http://id.loc.gov/authorities/genreForms/gf2011026297',
+            source: {
+              code: 'lcgft'
+            }
+          },
+          {
+            value: 'cartographic dataset',
+            type: 'genre',
+            uri: 'http://rdvocab.info/termList/RDAContentType/1001',
+            source: {
+              code: 'rdacontent'
+            }
+          },
+          {
+            value: 'cartographic',
+            type: 'resource type',
+            source: {
+              value: 'MODS resource types'
+            }
+          },
+          {
+            value: 'software, multimedia',
+            type: 'resource type',
+            source: {
+              value: 'MODS resource types'
+            }
+          },
+          {
+            value: 'Shapefile',
+            type: 'form'
+          },
+          {
+            value: '2.815',
+            type: 'extent'
+          },
+          {
+            value: 'born digital',
+            type: 'digital origin',
+            source: {
+              value: 'MODS digital origin terms'
+            }
+          },
+          {
+            value: 'Scale not given.',
+            type: 'map scale'
+          },
+          {
+            value: 'Custom projection',
+            type: 'map projection'
+          },
+          {
+            value: 'EPSG::4326',
+            type: 'map projection',
+            uri: 'http://opengis.net/def/crs/EPSG/0/4326',
+            source: {
+              code: 'EPSG'
+            },
+            displayLabel: 'WGS84'
+          }
+        ],
+        geographic: [
+          {
+            form: [
+              {
+                value: 'application/x-esri-shapefile',
+                type: 'media type',
+                source: {
+                  value: 'IANA media type terms'
+                }
+              },
+              {
+                value: 'Shapefile',
+                type: 'data format'
+              },
+              {
+                value: 'Dataset#Polygon',
+                type: 'type'
+              }
+            ],
+            subject: [
+              {
+                structuredValue: bounding_box,
+                type: 'bounding box coordinates',
+                standard: {
+                  code: 'EPSG:4326'
+                },
+                encoding: {
+                  value: 'decimal'
+                }
+              },
+              {
+                value: 'San Luis Obispo County (Calif.)',
+                type: 'coverage',
+                valueLanguage: {
+                  code: 'eng'
+                }
+              }
+            ]
+          }
+        ],
+        note: [
+          {
+            value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
+            displayLabel: 'WGS84 Cartographics'
+          }
+        ],
+        purl: 'https://purl.stanford.edu/cc044gt0726'
+      }
+    end
     let(:original_description) do
       {
         title: [
@@ -511,148 +681,16 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       }
     end
 
-    let(:expected_description) do
-      {
-        title: [
-          {
-            value: 'Important Farmland, San Luis Obispo County, California, 1996'
-          }
-        ],
-        form: [
-          {
-            value: 'Geospatial data',
-            type: 'genre',
-            uri: 'http://id.loc.gov/authorities/genreForms/gf2011026297',
-            source: {
-              code: 'lcgft'
-            }
-          },
-          {
-            value: 'cartographic dataset',
-            type: 'genre',
-            uri: 'http://rdvocab.info/termList/RDAContentType/1001',
-            source: {
-              code: 'rdacontent'
-            }
-          },
-          {
-            value: 'cartographic',
-            type: 'resource type',
-            source: {
-              value: 'MODS resource types'
-            }
-          },
-          {
-            value: 'software, multimedia',
-            type: 'resource type',
-            source: {
-              value: 'MODS resource types'
-            }
-          },
-          {
-            value: 'Shapefile',
-            type: 'form'
-          },
-          {
-            value: '2.815',
-            type: 'extent'
-          },
-          {
-            value: 'born digital',
-            type: 'digital origin',
-            source: {
-              value: 'MODS digital origin terms'
-            }
-          },
-          {
-            value: 'Scale not given.',
-            type: 'map scale'
-          },
-          {
-            value: 'Custom projection',
-            type: 'map projection'
-          },
-          {
-            value: 'EPSG::4326',
-            type: 'map projection',
-            uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-            source: {
-              code: 'EPSG'
-            },
-            displayLabel: 'WGS84'
-          }
-        ],
-        geographic: [
-          {
-            form: [
-              {
-                value: 'application/x-esri-shapefile',
-                type: 'media type',
-                source: {
-                  value: 'IANA media type terms'
-                }
-              },
-              {
-                value: 'Shapefile',
-                type: 'data format'
-              },
-              {
-                value: 'Dataset#Polygon',
-                type: 'type'
-              }
-            ],
-            subject: [
-              {
-                structuredValue: [
-                  {
-                    value: '-121.347866',
-                    type: 'west'
-                  },
-                  {
-                    value: '34.89752',
-                    type: 'south'
-                  },
-                  {
-                    value: '-119.472601',
-                    type: 'east'
-                  },
-                  {
-                    value: '35.795197',
-                    type: 'north'
-                  }
-                ],
-                type: 'bounding box coordinates',
-                standard: {
-                  code: 'EPSG:4326'
-                },
-                encoding: {
-                  value: 'decimal'
-                }
-              },
-              {
-                value: 'San Luis Obispo County (Calif.)',
-                type: 'coverage',
-                valueLanguage: {
-                  code: 'eng'
-                }
-              }
-            ]
-          }
-        ],
-        note: [
-          {
-            value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-            displayLabel: 'WGS84 Cartographics'
-          }
-        ],
-        purl: 'https://purl.stanford.edu/cc044gt0726'
-      }
+    def ci?
+      IO.popen("#{Settings.gdal_path}ogr2ogr --version") do |f|
+        return f.read.include?('GDAL 3.4')
+      end
     end
 
     it 'updates the cocina with the bounding box' do
       test_perform(robot, druid)
       expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-      expect(IO).to have_received(:popen).with("ogrinfo -ro -so -al '/tmp/extractboundingbox_cc044gt0726/sanluisobispo1996.shp'")
+      expect(IO).to have_received(:popen).with("ogrinfo -ro -so -al '/tmp/normalizevector_cc044gt0726/sanluisobispo1996.shp'")
     end
   end
 end
