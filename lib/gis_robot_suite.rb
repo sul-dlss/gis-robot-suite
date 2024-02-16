@@ -163,15 +163,6 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
   end
 
-  def self.determine_file_format_from_mods(modsfn)
-    doc = Nokogiri::XML(File.read(modsfn))
-    format = doc.xpath('/mods:mods/mods:extension[@displayLabel="geo"]/*/*/dc:format',
-                       'mods' => 'http://www.loc.gov/mods/v3',
-                       'dc' => 'http://purl.org/dc/elements/1.1/').first
-    format = format.text unless format.nil?
-    format
-  end
-
   def self.determine_rights(cocina_model)
     return 'public' if cocina_model.access.view == 'world'
 

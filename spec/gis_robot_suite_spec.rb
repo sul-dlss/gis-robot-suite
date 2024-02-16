@@ -134,4 +134,32 @@ RSpec.describe GisRobotSuite do
       expect(described_class.determine_raster_style(grayscale8_file)).to eq('grayscale8')
     end
   end
+
+  describe '.locate_druid_path' do
+    let(:druid) { 'druid:bc123df4567' }
+
+    context 'when type is :stage' do
+      it 'returns the stage path' do
+        expect(described_class.locate_druid_path(druid, type: :stage)).to eq File.join(Settings.geohydra.stage, 'bc123df4567')
+      end
+    end
+
+    context 'when type is :workspace' do
+      it 'returns the workspace path' do
+        expect(described_class.locate_druid_path(druid, type: :workspace)).to eq DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
+      end
+    end
+
+    context 'when type is not :stage or :workspace' do
+      it 'raises' do
+        expect { described_class.locate_druid_path(druid, type: :something_else) }.to raise_error(RuntimeError, 'Only :stage, :workspace are supported')
+      end
+    end
+
+    context 'when validate is true and the directory does not exist' do
+      it 'raises' do
+        expect { described_class.locate_druid_path(druid, type: :stage, validate: true) }.to raise_error(RuntimeError, "Missing #{Settings.geohydra.stage}/bc123df4567")
+      end
+    end
+  end
 end
