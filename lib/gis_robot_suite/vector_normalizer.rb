@@ -29,6 +29,18 @@ module GisRobotSuite
       FileUtils.rm_rf tmpdir
     end
 
+    def run_shp2pgsql(projection, encoding, shpfn, schema, sqlfn, errfn)
+      # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
+      # XXX: -G for the geography column causes some issues with GeoServer
+      cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding} " \
+            "'#{shpfn}' #{schema}.#{bare_druid} " \
+            "> '#{sqlfn}' 2> '#{errfn}'"
+      logger.debug "Running: #{cmd}"
+      success = system(cmd, exception: true)
+      raise "normalize-vector: #{bare_druid} cannot convert Shapefile to PostGIS: #{File.open(errfn).readlines}" unless success
+      raise "normalize-vector: #{bare_druid} shp2pgsql generated no SQL?" unless File.size?(sqlfn)
+    end
+
     private
 
     attr_reader :logger, :bare_druid, :rootdir
@@ -62,18 +74,6 @@ module GisRobotSuite
     def wkt
       # Well Known Text. It’s a text markup language for expressing geometries in vector data.
       @wkt ||= URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
-    end
-
-    def run_shp2pgsql(projection, encoding, shpfn, schema, sqlfn, errfn)
-      # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
-      # XXX: -G for the geography column causes some issues with GeoServer
-      cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding} " \
-            "'#{shpfn}' #{schema}.#{bare_druid} " \
-            "> '#{sqlfn}' 2> '#{errfn}'"
-      logger.debug "Running: #{cmd}"
-      success = system(cmd, exception: true)
-      raise "normalize-vector: #{bare_druid} cannot convert Shapefile to PostGIS: #{File.open(errfn).readlines}" unless success
-      raise "normalize-vector: #{bare_druid} shp2pgsql generated no SQL?" unless File.size?(sqlfn)
     end
   end
 end

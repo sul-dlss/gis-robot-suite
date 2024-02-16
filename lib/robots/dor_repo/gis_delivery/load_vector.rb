@@ -39,9 +39,9 @@ module Robots
 
               # first try decoding with UTF-8 and if that fails use LATIN1
               begin
-                run_shp2pgsql('4326', 'UTF-8', shpfn, schema, sqlfn, errfn)
+                normalizer.run_shp2pgsql('4326', 'UTF-8', shpfn, schema, sqlfn, errfn)
               rescue RuntimeError
-                run_shp2pgsql('4326', 'LATIN1', shpfn, schema, sqlfn, errfn)
+                normalizer.run_shp2pgsql('4326', 'LATIN1', shpfn, schema, sqlfn, errfn)
               end
             end
 
