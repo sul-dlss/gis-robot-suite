@@ -30,19 +30,17 @@ module Robots
             #   end
 
             # sniff out shapefile from extraction
-            Dir.chdir(tmpdir) do
-              shpfn = Dir.glob('*.shp').first
+            Dir.chdir(tmpdir)
+            shpfn = Dir.glob('*.shp').first
+            sqlfn = shpfn.gsub(/\.shp$/, '.sql')
+            errfn = 'shp2pgsql.err'
+            logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shpfn}"
 
-              sqlfn = shpfn.gsub(/\.shp$/, '.sql')
-              errfn = 'shp2pgsql.err'
-              logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shpfn}"
-
-              # first try decoding with UTF-8 and if that fails use LATIN1
-              begin
-                normalizer.run_shp2pgsql('4326', 'UTF-8', shpfn, schema, sqlfn, errfn)
-              rescue RuntimeError
-                normalizer.run_shp2pgsql('4326', 'LATIN1', shpfn, schema, sqlfn, errfn)
-              end
+            # first try decoding with UTF-8 and if that fails use LATIN1
+            begin
+              normalizer.run_shp2pgsql('4326', 'UTF-8', shpfn, schema, sqlfn, errfn)
+            rescue RuntimeError
+              normalizer.run_shp2pgsql('4326', 'LATIN1', shpfn, schema, sqlfn, errfn)
             end
 
             # Load the data into PostGIS
