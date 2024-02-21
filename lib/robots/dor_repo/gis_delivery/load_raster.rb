@@ -32,7 +32,7 @@ module Robots
               logger.debug "Running: #{cmd}"
               system(cmd, exception: true)
 
-              # copy statistics files (produced by NormalizeData#compute_statistics, as of Feb 2024)
+              # copy statistics files (produced by CopyData#compute_statistics, as of Feb 2024)
               cmd = "rsync -v '#{tiffn}'.aux.xml #{path}/#{bare_druid}.tif.aux.xml"
               logger.debug "Running: #{cmd}"
               system(cmd, exception: true)

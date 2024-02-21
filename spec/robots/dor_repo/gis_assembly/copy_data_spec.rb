@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
+RSpec.describe Robots::DorRepo::GisAssembly::CopyData do
   let(:robot) { described_class.new }
 
   describe '.perform_work' do
@@ -75,7 +75,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         ]
       end
 
-      it 'normalizes the data' do
+      it 'copies the data' do
         test_perform(robot, druid)
         expect(output_xml_files.size).to eq 4
         # Copies the data files
@@ -133,7 +133,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         ]
       end
 
-      it 'normalizes the data' do
+      it 'copies the data' do
         test_perform(robot, druid)
         # Copies the data files
         output_data_files.each do |file|
@@ -203,7 +203,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         FileUtils.rm_f(output_thumbnail)
       end
 
-      it 'normalizes the data' do
+      it 'copies the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_thumbnail)).to be true # Thumbnail is copied.
         expect(output_xml_files.size).to eq 4
@@ -253,7 +253,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::NormalizeData do
         }
       end
 
-      it 'normalizes the data' do
+      it 'copies the data' do
         test_perform(robot, druid)
         expect(File.exist?(output_thumbnail)).to be true # Thumbnail is already in content directory.
         expect(output_xml_files.size).to eq 1
