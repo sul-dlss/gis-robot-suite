@@ -2,11 +2,10 @@
 
 module GisRobotSuite
   class RasterNormalizer
-    def initialize(logger:, cocina_object:, rootdir:, skip_alpha_channel: false)
+    def initialize(logger:, cocina_object:, rootdir:)
       @logger = logger
       @cocina_object = cocina_object
       @rootdir = rootdir
-      @skip_alpha_channel = skip_alpha_channel
     end
 
     def with_normalized
@@ -24,7 +23,6 @@ module GisRobotSuite
 
       epsg4326_projection? ? compress_only : reproject_and_compress
       convert_8bit_to_rgb if eight_bit?
-      add_alpha_channel unless skip_alpha_channel
       compute_statistics
       tmpdir
     end
@@ -36,7 +34,7 @@ module GisRobotSuite
 
     private
 
-    attr_reader :logger, :cocina_object, :skip_alpha_channel, :rootdir
+    attr_reader :logger, :cocina_object, :rootdir
 
     def reproject_and_compress
       temp_filepath = "#{tmpdir}/#{geo_object_name}_uncompressed.tif"
@@ -77,17 +75,6 @@ module GisRobotSuite
       Kernel.system("mv #{output_filepath} #{temp_filename}", exception: true)
       Kernel.system("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'", exception: true)
       File.delete(temp_filename)
-    end
-
-    def add_alpha_channel
-      # NOTE: gdalwarp is smart enough not to add a new alpha channel (band) if one is already there.
-      # If we want to improve the performance of the normalize step, and many GeoTIFFs already
-      # have alpha channels, then we could introspect on the GeoTIFF file with gdalinfo and skip
-      # this call to gdalwarp if one is already present.
-      logger.info "load-raster: adding alpha channel for #{output_filepath}"
-      temp_filepath = "#{tmpdir}/#{geo_object_name}_alpha.tif"
-      Kernel.system("#{Settings.gdal_path}gdalwarp -dstalpha #{output_filepath} #{temp_filepath}", exception: true)
-      FileUtils.mv(temp_filepath, output_filepath)
     end
 
     def compute_statistics
