@@ -7,14 +7,14 @@ module GisRobotSuite
       new(*).build
     end
 
-    # @param [String] druid
-    def initialize(cocina_model, bare_druid, iso19139_ng)
-      @cocina_model = cocina_model
+    # @param [String] bare_druid
+    # @param [Nokogiri::XML] iso19139_ng
+    def initialize(bare_druid, iso19139_ng)
       @bare_druid = bare_druid
       @iso19139_ng = iso19139_ng
     end
 
-    attr_reader :cocina_model, :bare_druid, :iso19139_ng
+    attr_reader :bare_druid, :iso19139_ng
 
     def build
       description_props = { title:, event:, form:, geographic:, language:, contributor:, note:, subject:, identifier:, purl:,

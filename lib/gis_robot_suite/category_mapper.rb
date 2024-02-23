@@ -7,7 +7,7 @@ module GisRobotSuite
       new(code).label
     end
 
-    # @param [String] druid
+    # @param [String] code
     def initialize(code)
       @code = code
     end
