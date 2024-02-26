@@ -64,9 +64,6 @@
       </role>
     </CI_ResponsibleParty>
   </contact>
-  <dateStamp>
-    <gco:Date>2019-09-28</gco:Date>
-  </dateStamp>
   <metadataStandardName>
     <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
   </metadataStandardName>

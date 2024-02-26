@@ -8,9 +8,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
 
     let(:robot) { described_class.new }
     let(:object_client) do
-      instance_double(Dor::Services::Client::Object, update: nil, find: object)
+      instance_double(Dor::Services::Client::Object, update: nil, find: cocina_object)
     end
-    let(:object) { build(:dro, id: druid) }
+    let(:cocina_object) { build(:dro, id: druid) }
     let(:staging_dir) { File.join(fixture_dir, 'stage', bare_druid, 'temp') }
 
     # Remove ISO19139.xml to restore temp dir to clean state at beginning of gisAssembly workflow
@@ -114,7 +114,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                  { value: 'EPSG::4326', type: 'map projection' }],
           adminMetadata: { language: [{ code: 'eng', source: { code: 'ISO639-2' } }],
                            contributor: [{ name: [{ value: 'Stanford' }] }],
-                           identifier: [{ value: 'edu.stanford.purl:dj322nc8936' }] },
+                           identifier: [{ value: 'edu.stanford.purl:dj322nc8936' }],
+                           event: [{ type: 'creation', date: [{ value: '2024-01-16', encoding: { code: 'w3cdtf' } }] }] },
           relatedResource: [{ title: [{ value: 'North Atlantic Ocean, Arquipélago dos Açores' }],
                               type: 'has other format',
                               displayLabel: 'Scanned map',
@@ -140,6 +141,30 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
     context 'when a shapefile' do
       let(:druid) { 'druid:mx245jd3310' }
       let(:bare_druid) { 'mx245jd3310' }
+      let(:cocina_object) { build(:dro, id: druid).new(description: original_description) }
+      let(:original_description) do
+        {
+          title: [
+            {
+              value: 'Road Bridge Districts, Riverside County California, 2019'
+            }
+          ],
+          purl: 'https://purl.stanford.edu/mx245jd3310',
+          subject: [],
+          form: [
+            { value: 'Shapefile', type: 'form' },
+            { value: 'EPSG::4326', type: 'map projection' }
+          ],
+          adminMetadata: {
+            event: [
+              {
+                type: 'creation',
+                date: [{ value: '2022-06-01', encoding: { code: 'w3cdtf' } }]
+              }
+            ]
+          }
+        }
+      end
 
       # rubocop:disable Layout/LineLength
       let(:description_props) do
@@ -183,7 +208,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                  { value: 'EPSG::4326', type: 'map projection' }],
           adminMetadata: { language: [{ code: 'eng', source: { code: 'ISO639-2' } }],
                            contributor: [{ name: [{ value: 'Stanford' }] }],
-                           identifier: [{ value: 'edu.stanford.purl:fh516dn9215' }] },
+                           identifier: [{ value: 'edu.stanford.purl:fh516dn9215' }],
+                           event: [{ type: 'creation',
+                                     date: [{ value: '2022-06-01', encoding: { code: 'w3cdtf' } }] },
+                                   { type: 'modification',
+                                     date: [{ value: '2024-01-16', encoding: { code: 'w3cdtf' } }] }] },
           geographic: [{ form: [{ value: 'application/x-esri-shapefile', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'Shapefile', type: 'data format' },
                                 { value: 'Dataset#Polygon', type: 'type' }] }] }

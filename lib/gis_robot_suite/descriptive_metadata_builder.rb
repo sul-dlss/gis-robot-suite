@@ -3,23 +3,23 @@
 module GisRobotSuite
   # Builds cocina descriptive metadata from ISO19139
   class DescriptiveMetadataBuilder # rubocop:disable Metrics/ClassLength
-    def self.build(*)
-      new(*).build
+    def self.build(cocina_model:, bare_druid:, iso19139_ng:)
+      new(cocina_model:, bare_druid:, iso19139_ng:).build
     end
 
     # @param [String] bare_druid
     # @param [Nokogiri::XML] iso19139_ng
-    def initialize(bare_druid, iso19139_ng)
+    def initialize(cocina_model:, bare_druid:, iso19139_ng:)
+      @cocina_model = cocina_model
       @bare_druid = bare_druid
       @iso19139_ng = iso19139_ng
     end
 
-    attr_reader :bare_druid, :iso19139_ng
+    attr_reader :bare_druid, :iso19139_ng, :cocina_model
 
     def build
       description_props = { title:, event:, form:, geographic:, language:, contributor:, note:, subject:, identifier:, purl:,
                             adminMetadata: admin_metadata, relatedResource: related_resource, access: }.compact
-
       Cocina::Models::Description.new(description_props)
     end
 
@@ -448,6 +448,7 @@ module GisRobotSuite
       {}.merge({ contributor: [{ name: [{ value: 'Stanford' }] }] })
         .merge(admin_identifier)
         .merge(admin_langs)
+        .merge(admin_events)
         .compact
     end
 
@@ -468,6 +469,36 @@ module GisRobotSuite
       end
 
       { language: data }
+    end
+
+    def admin_events
+      datestamp = iso19139_ng.xpath('//gmd:MD_Metadata/gmd:dateStamp/gco:Date', NS).text
+      return {} if datestamp.empty?
+
+      events = []
+      type = 'creation'
+      # keep any existing adminMetadata events
+      if existing_admin_events?
+        events << cocina_model.description.adminMetadata&.event
+        type = 'modification' if admin_creation_date?
+      end
+
+      events << { type:, date: [{ value: datestamp, encoding: { code: 'w3cdtf' } }] }
+      { event: events.flatten }
+    end
+
+    def existing_admin_events?
+      events = cocina_model.description.adminMetadata&.event
+      return false if events.nil?
+
+      true
+    end
+
+    def admin_creation_date?
+      # check for existing cocina adminMetadata event for creation date
+      events = cocina_model.description.adminMetadata&.event
+      events.find { |event| event.type == 'creation' }
+      events.any?
     end
 
     def access
