@@ -56,10 +56,6 @@ module Robots
           @rootdir ||= GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
         end
 
-        def data_zip_objectfile
-          @data_zip_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/data.zip")
-        end
-
         def preview_objectfile_path
           @preview_objectfile_path ||= File.join(rootdir, 'content', 'preview.jpg')
         end
@@ -95,7 +91,6 @@ module Robots
             objectfile = Assembly::ObjectFile.new(file)
             build_file_params(objectfile:, mimetype: mimetype_for_data_file(objectfile))
           end
-          params << build_file_params(objectfile: data_zip_objectfile, mimetype: 'application/zip')
           # Add index_map.json if it exists
           params << index_map_params if index_map_objectfile.file_exists?
           params
