@@ -412,7 +412,7 @@ module GisRobotSuite
         { type: 'has other format',
           displayLabel: 'Scanned map',
           title: [{ value: related_map.xpath('gmd:sourceCitation/gmd:CI_Citation/gmd:title/gco:CharacterString', NS).text }],
-          purl: related_map.xpath('gmd:sourceCitation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text }
+          identifier: [{ value: related_map.xpath('gmd:sourceCitation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text }] }
       end
     end
 

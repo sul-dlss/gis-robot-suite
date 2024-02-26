@@ -119,7 +119,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
           relatedResource: [{ title: [{ value: 'North Atlantic Ocean, Arquipélago dos Açores' }],
                               type: 'has other format',
                               displayLabel: 'Scanned map',
-                              purl: 'https://purl.stanford.edu/jf567jb0412' }],
+                              identifier: [{ value: 'https://purl.stanford.edu/jf567jb0412' }] }],
           geographic: [{ form: [{ value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'GeoTIFF', type: 'data format' },
                                 { value: 'Dataset#Raster', type: 'type' }] }],
