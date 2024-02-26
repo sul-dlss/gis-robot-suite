@@ -69,4 +69,3 @@ Style/NumericLiterals:
 Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
-    - 'lib/robots/dor_repo/gis_assembly/generate_mods.rb'

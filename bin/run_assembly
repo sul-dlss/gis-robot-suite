@@ -11,7 +11,7 @@ for s in \
   extract-fgdc-metadata \
   generate-geo-metadata \
   generate-tag \
-  generate-mods \
+  generate-descriptive \
   assign-placenames \
   package-data \
   normalize-data \
