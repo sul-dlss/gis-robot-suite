@@ -21,7 +21,6 @@ module Robots
             check_bounding_box # bounding box is valid
 
             add_bounding_box_to_geographic_subject
-            adding_bounding_box_to_projection_form
 
             object_client.update(params: cocina_object.new(description: description_props))
           end
@@ -102,104 +101,45 @@ module Robots
         end
 
         def add_bounding_box_to_geographic_subject
-          bounding_box_geographic_subjects.each do |subject|
-            subject.clear
-            subject[:structuredValue] =
-              [
-                {
-                  value: ulx.to_s,
-                  type: 'west'
-                },
-                {
-                  value: lry.to_s,
-                  type: 'south'
-                },
-                {
-                  value: lrx.to_s,
-                  type: 'east'
-                },
-                {
-                  value: uly.to_s,
-                  type: 'north'
-                }
-              ]
-            subject[:type] = 'bounding box coordinates'
-            subject[:encoding] = {
-              value: 'decimal'
-            }
-            subject[:standard] = {
-              code: 'EPSG:4326'
-            }
-          end
+          # add new bounding box subject or replace existing boundng box subject
+          delete_bounding_box_geographic_subjects
+
+          geographic = description_props[:geographic]
+          geographic.first[:subject] << bounding_box_geographic_subject
         end
 
-        def bounding_box_geographic_subjects
+        def delete_bounding_box_geographic_subjects
+          # delete existing bounding box coordinates so that they can be replaced with re-generated coordinates
           Array(description_props[:geographic]).flat_map do |geo|
-            Array(geo[:subject]).select { |subject| subject[:type] == 'bounding box coordinates' }
+            Array(geo[:subject]).reject! { |subject| subject[:type] == 'bounding box coordinates' }
           end
         end
 
-        def adding_bounding_box_to_projection_form
-          # Check to see whether the current native projection is WGS84
-          raise "extract-boundingbox: #{bare_druid} is missing map projection!" if projection_forms.empty?
-          raise "extract-boundingbox: #{bare_druid} has too many map projections: #{projection_forms.size}" unless projection_forms.size == 1
-
-          return update_projection_form_epsg if projection_form_epsg_4326?
-
-          logger.debug "extract-boundingbox: #{bare_druid} has non-native WGS84 projection: #{projection_form[:value]}"
-
-          unless scale_not_given_form?
-            description_props[:form] << {
-              value: 'Scale not given.',
-              type: 'map scale'
-            }
-          end
-
-          description_props[:form] << {
-            value: 'EPSG::4326',
-            type: 'map projection',
-            uri: 'http://opengis.net/def/crs/EPSG/0/4326',
-            source: {
-              code: 'EPSG'
+        def bounding_box_geographic_subject
+          { structuredValue:
+            [
+              {
+                value: ulx.to_s,
+                type: 'west'
+              },
+              {
+                value: lry.to_s,
+                type: 'south'
+              },
+              {
+                value: lrx.to_s,
+                type: 'east'
+              },
+              {
+                value: uly.to_s,
+                type: 'north'
+              }
+            ],
+            type: 'bounding box coordinates',
+            encoding: {
+              value: 'decimal'
             },
-            displayLabel: 'WGS84'
-          }
-
-          return if wgs84_note?
-
-          description_props[:note] << {
-            value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-            displayLabel: 'WGS84 Cartographics'
-          }
-        end
-
-        def projection_forms
-          @projection_forms ||= description_props[:form].select { |form| form[:type] == 'map projection' }
-        end
-
-        def projection_form
-          @projection_form ||= projection_forms.first
-        end
-
-        def projection_form_epsg_4326?
-          projection_form[:value] =~ /EPSG:+4326\s*$/
-        end
-
-        def scale_not_given_form?
-          description_props[:form].any? { |form| form[:value] == 'Scale not given.' && form[:type] == 'map scale' }
-        end
-
-        def wgs84_note?
-          description_props[:note].any? { |note| note[:displayLabel] == 'WGS84 Cartographics' }
-        end
-
-        def update_projection_form_epsg
-          logger.debug "extract-boundingbox: #{bare_druid} has native WGS84 projection: #{projection_form[:value]}"
-          projection_form[:uri] = 'http://opengis.net/def/crs/EPSG/0/4326'
-          projection_form[:source] = {
-            code: 'EPSG'
-          }
-          projection_form[:displayLabel] = 'WGS84'
+            standard: { code: 'EPSG:4326' } }
         end
 
         # gets the bounding box for the normalize data in tmpdir

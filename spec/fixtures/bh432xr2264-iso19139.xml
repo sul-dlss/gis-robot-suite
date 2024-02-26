@@ -175,6 +175,9 @@
           <title>
             <gco:CharacterString>North Atlantic Ocean, Arquip&#xE9;lago dos A&#xE7;ores (Raster Image)</gco:CharacterString>
           </title>
+          <alternateTitle>
+            <gco:CharacterString>North Atlantic Ocean</gco:CharacterString>
+          </alternateTitle>
           <date>
             <CI_Date>
               <date>
@@ -191,7 +194,14 @@
           <identifier>
             <MD_Identifier>
               <code>
-                <gco:CharacterString>https://purl.stanford.edu/dj322nc8936</gco:CharacterString>
+                <gco:CharacterString>http://purl.stanford.edu/bh432xr2264</gco:CharacterString>
+              </code>
+            </MD_Identifier>
+          </identifier>
+          <identifier>
+            <MD_Identifier>
+              <code>
+                <gco:CharacterString>https://doi.org/10.25740/bh432xr2264</gco:CharacterString>
               </code>
             </MD_Identifier>
           </identifier>
@@ -218,6 +228,26 @@
           <citedResponsibleParty>
             <CI_ResponsibleParty>
               <organisationName>
+                <gco:CharacterString>Sea Info (Firm)</gco:CharacterString>
+              </organisationName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Hubing, Nick</gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
                 <gco:CharacterString>United States. National Imagery and Mapping Agency</gco:CharacterString>
               </organisationName>
               <role>
@@ -233,12 +263,14 @@
           </collectiveTitle>
         </CI_Citation>
       </citation>
+      <supplementalInformation>
+        <gco:CharacterString>Some supplemental information about the data.</gco:CharacterString>
+      </supplementalInformation>
       <abstract>
         <gco:CharacterString>This layer is a digital raster graphic (DRG) of a scanned nautical chart titled: Arquipelago dos Acores the U.S. National Imagery and Mapping Agency, (NIMA). (Oct 2001, 7Th ed.).Covers Arquipelago dos Acores. This layer is part of a selection of digitally scanned and georeferenced maps from The Branner Library Map Collection at Stanford University.</gco:CharacterString>
       </abstract>
       <purpose>
-        <gco:CharacterString>Historic paper maps can provide an excellent view of the changes that have occurred in the cultural and physical landscape. The wide range of information provided on these maps make them useful in the study of historic geography, and urban and rural land use change. As this map has been georeferenced, it can be used in a GIS as a source or background layer in conjunction with other GIS data.
-</gco:CharacterString>
+        <gco:CharacterString>Historic paper maps can provide an excellent view of the changes that have occurred in the cultural and physical landscape. The wide range of information provided on these maps make them useful in the study of historic geography, and urban and rural land use change. As this map has been georeferenced, it can be used in a GIS as a source or background layer in conjunction with other GIS data.</gco:CharacterString>
       </purpose>
       <status>
         <MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" codeSpace="ISOTC211/19115">completed</MD_ProgressCode>
@@ -364,6 +396,16 @@
           </thesaurusName>
         </MD_Keywords>
       </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>2000-2003</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode codeListValue='temporal' codeSpace="ISOTC211/19115">temporal</MD_KeywordTypeCode>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
       <resourceConstraints>
         <MD_LegalConstraints>
           <accessConstraints>
@@ -400,6 +442,54 @@
           <initiativeType>
             <DS_InitiativeTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DS_InitiativeTypeCode" codeListValue="collection" codeSpace="ISOTC211/19115">collection</DS_InitiativeTypeCode>
           </initiativeType>
+        </MD_AggregateInformation>
+      </aggregationInfo>
+      <aggregationInfo>
+        <MD_AggregateInformation>
+          <aggregateDataSetName>
+            <CI_Citation>
+              <title>
+                <gco:CharacterString>Mapping Interstate Territorial Conflict: A New Data Set and Applications</gco:CharacterString>
+              </title>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>2015-12-27</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
+              <identifier>
+                <MD_Identifier>
+                  <code>
+                    <gco:CharacterString>http://dx.doi.org/10.1177/0022002715620470</gco:CharacterString>
+                  </code>
+                </MD_Identifier>
+              </identifier>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <individualName>
+                    <gco:CharacterString>Schultz, Kenneth A.</gco:CharacterString>
+                  </individualName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <series>
+                <CI_Series>
+                  <name>
+                    <gco:CharacterString>The Journal of Conflict Resolution</gco:CharacterString>
+                  </name>
+                </CI_Series>
+              </series>
+              <otherCitationDetails>
+                <gco:CharacterString>Related publication</gco:CharacterString>
+              </otherCitationDetails>
+            </CI_Citation>
+          </aggregateDataSetName>
         </MD_AggregateInformation>
       </aggregationInfo>
       <spatialRepresentationType>

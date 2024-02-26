@@ -241,20 +241,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
                   code: 'iso639-2b'
                 }
               }
-            },
-            {
-              value: 'Circuit Rider Productions and National Oceanic and Atmospheric Administration (2002). Hydrologic Sub-Area Boundaries: Russian River Watershed, California, 1999. Circuit Rider Productions. Available at: http://purl.stanford.edu/bb338jh0716',
-              displayLabel: 'Preferred citation',
-              valueLanguage: {
-                code: 'eng',
-                source: {
-                  code: 'iso639-2b'
-                }
-              }
-            },
-            {
-              value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-              displayLabel: 'WGS84 Cartographics'
             }
           ],
           subject: [
@@ -650,20 +636,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
                   code: 'iso639-2b'
                 }
               }
-            },
-            {
-              value: 'Circuit Rider Productions and National Oceanic and Atmospheric Administration (2002). 1000 Meter Resolution Bathymetry Grid of Exclusive Economic Zone (EEZ): Russian River Basin, California, 1998. Circuit Rider Productions. Available at: http://purl.stanford.edu/dg548ft1892',
-              displayLabel: 'Preferred citation',
-              valueLanguage: {
-                code: 'eng',
-                source: {
-                  code: 'iso639-2b'
-                }
-              }
-            },
-            {
-              value: 'This layer is presented in the WGS84 coordinate system for web display purposes. Downloadable data are provided in native coordinate system or projection.',
-              displayLabel: 'WGS84 Cartographics'
             }
           ],
           subject: [
