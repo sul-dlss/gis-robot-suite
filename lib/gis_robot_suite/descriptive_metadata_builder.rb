@@ -390,7 +390,7 @@ module GisRobotSuite
 
       [{ displayLabel: 'DOI',
          source: { code: 'doi' },
-         value: data_id_node.xpath('gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text }]
+         value: data_id_node.xpath('gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[contains(text(), "doi")]', NS).text }]
     end
 
     def purl
@@ -439,7 +439,7 @@ module GisRobotSuite
       pub_date = node.xpath('../../gmd:date/gmd:CI_Date/gmd:date/gco:Date', NS).text
       pub_year = pub_date.present? ? "(#{Date.parse(pub_date).strftime('%Y')})." : nil # Year in parens (2023)
       series = node.xpath('../../gmd:series/gmd:CI_Series/gmd:name/gco:CharacterString', NS).text
-      identifier = node.xpath('../../gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS)
+      identifier = node.xpath('../../gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString[contains(text(), "doi")]', NS)
       identifier_text = identifier.any? ? "Available at: #{identifier.text}" : nil
 
       [authors, title, series, pub_year, identifier_text].compact.join(' ')
