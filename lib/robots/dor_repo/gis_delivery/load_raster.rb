@@ -43,7 +43,6 @@ module Robots
         def normalizer
           GisRobotSuite::RasterNormalizer.new(logger:, cocina_object:, rootdir:)
         end
-        # end
 
         def rootdir
           @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :workspace
