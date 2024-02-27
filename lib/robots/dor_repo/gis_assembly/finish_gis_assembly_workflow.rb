@@ -15,7 +15,7 @@ module Robots
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
           # delete all staged files in temp/
-          tmpdir = "#{rootdir}/temp"
+          tmpdir = "#{rootdir}/content"
           if File.directory?(tmpdir)
             logger.debug "finish-gis-assembly-workflow deleting #{tmpdir}"
             FileUtils.rm_r(tmpdir)

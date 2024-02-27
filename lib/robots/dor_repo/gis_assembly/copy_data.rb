@@ -46,7 +46,7 @@ module Robots
           delegate :logger, :bare_druid, :cocina_object, to: :robot
 
           def temp_dir
-            @temp_dir ||= File.join(rootdir, 'temp')
+            @temp_dir ||= File.join(rootdir, 'content')
           end
 
           def geo_object_name
@@ -72,12 +72,9 @@ module Robots
 
           def copy_thumbnail
             thumbnail_file = File.join(rootdir, 'content', 'preview.jpg')
-            return thumbnail_file if File.size?(thumbnail_file)
+            raise "normalize_data: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(thumbnail_file)
 
-            temp_thumbnail_file = File.join(rootdir, 'temp', 'preview.jpg')
-            raise "copy-data: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
-
-            FileUtils.cp(temp_thumbnail_file, thumbnail_file)
+            thumbnail_file
           end
 
           private
