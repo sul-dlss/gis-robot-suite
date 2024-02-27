@@ -33,10 +33,10 @@ module Robots
 
             raise "copy-data: #{bare_druid} cannot locate geo object in #{temp_dir}" unless geo_object_name
 
-            FileUtils.mkdir_p(content_dir)
-            copy_metadata # Copy metadata files to the content directory
-            copy_data # Copy data files to the content directory
-            copy_thumbnail # Copy thumbnail to the content directory
+            # FileUtils.mkdir_p(content_dir)
+            # copy_metadata # Copy metadata files to the content directory
+            # copy_data # Copy data files to the content directory
+            # copy_thumbnail # Copy thumbnail to the content directory
           end
 
           protected
