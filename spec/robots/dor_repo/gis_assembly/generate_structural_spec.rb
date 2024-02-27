@@ -182,32 +182,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                       sdrPreserve: true,
                       shelve: true
                     }
-                  },
-                  {
-                    type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
-                    label: 'data.zip',
-                    filename: 'data.zip',
-                    size: 1763115,
-                    version: 1,
-                    hasMimeType: 'application/zip',
-                    use: 'master',
-                    hasMessageDigests: [
-                      {
-                        type: 'sha1',
-                        digest: 'eaed4019f2d012ff1e0b795b3ff8795e19cf3d7a'
-                      },
-                      {
-                        type: 'md5',
-                        digest: '86b7905d67d84e5750c2e7f3aa473ba9'
-                      }
-                    ],
-                    access: expected_file_access,
-                    administrative: {
-                      publish: true,
-                      sdrPreserve: true,
-                      shelve: true
-                    }
                   }
                 ]
               }
@@ -511,36 +485,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                       sdrPreserve: true,
                       shelve: true
                     }
-                  },
-                  {
-                    type: 'https://cocina.sul.stanford.edu/models/file',
-                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a',
-                    label: 'data.zip',
-                    filename: 'data.zip',
-                    size: 9008565,
-                    version: 1,
-                    hasMimeType: 'application/zip',
-                    use: 'master',
-                    hasMessageDigests: [
-                      {
-                        type: 'sha1',
-                        digest: '8c15a1391b6f0655f38a7e1fa4ebdcab634c9e1f'
-                      },
-                      {
-                        type: 'md5',
-                        digest: 'b65ea0c759bd1525ca6f7bc8a74f9a29'
-                      }
-                    ],
-                    access: {
-                      view: 'world',
-                      download: 'world',
-                      controlledDigitalLending: false
-                    },
-                    administrative: {
-                      publish: true,
-                      sdrPreserve: true,
-                      shelve: true
-                    }
                   }
                 ]
               }
@@ -703,7 +647,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
       let(:expected_file) do
         {
           type: 'https://cocina.sul.stanford.edu/models/file',
-          externalIdentifier: 'https://cocina.sul.stanford.edu/file/ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60',
+          externalIdentifier: 'https://cocina.sul.stanford.edu/file/8222376b-861f-4cb1-8ebb-c2ae6b112b4e',
           label: 'index_map.json',
           filename: 'index_map.json',
           size: 13275,
@@ -735,7 +679,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
           structural = args[:params].structural
           expect(structural.contains.length).to eq(3)
           fileset = structural.contains.first
-          expect(fileset.structural.contains.length).to eq(2)
+          expect(fileset.structural.contains.length).to eq(1)
           expect(fileset.structural.contains.last.to_h).to match(expected_file)
         end
       end
@@ -763,7 +707,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
             structural = args[:params].structural
             expect(structural.contains.length).to eq(3)
             fileset = structural.contains.first
-            expect(fileset.structural.contains.length).to eq(2)
+            expect(fileset.structural.contains.length).to eq(1)
             expect(fileset.structural.contains.last.to_h).to match(expected_file)
           end
         end

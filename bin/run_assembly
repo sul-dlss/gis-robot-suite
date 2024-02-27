@@ -13,7 +13,6 @@ for s in \
   generate-tag \
   generate-descriptive \
   assign-placenames \
-  package-data \
   copy-data \
   extract-boundingbox \
   generate-structural \

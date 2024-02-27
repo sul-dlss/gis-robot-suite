@@ -14,15 +14,6 @@ module Robots
           logger.debug "finish-gis-assembly-workflow working on #{bare_druid}"
           rootdir = GisRobotSuite.locate_druid_path bare_druid, type: :stage
 
-          # first ensure all files are ready
-          %w[
-            content/data.zip
-            content/preview.jpg
-          ].each do |f|
-            fn = File.join(rootdir, f)
-            raise "finish-gis-assembly-workflow: #{bare_druid} is missing required file: #{fn}" unless File.size?(fn)
-          end
-
           # delete all staged files in temp/
           tmpdir = "#{rootdir}/temp"
           if File.directory?(tmpdir)
