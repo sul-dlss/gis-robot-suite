@@ -31,21 +31,21 @@ module Robots
 
             # sniff out shapefile from extraction
             Dir.chdir(tmpdir)
-            shpfn = Dir.glob('*.shp').first
-            sqlfn = shpfn.gsub(/\.shp$/, '.sql')
-            errfn = 'shp2pgsql.err'
-            logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shpfn}"
+            shp_filename = Dir.glob('*.shp').first
+            sql_filename = shp_filename.gsub(/\.shp$/, '.sql')
+            stderr_filename = 'shp2pgsql.err'
+            logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shp_filename}"
 
             # first try decoding with UTF-8 and if that fails use LATIN1
             begin
-              normalizer.run_shp2pgsql('4326', 'UTF-8', shpfn, schema, sqlfn, errfn)
+              normalizer.run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename, stderr_filename)
             rescue RuntimeError
-              normalizer.run_shp2pgsql('4326', 'LATIN1', shpfn, schema, sqlfn, errfn)
+              normalizer.run_shp2pgsql('4326', 'LATIN1', shp_filename, schema, sql_filename, stderr_filename)
             end
 
             # Load the data into PostGIS
             cmd = 'psql --no-psqlrc --no-password --quiet ' \
-                  "--file='#{sqlfn}' "
+                  "--file='#{sql_filename}' "
             logger.debug "Running: #{cmd}"
             system(cmd, exception: true)
           end
