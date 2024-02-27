@@ -50,16 +50,19 @@ module GisRobotSuite
     end
 
     def vector_filepath
+      logger.info("rootdir: #{rootdir}  content: #{Dir.glob("#{rootdir}/content/*.{shp,geojson}")}")
       @vector_filepath ||= Dir.glob("#{rootdir}/content/*.{shp,geojson}").first
     end
 
     def geo_object_name
+      logger.info("vector_filepath: #{vector_filepath}")
       @geo_object_name ||= File.basename(vector_filepath, File.extname(vector_filepath))
     end
 
     def normalize_shp
       # See http://www.gdal.org/ogr2ogr.html
       output_filepath = File.join(tmpdir, "#{geo_object_name}.shp") # output shapefile
+      logger.info("normalize-vector: #{bare_druid} is copying #{vector_filepath} to #{output_filepath}")
       logger.info "normalize-vector: #{bare_druid} is projecting #{geo_object_name} to EPSG:4326"
       Kernel.system("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{vector_filepath}'", exception: true) # prevent recoding
       raise "normalize-vector: #{bare_druid} failed to reproject #{vector_filepath}" unless File.size?(output_filepath)
