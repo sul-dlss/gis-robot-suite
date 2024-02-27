@@ -29,7 +29,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `extract-iso19139-metadata` :: Transform ISO 19139 metadata from ArcCatalog metadata
 * `extract-iso19110-metadata` :: Transform ISO 19110metadata from ArcCatalog metadata
 * `extract-fgdc-metadata` :: Transform FGDC metadata from ArcCatalog metadata
-* `generate-geo-metadata` :: Convert ISO 19139 metadata into geoMetadata RDF XML file
 * `generate-tag` :: Apply Geo tag to object
 * `generate-descriptive` :: Convert ISO 19139 into Cocina descriptive
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
