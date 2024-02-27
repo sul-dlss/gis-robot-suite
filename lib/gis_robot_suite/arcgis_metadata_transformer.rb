@@ -38,7 +38,7 @@ module GisRobotSuite
     end
 
     def output_file
-      File.join(staging_dir, 'temp', "#{layer_name}-#{output}")
+      File.join(staging_dir, 'content', "#{layer_name}-#{output}")
     end
 
     # Staging directory for this object
@@ -48,7 +48,7 @@ module GisRobotSuite
 
     # XML metadata file exported from ArcGIS
     def esri_metadata_file
-      GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'temp'))
+      GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
     rescue RuntimeError => e
       logger&.error "extract-#{output}-metadata: #{bare_druid} is missing ESRI metadata file"
       raise e

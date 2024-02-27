@@ -107,8 +107,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
 
     case opts[:type]
     when :stage
-      rootdir = Settings.geohydra.stage
-      rootdir = File.join(rootdir, pid)
+      rootdir = DruidTools::Druid.new(druid, Settings.geohydra.stage).path
     when :workspace
       rootdir = DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
     else
