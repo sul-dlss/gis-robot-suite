@@ -164,7 +164,7 @@ module Robots
             ['.dbf', 'application/vnd.dbf'],
             ['.prj', 'text/plain'],
             ['.cpg', 'text/plain'],
-            ['.geojson', 'application/json'],
+            ['.geojson', 'application/geo+json'],
             ['.tif', 'image/tiff'],
             ['.tfw', 'text/plain'],
             ['.xml', 'application/xml']
