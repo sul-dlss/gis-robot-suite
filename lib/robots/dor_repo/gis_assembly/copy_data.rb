@@ -3,27 +3,27 @@
 module Robots
   module DorRepo
     module GisAssembly
-      class NormalizeData < Base
+      class CopyData < Base
         def initialize
-          super('gisAssemblyWF', 'normalize-data')
+          super('gisAssemblyWF', 'copy-data')
         end
 
         def perform_work
-          logger.debug "normalize-data working on #{bare_druid}"
+          logger.debug "copy-data working on #{bare_druid}"
 
           File.umask(002)
 
-          normalizer_class = if GisRobotSuite.vector?(cocina_object)
-                               ShapefileNormalizer
-                             elsif GisRobotSuite.raster?(cocina_object)
-                               RasterNormalizer
-                             else
-                               raise "normalize-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
-                             end
-          normalizer_class.new(robot: self).call
+          copier_class = if GisRobotSuite.vector?(cocina_object)
+                           ShapefileCopier
+                         elsif GisRobotSuite.raster?(cocina_object)
+                           RasterCopier
+                         else
+                           raise "copy-data: #{bare_druid} has unsupported media type: #{GisRobotSuite.media_type(cocina_object)}"
+                         end
+          copier_class.new(robot: self).call
         end
 
-        class BaseNormalizer
+        class BaseCopier
           def initialize(robot:)
             @robot = robot
           end
@@ -31,7 +31,7 @@ module Robots
           def call
             logger.debug "Processing #{bare_druid}"
 
-            raise "normalize-data: #{bare_druid} cannot locate geo object in #{temp_dir}" unless geo_object_name
+            raise "copy-data: #{bare_druid} cannot locate geo object in #{temp_dir}" unless geo_object_name
 
             FileUtils.mkdir_p(content_dir)
             copy_metadata # Copy metadata files to the content directory
@@ -44,14 +44,6 @@ module Robots
           attr_reader :robot
 
           delegate :logger, :bare_druid, :cocina_object, to: :robot
-
-          def system_with_check(cmd)
-            logger.debug "normalize-data: running: #{cmd}"
-            success = Kernel.system(cmd)
-            raise "normalize-data: could not execute command successfully: #{success}: #{cmd}" unless success
-
-            success
-          end
 
           def temp_dir
             @temp_dir ||= File.join(rootdir, 'temp')
@@ -83,7 +75,7 @@ module Robots
             return thumbnail_file if File.size?(thumbnail_file)
 
             temp_thumbnail_file = File.join(rootdir, 'temp', 'preview.jpg')
-            raise "normalize_data: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
+            raise "copy-data: #{bare_druid} is missing thumbnail preview.jpg" unless File.size?(temp_thumbnail_file)
 
             FileUtils.cp(temp_thumbnail_file, thumbnail_file)
           end
@@ -101,7 +93,7 @@ module Robots
           end
         end
 
-        class ShapefileNormalizer < BaseNormalizer
+        class ShapefileCopier < BaseCopier
           def geo_object_name
             @geo_object_name ||= vector_filepath ? File.basename(vector_filepath, vector_file_extention) : nil
           end
@@ -125,7 +117,7 @@ module Robots
           end
         end
 
-        class RasterNormalizer < BaseNormalizer
+        class RasterCopier < BaseCopier
           def geo_object_name
             @geo_object_name = if arcgrid?
                                  filepath = Dir.glob("#{temp_dir}/*/metadata.xml").first
@@ -140,10 +132,6 @@ module Robots
 
           def data_format
             @data_format ||= GisRobotSuite.data_format(cocina_object)
-          end
-
-          def geotiff?
-            data_format == 'GeoTIFF'
           end
 
           def arcgrid?

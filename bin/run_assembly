@@ -14,7 +14,7 @@ for s in \
   generate-descriptive \
   assign-placenames \
   package-data \
-  normalize-data \
+  copy-data \
   extract-boundingbox \
   generate-structural \
   finish-gis-assembly-workflow \
