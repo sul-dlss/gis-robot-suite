@@ -11,7 +11,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateTag do
     allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
   end
 
-  describe '#perform' do
+  describe '#perform_work' do
     let(:object_client) do
       instance_double(Dor::Services::Client::Object, find: cocina, update: true, administrative_tags: fake_tags_client)
     end
