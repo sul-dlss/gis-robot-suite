@@ -143,6 +143,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     spatial_index_x_shapefile = Dir.glob("#{dir}/*.sbx").first
     projection_file = Dir.glob("#{dir}/*.prj").first
     coding_file = Dir.glob("#{dir}/*.cpg").first
+    json_file = Dir.glob("#{dir}/*.json").first
     geojson_file = Dir.glob("#{dir}/*.geojson").first
     raster_file = Dir.glob("#{dir}/*.tif").first
     world_raster_file = Dir.glob("#{dir}/*.tfw").first
@@ -152,7 +153,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     auxiliary_stats_xml_raster_file = Dir.glob("#{dir}/*.aux.xml").first
 
     [geometry_shapefile, offsets_shapefile, table_file, spatial_index_n_shapefile, spatial_index_x_shapefile, projection_file, coding_file,
-     geojson_file, raster_file, world_raster_file, pyramid_ovr_raster_file, pyramid_rrd_raster_file, auxiliary_stats_raster_file, auxiliary_stats_xml_raster_file].compact
+     json_file, geojson_file, raster_file, world_raster_file, pyramid_ovr_raster_file, pyramid_rrd_raster_file, auxiliary_stats_raster_file, auxiliary_stats_xml_raster_file].compact
   end
 
   def self.locate_derivative_metadata_files(dir)

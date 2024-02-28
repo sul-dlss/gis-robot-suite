@@ -64,10 +64,6 @@ module Robots
           @preview_objectfile ||= Assembly::ObjectFile.new(preview_objectfile_path)
         end
 
-        def index_map_objectfile
-          @index_map_objectfile ||= Assembly::ObjectFile.new("#{rootdir}/content/index_map.json")
-        end
-
         def preview_presentation_params
           wh = FastImage.size(preview_objectfile.path)
           { width: wh[0], height: wh[1] }
@@ -87,17 +83,17 @@ module Robots
         end
 
         def data_files_params
-          params = GisRobotSuite.locate_data_files(content_dir).map do |file|
+          GisRobotSuite.locate_data_files(content_dir).map do |file|
+            file = to_geojson(file) if File.extname(file) == '.json'
             objectfile = Assembly::ObjectFile.new(file)
             build_file_params(objectfile:, mimetype: mimetype_for_data_file(objectfile))
           end
-          # Add index_map.json if it exists
-          params << index_map_params if index_map_objectfile.file_exists?
-          params
         end
 
-        def index_map_params
-          build_file_params(objectfile: index_map_objectfile, mimetype: 'application/json')
+        def to_geojson(file)
+          new_file = File.join(content_dir, "#{File.basename(file, '.json')}.geojson")
+          File.rename(file, new_file)
+          new_file
         end
 
         def preview_file_params
