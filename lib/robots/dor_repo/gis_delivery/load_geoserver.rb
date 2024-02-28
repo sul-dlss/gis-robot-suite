@@ -224,7 +224,6 @@ module Robots
       </UserStyle>
     </UserLayer>
   </StyledLayerDescriptor>"
-              puts sldtxt
 
               # create a style with the SLD definition
               style_exists = style.find(
@@ -233,7 +232,7 @@ module Robots
               logger.debug "load-geoserver: #{bare_druid} loaded style #{raster_style}"
               if style_exists.nil?
                 logger.debug "load-geoserver: #{bare_druid} saving new style #{raster_style}"
-                style.create(style_name: raster_style)
+                style.create(style_name: raster_style, filename: nil)
                 style.update(style_name: raster_style, filename: nil, payload: sldtxt)
               end
             else

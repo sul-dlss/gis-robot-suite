@@ -856,6 +856,37 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
           expect(stubbed_layer_put).to have_been_requested
         end
       end
+
+      context 'when raster greyscale' do
+        let(:coverage) { instance_double(Geoserver::Publish::Coverage) }
+        let(:coverage_store) { instance_double(Geoserver::Publish::CoverageStore) }
+        let(:style) { instance_double(Geoserver::Publish::Style) }
+        let(:layer) { instance_double(Geoserver::Publish::Layer) }
+
+        before do
+          allow(GisRobotSuite).to receive(:determine_raster_style).and_return('grayscale_8_4')
+          allow(Geoserver::Publish::Coverage).to receive(:new).and_return(coverage)
+          allow(Geoserver::Publish::CoverageStore).to receive(:new).and_return(coverage_store)
+          allow(Geoserver::Publish::Style).to receive(:new).and_return(style)
+          allow(Geoserver::Publish::Layer).to receive(:new).and_return(layer)
+          allow(layer).to receive(:find).and_return({ 'layer' => { 'defaultStyle' => { 'name' => 'raster_grayscale_8_4' } } })
+          allow(layer).to receive(:update)
+          allow(style).to receive(:find).and_return(nil)
+          allow(style).to receive(:create)
+          allow(style).to receive(:update)
+          allow(coverage).to receive(:find).and_return(druid)
+          allow(coverage).to receive(:update)
+          allow(coverage_store).to receive(:find).and_return(druid)
+        end
+
+        it 'runs without error' do
+          test_perform(robot, druid)
+          expect(coverage).to have_received(:update)
+          expect(coverage_store).to have_received(:find)
+          expect(style).to have_received(:create)
+          expect(style).to have_received(:update)
+        end
+      end
       # rubocop:enable RSpec/NestedGroups
     end
   end
