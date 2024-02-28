@@ -140,7 +140,7 @@ RSpec.describe GisRobotSuite do
 
     context 'when type is :stage' do
       it 'returns the stage path' do
-        expect(described_class.locate_druid_path(druid, type: :stage)).to eq File.join(Settings.geohydra.stage, 'bc123df4567')
+        expect(described_class.locate_druid_path(druid, type: :stage)).to eq File.join(Settings.geohydra.stage, 'bc', '123', 'df', '4567', 'bc123df4567')
       end
     end
 
@@ -158,7 +158,7 @@ RSpec.describe GisRobotSuite do
 
     context 'when validate is true and the directory does not exist' do
       it 'raises' do
-        expect { described_class.locate_druid_path(druid, type: :stage, validate: true) }.to raise_error(RuntimeError, "Missing #{Settings.geohydra.stage}/bc123df4567")
+        expect { described_class.locate_druid_path(druid, type: :stage, validate: true) }.to raise_error(RuntimeError, "Missing #{Settings.geohydra.stage}/bc/123/df/4567/bc123df4567")
       end
     end
   end
