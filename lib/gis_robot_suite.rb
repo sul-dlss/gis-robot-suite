@@ -103,8 +103,9 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
 
   def self.locate_druid_path(druid, opts = {})
     rootdir = '.'
-    pid = druid.gsub(/^druid:/, '')
 
+    # :type => :stage indicates the path to the druid in the local stage area
+    # :type => :workspace indicates the path to the druid in the SDR dor workspace
     case opts[:type]
     when :stage
       rootdir = DruidTools::Druid.new(druid, Settings.geohydra.stage).path
