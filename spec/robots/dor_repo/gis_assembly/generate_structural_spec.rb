@@ -32,7 +32,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
       allow(SecureRandom).to receive(:uuid).and_return('8222376b-861f-4cb1-8ebb-c2ae6b112b4e', 'ec13ab89-39b0-455d-8b2c-f6e1c9cc8e60', '0d896cd1-57e3-4fc1-93c0-dd0e37d4e65a')
     end
 
-    context 'without an index map file' do
+    context 'without json files' do
       let(:druid) { 'druid:cc044gt0726' }
 
       let(:expected_file_access) do
@@ -633,8 +633,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
       end
     end
 
-    context 'with an index map file' do
+    context 'with an index map .json file' do
       let(:druid) { 'druid:wf887zc4874' }
+      let(:staging_dir) { File.join(fixture_dir, 'stage', 'wf887zc4874', 'content') }
 
       let(:expected_file_access) do
         {
@@ -648,11 +649,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         {
           type: 'https://cocina.sul.stanford.edu/models/file',
           externalIdentifier: 'https://cocina.sul.stanford.edu/file/8222376b-861f-4cb1-8ebb-c2ae6b112b4e',
-          label: 'index_map.json',
-          filename: 'index_map.json',
+          label: 'index_map.geojson',
+          filename: 'index_map.geojson',
           size: 13275,
           version: 1,
-          hasMimeType: 'application/json',
+          hasMimeType: 'application/geo+json',
           use: 'master',
           hasMessageDigests: [
             {
@@ -671,6 +672,17 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
             shelve: true
           }
         }
+      end
+
+      before do
+        # replace index_map.geojson with an index_map.json file
+        File.rename(File.join(staging_dir, 'index_map.geojson'), File.join(staging_dir, 'index_map.json'))
+      end
+
+      after do
+        # clean up and restore .geojson to staging_dir
+        FileUtils.rm_r(File.join(staging_dir, 'index_map.json')) if File.exist?(File.join(staging_dir, 'index_map.json'))
+        FileUtils.cp(File.join(fixture_dir, 'wf887zc4874-index_map.geojson'), File.join(staging_dir, 'index_map.geojson'))
       end
 
       it 'creates structural' do
