@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
-  let(:staging_dir) { File.join(fixture_dir, 'stage', druid, 'temp') }
+  let(:staging_dir) { File.join(DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path, 'content') }
 
   # Get rid of any generated XML files
   def cleanup
