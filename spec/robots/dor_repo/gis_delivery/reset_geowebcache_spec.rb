@@ -14,7 +14,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::ResetGeowebcache do
     allow(GisRobotSuite).to receive(:determine_rights).and_return 'public'
   end
 
-  describe '#perform' do
+  describe '#perform_work' do
     it 'raises an error if layer does not exist' do
       stub_request(:post, 'http://example.com/geoserver/gwc/rest/masstruncate')
         .with(body: '<truncateLayer><layerName>druid:fx392st8577</layerName></truncateLayer>')

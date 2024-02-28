@@ -21,7 +21,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
       .to_return(status: 200, body: read_fixture('geoserver_responses/workspaces.json'), headers: {})
   end
 
-  describe '#perform' do
+  describe '#perform_work' do
     describe 'loading a vector dataset' do
       let(:druid) { 'bb338jh0716' }
 

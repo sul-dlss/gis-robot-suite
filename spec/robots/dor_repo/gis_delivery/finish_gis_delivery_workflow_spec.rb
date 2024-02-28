@@ -11,7 +11,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
     allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
   end
 
-  describe '#perform' do
+  describe '#perform_work' do
     it 'raises an error if layer does not exist' do
       stub_request(:get, 'http://example.com/geoserver/rest/layers/fx392st8577')
         .to_return(status: 404)

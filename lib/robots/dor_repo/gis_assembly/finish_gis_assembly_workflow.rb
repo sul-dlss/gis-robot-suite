@@ -26,7 +26,7 @@ module Robots
           FileUtils.mkdir_p(destdir) unless File.directory?(destdir)
           logger.info "finish-gis-assembly-workflow: #{bare_druid} migrating object to #{destdir} from #{rootdir}"
           FileUtils.cp_r("#{rootdir}/.", destdir)
-          FileUtils.rm_f(rootdir)
+          FileUtils.rm_r(rootdir)
         end
       end
     end

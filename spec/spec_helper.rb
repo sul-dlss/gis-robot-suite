@@ -27,3 +27,8 @@ end
 def fixture_dir
   @fixture_dir ||= File.join(File.dirname(__FILE__), 'fixtures')
 end
+
+# count the number of files in the given directory
+def count_files(dir)
+  Dir.glob("#{dir}/*").count { |file| File.file?(file) }
+end
