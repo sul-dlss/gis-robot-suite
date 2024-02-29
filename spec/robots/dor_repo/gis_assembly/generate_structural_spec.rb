@@ -635,7 +635,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
 
     context 'with an index map .json file' do
       let(:druid) { 'druid:wf887zc4874' }
-      let(:staging_dir) { File.join(fixture_dir, 'stage', 'wf887zc4874', 'content') }
+      let(:staging_dir) { File.join(DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path, 'content') }
 
       let(:expected_file_access) do
         {
