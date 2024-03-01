@@ -856,6 +856,76 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
           expect(stubbed_layer_put).to have_been_requested
         end
       end
+
+      context 'when raster greyscale' do
+        let(:coverage) { instance_double(Geoserver::Publish::Coverage) }
+        let(:coverage_store) { instance_double(Geoserver::Publish::CoverageStore) }
+        let(:style) { instance_double(Geoserver::Publish::Style) }
+        let(:layer) { instance_double(Geoserver::Publish::Layer) }
+
+        before do
+          allow(GisRobotSuite).to receive(:determine_raster_style).and_return(style_name)
+          allow(Geoserver::Publish::Coverage).to receive(:new).and_return(coverage)
+          allow(Geoserver::Publish::CoverageStore).to receive(:new).and_return(coverage_store)
+          allow(Geoserver::Publish::Style).to receive(:new).and_return(style)
+          allow(Geoserver::Publish::Layer).to receive(:new).and_return(layer)
+          allow(layer).to receive(:find).and_return({ 'layer' => { 'defaultStyle' => { 'name' => "raster_#{style_name}" } } })
+          allow(layer).to receive(:update)
+          allow(style).to receive(:find).and_return(nil)
+          allow(style).to receive(:create)
+          allow(style).to receive(:update)
+          allow(coverage).to receive(:find).and_return('something')
+          allow(coverage).to receive(:update)
+          allow(coverage_store).to receive(:find).and_return('somethingelse')
+        end
+
+        context 'when raster that matches regex' do
+          let(:style_name) { 'grayscale_8_4' }
+          let(:payload) do
+            "
+  <StyledLayerDescriptor xmlns='http://www.opengis.net/sld'
+                         xmlns:ogc='http://www.opengis.net/ogc'
+                         xmlns:xlink='http://www.w3.org/1999/xlink'
+                         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                         xsi:schemaLocation='http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd'
+                         version='1.0.0'>
+    <UserLayer>
+      <Name>raster_layer</Name>
+        <UserStyle>
+          <FeatureTypeStyle>
+            <Rule>
+              <RasterSymbolizer>
+                <ColorMap>
+                  <ColorMapEntry color='#000000' quantity='8' opacity='1'/>
+                  <ColorMapEntry color='#FFFFFF' quantity='4' opacity='1'/>
+                </ColorMap>
+              </RasterSymbolizer>
+            </Rule>
+          </FeatureTypeStyle>
+      </UserStyle>
+    </UserLayer>
+  </StyledLayerDescriptor>"
+          end
+
+          it 'runs without error and updates style with correct payload' do
+            test_perform(robot, druid)
+            expect(style).to have_received(:create).with(style_name: "raster_#{druid}", filename: nil)
+            expect(style).to have_received(:update).with(style_name: "raster_#{druid}", filename: nil, payload:)
+          end
+        end
+
+        context 'when raster that does not match regex' do
+          let(:style_name) { 'grayscale_8_8193' }
+
+          before { allow(style).to receive(:find).and_return('something') }
+
+          it 'runs without error' do
+            test_perform(robot, druid)
+            expect(style).not_to have_received(:create).with(style_name: "raster_#{druid}", filename: nil)
+            expect(style).to have_received(:find).with(style_name: 'raster_grayband')
+          end
+        end
+      end
       # rubocop:enable RSpec/NestedGroups
     end
   end
