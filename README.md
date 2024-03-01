@@ -33,7 +33,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `generate-descriptive` :: Convert ISO 19139 into Cocina descriptive
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
 * `package-data` :: Package the digital work
-* `copy-data` :: Move files from temp to content directory.
 * `extract-boundingbox` :: Extract bounding box from data for Cocina descriptive
 * `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
@@ -58,22 +57,20 @@ Step 1: Preparing for stage
 ---------------------------
 
 The file system structure will initially look like the following (see [Consul
-page](https://consul.stanford.edu/x/C5xSC) for a description) where the temp
+page](https://consul.stanford.edu/x/C5xSC) for a description) where the source input
 files for the shapefiles are all hard links to reduce space requirements: This
-is *pre-stage*:
+is *pre-stage* when preparing the data for upload to globus.
 
     zv925hd6723/
-      temp/
-        OGWELLS.dbf
-        OGWELLS.prj
-        OGWELLS.shp
-        OGWELLS.shp.xml
-        OGWELLS.shx
-        preview.jpg
-      content/
-        index_map.json
+      OGWELLS.dbf
+      OGWELLS.prj
+      OGWELLS.shp
+      OGWELLS.shp.xml
+      OGWELLS.shx
+      preview.jpg
+      index_map.json
 
-Note that `content/index_map.json` is optional.
+Note that `index_map.json` is optional.
 
 
 Step 2: Assembly
@@ -82,16 +79,18 @@ Step 2: Assembly
 Then at the end of GIS assembly processing -- see above prior to accessioning -- it will
 look like this in the workspace:
 
-    zv925hd6723/
-      content/
-        data.zip
-        data_ESRI_4326.zip
-        preview.jpg
-        index_map.json
-        layer-iso19110.xml
-        layer-iso19139.xml
-        layer-fgdc.xml
-        layer.shp.xml
+    zv/
+      925/
+        hd/
+          6723/
+            zv925hd6723/
+              content/
+                preview.jpg
+                index_map.json
+                layer-iso19110.xml
+                layer-iso19139.xml
+                layer-fgdc.xml
+                layer.shp.xml
 
 Note that `content/index_map.json` is optional.
 
