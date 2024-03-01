@@ -12,7 +12,6 @@ for s in \
   generate-tag \
   generate-descriptive \
   assign-placenames \
-  copy-data \
   extract-boundingbox \
   generate-structural \
   finish-gis-assembly-workflow \
