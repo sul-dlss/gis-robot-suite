@@ -61,6 +61,8 @@ module Robots
         end
 
         def preview_objectfile
+          raise "Missing preview file: #{preview_objectfile_path}" unless File.exist?(preview_objectfile_path)
+
           @preview_objectfile ||= Assembly::ObjectFile.new(preview_objectfile_path)
         end
 

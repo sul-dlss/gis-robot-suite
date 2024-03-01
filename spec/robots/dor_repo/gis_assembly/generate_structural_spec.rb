@@ -381,6 +381,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
       end
     end
 
+    context 'without preview.jpg file' do
+      let(:druid) { 'druid:bh432xr2264' } # druid with no preview.jpg in staging fixture area
+
+      it 'raises an exception' do
+        expect { test_perform(robot, druid) }.to raise_error(/Missing preview file/)
+      end
+    end
+
     context 'with raster data' do
       let(:druid) { 'druid:rc709sz0113' }
       let(:expected_file_access) do
