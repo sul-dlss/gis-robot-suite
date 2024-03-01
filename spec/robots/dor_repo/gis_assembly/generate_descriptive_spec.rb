@@ -11,7 +11,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
       instance_double(Dor::Services::Client::Object, update: nil, find: cocina_object)
     end
     let(:cocina_object) { build(:dro, id: druid) }
-    let(:staging_dir) { File.join(fixture_dir, 'stage', bare_druid, 'temp') }
+    let(:staging_dir) { File.join(DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path, 'content') }
 
     # Remove ISO19139.xml to restore temp dir to clean state at beginning of gisAssembly workflow
     def cleanup

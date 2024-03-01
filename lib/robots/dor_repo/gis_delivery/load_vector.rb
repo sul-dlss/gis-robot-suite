@@ -58,7 +58,7 @@ module Robots
         end
 
         def rootdir
-          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :workspace
+          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
         end
       end
     end

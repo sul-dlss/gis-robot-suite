@@ -518,7 +518,7 @@ module GisRobotSuite
     end
 
     def vector_file
-      @vector_file ||= Dir.glob(["#{rootdir}/temp/*.shp", "#{rootdir}/temp/*.geojson"]).first
+      @vector_file ||= Dir.glob(["#{rootdir}/content/*.shp", "#{rootdir}/content/*.geojson"]).first
     end
 
     def vector_file_format
@@ -536,10 +536,10 @@ module GisRobotSuite
     end
 
     def raster_file_format
-      tif_file = Dir.glob("#{rootdir}/temp/*.tif").first
+      tif_file = Dir.glob("#{rootdir}/content/*.tif").first
       if tif_file.nil?
-        metadata_xml_file = Dir.glob("#{rootdir}/temp/*/metadata.xml").first
-        raise "generate-descriptive: #{bare_druid} cannot detect fileFormat: #{rootdir}/temp" if metadata_xml_file.nil?
+        metadata_xml_file = Dir.glob("#{rootdir}/content/*/metadata.xml").first
+        raise "generate-descriptive: #{bare_druid} cannot detect fileFormat: #{rootdir}/content" if metadata_xml_file.nil?
 
         'ArcGRID'
       else
