@@ -43,4 +43,24 @@ RSpec.describe GisRobotSuite::VectorNormalizer do
       )
     end
   end
+
+  describe '#run_shp2pgsql' do
+    let(:projection) { '4326' }
+    let(:encoding) { 'UTF-8' }
+    let(:bare_druid) { 'cc044gt0726' }
+    let(:shp_filename) { "#{tmpdir}/sanluisobispo1996.shp" }
+    let(:sql_filename) { "#{tmpdir}/sanluisobispo1996.sql" }
+    let(:stderr_filename) { "#{tmpdir}/shp2pgsql.err" }
+    let(:cmd) { "shp2pgsql -s #{projection} -d -D -I -W #{encoding} '#{shp_filename}' druid.#{bare_druid} > '#{sql_filename}' 2> '#{stderr_filename}'" }
+
+    before do
+      allow(normalizer).to receive(:system).with(cmd, exception: true).and_return(true)
+      allow(File).to receive(:size?).with(sql_filename).and_return('123')
+    end
+
+    it 'runs the psql command with the given parameters' do
+      normalizer.run_shp2pgsql(projection, encoding, shp_filename, 'druid', sql_filename, stderr_filename)
+      expect(normalizer).to have_received(:system).with(cmd, exception: true)
+    end
+  end
 end

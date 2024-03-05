@@ -36,8 +36,7 @@ module GisRobotSuite
             "'#{shp_filename}' #{schema}.#{bare_druid} " \
             "> '#{sql_filename}' 2> '#{stderr_filename}'"
       logger.debug "Running: #{cmd}"
-      success = system(cmd, exception: true)
-      raise "normalize-vector: #{bare_druid} cannot convert Shapefile to PostGIS: #{File.open(stderr_filename).readlines}" unless success
+      system(cmd, exception: true)
       raise "normalize-vector: #{bare_druid} shp2pgsql generated no SQL?" unless File.size?(sql_filename)
     end
 
