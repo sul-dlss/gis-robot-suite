@@ -32,7 +32,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `generate-tag` :: Apply Geo tag to object
 * `generate-descriptive` :: Convert ISO 19139 into Cocina descriptive
 * `assign-placenames` :: Insert linked data into MODS record from gazetteer
-* `package-data` :: Package the digital work
 * `extract-boundingbox` :: Extract bounding box from data for Cocina descriptive
 * `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
