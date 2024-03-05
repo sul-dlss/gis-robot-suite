@@ -38,11 +38,11 @@ module Robots
 
             # first try decoding with UTF-8 and if that fails use LATIN1
             begin
-              normalizer.run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename, stderr_filename)
+              run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename, stderr_filename)
             rescue RuntimeError => e
-              logger.warn("#{druid} -- fell through to LATIN1 encoding after calling normalizer.run_shp2pgsql with " \
+              logger.warn("#{druid} -- fell through to LATIN1 encoding after calling run_shp2pgsql with " \
                           "UTF-8 encoding and encountering error: #{e.message}; #{e.backtrace.join('; ')}")
-              normalizer.run_shp2pgsql('4326', 'LATIN1', shp_filename, schema, sql_filename, stderr_filename)
+              run_shp2pgsql('4326', 'LATIN1', shp_filename, schema, sql_filename, stderr_filename)
             end
 
             # Load the data into PostGIS
@@ -61,6 +61,17 @@ module Robots
 
         def rootdir
           @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+        end
+
+        def run_shp2pgsql(projection, encoding, shp_filename, schema, sql_filename, stderr_filename)
+          # TODO: Perhaps put the .sql data into the content directory as .zip for derivative
+          # NOTE: -G for the geography column causes some issues with GeoServer
+          cmd = "shp2pgsql -s #{projection} -d -D -I -W #{encoding} " \
+                "'#{shp_filename}' #{schema}.#{bare_druid} " \
+                "> '#{sql_filename}' 2> '#{stderr_filename}'"
+          logger.debug "Running: #{cmd}"
+          system(cmd, exception: true)
+          raise "normalize-vector: #{bare_druid} shp2pgsql generated no SQL?" unless File.size?(sql_filename)
         end
       end
     end
