@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDelivery::LoadRaster do
   let(:druid) { "druid:#{bare_druid}" }
   let(:bare_druid) { 'bb021mm7809' }
-  let(:tif_filename) { 'MCE_FI2G_2014.tif' }
+  let(:tif_filename) { "/tmp/normalizeraster_#{bare_druid}/MCE_FI2G_2014.tif" }
   let(:destination_path) { '/geotiff' }
   let(:cmd_tif_sync) { "rsync -v '#{tif_filename}' #{destination_path}/#{bare_druid}.tif" }
   let(:cmd_aux_sync) { "rsync -v '#{tif_filename}'.aux.xml #{destination_path}/#{bare_druid}.tif.aux.xml" }
