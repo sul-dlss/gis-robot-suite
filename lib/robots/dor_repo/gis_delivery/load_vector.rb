@@ -21,13 +21,6 @@ module Robots
 
           normalizer.with_normalized do |tmpdir|
             schema = Settings.geohydra.postgis.schema || 'druid'
-            # encoding =  # XXX: these are hardcoded encodings for certain druids -- these should be read from the metadata somewhere
-            #   case druid
-            #   when 'bt348dh6363', 'cc936tf6277'
-            #     'LATIN1'
-            #   else
-            #     'UTF-8'
-            #   end
 
             # sniff out shapefile from extraction
             shp_filename = Dir.glob("#{tmpdir}/*.shp").first
@@ -37,6 +30,7 @@ module Robots
             logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shp_filename}"
 
             # first try decoding with UTF-8 and if that fails use LATIN1
+            # see also https://github.com/sul-dlss/gis-robot-suite/issues/850
             begin
               run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename, stderr_filename)
             rescue RuntimeError => e
