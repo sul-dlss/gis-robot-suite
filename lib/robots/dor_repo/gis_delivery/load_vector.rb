@@ -39,7 +39,9 @@ module Robots
             # first try decoding with UTF-8 and if that fails use LATIN1
             begin
               normalizer.run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename, stderr_filename)
-            rescue RuntimeError
+            rescue RuntimeError => e
+              logger.warn("#{druid} -- fell through to LATIN1 encoding after calling normalizer.run_shp2pgsql with " \
+                          "UTF-8 encoding and encountering error: #{e.message}; #{e.backtrace.join('; ')}")
               normalizer.run_shp2pgsql('4326', 'LATIN1', shp_filename, schema, sql_filename, stderr_filename)
             end
 
