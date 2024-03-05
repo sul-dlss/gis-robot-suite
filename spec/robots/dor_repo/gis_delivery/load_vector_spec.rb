@@ -5,7 +5,10 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
   let(:druid) { "druid:#{bare_druid}" }
   let(:bare_druid) { 'cc044gt0726' }
-  let(:cmd) { "psql --no-psqlrc --no-password --quiet --file='sanluisobispo1996.sql' " }
+  let(:shp_filename) { 'sanluisobispo1996.shp' }
+  let(:sql_filename) { 'sanluisobispo1996.sql' }
+  let(:stderr_filename) { 'shp2pgsql.err' }
+  let(:cmd) { "psql --no-psqlrc --no-password --quiet --file='#{sql_filename}' " }
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }
@@ -115,7 +118,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
 
     it 'executes system commands to load vector' do
       test_perform(robot, druid)
-      expect(normalizer).to have_received(:run_shp2pgsql)
+      expect(normalizer).to have_received(:run_shp2pgsql).with('4326', 'UTF-8', shp_filename, 'druid', sql_filename, stderr_filename)
       expect(normalizer).to have_received(:cleanup)
       expect(robot).to have_received(:system).with(cmd, exception: true)
     end
