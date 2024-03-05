@@ -30,10 +30,10 @@ module Robots
             #   end
 
             # sniff out shapefile from extraction
-            Dir.chdir(tmpdir)
-            shp_filename = Dir.glob('*.shp').first
+            shp_filename = Dir.glob("#{tmpdir}/*.shp").first
             sql_filename = shp_filename.gsub(/\.shp$/, '.sql')
-            stderr_filename = 'shp2pgsql.err'
+            stderr_filename = "#{tmpdir}/shp2pgsql.err"
+
             logger.debug "load-vector: #{bare_druid} is working on Shapefile: #{shp_filename}"
 
             # first try decoding with UTF-8 and if that fails use LATIN1

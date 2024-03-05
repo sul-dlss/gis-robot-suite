@@ -5,9 +5,10 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
   let(:druid) { "druid:#{bare_druid}" }
   let(:bare_druid) { 'cc044gt0726' }
-  let(:shp_filename) { 'sanluisobispo1996.shp' }
-  let(:sql_filename) { 'sanluisobispo1996.sql' }
-  let(:stderr_filename) { 'shp2pgsql.err' }
+  let(:normalizer_tmpdir) { "/tmp/normalizevector_#{bare_druid}" }
+  let(:shp_filename) { "#{normalizer_tmpdir}/sanluisobispo1996.shp" }
+  let(:sql_filename) { "#{normalizer_tmpdir}/sanluisobispo1996.sql" }
+  let(:stderr_filename) { "#{normalizer_tmpdir}/shp2pgsql.err" }
   let(:cmd) { "psql --no-psqlrc --no-password --quiet --file='#{sql_filename}' " }
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
@@ -114,11 +115,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
         .to_return(status: 200, body: wkt, headers: {})
       allow(robot).to receive(:normalizer).and_return(normalizer)
       allow(normalizer).to receive_messages(cleanup: true, run_shp2pgsql: true)
-      @pwd = Dir.pwd
-    end
-
-    after do
-      Dir.chdir(@pwd) # rubocop:disable RSpec/InstanceVariable
     end
 
     it 'executes system commands to load vector' do
