@@ -19,21 +19,21 @@ module Robots
 
           normalizer.with_normalized do |tmpdir|
             Dir.chdir(tmpdir) do
-              tiffn = Dir.glob('*.tif').first
-              raise "load-raster: #{bare_druid} cannot locate GeoTIFF: #{tmpdir}" if tiffn.nil?
+              tif_filename = Dir.glob('*.tif').first
+              raise "load-raster: #{bare_druid} cannot locate GeoTIFF: #{tmpdir}" if tif_filename.nil?
 
               # copy to geoserver storage
-              path = if Settings.geohydra.geotiff.host == 'localhost'
-                       Settings.geohydra.geotiff.dir
-                     else
-                       [Settings.geohydra.geotiff.host, Settings.geohydra.geotiff.dir].join(':')
-                     end
-              cmd = "rsync -v '#{tiffn}' #{path}/#{bare_druid}.tif"
+              destination_path = if Settings.geohydra.geotiff.host == 'localhost'
+                                   Settings.geohydra.geotiff.dir
+                                 else
+                                   [Settings.geohydra.geotiff.host, Settings.geohydra.geotiff.dir].join(':')
+                                 end
+              cmd = "rsync -v '#{tif_filename}' #{destination_path}/#{bare_druid}.tif"
               logger.debug "Running: #{cmd}"
               system(cmd, exception: true)
 
-              # copy statistics files (produced by CopyData#compute_statistics, as of Feb 2024)
-              cmd = "rsync -v '#{tiffn}'.aux.xml #{path}/#{bare_druid}.tif.aux.xml"
+              # copy statistics files (produced by RasterNormalizer#compute_statistics, as of March 2024)
+              cmd = "rsync -v '#{tif_filename}'.aux.xml #{destination_path}/#{bare_druid}.tif.aux.xml"
               logger.debug "Running: #{cmd}"
               system(cmd, exception: true)
             end
