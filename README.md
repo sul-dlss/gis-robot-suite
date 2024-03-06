@@ -47,6 +47,7 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `reset-geowebcache` :: Reset GeoWebCache for the layer
 * `finish-gis-delivery-workflow` :: Connect to public and restricted GeoServers to verify layer
 * `reload-geoserver` :: Automatically reload the GeoServer
+* `metadata-cleanup` :: Remove the staging druid tree for the working druid
 * `start-accession-workflow` :: Start accessionWF
 
 Data Wrangling

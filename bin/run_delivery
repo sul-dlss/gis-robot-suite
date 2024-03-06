@@ -12,6 +12,7 @@ for s in \
   reset-geowebcache \
   finish-gis-delivery-workflow \
   reload-geoserver \
+  metadata-cleanup \
   start-accession-workflow \
   ; do
   bundle exec run_robot dor:gisDeliveryWF:$s -d $druid
