@@ -181,6 +181,16 @@
           <date>
             <CI_Date>
               <date>
+                <gco:Date>2008-06-14</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" codeSpace="ISOTC211/19115">creation</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <date>
+            <CI_Date>
+              <date>
                 <gco:Date>2009-06-20</gco:Date>
               </date>
               <dateType>

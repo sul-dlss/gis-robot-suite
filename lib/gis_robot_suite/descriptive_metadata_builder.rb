@@ -58,18 +58,17 @@ module GisRobotSuite
 
     def event
       citation_nodes = data_id_node.xpath('gmd:citation/gmd:CI_Citation', NS)
-      publisher_nodes = citation_nodes.xpath("gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[text()='publisher']", NS)
-      raise "Publisher missing for #{bare_druid}." unless publisher_nodes.any?
 
       [].tap do |events|
-        events << extract_publishers(publisher_nodes)
-                  .merge(extract_pubdate(publisher_nodes.first)) # use first publisher node to navigate to date elements
-                  .merge(extract_edition(publisher_nodes.first)) # use first publisher node to navigate to edition elements
+        events << extract_pubdate(citation_nodes)
+                  .merge(extract_publishers(citation_nodes))
+                  .merge(extract_edition(citation_nodes))
       end.flatten.reject(&:empty?)
     end
 
-    def extract_publishers(publisher_nodes)
+    def extract_publishers(nodes)
       contributors = []
+      publisher_nodes = nodes.xpath("gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[text()='publisher']", NS)
       publisher_nodes.map do |node|
         if node.xpath('../../gmd:individualName/gco:CharacterString', NS).any?
           contributors << node.xpath('../../gmd:individualName/gco:CharacterString', NS).map do |name|
@@ -96,10 +95,11 @@ module GisRobotSuite
     end
 
     def extract_pubdate(node)
-      pub_date = node.xpath('../../../../gmd:date/gmd:CI_Date/gmd:date/gco:Date', NS)
-      raise "Publication date is missing for #{bare_druid}." unless pub_date.any?
+      pub_date_node = node.xpath('gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue="publication"]', NS)
+      raise "Publication date is missing for #{bare_druid}." unless pub_date_node.any?
 
-      pub_year = Date.parse(pub_date.text).strftime('%Y')
+      pub_date = pub_date_node.xpath('../../gmd:date/gco:Date', NS).text
+      pub_year = Date.parse(pub_date).strftime('%Y')
       dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }]
       dates << extract_keyword_dates
       { date: dates.compact }
@@ -121,7 +121,7 @@ module GisRobotSuite
     end
 
     def extract_edition(node)
-      edition = node.xpath('../../../../gmd:edition/gco:CharacterString', NS)
+      edition = node.xpath('gmd:edition/gco:CharacterString', NS)
       return {} unless edition.any?
 
       { note: [{ type: 'edition', value: edition.text }] }
@@ -432,8 +432,8 @@ module GisRobotSuite
     # rubocop:enable Layout/LineLength
 
     def related_citation(node)
-      authors = node.xpath('../../gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString', NS).collect(&:text)
-                    .concat(node.xpath('../../gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString', NS).collect(&:text))
+      authors = node.xpath('../../gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString', NS).map(&:text)
+                    .concat(node.xpath('../../gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString', NS).map(&:text))
       authors = authors.join(', ').chomp('.').concat('.') # Remove any existing ending middle initial period before adding period to end of authors string
       title = "\"#{node.xpath('../../gmd:title/gco:CharacterString', NS).text}.\"" # "Example article title"
       pub_date = node.xpath('../../gmd:date/gmd:CI_Date/gmd:date/gco:Date', NS).text
