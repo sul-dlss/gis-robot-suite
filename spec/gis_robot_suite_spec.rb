@@ -162,4 +162,65 @@ RSpec.describe GisRobotSuite do
       end
     end
   end
+
+  describe '.run_system_command' do
+    let(:cmd_result) { described_class.run_system_command(cmd, logger:) }
+
+    let(:logger) { instance_double(Logger, debug: nil, info: nil, error: nil) }
+
+    context 'when the command succeeds' do
+      let(:cmd) { 'echo "hello"' }
+      let(:expected_result) { { cmd:, stdout_str: "hello\n", stderr_str: '', exitstatus: 0, success: true } }
+
+      it 'does not raise' do
+        expect { cmd_result }.not_to raise_error
+      end
+
+      it 'returns a hash with the result of the command execution' do
+        expect(cmd_result).to eq(expected_result)
+      end
+
+      it 'logs beginning and succeeding' do
+        cmd_result
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Successfully executed system command: '#{cmd}'")
+        expect(logger).to have_received(:debug).with("#{described_class}.run_system_command: System command result: #{cmd_result}")
+      end
+    end
+
+    context 'when the command finishes and returns a non-zero error code' do
+      let(:cmd) { 'cat missing_file' }
+      let(:expected_result) { { cmd:, stdout_str: '', stderr_str: "cat: missing_file: No such file or directory\n", exitstatus: 1, success: false } }
+      let(:err_msg) { "Unsuccessful attempt executing system command: result=#{expected_result}" }
+
+      it 'raises an informative error' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandNonzeroExit, err_msg)
+      end
+
+      it 'logs beginning and failing' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandError)
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:error).with("#{described_class}.run_system_command: #{err_msg}")
+      end
+    end
+
+    context 'when the command fails to run and exit on its own' do
+      let(:cmd) { 'ssshh' }
+      let(:err_msg) { "Error executing system command: '#{cmd}' raised No such file or directory - ssshh" }
+
+      it 'raises an informative error' do
+        expect { cmd_result }.to raise_error(
+          an_instance_of(described_class::SystemCommandExecutionError).and(
+            having_attributes(message: err_msg, cause: a_kind_of(Errno::ENOENT))
+          )
+        )
+      end
+
+      it 'logs beginning and erroring out' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandError)
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:error).with("#{described_class}.run_system_command: #{err_msg}")
+      end
+    end
+  end
 end

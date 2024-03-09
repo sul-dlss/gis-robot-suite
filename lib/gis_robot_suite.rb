@@ -171,4 +171,41 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
 
     'restricted'
   end
+
+  class SystemCommandError < StandardError; end
+  class SystemCommandNonzeroExit < SystemCommandError; end
+  class SystemCommandExecutionError < SystemCommandError; end
+
+  # @param [String] cmd the command string (including args) to run
+  # @param [Logger] logger a Ruby Logger instance (e.g. the Sidekiq::Logger returned by LyberCore::Robot#logger)
+  # @return [Hash<Symbol => [String, Integer, Boolean]>] cmd_result
+  #   * cmd: the command string that was run
+  #   * stdout_str, stderr_str: the contents, respectively, of stdout and stderr from command execution
+  #   * exitstatus: the integer exit code from command execution (in practice likely always 0 if no error is raised)
+  #   * success: boolean indicating whether execution was successful (in practice likely always true if no error is raised)
+  # @raise [SystemCommandExecutionError, SystemCommandNonzeroExit] if the command does not execute cleanly
+  def self.run_system_command(cmd, logger:)
+    logger.info "#{name}.#{__method__}: Attempting to execute system command: '#{cmd}'"
+
+    stdout_str, stderr_str, status =
+      begin
+        Open3.capture3(cmd)
+      rescue StandardError => e
+        err_msg = "Error executing system command: '#{cmd}' raised #{e}"
+        logger.error "#{name}.#{__method__}: #{err_msg}"
+        raise SystemCommandExecutionError, err_msg
+      end
+
+    cmd_result = { cmd:, stdout_str:, stderr_str:, exitstatus: status.exitstatus, success: status.success? }
+
+    unless status.success? && status.exitstatus.zero?
+      err_msg = "Unsuccessful attempt executing system command: result=#{cmd_result}"
+      logger.error "#{name}.#{__method__}: #{err_msg}"
+      raise SystemCommandNonzeroExit, err_msg
+    end
+
+    logger.info "#{name}.#{__method__}: Successfully executed system command: '#{cmd}'"
+    logger.debug "#{name}.#{__method__}: System command result: #{cmd_result}"
+    cmd_result
+  end
 end
