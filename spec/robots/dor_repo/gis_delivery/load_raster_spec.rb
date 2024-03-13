@@ -8,7 +8,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadRaster do
   let(:tif_filename) { "/tmp/normalizeraster_#{bare_druid}/MCE_FI2G_2014.tif" }
   let(:destination_path) { '/geotiff' }
   let(:cmd_tif_sync) { "rsync -v '#{tif_filename}' #{destination_path}/#{bare_druid}.tif" }
-  let(:cmd_aux_sync) { "rsync -v '#{tif_filename}'.aux.xml #{destination_path}/#{bare_druid}.tif.aux.xml" }
+  let(:cmd_aux_sync) { "rsync -v '#{tif_filename}.aux.xml' #{destination_path}/#{bare_druid}.tif.aux.xml" }
   let(:robot) { described_class.new }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }

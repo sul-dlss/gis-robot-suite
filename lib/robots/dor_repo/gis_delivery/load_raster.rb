@@ -32,7 +32,7 @@ module Robots
             system(cmd, exception: true)
 
             # copy statistics files (produced by RasterNormalizer#compute_statistics, as of March 2024)
-            cmd = "rsync -v '#{tif_filename}'.aux.xml #{destination_path}/#{bare_druid}.tif.aux.xml"
+            cmd = "rsync -v '#{tif_filename}.aux.xml' #{destination_path}/#{bare_druid}.tif.aux.xml"
             logger.debug "Running: #{cmd}"
             system(cmd, exception: true)
           end
