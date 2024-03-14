@@ -79,7 +79,6 @@ module GisRobotSuite
 
     def compute_statistics
       Kernel.system("#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{output_filepath}", exception: true)
-      raise "load-raster: #{bare_druid} gdalinfo did not create stats file" unless File.size?("#{output_filepath}.aux.xml")
     end
 
     def tmpdir
