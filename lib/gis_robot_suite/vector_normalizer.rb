@@ -49,7 +49,9 @@ module GisRobotSuite
       # See http://www.gdal.org/ogr2ogr.html
       output_filepath = File.join(tmpdir, "#{geo_object_name}.shp") # output shapefile
       logger.info "normalize-vector: #{bare_druid} is projecting #{geo_object_name} to EPSG:4326"
-      Kernel.system("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{vector_filepath}'", exception: true) # prevent recoding
+
+      # prevent recoding
+      GisRobotSuite.run_system_command("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{vector_filepath}'", logger:)
       raise "normalize-vector: #{bare_druid} failed to reproject #{vector_filepath}" unless File.size?(output_filepath)
     end
 

@@ -40,7 +40,7 @@ module GisRobotSuite
 
       # reproject with gdalwarp (must uncompress here to prevent bloat)
       logger.info "load-raster: #{bare_druid} projecting #{geo_object_name} from #{projection_from_cocina_subject}"
-      Kernel.system("#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 #{input_filepath} #{temp_filepath} -co 'COMPRESS=NONE'", exception: true)
+      GisRobotSuite.run_system_command("#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 #{input_filepath} #{temp_filepath} -co 'COMPRESS=NONE'", logger:)
       raise "load-raster: #{bare_druid} gdalwarp failed to create #{temp_filepath}" unless File.size?(temp_filepath)
 
       compress(temp_filepath, output_filepath)
@@ -53,7 +53,7 @@ module GisRobotSuite
 
     def compress(input_filepath, output_filepath)
       logger.info "load-raster: #{bare_druid} is compressing to #{projection_from_cocina_subject}"
-      Kernel.system("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{input_filepath} #{output_filepath} -co 'COMPRESS=LZW'", exception: true)
+      GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal_translate -a_srs EPSG:4326 #{input_filepath} #{output_filepath} -co 'COMPRESS=LZW'", logger:)
       raise "load-raster: #{bare_druid} gdal_translate failed to create #{output_filepath}" unless File.size?(output_filepath)
     end
 
@@ -71,8 +71,8 @@ module GisRobotSuite
     def convert_8bit_to_rgb
       logger.info "load-raster: expanding color palette into rgb for #{output_filepath}"
       temp_filename = "#{tmpdir}/raw8bit.tif"
-      Kernel.system("mv #{output_filepath} #{temp_filename}", exception: true)
-      Kernel.system("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'", exception: true)
+      GisRobotSuite.run_system_command("mv #{output_filepath} #{temp_filename}", logger:)
+      GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'", logger:)
       File.delete(temp_filename)
     end
 

@@ -43,7 +43,7 @@ module Robots
             cmd = 'psql --no-psqlrc --no-password --quiet ' \
                   "--file='#{sql_filename}' "
             logger.debug "Running: #{cmd}"
-            system(cmd, exception: true)
+            GisRobotSuite.run_system_command(cmd, logger:)
           end
         end
 
@@ -64,7 +64,7 @@ module Robots
                 "'#{shp_filename}' #{schema}.#{bare_druid} " \
                 "> '#{sql_filename}' 2> '#{stderr_filename}'"
           logger.debug "Running: #{cmd}"
-          system(cmd, exception: true)
+          GisRobotSuite.run_system_command(cmd, logger:)
           raise "normalize-vector: #{bare_druid} shp2pgsql generated no SQL?" unless File.size?(sql_filename)
         end
       end
