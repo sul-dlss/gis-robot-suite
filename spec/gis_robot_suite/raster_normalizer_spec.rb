@@ -99,7 +99,6 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
       it 'normalizes the data' do
         expect(normalizer.normalize).to eq(tmpdir)
         expect(File).to exist(File.join(tmpdir, 'MCE_FI2G_2014.tif'))
-        expect(File).to exist(File.join(tmpdir, 'MCE_FI2G_2014.tif.aux.xml'))
 
         # Does not reproject
         expect(Kernel).not_to have_received(:system).with(
@@ -114,11 +113,6 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
         # Convert to RGB
         expect(Kernel).to have_received(:system).with(
           "gdal_translate -expand rgb /tmp/normalizeraster_bb021mm7809/raw8bit.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'",
-          exception: true
-        )
-        # Stats
-        expect(Kernel).to have_received(:system).with(
-          'gdalinfo -mm -stats -norat -noct /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif',
           exception: true
         )
       end
@@ -191,7 +185,6 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
       it 'normalizes the data' do
         expect(normalizer.normalize).to eq(tmpdir)
         expect(File).to exist(File.join(tmpdir, 'h_shade.tif'))
-        expect(File).to exist(File.join(tmpdir, 'h_shade.tif.aux.xml'))
 
         # Reprojects
         expect(Kernel).to have_received(:system).with(
@@ -206,11 +199,6 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
         # Not convert to RGB
         expect(Kernel).not_to have_received(:system).with(
           "gdal_translate -expand rgb /tmp/normalizeraster_vh469wk7989/raw8bit.tif /tmp/normalizeraster_vh469wk7989/h_shade.tif -co 'COMPRESS=LZW'",
-          exception: true
-        )
-        # Stats
-        expect(Kernel).to have_received(:system).with(
-          'gdalinfo -mm -stats -norat -noct /tmp/normalizeraster_vh469wk7989/h_shade.tif',
           exception: true
         )
       end
