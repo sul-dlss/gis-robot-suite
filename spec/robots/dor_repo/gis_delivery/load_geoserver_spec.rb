@@ -909,8 +909,8 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
 
           it 'runs without error and updates style with correct payload' do
             test_perform(robot, druid)
-            expect(style).to have_received(:create).with(style_name: "raster_#{druid}", filename: nil)
-            expect(style).to have_received(:update).with(style_name: "raster_#{druid}", filename: nil, payload:)
+            expect(style).to have_received(:create).with(style_name: "raster_#{druid}", filename: "raster_#{druid}.sld")
+            expect(style).to have_received(:update).with(style_name: "raster_#{druid}", filename: "raster_#{druid}.sld", payload:)
           end
         end
 
