@@ -109,7 +109,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadRaster do
     it 'executes system commands to load raster' do
       test_perform(robot, druid)
       expect(robot).to have_received(:system).with(cmd_tif_sync, exception: true)
-      expect(robot).to have_received(:system).with(cmd_aux_sync, exception: true)
     end
   end
 end

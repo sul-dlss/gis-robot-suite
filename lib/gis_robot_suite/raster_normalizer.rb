@@ -23,7 +23,6 @@ module GisRobotSuite
 
       epsg4326_projection? ? compress_only : reproject_and_compress
       convert_8bit_to_rgb if eight_bit?
-      compute_statistics
       tmpdir
     end
 
@@ -75,11 +74,6 @@ module GisRobotSuite
       Kernel.system("mv #{output_filepath} #{temp_filename}", exception: true)
       Kernel.system("#{Settings.gdal_path}gdal_translate -expand rgb #{temp_filename} #{output_filepath} -co 'COMPRESS=LZW'", exception: true)
       File.delete(temp_filename)
-    end
-
-    def compute_statistics
-      Kernel.system("#{Settings.gdal_path}gdalinfo -mm -stats -norat -noct #{output_filepath}", exception: true)
-      raise "load-raster: #{bare_druid} gdalinfo did not create stats file" unless File.size?("#{output_filepath}.aux.xml")
     end
 
     def tmpdir
