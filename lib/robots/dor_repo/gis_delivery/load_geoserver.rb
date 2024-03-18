@@ -232,8 +232,9 @@ module Robots
               logger.debug "load-geoserver: #{bare_druid} loaded style #{raster_style}"
               if style_exists.nil?
                 logger.debug "load-geoserver: #{bare_druid} saving new style #{raster_style}"
-                style.create(style_name: raster_style, filename: nil)
-                style.update(style_name: raster_style, filename: nil, payload: sldtxt)
+                filename = "#{raster_style}.sld"
+                style.create(style_name: raster_style, filename:)
+                style.update(style_name: raster_style, filename:, payload: sldtxt)
               end
             else
               raster_style = 'raster_grayband' # a simple band-oriented histogram adjusted style
