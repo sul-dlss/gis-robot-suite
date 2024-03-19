@@ -2,6 +2,9 @@
 *~
 coverage/
 coverage.data
+# spec/examples.txt allows RSpec to persist some state between runs in order to support the `--only-failures` and
+# `--next-failure` CLI options. RSpec recommends configuring source control to ignore this file.
+spec/examples.txt
 .idea
 *.tar.gz
 pid
