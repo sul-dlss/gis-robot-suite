@@ -51,23 +51,22 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def bounding_box_from_shapefile(shape_filename)
           logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
-          IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'") do |ogrinfo_io|
-            # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of parsing text.
-            # json = JSON.parse(ogrinfo_io.read)
-            # extent = json.dig('layers', 0, 'geometryFields', 0, 'extent')
-            # return [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
+          ogrinfo_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'", logger:)[:stdout_str]
+          # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of regexing text line-by-line.
+          # json = JSON.parse(ogrinfo_str)
+          # extent = json.dig('layers', 0, 'geometryFields', 0, 'extent')
+          # return [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
 
-            ogrinfo_io.readlines.each do |line|
-              # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
-              next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
+          ogrinfo_str.each_line do |line|
+            # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
+            next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
 
-              w, s, e, n = [Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4)].map(&:to_s)
-              ulx = w
-              uly = n
-              lrx = e
-              lry = s
-              return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
-            end
+            w, s, e, n = [Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4)].map(&:to_s)
+            ulx = w
+            uly = n
+            lrx = e
+            lry = s
+            return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
           end
         end
 
@@ -76,28 +75,27 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def bounding_box_from_geotiff(tiff_filename)
           logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
-          IO.popen("#{Settings.gdal_path}gdalinfo -json '#{tiff_filename}'") do |gdalinfo_io|
-            ulx = 0
-            uly = 0
-            lrx = 0
-            lry = 0
-            # {
-            #   "cornerCoordinates":{
-            #     "upperLeft":[-32.3338761, 40.5004267], "lowerLeft":[-32.3338761, 36.0005087],
-            #     "lowerRight":[-23.8337056, 36.0005087], "upperRight":[-23.8337056, 40.5004267],
-            #     "center":[-28.0837908, 38.2504677]
-            #   }
-            # } # plus many other sibling keys for cornerCoordinates
-            gdalinfo_io.read.tap do |gdalinfo_json_str|
-              gdalinfo_json = JSON.parse(gdalinfo_json_str)
-              corner_coordinates = gdalinfo_json['cornerCoordinates']
-              next unless corner_coordinates # everything else depends on a hash nested in the cornerCoordinates field
+          gdalinfo_json_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}gdalinfo -json '#{tiff_filename}'", logger:)[:stdout_str]
 
-              ulx, uly = corner_coordinates['upperLeft']
-              lrx, lry = corner_coordinates['lowerRight']
-            end
-            return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
+          ulx = 0
+          uly = 0
+          lrx = 0
+          lry = 0
+          # {
+          #   "cornerCoordinates":{
+          #     "upperLeft":[-32.3338761, 40.5004267], "lowerLeft":[-32.3338761, 36.0005087],
+          #     "lowerRight":[-23.8337056, 36.0005087], "upperRight":[-23.8337056, 40.5004267],
+          #     "center":[-28.0837908, 38.2504677]
+          #   }
+          # } # plus many other sibling keys for cornerCoordinates
+          gdalinfo_json = JSON.parse(gdalinfo_json_str)
+          corner_coordinates = gdalinfo_json['cornerCoordinates']
+          unless corner_coordinates.blank?
+            ulx, uly = corner_coordinates['upperLeft']
+            lrx, lry = corner_coordinates['lowerRight']
           end
+
+          [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
         end
 
         def add_bounding_box_to_geographic_subject

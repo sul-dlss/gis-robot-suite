@@ -2,7 +2,7 @@
 
 module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
-  def self.determine_raster_style(tifffn)
+  def self.determine_raster_style(tiff_filename, logger:)
     info = {
       nbands: 0,
       type: 'Byte',
@@ -10,33 +10,29 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
       max: 0
     }
 
-    # execute gdalinfo command
-    IO.popen("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tifffn}'") do |gdalinfo_io|
-      # gdalinfo output:
-      # a grayscale8 example:
-      # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
-      #
-      # an rgb8 example:
-      # {
-      #   "bands":[
-      #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
-      #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
-      #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
-      #     ]
-      # } # plus many other keys at each level
-      gdalinfo_io.read.tap do |gdalinfo_json_str|
-        gdalinfo_json = JSON.parse(gdalinfo_json_str)
-        bands = gdalinfo_json['bands']
+    gdalinfo_json_str = run_system_command("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tiff_filename}'", logger:)[:stdout_str]
+    # gdalinfo output:
+    # a grayscale8 example:
+    # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
+    #
+    # an rgb8 example:
+    # {
+    #   "bands":[
+    #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
+    #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
+    #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
+    #     ]
+    # } # plus many other keys at each level
+    gdalinfo_json = JSON.parse(gdalinfo_json_str)
+    bands = gdalinfo_json['bands']
 
-        info[:nbands] = bands.size
-        info[:type] = bands.last['type']
+    info[:nbands] = bands.size
+    info[:type] = bands.last['type']
 
-        min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
-        info[:min] = min_from_bands if min_from_bands
-        max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
-        info[:max] = max_from_bands if max_from_bands
-      end
-    end
+    min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
+    info[:min] = min_from_bands if min_from_bands
+    max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
+    info[:max] = max_from_bands if max_from_bands
 
     # determine raster style
     nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil

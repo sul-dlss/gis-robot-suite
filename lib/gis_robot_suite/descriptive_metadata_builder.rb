@@ -3,20 +3,22 @@
 module GisRobotSuite
   # Builds cocina descriptive metadata from ISO19139
   class DescriptiveMetadataBuilder # rubocop:disable Metrics/ClassLength
-    def self.build(cocina_model:, bare_druid:, iso19139_ng:)
-      new(cocina_model:, bare_druid:, iso19139_ng:).build
+    def self.build(cocina_model:, bare_druid:, iso19139_ng:, logger:)
+      new(cocina_model:, bare_druid:, iso19139_ng:, logger:).build
     end
 
     # @param [Cocina::Models::DRO] cocina_model the current cocina object
     # @param [String] bare_druid
     # @param [Nokogiri::XML] iso19139_ng
-    def initialize(cocina_model:, bare_druid:, iso19139_ng:)
+    # @param [Logger] logger
+    def initialize(cocina_model:, bare_druid:, iso19139_ng:, logger:)
       @cocina_model = cocina_model
       @bare_druid = bare_druid
       @iso19139_ng = iso19139_ng
+      @logger = logger
     end
 
-    attr_reader :cocina_model, :bare_druid, :iso19139_ng
+    attr_reader :cocina_model, :bare_druid, :iso19139_ng, :logger
 
     def build
       description_props = { title:, event:, form:, geographic:, language:, contributor:, note:, subject:, identifier:, purl:,
@@ -573,12 +575,11 @@ module GisRobotSuite
     end
 
     def find_geometry_type_ogrinfo
-      IO.popen("#{Settings.gdal_path}ogrinfo -ro -so -al '#{vector_file}'") do |file|
-        file.readlines.each do |line|
-          next unless line =~ /^Geometry:\s+(.*)\s*$/
+      ogrinfo_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogrinfo -ro -so -al '#{vector_file}'", logger:)[:stdout_str]
+      ogrinfo_str.each_line do |line|
+        next unless line =~ /^Geometry:\s+(.*)\s*$/
 
-          return Regexp.last_match(1).gsub('3D', '').gsub('Multi', '').strip
-        end
+        return Regexp.last_match(1).gsub('3D', '').gsub('Multi', '').strip
       end
     end
 

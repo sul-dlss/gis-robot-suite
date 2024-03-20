@@ -59,12 +59,12 @@ module GisRobotSuite
 
     def eight_bit?
       cmd = "#{Settings.gdal_path}gdalinfo -json -norat -noct '#{output_filepath}'"
-      IO.popen(cmd).read.tap do |gdalinfo_json_str|
-        gdalinfo_json = JSON.parse(gdalinfo_json_str)
-        bands = gdalinfo_json['bands']
-        # { "bands":[{ "band": 1, "block": [10503, 3], "type": "Byte", "colorInterpretation": "Palette" }] } # plus many other keys at each level
-        return true if bands.any? { |band| band.key?('block') && band['type'] == 'Byte' && band['colorInterpretation'] == 'Palette' }
-      end
+      gdalinfo_json_str = GisRobotSuite.run_system_command(cmd, logger:)[:stdout_str]
+      gdalinfo_json = JSON.parse(gdalinfo_json_str)
+      bands = gdalinfo_json['bands']
+      # { "bands":[{ "band": 1, "block": [10503, 3], "type": "Byte", "colorInterpretation": "Palette" }] } # plus many other keys at each level
+      return true if bands.any? { |band| band.key?('block') && band['type'] == 'Byte' && band['colorInterpretation'] == 'Palette' }
+
       false
     end
 
