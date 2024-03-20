@@ -8,7 +8,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
   let(:normalizer_tmpdir) { "/tmp/normalizevector_#{bare_druid}" }
   let(:shp_filename) { "#{normalizer_tmpdir}/sanluisobispo1996.shp" }
   let(:sql_filename) { "#{normalizer_tmpdir}/sanluisobispo1996.sql" }
-  let(:stderr_filename) { "#{normalizer_tmpdir}/shp2pgsql.err" }
   let(:robot) { described_class.new }
   let(:logger) { robot.logger }
   let(:workflow_client) { instance_double(Dor::Workflow::Client) }
@@ -109,7 +108,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
     let(:media_type) { 'application/x-esri-shapefile' }
     let(:rootdir) { GisRobotSuite.locate_druid_path bare_druid, type: :workspace }
     let(:cmd_psql) { "psql --no-psqlrc --no-password --quiet --file='#{sql_filename}' " }
-    let(:cmd_shp2pgsql) { "shp2pgsql -s 4326 -d -D -I -W UTF-8 '#{shp_filename}' druid.#{bare_druid} > '#{sql_filename}' 2> '#{stderr_filename}'" }
+    let(:cmd_shp2pgsql) { "shp2pgsql -s 4326 -d -D -I -W UTF-8 '#{shp_filename}' druid.#{bare_druid} > '#{sql_filename}'" }
     let(:wkt) do
       'GEOGCS["WGS 84", DATUM["WGS_1984", SPHEROID["WGS 84",6378137,298.257223563, AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich",0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.0174532925199433, AUTHORITY["EPSG","9122"]], AUTHORITY["EPSG","4326"]]' # rubocop:disable Layout/LineLength
     end
@@ -135,7 +134,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
 
     context 'when decoding UTF-8 fails' do
       let(:decoding_err_msg) { 'Could not decode UTF-8 for some reason 🤷' }
-      let(:cmd_shp2pgsql_retry) { "shp2pgsql -s 4326 -d -D -I -W LATIN1 '#{shp_filename}' druid.#{bare_druid} > '#{sql_filename}' 2> '#{stderr_filename}'" }
+      let(:cmd_shp2pgsql_retry) { "shp2pgsql -s 4326 -d -D -I -W LATIN1 '#{shp_filename}' druid.#{bare_druid} > '#{sql_filename}'" }
 
       before do
         allow(robot.logger).to receive(:warn)
