@@ -99,7 +99,16 @@ module GisRobotSuite
       raise "Publication date is missing for #{bare_druid}." unless pub_date_node.any?
 
       pub_date = pub_date_node.xpath('../../gmd:date/gco:Date', NS).text
-      pub_year = Date.parse(pub_date).strftime('%Y')
+
+      # some atypical raster metadata are missing a dash between the year and the month
+      # this is a temporary fix to move along some items stalled in workflow
+      pub_year = case pub_date
+      when /(\d\d\d\d)\d\d-\d\d/
+        $1
+      else
+        Date.parse(pub_date).strftime('%Y')
+      end
+
       dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }]
       dates << extract_keyword_dates
       { date: dates.compact }
