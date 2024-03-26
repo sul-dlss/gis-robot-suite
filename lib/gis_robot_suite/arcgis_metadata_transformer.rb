@@ -15,7 +15,7 @@ module GisRobotSuite
 
     def transform
       logger&.info("extracting metadata: generating #{output_file} using #{xslt_file}")
-      system("#{xslt_command} #{xslt_file} '#{esri_metadata_file}' | #{xml_lint_command} -o '#{output_file}' -", exception: true)
+      GisRobotSuite.run_system_command("#{xslt_command} #{xslt_file} '#{esri_metadata_file}' | #{xml_lint_command} -o '#{output_file}' -", logger:)
     end
 
     # Type of GIS data for this object

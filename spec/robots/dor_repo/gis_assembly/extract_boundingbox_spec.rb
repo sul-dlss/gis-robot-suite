@@ -14,7 +14,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
 
   before do
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-    allow(IO).to receive(:popen).and_call_original
+    allow(GisRobotSuite).to receive(:run_system_command).and_call_original
     stub_request(:get, 'https://spatialreference.org/ref/epsg/4326/prettywkt/')
       .to_return(status: 200, body: wkt, headers: {})
   end
@@ -164,7 +164,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
+        expect(GisRobotSuite).to have_received(:run_system_command).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
       end
     end
 
@@ -292,7 +292,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
+        expect(GisRobotSuite).to have_received(:run_system_command).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
       end
     end
 
@@ -450,7 +450,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the new bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(IO).to have_received(:popen).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'")
+        expect(GisRobotSuite).to have_received(:run_system_command).with("gdalinfo -json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
       end
     end
   end
@@ -695,15 +695,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
     end
 
     def ci?
-      IO.popen("#{Settings.gdal_path}ogr2ogr --version") do |f|
-        return f.read.include?('GDAL 3.4')
-      end
+      cmd_result = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogr2ogr --version", logger: Logger.new($stdout)) # provide a throw away logger
+      cmd_result[:stdout_str].include?('GDAL 3.4')
     end
 
     it 'updates the cocina with the bounding box' do
       test_perform(robot, druid)
       expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-      expect(IO).to have_received(:popen).with("ogrinfo -ro -so -al '/tmp/normalizevector_cc044gt0726/sanluisobispo1996.shp'")
+      expect(GisRobotSuite).to have_received(:run_system_command).with("ogrinfo -ro -so -al '/tmp/normalizevector_cc044gt0726/sanluisobispo1996.shp'", logger: robot.logger)
     end
   end
 end

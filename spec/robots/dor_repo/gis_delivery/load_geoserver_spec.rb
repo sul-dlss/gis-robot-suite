@@ -864,7 +864,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadGeoserver do
         let(:layer) { instance_double(Geoserver::Publish::Layer) }
 
         before do
-          allow(GisRobotSuite).to receive(:determine_raster_style).and_return(style_name)
+          allow(GisRobotSuite).to receive(:determine_raster_style).with('/geotiff/dg548ft1892.tif', logger: a_kind_of(Logger)).and_return(style_name)
           allow(Geoserver::Publish::Coverage).to receive(:new).and_return(coverage)
           allow(Geoserver::Publish::CoverageStore).to receive(:new).and_return(coverage_store)
           allow(Geoserver::Publish::Style).to receive(:new).and_return(style)

@@ -2,7 +2,7 @@
 
 module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
-  def self.determine_raster_style(tifffn)
+  def self.determine_raster_style(tiff_filename, logger:)
     info = {
       nbands: 0,
       type: 'Byte',
@@ -10,33 +10,29 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
       max: 0
     }
 
-    # execute gdalinfo command
-    IO.popen("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tifffn}'") do |gdalinfo_io|
-      # gdalinfo output:
-      # a grayscale8 example:
-      # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
-      #
-      # an rgb8 example:
-      # {
-      #   "bands":[
-      #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
-      #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
-      #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
-      #     ]
-      # } # plus many other keys at each level
-      gdalinfo_io.read.tap do |gdalinfo_json_str|
-        gdalinfo_json = JSON.parse(gdalinfo_json_str)
-        bands = gdalinfo_json['bands']
+    gdalinfo_json_str = run_system_command("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tiff_filename}'", logger:)[:stdout_str]
+    # gdalinfo output:
+    # a grayscale8 example:
+    # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
+    #
+    # an rgb8 example:
+    # {
+    #   "bands":[
+    #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
+    #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
+    #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
+    #     ]
+    # } # plus many other keys at each level
+    gdalinfo_json = JSON.parse(gdalinfo_json_str)
+    bands = gdalinfo_json['bands']
 
-        info[:nbands] = bands.size
-        info[:type] = bands.last['type']
+    info[:nbands] = bands.size
+    info[:type] = bands.last['type']
 
-        min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
-        info[:min] = min_from_bands if min_from_bands
-        max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
-        info[:max] = max_from_bands if max_from_bands
-      end
-    end
+    min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
+    info[:min] = min_from_bands if min_from_bands
+    max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
+    info[:max] = max_from_bands if max_from_bands
 
     # determine raster style
     nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil
@@ -170,5 +166,42 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     return 'public' if cocina_model.access.view == 'world'
 
     'restricted'
+  end
+
+  class SystemCommandError < StandardError; end
+  class SystemCommandNonzeroExit < SystemCommandError; end
+  class SystemCommandExecutionError < SystemCommandError; end
+
+  # @param [String] cmd the command string (including args) to run
+  # @param [Logger] logger a Ruby Logger instance (e.g. the Sidekiq::Logger returned by LyberCore::Robot#logger)
+  # @return [Hash<Symbol => [String, Integer, Boolean]>] cmd_result
+  #   * cmd: the command string that was run
+  #   * stdout_str, stderr_str: the contents, respectively, of stdout and stderr from command execution
+  #   * exitstatus: the integer exit code from command execution (in practice likely always 0 if no error is raised)
+  #   * success: boolean indicating whether execution was successful (in practice likely always true if no error is raised)
+  # @raise [SystemCommandExecutionError, SystemCommandNonzeroExit] if the command does not execute cleanly
+  def self.run_system_command(cmd, logger:)
+    logger.info "#{name}.#{__method__}: Attempting to execute system command: '#{cmd}'"
+
+    stdout_str, stderr_str, status =
+      begin
+        Open3.capture3(cmd)
+      rescue StandardError => e
+        err_msg = "Error executing system command: '#{cmd}' raised #{e}"
+        logger.error "#{name}.#{__method__}: #{err_msg}"
+        raise SystemCommandExecutionError, err_msg
+      end
+
+    cmd_result = { cmd:, stdout_str:, stderr_str:, exitstatus: status.exitstatus, success: status.success? }
+
+    unless status.success? && status.exitstatus.zero?
+      err_msg = "Unsuccessful attempt executing system command: result=#{cmd_result}"
+      logger.error "#{name}.#{__method__}: #{err_msg}"
+      raise SystemCommandNonzeroExit, err_msg
+    end
+
+    logger.info "#{name}.#{__method__}: Successfully executed system command: '#{cmd}'"
+    logger.debug "#{name}.#{__method__}: System command result: #{cmd_result}"
+    cmd_result
   end
 end

@@ -122,6 +122,7 @@ RSpec.describe GisRobotSuite do
   describe '.determine_raster_style' do
     let(:rgb8_file) { File.join(fixture_dir, 'tif_files/MCE_AF2G_2010.tif') }
     let(:grayscale8_file) { File.join(fixture_dir, 'stage/bh/432/xr/2264/bh432xr2264/content/51002.tif') }
+    let(:logger) { instance_double(Logger, info: nil, debug: nil) }
 
     after do
       # the *.aux.xml files are written by gdalinfo when it computes image statistics (will be regenerated if not present)
@@ -130,8 +131,8 @@ RSpec.describe GisRobotSuite do
     end
 
     it 'determines the correct raster style' do
-      expect(described_class.determine_raster_style(rgb8_file)).to eq('rgb8')
-      expect(described_class.determine_raster_style(grayscale8_file)).to eq('grayscale8')
+      expect(described_class.determine_raster_style(rgb8_file, logger:)).to eq('rgb8')
+      expect(described_class.determine_raster_style(grayscale8_file, logger:)).to eq('grayscale8')
     end
   end
 
@@ -159,6 +160,67 @@ RSpec.describe GisRobotSuite do
     context 'when validate is true and the directory does not exist' do
       it 'raises' do
         expect { described_class.locate_druid_path(druid, type: :stage, validate: true) }.to raise_error(RuntimeError, "Missing #{Settings.geohydra.stage}/bc/123/df/4567/bc123df4567")
+      end
+    end
+  end
+
+  describe '.run_system_command' do
+    let(:cmd_result) { described_class.run_system_command(cmd, logger:) }
+
+    let(:logger) { instance_double(Logger, debug: nil, info: nil, error: nil) }
+
+    context 'when the command succeeds' do
+      let(:cmd) { 'echo "hello"' }
+      let(:expected_result) { { cmd:, stdout_str: "hello\n", stderr_str: '', exitstatus: 0, success: true } }
+
+      it 'does not raise' do
+        expect { cmd_result }.not_to raise_error
+      end
+
+      it 'returns a hash with the result of the command execution' do
+        expect(cmd_result).to eq(expected_result)
+      end
+
+      it 'logs beginning and succeeding' do
+        cmd_result
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Successfully executed system command: '#{cmd}'")
+        expect(logger).to have_received(:debug).with("#{described_class}.run_system_command: System command result: #{cmd_result}")
+      end
+    end
+
+    context 'when the command finishes and returns a non-zero error code' do
+      let(:cmd) { 'cat missing_file' }
+      let(:expected_result) { { cmd:, stdout_str: '', stderr_str: "cat: missing_file: No such file or directory\n", exitstatus: 1, success: false } }
+      let(:err_msg) { "Unsuccessful attempt executing system command: result=#{expected_result}" }
+
+      it 'raises an informative error' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandNonzeroExit, err_msg)
+      end
+
+      it 'logs beginning and failing' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandError)
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:error).with("#{described_class}.run_system_command: #{err_msg}")
+      end
+    end
+
+    context 'when the command fails to run and exit on its own' do
+      let(:cmd) { 'ssshh' }
+      let(:err_msg) { "Error executing system command: '#{cmd}' raised No such file or directory - ssshh" }
+
+      it 'raises an informative error' do
+        expect { cmd_result }.to raise_error(
+          an_instance_of(described_class::SystemCommandExecutionError).and(
+            having_attributes(message: err_msg, cause: a_kind_of(Errno::ENOENT))
+          )
+        )
+      end
+
+      it 'logs beginning and erroring out' do
+        expect { cmd_result }.to raise_error(described_class::SystemCommandError)
+        expect(logger).to have_received(:info).with("#{described_class}.run_system_command: Attempting to execute system command: '#{cmd}'")
+        expect(logger).to have_received(:error).with("#{described_class}.run_system_command: #{err_msg}")
       end
     end
   end

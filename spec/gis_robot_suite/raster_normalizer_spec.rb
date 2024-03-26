@@ -17,7 +17,7 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
 
   before do
     FileUtils.mkdir_p(tmpdir)
-    allow(Kernel).to receive(:system).and_call_original
+    allow(GisRobotSuite).to receive(:run_system_command).and_call_original
   end
 
   after do
@@ -101,19 +101,19 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
         expect(File).to exist(File.join(tmpdir, 'MCE_FI2G_2014.tif'))
 
         # Does not reproject
-        expect(Kernel).not_to have_received(:system).with(
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(
           "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014_uncompressed.tif -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
-          exception: true
+          logger:
         )
         # Compress
-        expect(Kernel).to have_received(:system).with(
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
           "gdal_translate -a_srs EPSG:4326 spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'", # rubocop:disable Layout/LineLength
-          exception: true
+          logger:
         )
         # Convert to RGB
-        expect(Kernel).to have_received(:system).with(
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
           "gdal_translate -expand rgb /tmp/normalizeraster_bb021mm7809/raw8bit.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'",
-          exception: true
+          logger:
         )
       end
     end
@@ -187,19 +187,19 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
         expect(File).to exist(File.join(tmpdir, 'h_shade.tif'))
 
         # Reprojects
-        expect(Kernel).to have_received(:system).with(
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
           "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/workspace/vh/469/wk/7989/vh469wk7989/content/h_shade /tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
-          exception: true
+          logger:
         )
         # Compress
-        expect(Kernel).to have_received(:system).with(
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
           "gdal_translate -a_srs EPSG:4326 /tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif /tmp/normalizeraster_vh469wk7989/h_shade.tif -co 'COMPRESS=LZW'",
-          exception: true
+          logger:
         )
         # Not convert to RGB
-        expect(Kernel).not_to have_received(:system).with(
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(
           "gdal_translate -expand rgb /tmp/normalizeraster_vh469wk7989/raw8bit.tif /tmp/normalizeraster_vh469wk7989/h_shade.tif -co 'COMPRESS=LZW'",
-          exception: true
+          logger:
         )
       end
     end

@@ -29,7 +29,7 @@ module Robots
                                end
             cmd = "rsync -v '#{tif_filename}' #{destination_path}/#{bare_druid}.tif"
             logger.debug "Running: #{cmd}"
-            system(cmd, exception: true)
+            GisRobotSuite.run_system_command(cmd, logger:)
           end
         end
 

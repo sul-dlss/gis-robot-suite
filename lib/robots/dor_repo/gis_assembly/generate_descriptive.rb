@@ -13,7 +13,7 @@ module Robots
         def perform_work
           logger.debug "generate-descriptive working on #{bare_druid}"
 
-          description = GisRobotSuite::DescriptiveMetadataBuilder.build(cocina_model: cocina_object, bare_druid:, iso19139_ng:)
+          description = GisRobotSuite::DescriptiveMetadataBuilder.build(cocina_model: cocina_object, bare_druid:, iso19139_ng:, logger:)
           updated = cocina_object.new(description:)
           object_client.update(params: updated)
         end

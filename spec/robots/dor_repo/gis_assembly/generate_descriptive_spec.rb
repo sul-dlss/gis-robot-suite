@@ -29,7 +29,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
       allow(Settings.geohydra).to receive(:stage).and_return('spec/fixtures/stage')
       allow(Settings.purl).to receive(:url).and_return('https://purl.stanford.edu')
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      # allow(IO).to receive(:popen).and_return(nil)
     end
 
     after { cleanup }
