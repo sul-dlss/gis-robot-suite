@@ -9,7 +9,6 @@ gem 'dor-workflow-client', '~> 7.0'
 gem 'druid-tools'
 gem 'geoserver-publish', '>= 0.5.0' # samvera labs
 gem 'lyber-core', '~> 7.1'
-gem 'stanford-mods' # for GisDelivery::LoadGeoserver
 
 gem 'config'
 gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
