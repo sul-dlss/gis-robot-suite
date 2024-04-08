@@ -10,8 +10,7 @@ module Robots
 
         def perform_work
           logger.debug "start-accession-workflow working on #{bare_druid}"
-          current_version = object_client.version.current
-          workflow_service.create_workflow_by_name(druid, 'accessionWF', version: current_version)
+          object_client.version.close
         end
       end
     end
