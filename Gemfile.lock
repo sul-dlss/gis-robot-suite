@@ -85,14 +85,14 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (14.5.0)
+    dor-services-client (14.6.1)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.96.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
       zeitwerk (~> 2.1)
-    dor-workflow-client (7.0.2)
+    dor-workflow-client (7.2.0)
       activesupport (>= 3.2.1, < 8)
       deprecation (>= 0.99.0)
       faraday (~> 2.0)
@@ -131,7 +131,7 @@ GEM
       net-http
     faraday-retry (2.2.0)
       faraday (~> 2.0)
-    fastimage (2.3.0)
+    fastimage (2.3.1)
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.0)
@@ -143,7 +143,7 @@ GEM
     irb (1.12.0)
       rdoc
       reline (>= 0.4.2)
-    json (2.7.1)
+    json (2.7.2)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
@@ -171,7 +171,7 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
-    net-ssh (7.2.1)
+    net-ssh (7.2.3)
     nokogiri (1.16.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -192,11 +192,11 @@ GEM
       method_source (~> 1.0)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     racc (1.7.3)
     rack (3.0.10)
     rainbow (3.1.1)
-    rake (13.1.0)
+    rake (13.2.1)
     rdoc (6.6.3.1)
       psych (>= 4.0.0)
     redis-client (0.21.1)
@@ -223,7 +223,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.3.0)
       rexml
-    rubocop (1.62.1)
+    rubocop (1.63.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -240,7 +240,7 @@ GEM
       rubocop (~> 1.41)
     rubocop-factory_bot (2.25.1)
       rubocop (~> 1.41)
-    rubocop-rspec (2.28.0)
+    rubocop-rspec (2.29.1)
       rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
@@ -262,7 +262,8 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     slop (4.10.1)
-    sshkit (1.22.0)
+    sshkit (1.22.1)
+      base64
       mutex_m
       net-scp (>= 1.1.2)
       net-sftp (>= 2.1.2)
