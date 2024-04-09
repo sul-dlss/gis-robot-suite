@@ -102,17 +102,17 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
 
         # Does not reproject
         expect(GisRobotSuite).not_to have_received(:run_system_command).with(
-          "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014_uncompressed.tif -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
+          "gdalwarp -r bilinear -t_srs EPSG:4326 'spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif' '/tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014_uncompressed.tif' -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
           logger:
         )
         # Compress
         expect(GisRobotSuite).to have_received(:run_system_command).with(
-          "gdal_translate -a_srs EPSG:4326 spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'", # rubocop:disable Layout/LineLength
+          "gdal_translate -a_srs EPSG:4326 'spec/fixtures/workspace/bb/021/mm/7809/bb021mm7809/content/MCE_FI2G_2014.tif' '/tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif' -co 'COMPRESS=LZW'", # rubocop:disable Layout/LineLength
           logger:
         )
         # Convert to RGB
         expect(GisRobotSuite).to have_received(:run_system_command).with(
-          "gdal_translate -expand rgb /tmp/normalizeraster_bb021mm7809/raw8bit.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif -co 'COMPRESS=LZW'",
+          "gdal_translate -expand rgb '/tmp/normalizeraster_bb021mm7809/raw8bit.tif' '/tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif' -co 'COMPRESS=LZW'",
           logger:
         )
       end
@@ -188,17 +188,17 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
 
         # Reprojects
         expect(GisRobotSuite).to have_received(:run_system_command).with(
-          "gdalwarp -r bilinear -t_srs EPSG:4326 spec/fixtures/workspace/vh/469/wk/7989/vh469wk7989/content/h_shade /tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
+          "gdalwarp -r bilinear -t_srs EPSG:4326 'spec/fixtures/workspace/vh/469/wk/7989/vh469wk7989/content/h_shade' '/tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif' -co 'COMPRESS=NONE'", # rubocop:disable Layout/LineLength
           logger:
         )
         # Compress
         expect(GisRobotSuite).to have_received(:run_system_command).with(
-          "gdal_translate -a_srs EPSG:4326 /tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif /tmp/normalizeraster_vh469wk7989/h_shade.tif -co 'COMPRESS=LZW'",
+          "gdal_translate -a_srs EPSG:4326 '/tmp/normalizeraster_vh469wk7989/h_shade_uncompressed.tif' '/tmp/normalizeraster_vh469wk7989/h_shade.tif' -co 'COMPRESS=LZW'",
           logger:
         )
         # Not convert to RGB
         expect(GisRobotSuite).not_to have_received(:run_system_command).with(
-          "gdal_translate -expand rgb /tmp/normalizeraster_vh469wk7989/raw8bit.tif /tmp/normalizeraster_vh469wk7989/h_shade.tif -co 'COMPRESS=LZW'",
+          "gdal_translate -expand rgb '/tmp/normalizeraster_vh469wk7989/raw8bit.tif' '/tmp/normalizeraster_vh469wk7989/h_shade.tif' -co 'COMPRESS=LZW'",
           logger:
         )
       end
