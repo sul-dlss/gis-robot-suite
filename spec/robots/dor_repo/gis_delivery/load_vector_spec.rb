@@ -139,7 +139,7 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
       before do
         allow(robot.logger).to receive(:warn)
         allow(GisRobotSuite).to receive(:run_system_command).with(cmd_shp2pgsql, logger:) do |cmd|
-          raise decoding_err_msg if cmd.include?('-W UTF-8')
+          raise GisRobotSuite::SystemCommandExecutionError, decoding_err_msg if cmd.include?('-W UTF-8')
         end
         allow(GisRobotSuite).to receive(:run_system_command).with(cmd_shp2pgsql_retry, logger:)
       end
