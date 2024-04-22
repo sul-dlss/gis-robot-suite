@@ -32,7 +32,7 @@ module Robots
             # see also https://github.com/sul-dlss/gis-robot-suite/issues/850
             begin
               run_shp2pgsql('4326', 'UTF-8', shp_filename, schema, sql_filename)
-            rescue GisRobotSuite::SystemCommandExecutionError => e
+            rescue GisRobotSuite::SystemCommandError => e
               logger.warn("#{druid} -- fell through to LATIN1 encoding after calling run_shp2pgsql with " \
                           "UTF-8 encoding and encountering error: #{e.message}; #{e.backtrace.join('; ')}")
               run_shp2pgsql('4326', 'LATIN1', shp_filename, schema, sql_filename)
