@@ -88,7 +88,7 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.0)
-    dor-services-client (14.6.1)
+    dor-services-client (14.7.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.96.0)
       deprecation
@@ -186,7 +186,7 @@ GEM
     openapi_parser (1.0.0)
     optimist (3.1.0)
     parallel (1.24.0)
-    parser (3.3.0.5)
+    parser (3.3.1.0)
       ast (~> 2.4.1)
       racc
     patience_diff (1.2.0)
@@ -206,7 +206,7 @@ GEM
     redis-client (0.22.1)
       connection_pool
     regexp_parser (2.9.0)
-    reline (0.5.2)
+    reline (0.5.3)
       io-console (~> 0.5)
     retries (0.0.5)
     rexml (3.2.6)
@@ -227,7 +227,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.3.0)
       rexml
-    rubocop (1.63.2)
+    rubocop (1.63.4)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -254,7 +254,7 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
     scanf (1.0.0)
-    sidekiq (7.2.2)
+    sidekiq (7.2.4)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
@@ -273,7 +273,7 @@ GEM
       net-sftp (>= 2.1.2)
       net-ssh (>= 2.8.0)
     stringio (3.1.0)
-    super_diff (0.11.0)
+    super_diff (0.12.1)
       attr_extras (>= 6.2.4)
       diff-lcs
       patience_diff
