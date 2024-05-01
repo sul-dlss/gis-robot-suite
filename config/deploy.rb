@@ -19,9 +19,7 @@ set :deploy_to, '/opt/app/lyberadmin/gis-robot-suite'
 # set :log_level, :debug
 
 # Default value for :pty is false
-# switched to true for ubuntu to perform resque:pool:hot_swap (prevented terminal session from hanging).
-# seems harmless even after switch to sidekiq.
-set :pty, true
+# set :pty, true
 
 # Default value for :linked_files is []
 set :linked_files, %w[config/honeybadger.yml]
