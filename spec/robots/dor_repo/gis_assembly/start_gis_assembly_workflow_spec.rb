@@ -20,19 +20,15 @@ RSpec.describe Robots::DorRepo::GisAssembly::StartGisAssemblyWorkflow do
   describe '#perform' do
     subject(:perform) { test_perform(robot, druid) }
 
-    before { allow(Honeybadger).to receive(:notify) }
-
-    it 'does not notify Honeybadger' do
-      perform
-      expect(Honeybadger).not_to have_received(:notify)
+    it 'does not raise an error' do
+      expect { perform }.not_to raise_error
     end
 
     context 'when object is not open' do
       let(:version_open) { false }
 
-      it 'notifies Honeybadger' do
-        perform
-        expect(Honeybadger).to have_received(:notify).once.with('[WARNING] GIS assembly has been started with an object that is not open')
+      it 'raises an error' do
+        expect { perform }.to raise_error 'GIS assembly has been started with an object that is not open'
       end
     end
   end
