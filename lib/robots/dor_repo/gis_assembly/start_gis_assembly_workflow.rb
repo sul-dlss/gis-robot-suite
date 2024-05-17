@@ -10,7 +10,7 @@ module Robots
         end
 
         def perform_work
-          Honeybadger.notify('[WARNING] GIS assembly has been started with an object that is not open') unless object_client.version.status.open?
+          raise 'GIS assembly has been started with an object that is not open' unless object_client.version.status.open?
         end
       end
     end
