@@ -60,6 +60,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.shp',
                     size: 2951888,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/vnd.shp',
                     use: 'master',
                     hasMessageDigests: [
@@ -86,6 +88,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.shx',
                     size: 21900,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/vnd.shx',
                     use: 'master',
                     hasMessageDigests: [
@@ -112,6 +116,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.dbf',
                     size: 270001,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/vnd.dbf',
                     use: 'master',
                     hasMessageDigests: [
@@ -138,6 +144,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.sbn',
                     size: 27300,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/octet-stream',
                     use: 'master',
                     hasMessageDigests: [
@@ -164,6 +172,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.prj',
                     size: 469,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'text/plain',
                     use: 'master',
                     hasMessageDigests: [
@@ -200,6 +210,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'preview.jpg',
                     size: 5298,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'image/jpeg',
                     use: 'master',
                     hasMessageDigests: [
@@ -240,6 +252,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996.shp.xml',
                     size: 24684,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'master',
                     hasMessageDigests: [
@@ -266,6 +280,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996-iso19139.xml',
                     size: 29062,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'derivative',
                     hasMessageDigests: [
@@ -292,6 +308,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996-iso19110.xml',
                     size: 10664,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'derivative',
                     hasMessageDigests: [
@@ -318,6 +336,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'sanluisobispo1996-fgdc.xml',
                     size: 7623,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'derivative',
                     hasMessageDigests: [
@@ -415,6 +435,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973.tif',
                     size: 31_565_174,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'image/tiff',
                     use: 'master',
                     hasMessageDigests: [
@@ -441,6 +463,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973.tif.ovr',
                     size: 1733109,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/octet-stream',
                     use: 'master',
                     hasMessageDigests: [
@@ -471,6 +495,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973.tif.aux.xml',
                     size: 2685,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'master',
                     hasMessageDigests: [
@@ -511,6 +537,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'preview.jpg',
                     size: 4934,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'image/jpeg',
                     use: 'master',
                     hasMessageDigests: [
@@ -551,6 +579,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973.tif.xml',
                     size: 17389,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'master',
                     hasMessageDigests: [
@@ -577,6 +607,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973-iso19139.xml',
                     size: 22729,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'derivative',
                     hasMessageDigests: [
@@ -603,6 +635,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     filename: 'SF_1973-fgdc.xml',
                     size: 5801,
                     version: 1,
+                    sdrGeneratedText: false,
+                    correctedForAccessibility: false,
                     hasMimeType: 'application/xml',
                     use: 'derivative',
                     hasMessageDigests: [
@@ -663,6 +697,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
           version: 1,
           hasMimeType: 'application/geo+json',
           use: 'master',
+          sdrGeneratedText: false,
+          correctedForAccessibility: false,
           hasMessageDigests: [
             {
               type: 'sha1',
