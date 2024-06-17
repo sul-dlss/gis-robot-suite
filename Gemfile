@@ -29,7 +29,10 @@ group :development do
   gem 'debug', require: false
   gem 'rspec'
   gem 'rubocop', require: false
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
 end
 
 group :test do
