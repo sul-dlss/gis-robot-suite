@@ -11,6 +11,7 @@ gem 'geoserver-publish', '>= 0.5.0' # samvera labs
 gem 'lyber-core', '~> 7.1'
 
 gem 'config'
+gem 'csv'
 gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
 gem 'honeybadger'
 gem 'pry' # for console
