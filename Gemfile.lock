@@ -1,9 +1,8 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.2.1)
-      base64
-      sidekiq (>= 7.2.0, < 8)
+    sidekiq-pro (7.3.0)
+      sidekiq (>= 7.3.0, < 8)
 
 GEM
   remote: https://rubygems.org/
@@ -35,7 +34,7 @@ GEM
       bundler (>= 1.2.0, < 3)
       thor (~> 1.0)
     byebug (11.1.3)
-    capistrano (3.19.0)
+    capistrano (3.19.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -91,7 +90,7 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.0)
-    dor-services-client (14.14.0)
+    dor-services-client (14.15.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.98.0)
       deprecation
@@ -110,7 +109,7 @@ GEM
     dry-core (1.0.1)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
-    dry-inflector (1.0.0)
+    dry-inflector (1.1.0)
     dry-logic (1.5.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
@@ -132,8 +131,9 @@ GEM
       activesupport (>= 3.0, < 8.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    faraday (2.9.2)
+    faraday (2.10.0)
       faraday-net_http (>= 2.0, < 3.2)
+      logger
     faraday-net_http (3.1.0)
       net-http
     faraday-retry (2.2.1)
@@ -142,18 +142,19 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.0)
-    honeybadger (5.13.0)
+    honeybadger (5.13.2)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-console (0.7.2)
-    irb (1.13.2)
+    irb (1.14.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.7.2)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
+    logger (1.6.0)
     lyber-core (7.5.0)
       activesupport
       config
@@ -166,7 +167,7 @@ GEM
     method_source (1.1.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.0604)
+    mime-types-data (3.2024.0702)
     mini_exiftool (2.11.0)
     mini_portile2 (2.8.7)
     minitest (5.24.1)
@@ -201,10 +202,10 @@ GEM
       stringio
     public_suffix (6.0.0)
     racc (1.8.0)
-    rack (3.1.4)
+    rack (3.1.6)
     rainbow (3.1.1)
     rake (13.2.1)
-    rb_sys (0.9.97)
+    rb_sys (0.9.98)
     rdoc (6.7.0)
       psych (>= 4.0.0)
     redis-client (0.22.2)
@@ -247,7 +248,7 @@ GEM
       rubocop (~> 1.41)
     rubocop-factory_bot (2.26.1)
       rubocop (~> 1.61)
-    rubocop-rspec (3.0.1)
+    rubocop-rspec (3.0.2)
       rubocop (~> 1.61)
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
@@ -255,11 +256,12 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
     scanf (1.0.0)
-    sidekiq (7.2.4)
+    sidekiq (7.3.0)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
+      logger
       rack (>= 2.2.4)
-      redis-client (>= 0.19.0)
+      redis-client (>= 0.22.2)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
