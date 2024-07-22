@@ -142,7 +142,7 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.0)
-    honeybadger (5.14.0)
+    honeybadger (5.15.0)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -214,7 +214,7 @@ GEM
     reline (0.5.9)
       io-console (~> 0.5)
     retries (0.0.5)
-    rexml (3.3.1)
+    rexml (3.3.2)
       strscan
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
