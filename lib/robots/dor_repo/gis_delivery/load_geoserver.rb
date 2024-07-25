@@ -121,6 +121,7 @@ module Robots
         end
 
         # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/MethodLength
         def create_raster(connection, workspace_name)
           %w[title abstract keywords].each do |field|
             raise ArgumentError, "load-geoserver: #{bare_druid}: Layer is missing #{field}" if send(field).empty?
@@ -258,6 +259,8 @@ module Robots
           return if layer_exists.dig('layer', 'defaultStyle', 'name') == raster_style
 
           layer_exists['layer']['defaultStyle'] = raster_style
+          layer_exists['layer']['queryable'] = true
+
           logger.debug "load-geoserver: #{bare_druid} updating #{bare_druid} with default style #{raster_style}"
           begin
             layer.update(layer_name: bare_druid, additional_payload: layer_exists)
@@ -265,6 +268,7 @@ module Robots
             raise "load-geoserver: #{bare_druid} cannot save Layer: #{e.message}"
           end
         end
+        # rubocop:enable Metrics/MethodLength
 
         def coverage_metadata
           { enabled: true,
