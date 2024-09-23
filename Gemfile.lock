@@ -132,8 +132,9 @@ GEM
       activesupport (>= 3.0, < 8.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    faraday (2.11.0)
+    faraday (2.12.0)
       faraday-net_http (>= 2.0, < 3.4)
+      json
       logger
     faraday-net_http (3.3.0)
       net-http
@@ -143,7 +144,8 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.1)
-    honeybadger (5.15.6)
+    honeybadger (5.16.0)
+      logger
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -276,7 +278,7 @@ GEM
       net-ssh (>= 2.8.0)
       ostruct
     stringio (3.1.1)
-    super_diff (0.12.1)
+    super_diff (0.13.0)
       attr_extras (>= 6.2.4)
       diff-lcs
       patience_diff
