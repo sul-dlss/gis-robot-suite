@@ -66,7 +66,7 @@ module Robots
 
         def keywords
           @keywords ||= (
-            cocina_object.description.subject.select { |subject| subject.type == 'topic' } + \
+            cocina_object.description.subject.select { |subject| subject.type == 'topic' } +
             cocina_object.description.subject.select { |subject| subject.type == 'place' })
                         .map(&:value).compact.uniq
         end
