@@ -92,7 +92,7 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (14.21.0)
+    dor-services-client (15.2.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.99.0)
       deprecation
@@ -159,10 +159,10 @@ GEM
       multi_json
     language_server-protocol (3.17.0.3)
     logger (1.6.1)
-    lyber-core (7.5.0)
+    lyber-core (7.6.0)
       activesupport
       config
-      dor-services-client (~> 14.0)
+      dor-services-client (~> 15.0)
       dor-workflow-client (>= 7.4)
       druid-tools
       honeybadger
@@ -308,7 +308,7 @@ DEPENDENCIES
   csv
   debug
   dlss-capistrano
-  dor-services-client (~> 14.0)
+  dor-services-client (~> 15.0)
   dor-workflow-client (~> 7.0)
   druid-tools
   fastimage (~> 2.2)

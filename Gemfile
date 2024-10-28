@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 # stanford dlss specific gems
 gem 'assembly-objectfile'
-gem 'dor-services-client', '~> 14.0'
+gem 'dor-services-client', '~> 15.0'
 gem 'dor-workflow-client', '~> 7.0'
 gem 'druid-tools'
 gem 'geoserver-publish', '>= 0.5.0' # samvera labs
