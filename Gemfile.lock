@@ -7,7 +7,7 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (8.0.0)
+    activesupport (8.0.1)
       base64
       benchmark (>= 0.3)
       bigdecimal
@@ -79,7 +79,7 @@ GEM
     crack (1.0.0)
       bigdecimal
       rexml
-    csv (3.3.0)
+    csv (3.3.1)
     date (3.4.1)
     debug (1.9.2)
       irb (~> 1.10)
@@ -103,7 +103,7 @@ GEM
       faraday (~> 2.0)
       faraday-retry
       zeitwerk (~> 2.1)
-    dor-workflow-client (7.6.1)
+    dor-workflow-client (7.7.0)
       activesupport (>= 7.0.0)
       deprecation (>= 0.99.0)
       faraday (~> 2.0)
@@ -156,14 +156,14 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-console (0.8.0)
-    irb (1.14.1)
+    irb (1.14.2)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.9.0)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
-    logger (1.6.2)
+    logger (1.6.3)
     lyber-core (7.7.0)
       activesupport
       config
@@ -191,10 +191,10 @@ GEM
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.3.0)
-    nokogiri (1.17.0)
+    nokogiri (1.17.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.17.0-x86_64-linux)
+    nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
     openapi3_parser (0.10.0)
       commonmarker (>= 1.0)
@@ -220,15 +220,15 @@ GEM
     rainbow (3.1.1)
     rake (13.2.1)
     rb_sys (0.9.103)
-    rdoc (6.8.1)
+    rdoc (6.9.0)
       psych (>= 4.0.0)
-    redis-client (0.22.2)
+    redis-client (0.23.0)
       connection_pool
     regexp_parser (2.9.3)
     reline (0.5.12)
       io-console (~> 0.5)
     retries (0.0.5)
-    rexml (3.3.9)
+    rexml (3.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -244,7 +244,7 @@ GEM
     rspec-support (3.13.2)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.69.1)
+    rubocop (1.69.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -254,13 +254,13 @@ GEM
       rubocop-ast (>= 1.36.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.36.2)
+    rubocop-ast (1.37.0)
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
     rubocop-factory_bot (2.26.1)
       rubocop (~> 1.61)
-    rubocop-rspec (3.2.0)
+    rubocop-rspec (3.3.0)
       rubocop (~> 1.61)
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
@@ -268,7 +268,7 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
     scanf (1.0.0)
-    securerandom (0.4.0)
+    securerandom (0.4.1)
     sidekiq (7.3.6)
       connection_pool (>= 2.3.0)
       logger
