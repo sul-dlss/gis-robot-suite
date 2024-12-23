@@ -1,8 +1,8 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.3.3)
-      sidekiq (>= 7.3.0, < 8)
+    sidekiq-pro (7.3.4)
+      sidekiq (>= 7.3.7, < 8)
 
 GEM
   remote: https://rubygems.org/
@@ -79,9 +79,9 @@ GEM
     crack (1.0.0)
       bigdecimal
       rexml
-    csv (3.3.1)
+    csv (3.3.2)
     date (3.4.1)
-    debug (1.9.2)
+    debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     deep_merge (1.2.2)
@@ -150,20 +150,20 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.2)
-    honeybadger (5.26.0)
+    honeybadger (5.26.1)
       logger
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     io-console (0.8.0)
-    irb (1.14.2)
+    irb (1.14.3)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.9.0)
+    json (2.9.1)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
-    logger (1.6.3)
+    logger (1.6.4)
     lyber-core (7.7.0)
       activesupport
       config
@@ -211,7 +211,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     pstore (0.1.4)
-    psych (5.2.1)
+    psych (5.2.2)
       date
       stringio
     public_suffix (6.0.1)
@@ -219,13 +219,13 @@ GEM
     rack (3.1.8)
     rainbow (3.1.1)
     rake (13.2.1)
-    rb_sys (0.9.103)
-    rdoc (6.9.0)
+    rb_sys (0.9.104)
+    rdoc (6.10.0)
       psych (>= 4.0.0)
     redis-client (0.23.0)
       connection_pool
     regexp_parser (2.9.3)
-    reline (0.5.12)
+    reline (0.6.0)
       io-console (~> 0.5)
     retries (0.0.5)
     rexml (3.4.0)
@@ -269,7 +269,7 @@ GEM
     rubyzip (2.3.2)
     scanf (1.0.0)
     securerandom (0.4.1)
-    sidekiq (7.3.6)
+    sidekiq (7.3.7)
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)
