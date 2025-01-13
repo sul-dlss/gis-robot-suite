@@ -1,7 +1,7 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.3.4)
+    sidekiq-pro (7.3.5)
       sidekiq (>= 7.3.7, < 8)
 
 GEM
@@ -147,8 +147,9 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.2)
-    honeybadger (5.26.1)
+    honeybadger (5.26.2)
       logger
+      ostruct
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -160,7 +161,7 @@ GEM
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.3)
-    logger (1.6.4)
+    logger (1.6.5)
     lyber-core (7.7.0)
       activesupport
       config
@@ -174,7 +175,7 @@ GEM
     mime-types (3.6.0)
       logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.1203)
+    mime-types-data (3.2025.0107)
     mini_exiftool (2.13.1)
       ostruct (>= 0.6.0)
       pstore (>= 0.1.3)
@@ -216,7 +217,7 @@ GEM
     rake (13.2.1)
     rdoc (6.10.0)
       psych (>= 4.0.0)
-    redis-client (0.23.0)
+    redis-client (0.23.1)
       connection_pool
     regexp_parser (2.10.0)
     reline (0.6.0)
@@ -238,7 +239,7 @@ GEM
     rspec-support (3.13.2)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.69.2)
+    rubocop (1.70.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
