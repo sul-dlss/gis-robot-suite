@@ -15,6 +15,9 @@ These robots require several dependencies needed to perform the GIS workflow ste
  - `xsltproc` and `xmllint` for transforming XML files
  - rsync also used as part of the robot process and is needed
 
+## System Commands
+There are many ways to execute commands on the host OS in Ruby.  For calling the aforementioned tools (GDAL commands, `xsltproc`, etc), it's suggested to first reach for `GisRobotSuite.run_system_command`, since that is consistent with the rest of the codebase, and includes some helpful logging and error handling.
+
 # Documentation
 
 GIS data has its own set of names, standards and conventions that can be difficult for newcomers. To better understand some of these please see the [Geo4LibCamp Glossary](https://geo4libcamp.org/glossary/) as well as the following article which describes the initial goals for supporting GIS in SDR:
