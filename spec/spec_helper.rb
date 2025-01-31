@@ -8,6 +8,12 @@ SimpleCov.start do
   track_files 'lib/**/*.rb'
   track_files 'robots/**/*.rb'
   add_filter '/spec/'
+
+  if ENV['CI']
+    require 'simplecov_json_formatter'
+
+    formatter SimpleCov::Formatter::JSONFormatter
+  end
 end
 
 ENV['ROBOT_ENVIRONMENT'] = 'test'

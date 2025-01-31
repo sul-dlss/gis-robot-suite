@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  ruby-rails: sul-dlss/ruby-rails@4.3.0
+  ruby-rails: sul-dlss/ruby-rails@4.4.0
 workflows:
   build:
     jobs:
@@ -10,6 +10,7 @@ workflows:
       - ruby-rails/test-gem:
           name: test
           context: dlss
+          use-codecov: true
           before-test:
             - run: sudo apt-get update -y
             - run: sudo apt-get install -y xsltproc libxml2-utils gdal-bin
