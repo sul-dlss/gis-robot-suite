@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
-
 # Gazetteer data look like this:
 #   "l_kw","geonames_kw","geonames_id","lc_kw","lc_id"
 #   "Ahmadābād District (India)","Ahmadābād",1279234,"Ahmadābād (India : District)","n78019943"
