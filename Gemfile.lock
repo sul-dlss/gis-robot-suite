@@ -83,7 +83,7 @@ GEM
     deep_merge (1.2.2)
     deprecation (1.1.0)
       activesupport
-    diff-lcs (1.5.1)
+    diff-lcs (1.6.0)
     dlss-capistrano (5.3.0)
       bcrypt_pbkdf
       capistrano (~> 3.0)
@@ -147,7 +147,7 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.1.2)
-    honeybadger (5.26.2)
+    honeybadger (5.26.3)
       logger
       ostruct
     i18n (1.14.7)
@@ -158,11 +158,12 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.9.1)
+    json (2.10.1)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.4)
-    logger (1.6.5)
+    lint_roller (1.1.0)
+    logger (1.6.6)
     lyber-core (7.7.0)
       activesupport
       config
@@ -216,7 +217,7 @@ GEM
       stringio
     public_suffix (6.0.1)
     racc (1.8.1)
-    rack (3.1.9)
+    rack (3.1.10)
     rainbow (3.1.1)
     rake (13.2.1)
     rdoc (6.12.0)
@@ -227,7 +228,7 @@ GEM
     reline (0.6.0)
       io-console (~> 0.5)
     retries (0.0.5)
-    rexml (3.4.0)
+    rexml (3.4.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -243,9 +244,10 @@ GEM
     rspec-support (3.13.2)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.71.2)
+    rubocop (1.72.1)
       json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
@@ -259,8 +261,9 @@ GEM
       rubocop (~> 1.41)
     rubocop-factory_bot (2.26.1)
       rubocop (~> 1.61)
-    rubocop-rspec (3.4.0)
-      rubocop (~> 1.61)
+    rubocop-rspec (3.5.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
       rubocop-rspec (~> 3, >= 3.0.1)
@@ -268,7 +271,7 @@ GEM
     rubyzip (2.4.1)
     scanf (1.0.0)
     securerandom (0.4.1)
-    sidekiq (7.3.8)
+    sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
       logger
@@ -288,7 +291,7 @@ GEM
       net-sftp (>= 2.1.2)
       net-ssh (>= 2.8.0)
       ostruct
-    stringio (3.1.2)
+    stringio (3.1.3)
     super_diff (0.15.0)
       attr_extras (>= 6.2.4)
       diff-lcs
