@@ -244,7 +244,7 @@ GEM
     rspec-support (3.13.2)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.72.2)
+    rubocop (1.73.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -255,7 +255,7 @@ GEM
       rubocop-ast (>= 1.38.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.38.0)
+    rubocop-ast (1.38.1)
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
@@ -302,7 +302,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    uri (1.0.2)
+    uri (1.0.3)
     webmock (3.25.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -350,4 +350,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-   2.4.13
+   2.6.5
