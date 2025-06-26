@@ -52,7 +52,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.104.0)
+    cocina-models (0.104.1)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -92,12 +92,13 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.12.0)
+    dor-services-client (15.13.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.104.0)
+      cocina-models (~> 0.104.1)
       deprecation
       faraday (~> 2.0)
       faraday-retry
+      nokogiri
       zeitwerk (~> 2.1)
     dor-workflow-client (7.7.0)
       activesupport (>= 7.0.0)
