@@ -18,6 +18,19 @@ module Robots
           object_client.update(params: updated)
         end
 
+        DATA_FILE_MIMETYPES =
+          [['.shp', 'application/vnd.shp'],
+           ['.shx', 'application/vnd.shx'],
+           ['.vat.dbf', 'application/octet-stream'],
+           ['.dbf', 'application/vnd.dbf'],
+           ['.prj', 'text/plain'],
+           ['.cpg', 'text/plain'],
+           ['.geojson', 'application/geo+json'],
+           ['.tif', 'image/tiff'],
+           ['.tfw', 'text/plain'],
+           ['.xml', 'application/xml']].freeze
+        private_constant :DATA_FILE_MIMETYPES
+
         private
 
         def contains_params
@@ -153,20 +166,6 @@ module Robots
             params[:presentation] = presentation if presentation
           end
         end
-
-        DATA_FILE_MIMETYPES =
-          [
-            ['.shp', 'application/vnd.shp'],
-            ['.shx', 'application/vnd.shx'],
-            ['.vat.dbf', 'application/octet-stream'],
-            ['.dbf', 'application/vnd.dbf'],
-            ['.prj', 'text/plain'],
-            ['.cpg', 'text/plain'],
-            ['.geojson', 'application/geo+json'],
-            ['.tif', 'image/tiff'],
-            ['.tfw', 'text/plain'],
-            ['.xml', 'application/xml']
-          ].freeze
 
         def mimetype_for_data_file(objectfile)
           DATA_FILE_MIMETYPES.each do |ext, mimetype|

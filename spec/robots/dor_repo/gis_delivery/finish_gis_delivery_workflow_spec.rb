@@ -4,12 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisDelivery::FinishGisDeliveryWorkflow do
   let(:robot) { described_class.new }
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:druid) { 'fx392st8577' }
-
-  before do
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-  end
 
   describe '#perform_work' do
     it 'raises an error if layer does not exist' do

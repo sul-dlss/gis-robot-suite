@@ -26,8 +26,6 @@ module GisRobotSuite
       Cocina::Models::Description.new(description_props)
     end
 
-    private
-
     NS = {
       'gmd' => 'http://www.isotc211.org/2005/gmd',
       'gco' => 'http://www.isotc211.org/2005/gco',
@@ -35,6 +33,9 @@ module GisRobotSuite
       'srv' => 'http://www.isotc211.org/2005/srv',
       'gml' => 'http://www.opengis.net/gml'
     }.freeze
+    private_constant :NS
+
+    private
 
     def data_id_node
       @data_id_node ||= iso19139_ng.xpath('//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification', NS)
@@ -589,9 +590,14 @@ module GisRobotSuite
     # * -109.758319 => 109°45ʹ29.9484ʺ
     # * 48.999336 => 48°59ʹ57.609ʺ
     E = 1
+    private_constant :E
     QSEC = 'ʺ'
+    private_constant :QSEC
     QMIN = 'ʹ'
+    private_constant :QMIN
     QDEG = "\u00B0"
+    private_constant :QDEG
+
     def dd2ddmmss_abs(value)
       value_abs = value.abs
       degrees = value_abs.floor
@@ -614,8 +620,8 @@ module GisRobotSuite
     # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
     def to_coordinates_ddmmss(native_values)
       west, east, north, south = native_values
-      raise ArgumentError, "Out of bounds latitude: #{north} #{south}" unless north >= -90 && north <= 90 && south >= -90 && south <= 90
-      raise ArgumentError, "Out of bounds longitude: #{west} #{east}" unless west >= -180 && west <= 180 && east >= -180 && east <= 180
+      raise ArgumentError, "Out of bounds latitude: #{north} #{south}" unless north.between?(-90, 90) && south.between?(-90, 90)
+      raise ArgumentError, "Out of bounds longitude: #{west} #{east}" unless west.between?(-180, 180) && east.between?(-180, 180)
 
       west = "#{west < 0 ? 'W' : 'E'} #{dd2ddmmss_abs(west)}"
       east = "#{east < 0 ? 'W' : 'E'} #{dd2ddmmss_abs(east)}"

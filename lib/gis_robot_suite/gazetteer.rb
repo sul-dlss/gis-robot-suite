@@ -10,7 +10,7 @@ module GisRobotSuite
     def initialize
       @registry = {}
       CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |row|
-        row = row.each { |_k, v2| v2.to_s.strip } # rubocop:disable Style/HashEachMethods rubocop thinks row is a regular Hash; it's not, and CSV::Row doesn't have #each_value
+        row = row.each { |_k, v2| v2.to_s.strip } # rubocop:disable Style/HashEachMethods --rubocop thinks row is a regular Hash; it's not, and CSV::Row doesn't have #each_value
         keyword = row[0]
         keyword = row[1] if keyword.nil? || keyword.empty?
         keyword.strip!

@@ -3,13 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::GenerateTag do
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:robot) { described_class.new }
   let(:druid) { 'druid:bb000dd1111' }
-
-  before do
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-  end
 
   describe '#perform_work' do
     let(:object_client) do

@@ -10,7 +10,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
   let(:sql_filename) { "#{normalizer_tmpdir}/sanluisobispo1996.sql" }
   let(:robot) { described_class.new }
   let(:logger) { robot.logger }
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }
   let(:cocina_object) { build(:dro, id: druid).new(description:) }
 
@@ -84,7 +83,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadVector do
 
   before do
     allow(GisRobotSuite).to receive(:run_system_command).and_call_original
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
   end
 
