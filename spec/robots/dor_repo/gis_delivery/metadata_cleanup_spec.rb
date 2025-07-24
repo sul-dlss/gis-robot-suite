@@ -3,7 +3,11 @@
 require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisDelivery::MetadataCleanup do
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
+  let(:process_response) { instance_double(Dor::Services::Response::Process, status: 'queued') }
+  let(:workflow_response) { instance_double(Dor::Services::Response::Workflow, process_for_recent_version: process_response) }
+  let(:workflow_client) { instance_double(Dor::Services::Client::ObjectWorkflow, create: true, find: workflow_response) }
+  let(:process_client) { instance_double(Dor::Services::Client::Process, update: nil) }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, workflow: workflow_client) }
   let(:source_druid) { 'cv676dy5796' }
   let(:source_dir) { File.join(DruidTools::Druid.new(source_druid, File.join(fixture_dir, 'stage')).path, 'content') }
   let(:staging_dir) { DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path }
@@ -11,9 +15,8 @@ RSpec.describe Robots::DorRepo::GisDelivery::MetadataCleanup do
   before do
     FileUtils.mkdir_p(staging_dir)
     FileUtils.cp_r(source_dir, staging_dir)
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-    allow(workflow_client).to receive(:workflow_status).and_return('queued')
-    allow(workflow_client).to receive(:update_status)
+    allow(Dor::Services::Client).to receive(:object).with("druid:#{druid}").and_return(object_client)
+    allow(workflow_client).to receive(:process).with('metadata-cleanup').and_return(process_client)
   end
 
   context 'with ESRI metadata for a shapefile' do

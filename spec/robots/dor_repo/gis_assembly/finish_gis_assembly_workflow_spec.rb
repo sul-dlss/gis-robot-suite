@@ -4,7 +4,6 @@ require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::FinishGisAssemblyWorkflow do
   let(:robot) { described_class.new }
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:bare_druid) { 'bb045mm1234' }
   let(:druid) { "druid:#{bare_druid}" }
   let(:rootdir) { GisRobotSuite.locate_druid_path bare_druid, type: :stage }
@@ -12,7 +11,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::FinishGisAssemblyWorkflow do
   let(:destdir) { GisRobotSuite.locate_druid_path bare_druid, type: :workspace }
 
   before do
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     FileUtils.mkdir_p(tmpdir) unless File.directory?(tmpdir) # make a temp directory to be deleted
   end
 

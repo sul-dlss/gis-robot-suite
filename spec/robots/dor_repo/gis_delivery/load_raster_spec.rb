@@ -9,7 +9,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadRaster do
   let(:destination_path) { '/geotiff' }
   let(:cmd_tif_sync) { "rsync -v '#{tif_filename}' #{destination_path}/#{bare_druid}.tif" }
   let(:robot) { described_class.new }
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object) }
   let(:cocina_object) { build(:dro, id: druid).new(description:) }
   let(:logger) { robot.logger }
@@ -84,7 +83,6 @@ RSpec.describe Robots::DorRepo::GisDelivery::LoadRaster do
   before do
     allow(GisRobotSuite).to receive(:run_system_command).and_call_original
     allow(GisRobotSuite).to receive(:run_system_command).with(cmd_tif_sync, logger:)
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
   end
 

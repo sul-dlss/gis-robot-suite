@@ -11,7 +11,7 @@ module Robots
         def perform_work
           logger.debug "start-delivery-workflow working on #{bare_druid}"
           current_version = object_client.version.current
-          workflow_service.create_workflow_by_name(druid, 'gisDeliveryWF', version: current_version)
+          object_client.workflow('gisDeliveryWF').create(version: current_version)
         end
       end
     end

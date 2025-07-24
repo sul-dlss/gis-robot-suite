@@ -3,7 +3,11 @@
 require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
-  let(:workflow_client) { instance_double(Dor::Workflow::Client) }
+  let(:process_response) { instance_double(Dor::Services::Response::Process, status: 'queued') }
+  let(:workflow_response) { instance_double(Dor::Services::Response::Workflow, process_for_recent_version: process_response) }
+  let(:workflow_client) { instance_double(Dor::Services::Client::ObjectWorkflow, create: true, find: workflow_response) }
+  let(:process_client) { instance_double(Dor::Services::Client::Process, update: nil, update_error: nil) }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, workflow: workflow_client) }
   let(:staging_dir) { File.join(DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path, 'content') }
 
   # Get rid of any generated XML files
@@ -13,10 +17,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
 
   before do
     cleanup
-    allow(LyberCore::WorkflowClientFactory).to receive(:build).and_return(workflow_client)
-    allow(workflow_client).to receive(:workflow_status).and_return('queued')
-    allow(workflow_client).to receive(:update_status)
-    allow(workflow_client).to receive(:update_error_status)
+    allow(Dor::Services::Client).to receive(:object).with("druid:#{druid}").and_return(object_client)
+    allow(workflow_client).to receive(:process).with('extract-fgdc-metadata').and_return(process_client)
     described_class.new.perform("druid:#{druid}")
   end
 
