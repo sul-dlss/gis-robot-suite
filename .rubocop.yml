@@ -421,3 +421,5 @@ Style/ComparableBetween: # new in 1.74
   Enabled: true
 Style/SafeNavigationChainLength: # new in 1.68
   Enabled: false
+Layout/EmptyLinesAfterModuleInclusion: # new in 1.79
+  Enabled: true
