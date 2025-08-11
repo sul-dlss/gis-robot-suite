@@ -29,9 +29,9 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     info[:nbands] = bands.size
     info[:type] = bands.last['type']
 
-    min_from_bands = (bands.min_by { |band| band['min'] })['min'] # the min value of all the min field values among the bands
+    min_from_bands = bands.min_by { |band| band['min'] }['min'] # the min value of all the min field values among the bands
     info[:min] = min_from_bands if min_from_bands
-    max_from_bands = (bands.max_by { |band| band['max'] })['max'] # the max value of all the max field values among the bands
+    max_from_bands = bands.max_by { |band| band['max'] }['max'] # the max value of all the max field values among the bands
     info[:max] = max_from_bands if max_from_bands
 
     # determine raster style
