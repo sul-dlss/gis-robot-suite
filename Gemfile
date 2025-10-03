@@ -17,7 +17,7 @@ gem 'pry' # for console
 gem 'rake'
 gem 'retries'
 gem 'scanf'
-gem 'sidekiq', '~> 7.0'
+gem 'sidekiq', '~> 8.0'
 gem 'slop' # for bin/run_robot
 gem 'zeitwerk', '~> 2.1'
 
