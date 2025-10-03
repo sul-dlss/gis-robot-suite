@@ -1,8 +1,8 @@
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.3.6)
-      sidekiq (>= 7.3.7, < 8)
+    sidekiq-pro (8.0.2)
+      sidekiq (>= 8.0.0, < 9)
 
 GEM
   remote: https://rubygems.org/
@@ -159,13 +159,13 @@ GEM
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
-    lyber-core (8.0.1)
+    lyber-core (8.1.0)
       activesupport
       config
       dor-services-client
       druid-tools
       honeybadger
-      sidekiq (~> 7.0)
+      sidekiq
       zeitwerk
     method_source (1.1.0)
     mime-types (3.7.0)
@@ -271,12 +271,12 @@ GEM
     rubyzip (3.1.1)
     scanf (1.0.0)
     securerandom (0.4.1)
-    sidekiq (7.3.9)
-      base64
-      connection_pool (>= 2.3.0)
-      logger
-      rack (>= 2.2.4)
-      redis-client (>= 0.22.2)
+    sidekiq (8.0.7)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -341,7 +341,7 @@ DEPENDENCIES
   rubocop-rspec_rails
   rubyzip
   scanf
-  sidekiq (~> 7.0)
+  sidekiq (~> 8.0)
   sidekiq-pro!
   simplecov
   slop
