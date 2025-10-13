@@ -129,7 +129,7 @@ GEM
       activesupport (>= 3.0, < 9.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    erb (5.0.2)
+    erb (5.1.1)
     faraday (2.14.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -142,7 +142,7 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.2.1)
-    honeybadger (6.1.0)
+    honeybadger (6.1.1)
       logger
       ostruct
     i18n (1.14.7)
@@ -199,10 +199,10 @@ GEM
       racc
     patience_diff (1.2.0)
       optimist (~> 3.0)
-    pp (0.6.2)
+    pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.5.1)
+    prism (1.5.2)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -212,7 +212,7 @@ GEM
       stringio
     public_suffix (6.0.2)
     racc (1.8.1)
-    rack (3.2.1)
+    rack (3.2.3)
     rainbow (3.1.1)
     rake (13.3.0)
     rdoc (6.15.0)
@@ -272,7 +272,7 @@ GEM
     rubyzip (3.1.1)
     scanf (1.0.0)
     securerandom (0.4.1)
-    sidekiq (8.0.7)
+    sidekiq (8.0.8)
       connection_pool (>= 2.5.0)
       json (>= 2.9.0)
       logger (>= 1.6.2)
