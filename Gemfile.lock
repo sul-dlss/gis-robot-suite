@@ -92,7 +92,7 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.23.0)
+    dor-services-client (15.24.0)
       activesupport (>= 7.0.0)
       cocina-models (~> 0.107.0)
       deprecation
@@ -142,7 +142,7 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.2.1)
-    honeybadger (6.1.1)
+    honeybadger (6.1.2)
       logger
       ostruct
     i18n (1.14.7)
@@ -202,7 +202,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.5.2)
+    prism (1.6.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -230,12 +230,12 @@ GEM
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.5)
+    rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.5)
+    rspec-mocks (3.13.6)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.6)
@@ -269,7 +269,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
     ruby-progressbar (1.13.0)
-    rubyzip (3.1.1)
+    rubyzip (3.2.0)
     scanf (1.0.0)
     securerandom (0.4.1)
     sidekiq (8.0.8)
