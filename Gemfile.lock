@@ -7,7 +7,7 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (8.1.0)
+    activesupport (8.1.1)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
@@ -51,7 +51,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.107.1)
+    cocina-models (0.108.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -91,9 +91,9 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.24.0)
+    dor-services-client (15.25.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.107.0)
+      cocina-models (~> 0.108.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
