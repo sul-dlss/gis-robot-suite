@@ -134,7 +134,7 @@ GEM
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
     hashdiff (1.2.1)
-    honeybadger (6.2.0)
+    honeybadger (6.2.1)
       logger
       ostruct
     i18n (1.14.8)
@@ -213,7 +213,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis-client (0.26.3)
+    redis-client (0.26.4)
       connection_pool
     regexp_parser (2.11.3)
     reline (0.6.3)
