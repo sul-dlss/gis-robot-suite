@@ -93,7 +93,7 @@ module Robots
           @file_access_params ||= cocina_object.access.to_h
                                                .slice(:view, :download, :location, :controlledDigitalLending)
                                                .tap do |access|
-                                                 access[:view] = 'dark' if access[:view] == 'citation-only'
+            access[:view] = 'dark' if access[:view] == 'citation-only'
           end
         end
 
