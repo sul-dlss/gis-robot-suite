@@ -49,3 +49,5 @@ group :deployment do
   gem 'capistrano-shared_configs'
   gem 'dlss-capistrano', require: false
 end
+
+gem 'benchmark', '~> 0.5.0'
