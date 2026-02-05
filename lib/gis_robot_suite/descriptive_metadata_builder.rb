@@ -3,6 +3,8 @@
 module GisRobotSuite
   # Builds cocina descriptive metadata from ISO19139
   class DescriptiveMetadataBuilder # rubocop:disable Metrics/ClassLength
+    GOOD_URI = /\A#{URI::RFC2396_PARSER.make_regexp(%w[http https])}\z/
+
     def self.build(cocina_model:, bare_druid:, iso19139_ng:, logger:)
       new(cocina_model:, bare_druid:, iso19139_ng:, logger:).build
     end
@@ -327,7 +329,8 @@ module GisRobotSuite
       return unless keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation', NS).any?
 
       code = keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString', NS).text
-      uri = keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text
+      uri = valid_uri(keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text)
+
       return { code:, uri: } unless code.include?('Library of Congress Subject Headings (LCSH)') # preserving logic from xslt to handle older records
 
       { code: 'lcsh', uri: }
@@ -343,7 +346,7 @@ module GisRobotSuite
 
         { source: { code: 'ISO19115TopicCategory', uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode' },
           value: label,
-          uri: node.text,
+          uri: valid_uri(node.text),
           type: 'topic' }
       end
     end
@@ -630,5 +633,11 @@ module GisRobotSuite
       "#{west}--#{east}/#{north}--#{south}"
     end
     # rubocop:enable Style/NumericPredicate
+
+    def valid_uri(uri)
+      raise "Invalid uri: '#{uri}'" unless uri.match?(GOOD_URI)
+
+      uri
+    end
   end
 end
