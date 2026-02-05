@@ -32,6 +32,7 @@ GEM
     attr_extras (7.1.0)
     base64 (0.3.0)
     bcrypt_pbkdf (1.1.2)
+    benchmark (0.5.0)
     bigdecimal (4.0.1)
     byebug (13.0.0)
       reline (>= 0.6.0)
@@ -84,7 +85,7 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.25.3)
+    dor-services-client (15.26.0)
       activesupport (>= 7.0.0)
       cocina-models (~> 0.109.0)
       deprecation
@@ -311,6 +312,7 @@ PLATFORMS
 
 DEPENDENCIES
   assembly-objectfile
+  benchmark (~> 0.5.0)
   byebug
   capistrano
   capistrano-bundler
