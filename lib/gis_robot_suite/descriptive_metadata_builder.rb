@@ -346,7 +346,7 @@ module GisRobotSuite
 
         { source: { code: 'ISO19115TopicCategory', uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode' },
           value: label,
-          uri: valid_uri(node.text),
+          code: node.text,
           type: 'topic' }
       end
     end
