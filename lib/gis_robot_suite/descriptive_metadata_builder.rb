@@ -5,6 +5,8 @@ module GisRobotSuite
   class DescriptiveMetadataBuilder # rubocop:disable Metrics/ClassLength
     GOOD_URI = /\A#{URI::RFC2396_PARSER.make_regexp(%w[http https])}\z/
 
+    class InvalidURIError < RuntimeError; end
+
     def self.build(cocina_model:, bare_druid:, iso19139_ng:, logger:)
       new(cocina_model:, bare_druid:, iso19139_ng:, logger:).build
     end
@@ -328,12 +330,15 @@ module GisRobotSuite
     def keyword_source(keyword)
       return unless keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation', NS).any?
 
-      code = keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString', NS).text
-      uri = valid_uri(keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text)
+      code = keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString', NS).text.presence
+      uri = keyword.xpath('../../gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', NS).text.presence
 
-      return { code:, uri: } unless code.include?('Library of Congress Subject Headings (LCSH)') # preserving logic from xslt to handle older records
-
-      { code: 'lcsh', uri: }
+      {}.tap do |source|
+        # preserving logic from xslt to handle older records
+        source[:code] = code.include?('Library of Congress Subject Headings (LCSH)') ? 'lcsh' : code
+        # URI is not required here, so if it's missing in the XML, don't try to validate it
+        source[:uri] = valid_uri(uri) if uri
+      end
     end
 
     def category_subjects
@@ -635,7 +640,7 @@ module GisRobotSuite
     # rubocop:enable Style/NumericPredicate
 
     def valid_uri(uri)
-      raise "Invalid uri: '#{uri}'" unless uri.match?(GOOD_URI)
+      raise InvalidURIError, "Invalid uri: '#{uri}'" unless uri.match?(GOOD_URI)
 
       uri
     end
