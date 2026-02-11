@@ -46,7 +46,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.109.0)
+    cocina-models (0.110.1)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -54,9 +54,10 @@ GEM
       edtf
       equivalent-xml
       i18n
+      json_schemer (~> 2.0)
       jsonpath
+      marc (~> 1.3)
       nokogiri
-      openapi_parser (~> 1.0)
       super_diff
       thor
       zeitwerk (~> 2.1)
@@ -85,9 +86,9 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.26.0)
+    dor-services-client (15.27.1)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.109.0)
+      cocina-models (~> 0.110.1)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -134,6 +135,7 @@ GEM
     fastimage (2.4.0)
     geoserver-publish (1.0.0)
       faraday (~> 2.2)
+    hana (1.3.7)
     hashdiff (1.2.1)
     honeybadger (6.3.0)
       logger
@@ -147,6 +149,11 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.1)
+    json_schemer (2.5.0)
+      bigdecimal
+      hana (~> 1.3)
+      regexp_parser (~> 2.0)
+      simpleidn (~> 0.2)
     jsonpath (1.1.5)
       multi_json
     language_server-protocol (3.17.0.5)
@@ -160,6 +167,9 @@ GEM
       honeybadger
       sidekiq
       zeitwerk
+    marc (1.4.0)
+      nokogiri (~> 1.0)
+      rexml
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
@@ -184,7 +194,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.0-x86_64-linux-gnu)
       racc (~> 1.4)
-    openapi_parser (1.0.0)
     optimist (3.2.1)
     ostruct (0.6.3)
     parallel (1.27.0)
@@ -279,6 +288,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
+    simpleidn (0.2.3)
     slop (4.10.1)
     sshkit (1.25.0)
       base64
