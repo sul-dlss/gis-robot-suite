@@ -194,6 +194,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.0-x86_64-linux-gnu)
       racc (~> 1.4)
+    open-uri (0.5.0)
+      stringio
+      time
+      uri
     optimist (3.2.1)
     ostruct (0.6.3)
     parallel (1.27.0)
@@ -303,6 +307,8 @@ GEM
       diff-lcs
       patience_diff
     thor (1.5.0)
+    time (0.4.2)
+      date
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -337,6 +343,7 @@ DEPENDENCIES
   geoserver-publish (>= 0.5.0)
   honeybadger
   lyber-core (~> 8.0)
+  open-uri
   pry
   rake
   retries
