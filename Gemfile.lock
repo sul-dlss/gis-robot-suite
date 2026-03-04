@@ -46,7 +46,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.112.1)
+    cocina-models (0.113.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -85,9 +85,9 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.30.1)
+    dor-services-client (15.31.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.112.0)
+      cocina-models (~> 0.113.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -105,7 +105,7 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.1)
       zeitwerk (~> 2.6)
-    dry-struct (1.8.0)
+    dry-struct (1.8.1)
       dry-core (~> 1.1)
       dry-types (~> 1.8, >= 1.8.2)
       ice_nine (~> 0.11)
