@@ -23,6 +23,7 @@ module GisRobotSuite
 
       epsg4326_projection? ? compress_only : reproject_and_compress
       convert_8bit_to_rgb if eight_bit?
+      add_alpha_channel
       tmpdir
     end
 
@@ -74,6 +75,19 @@ module GisRobotSuite
       GisRobotSuite.run_system_command("mv '#{output_filepath}' '#{temp_filename}'", logger:)
       GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal_translate -expand rgb '#{temp_filename}' '#{output_filepath}' -co 'COMPRESS=LZW'", logger:)
       File.delete(temp_filename)
+    end
+
+    def add_alpha_channel
+      # NOTE: gdalwarp is smart enough not to add a new alpha channel (band) if one is already there.
+      # If we want to improve the performance of the normalize step, and many GeoTIFFs already
+      # have alpha channels, then we could introspect on the GeoTIFF file with gdalinfo and skip
+      # this call to gdalwarp if one is already present.
+
+      logger.info "load-raster: adding alpha channel for #{output_filepath}"
+      temp_filepath = "#{tmpdir}/#{geo_object_name}_alpha.tif"
+      gdalwarp_cmd = "#{Settings.gdal_path}gdalwarp -dstalpha -co 'COMPRESS=LZW' -dstnodata 0"
+      GisRobotSuite.run_system_command("#{gdalwarp_cmd} #{output_filepath} #{temp_filepath}", logger:)
+      FileUtils.mv(temp_filepath, output_filepath)
     end
 
     def tmpdir
