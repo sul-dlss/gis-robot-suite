@@ -46,7 +46,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.114.0)
+    cocina-models (0.115.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -85,12 +85,13 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.33.0)
+    dor-services-client (15.36.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.114.0)
+      cocina-models (~> 0.115.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
+      hashie
       nokogiri
       zeitwerk (~> 2.1)
     drb (2.2.3)
@@ -136,6 +137,8 @@ GEM
       faraday (~> 2.2)
     hana (1.3.7)
     hashdiff (1.2.1)
+    hashie (5.1.0)
+      logger
     honeybadger (6.5.2)
       logger
       ostruct
@@ -148,7 +151,7 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.19.1)
+    json (2.19.2)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
