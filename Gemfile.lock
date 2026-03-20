@@ -46,7 +46,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.115.0)
+    cocina-models (0.116.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -85,9 +85,9 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.36.0)
+    dor-services-client (15.37.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.115.0)
+      cocina-models (~> 0.116.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -195,10 +195,10 @@ GEM
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-ssh (7.3.1)
-    nokogiri (1.19.1)
+    nokogiri (1.19.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.19.1-x86_64-linux-gnu)
+    nokogiri (1.19.2-x86_64-linux-gnu)
       racc (~> 1.4)
     open-uri (0.5.0)
       stringio
