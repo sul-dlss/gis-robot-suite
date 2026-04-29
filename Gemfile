@@ -14,7 +14,6 @@ gem 'csv'
 gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
 gem 'honeybadger'
 gem 'open-uri'
-gem 'pry' # for console
 gem 'rake'
 gem 'retries'
 gem 'scanf'
