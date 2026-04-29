@@ -7,12 +7,7 @@ task :console, :ROBOT_ENVIRONMENT do |_t, args|
   ENV['ROBOT_ENVIRONMENT'] ||= args[:ROBOT_ENVIRONMENT]
   Rake::Task['environment'].invoke
 
-  begin
-    require 'pry'
-    IRB = Pry
-  rescue LoadError
-    require 'irb'
-  end
+  require 'irb'
 
   ARGV.clear
   IRB.start

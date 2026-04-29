@@ -1,18 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# To start an pry session with gems and configuration loaded:
+# To start an irb session with gems and configuration loaded:
 # [robot_root] $ ./bin/console development
 ENV['ROBOT_ENVIRONMENT'] = ARGV.shift unless ARGV.first.nil?
-
+require 'irb'
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-
-silence_warnings do
-  begin
-    require 'pry'
-    IRB = Pry
-  rescue LoadError
-  end
-end
 
 IRB.start
