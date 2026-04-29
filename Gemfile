@@ -6,7 +6,6 @@ source 'https://rubygems.org'
 gem 'assembly-objectfile'
 gem 'dor-services-client', '~> 15.0'
 gem 'druid-tools'
-gem 'geoserver-publish', '>= 0.5.0' # samvera labs
 gem 'lyber-core', '~> 8.0'
 
 gem 'config'

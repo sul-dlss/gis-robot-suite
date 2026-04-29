@@ -23,7 +23,7 @@ GIS data has its own set of names, standards and conventions that can be difficu
 
 Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of Geospatial Data Using Hydra, Journal of Map &amp; Geography Libraries, 11:2, 123-154, DOI: [10.1080/15420353.2015.1041630](https://doi.org/10.1080/15420353.2015.1041630).
 
-*gis-robot-suite* services two workflows: *gisAssemblyWF* and *gisDeliveryWF*.
+*gis-robot-suite* services one workflow: *gisAssemblyWF*.
 
 `gisAssemblyWF`
 ---------------
@@ -37,18 +37,6 @@ Kim Durante &amp; Darren Hardy (2015) Discovery, Management, and Preservation of
 * `extract-boundingbox` :: Extract bounding box from data for Cocina descriptive
 * `generate-structural` :: Generate structural metadata and update the Cocina data store accordingly
 * `finish-gis-assembly-workflow` :: Finalize assembly workflow to prepare for assembly/delivery/discovery (validity check)
-* `start-delivery-workflow` :: Kickstart the GIS delivery workflow at gisDeliveryWF
-
-
-`gisDeliveryWF`
----------------
-
-* `load-vector` :: Load vector data into PostGIS database
-* `load-raster` :: Load raster into GeoTIFF data store
-* `load-geoserver` :: Load layers into GeoServer
-* `reset-geowebcache` :: Reset GeoWebCache for the layer
-* `finish-gis-delivery-workflow` :: Connect to public and restricted GeoServers to verify layer
-* `metadata-cleanup` :: Remove the staging druid tree for the working druid
 * `start-accession-workflow` :: Closes the object version to initiate the accessioning workflow
 
 Data Wrangling
@@ -105,7 +93,6 @@ None 🙂
 * Nothing special needs to be kept in terms of APOs, other than what the integration tests use (saving and reseeding that is already tracked elsewhere in the overall SDR reset process).  Same for agreements and collections.
 * Earthworks: we expect/hope that the unpublish step of the overall SDR reset plan will take care of removing old Earthworks data, but we are not sure whether Earthworks responds to unpublish, so that is yet to be tested on our first QA/stage SDR reset attempt (planned for Sept 2023).
 * We have checked with the main user of gis-robot-suite, and have confirmed that there is no test data that needs to be kept in stage or QA across resets.
-* While gis-robot-suite connects to a geoserver database, that is maintained as part of the Access portfolio, and resetting it is outside the scope of an Infrastructure portfolio SDR reset.
 
 ## Steps
 
@@ -113,7 +100,6 @@ None 🙂
   - `Settings.geohydra.stage` (e.g. `'/var/geomdtk/current/stage'`)
   - `Settings.geohydra.workspace` (e.g. `'/var/geomdtk/current/workspace'`)
   - `Settings.geohydra.tmpdir` (e.g. `'/var/geomdtk/current/tmp'`)
-  - `Settings.geohydra.geotiff.dir` (e.g. `'/var/geoserver/local/raster/geotiff'`)
   - `Settings.geohydra.opengeometadata.dir` (e.g. `'/var/geomdtk/current/export/opengeometadata/edu.stanford.purl'`)
 
 Done.

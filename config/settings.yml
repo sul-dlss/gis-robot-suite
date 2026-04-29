@@ -8,18 +8,6 @@ geohydra:
   stage: '/stage'
   workspace: '/workspace'
   tmpdir: '/tmp'
-  geoserver:
-    url: 'http://localhost/geoserver'
-    #  styledir '/var/geoserver/local/data/styles'
-  geowebcache:
-    user: 'example_user'
-    password: 'example_password'
-    url: 'https://localhost/geoserver/gwc'
-  geotiff:
-    host: 'localhost'
-    dir: '/geotiff'
-  postgis:
-    schema: 'druid'
   opengeometadata:
     dir: '/opengeometadata'
 
@@ -27,23 +15,3 @@ purl:
   url: 'http://localhost/purl'
 
 gdal_path: ''
-
-geoserver:
-  public:
-    primary:
-      url: 'http://example.com/geoserver/rest'
-      user: admin
-      password: geoserver
-    replica:
-      url: 'http://example-2.com/geoserver/rest'
-      user: admin
-      password: geoserver
-  restricted:
-    primary:
-      url: 'http://example.com/restricted/geoserver/rest'
-      user: admin
-      password: geoserver
-    replica:
-      url: 'http://examplep-2.com/restricted/geoserver/rest'
-      user: admin
-      password: geoserver
