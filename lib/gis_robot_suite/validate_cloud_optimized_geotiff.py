@@ -13,6 +13,12 @@
 # *****************************************************************************
 # Script from https://raw.githubusercontent.com/OSGeo/gdal/refs/heads/master/swig/python/gdal-utils/osgeo_utils/samples/validate_cloud_optimized_geotiff.py
 
+# /// script
+# dependencies = [
+#   "gdal",
+# ]
+# ///
+
 import os.path
 import struct
 import sys
