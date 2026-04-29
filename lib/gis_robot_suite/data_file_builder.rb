@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
+  # This class is responsible for building the list of Cocina Files for the GIS data files located in the content directory.
   class DataFileBuilder
     # @return [Array<Hash<Symbol, Object>>]
     def self.build(content_dir:, file_access:, version:)

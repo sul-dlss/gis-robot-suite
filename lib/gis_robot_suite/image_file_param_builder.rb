@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
+  # A specialized subclass of FileParamBuilder for building the Cocina File metadata for an image file.
   class ImageFileParamBuilder < FileParamBuilder
     # @return [Hash<Symbol, Object>]
     def self.build(presentation:, **)
