@@ -12,7 +12,7 @@ module GisRobotSuite
         ['.json', 'application/geo+json'],
         ['.geojson', 'application/geo+json'],
         ['.pmtiles', 'application/vnd.pmtiles'],
-        ['.tif', 'image/tiff'],
+        ['.tif', 'image/tiff; application=geotiff'],
         ['.ovr', 'application/octet-stream'], # pyramid_ovr_raster_file
         ['.rrd', 'application/octet-stream'], # pyramid_rrd_raster_file
         ['.aux', 'application/octet-stream'], # auxiliary_stats_raster_file

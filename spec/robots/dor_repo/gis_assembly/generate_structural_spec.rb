@@ -437,7 +437,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     version: 1,
                     sdrGeneratedText: false,
                     correctedForAccessibility: false,
-                    hasMimeType: 'image/tiff',
+                    hasMimeType: 'image/tiff; application=geotiff',
                     use: 'master',
                     hasMessageDigests: [
                       {
