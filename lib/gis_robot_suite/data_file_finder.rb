@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
+  # This class is responsible for finding GIS data files in the provided directory.
   class DataFileFinder
     FILE_MIMETYPES =
       [

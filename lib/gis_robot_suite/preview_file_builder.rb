@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
+  # This class is responsible for building the list of Cocina Files (there is only one) for the preview image.
   class PreviewFileBuilder
     def self.build(content_dir:, file_access:, version:)
       new(content_dir:, file_access:, version:).build

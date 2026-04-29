@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
+  # This class is responsible for building the Cocina File metadata for a given file
   class FileParamBuilder
     # @return [Hash<Symbol, Object>]
     def self.build(objectfile:, file_access:, version:, mimetype:, use: 'master', preserve: true)
