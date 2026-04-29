@@ -25,8 +25,11 @@ source 'https://gems.contribsys.com/' do
   gem 'sidekiq-pro'
 end
 
-group :development do
+group :development, :test do
   gem 'debug', require: false
+end
+
+group :development do
   gem 'rspec'
   gem 'rubocop', require: false
   gem 'rubocop-capybara'
@@ -36,7 +39,6 @@ group :development do
 end
 
 group :test do
-  gem 'byebug'
   gem 'rspec_junit_formatter' # For circleCI
   gem 'rubyzip'
   gem 'simplecov', require: 'false'

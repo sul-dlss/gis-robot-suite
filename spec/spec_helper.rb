@@ -19,7 +19,7 @@ end
 ENV['ROBOT_ENVIRONMENT'] = 'test'
 require File.expand_path("#{__dir__}/../config/boot")
 
-require 'byebug'
+require 'debug'
 require 'rspec'
 require 'cocina/rspec'
 require 'zip'
