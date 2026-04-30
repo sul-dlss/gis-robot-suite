@@ -404,6 +404,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
     context 'without preview.jpg file' do
       let(:druid) { 'druid:bh432xr2264' } # druid with no preview.jpg in staging fixture area
 
+      before do
+        allow(GisRobotSuite::CogValidator).to receive(:valid?).and_return(false)
+      end
+
       it 'raises an exception' do
         expect { test_perform(robot, druid) }.to raise_error(/Missing preview file/)
       end
@@ -437,7 +441,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
                     version: 1,
                     sdrGeneratedText: false,
                     correctedForAccessibility: false,
-                    hasMimeType: 'image/tiff; application=geotiff',
+                    hasMimeType: expected_mimetype,
                     use: 'master',
                     hasMessageDigests: [
                       {
@@ -667,10 +671,33 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         }
       end
 
-      it 'creates structural with the expected file rights' do
-        test_perform(robot, druid)
-        expect(object_client).to have_received(:update) do |args|
-          expect(args[:params].structural.to_h).to match(expected_structural)
+      context 'with a cloud optimized geotiff file' do # rubocop:disable RSpec/NestedGroups
+        before do
+          allow(GisRobotSuite::CogValidator).to receive(:valid?).and_return(true)
+        end
+
+        let(:expected_mimetype) { 'image/tiff; application=geotiff; profile=cloud-optimized' }
+
+        it 'creates structural with the expected file rights' do
+          test_perform(robot, druid)
+          expect(object_client).to have_received(:update) do |args|
+            expect(args[:params].structural.to_h).to match(expected_structural)
+          end
+        end
+      end
+
+      context 'with a regular geotiff file' do # rubocop:disable RSpec/NestedGroups
+        before do
+          allow(GisRobotSuite::CogValidator).to receive(:valid?).and_return(false)
+        end
+
+        let(:expected_mimetype) { 'image/tiff; application=geotiff' }
+
+        it 'creates structural with the expected file rights' do
+          test_perform(robot, druid)
+          expect(object_client).to have_received(:update) do |args|
+            expect(args[:params].structural.to_h).to match(expected_structural)
+          end
         end
       end
     end
