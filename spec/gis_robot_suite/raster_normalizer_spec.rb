@@ -115,6 +115,11 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
           "gdal_translate -expand rgb '/tmp/normalizeraster_bb021mm7809/raw8bit.tif' '/tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif' -co 'COMPRESS=LZW'",
           logger:
         )
+        # Adds an alpha channel
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
+          "gdalwarp -dstalpha -co 'COMPRESS=LZW' -dstnodata 0 /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014.tif /tmp/normalizeraster_bb021mm7809/MCE_FI2G_2014_alpha.tif",
+          logger:
+        )
       end
     end
 
