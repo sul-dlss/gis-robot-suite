@@ -34,10 +34,18 @@ module GisRobotSuite
 
     def mimetype_for_file(objectfile)
       DataFileFinder::FILE_MIMETYPES.each do |ext, mimetype|
-        return mimetype if objectfile.filename.end_with?(ext)
+        if objectfile.filename.end_with?(ext)
+          return ext == '.tif' ? geotiff_or_cog(objectfile) : mimetype
+        end
       end
 
       'application/octet-stream'
+    end
+
+    def geotiff_or_cog(objectfile)
+      return 'image/tiff; application=geotiff; profile=cloud-optimized' if GisRobotSuite::CogValidator.valid?(objectfile.path)
+
+      'image/tiff; application=geotiff'
     end
 
     def data_files
