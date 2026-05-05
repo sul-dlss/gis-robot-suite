@@ -15,7 +15,7 @@
 
 # /// script
 # dependencies = [
-#   "gdal",
+#   "gdal==3.11.4",
 # ]
 # ///
 
