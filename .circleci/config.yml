@@ -1,15 +1,22 @@
 version: 2.1
 orbs:
   ruby-rails: sul-dlss/ruby-rails@4.8.0
+
 workflows:
   build:
     jobs:
       - ruby-rails/lint:
           name: lint
           context: dlss
+          executor:
+            name: "ruby-rails/ruby"
+            "ruby-tag": "4.0"
       - ruby-rails/test-gem:
           name: test
           context: dlss
+          executor:
+            name: "ruby-rails/ruby"
+            "ruby-tag": "4.0"
           before-test:
             - run: sudo apt-get update -y
             - run: sudo apt-get install -y xsltproc libxml2-utils gdal-bin
