@@ -18,5 +18,6 @@ workflows:
             name: "ruby-rails/ruby"
             "ruby-tag": "4.0"
           before-test:
+            - run: sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
             - run: sudo apt-get update -y
             - run: sudo apt-get install -y xsltproc libxml2-utils gdal-bin
