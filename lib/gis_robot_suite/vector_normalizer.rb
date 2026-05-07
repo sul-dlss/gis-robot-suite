@@ -19,7 +19,6 @@ module GisRobotSuite
       FileUtils.mkdir_p tmpdir
 
       normalize_shp
-      normalize_prj
 
       tmpdir
     end
@@ -46,24 +45,16 @@ module GisRobotSuite
     end
 
     def normalize_shp
-      # See http://www.gdal.org/ogr2ogr.html
-      output_filepath = File.join(tmpdir, "#{geo_object_name}.shp") # output shapefile
+      # See https://gdal.org/programs/gdal_vector_reproject.html
+      output_filepath = File.join(tmpdir, "#{geo_object_name}.shp")
       logger.info "normalize-vector: #{bare_druid} is projecting #{geo_object_name} to EPSG:4326"
 
-      # prevent recoding
-      GisRobotSuite.run_system_command("env SHAPE_ENCODING= #{Settings.gdal_path}ogr2ogr -progress -t_srs '#{wkt}' '#{output_filepath}' '#{vector_filepath}'", logger:)
+      # gdal vector reproject automatically creates the .prj file alongside the shapefile
+      GisRobotSuite.run_system_command(
+        "env SHAPE_ENCODING= #{Settings.gdal_path}gdal vector reproject --dst-crs=EPSG:4326 --overwrite '#{vector_filepath}' '#{output_filepath}'",
+        logger:
+      )
       raise "normalize-vector: #{bare_druid} failed to reproject #{vector_filepath}" unless File.size?(output_filepath)
-    end
-
-    def normalize_prj
-      output_filepath = File.join(tmpdir, "#{geo_object_name}.prj")
-      logger.debug "normalize-vector: #{bare_druid} overwriting #{output_filepath}"
-      File.write(output_filepath, wkt)
-    end
-
-    def wkt
-      # Well Known Text. It’s a text markup language for expressing geometries in vector data.
-      @wkt ||= URI.open('https://spatialreference.org/ref/epsg/4326/prettywkt/').read
     end
   end
 end
