@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'scanf'
 
 module Robots
   module DorRepo
@@ -51,23 +50,12 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def bounding_box_from_shapefile(shape_filename)
           logger.debug "extract-boundingbox: working on Shapefile: #{shape_filename}"
-          ogrinfo_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogrinfo -ro -so -al '#{shape_filename}'", logger:)[:stdout_str]
-          # When GDAL is upgraded to >= 3.7.0, the -json flag can be added to use JSON output instead of regexing text line-by-line.
-          # json = JSON.parse(ogrinfo_str)
-          # extent = json.dig('layers', 0, 'geometryFields', 0, 'extent')
-          # return [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
+          vector_info_json_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal vector info -f json '#{shape_filename}'", logger:)[:stdout_str]
 
-          ogrinfo_str.each_line do |line|
-            # Extent: (-151.479444, 26.071745) - (-78.085007, 69.432500) --> (W, S) - (E, N)
-            next unless line =~ /^Extent:\s+\((.*),\s*(.*)\)\s+-\s+\((.*),\s*(.*)\)/
-
-            w, s, e, n = [Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), Regexp.last_match(4)].map(&:to_s)
-            ulx = w
-            uly = n
-            lrx = e
-            lry = s
-            return [ulx, uly, lrx, lry].map { |x| x.to_s.strip.to_f }
-          end
+          vector_info_json = JSON.parse(vector_info_json_str)
+          extent = vector_info_json.dig('layers', 0, 'geometryFields', 0, 'extent')
+          # extent is [min_x, min_y, max_x, max_y] --> [west, south, east, north]
+          [extent[0].to_f, extent[3].to_f, extent[2].to_f, extent[1].to_f]
         end
 
         # Reads the GeoTIFF to determine box
@@ -75,7 +63,7 @@ module Robots
         # @return [Array#Float] ulx uly lrx lry
         def bounding_box_from_geotiff(tiff_filename)
           logger.debug "extract-boundingbox: working on GeoTIFF: #{tiff_filename}"
-          gdalinfo_json_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}gdalinfo -json '#{tiff_filename}'", logger:)[:stdout_str]
+          raster_info_json_str = GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal raster info -f json '#{tiff_filename}'", logger:)[:stdout_str]
 
           ulx = 0
           uly = 0
@@ -83,13 +71,15 @@ module Robots
           lry = 0
           # {
           #   "cornerCoordinates":{
-          #     "upperLeft":[-32.3338761, 40.5004267], "lowerLeft":[-32.3338761, 36.0005087],
-          #     "lowerRight":[-23.8337056, 36.0005087], "upperRight":[-23.8337056, 40.5004267],
-          #     "center":[-28.0837908, 38.2504677]
+          #     "upperLeft":[16.1179474, 70.6126121],
+          #     "lowerLeft":[16.1179474, 59.2022116],
+          #     "lowerRight":[32.2367687, 59.2022116],
+          #     "upperRight":[32.2367687, 70.6126121],
+          #     "center":[24.1773581, 64.9074119]
           #   }
-          # } # plus many other sibling keys for cornerCoordinates
-          gdalinfo_json = JSON.parse(gdalinfo_json_str)
-          corner_coordinates = gdalinfo_json['cornerCoordinates']
+          # }
+          raster_info_json = JSON.parse(raster_info_json_str)
+          corner_coordinates = raster_info_json['cornerCoordinates']
           unless corner_coordinates.blank?
             ulx, uly = corner_coordinates['upperLeft']
             lrx, lry = corner_coordinates['lowerRight']
