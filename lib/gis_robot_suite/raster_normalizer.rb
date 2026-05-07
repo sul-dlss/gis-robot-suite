@@ -40,7 +40,8 @@ module GisRobotSuite
 
       # reproject with gdalwarp (must uncompress here to prevent bloat)
       logger.info "load-raster: #{bare_druid} projecting #{geo_object_name} from #{projection_from_cocina_subject}"
-      GisRobotSuite.run_system_command("#{Settings.gdal_path}gdalwarp -r bilinear -t_srs EPSG:4326 '#{input_filepath}' '#{temp_filepath}' -co 'COMPRESS=NONE'", logger:)
+      GisRobotSuite.run_system_command("#{Settings.gdal_path}gdal raster reproject -r bilinear -d EPSG:4326 -i '#{input_filepath}' -o '#{temp_filepath}' --co 'COMPRESS=NONE'",
+                                       logger:)
       raise "load-raster: #{bare_druid} gdalwarp failed to create #{temp_filepath}" unless File.size?(temp_filepath)
 
       compress(temp_filepath, output_filepath)
@@ -58,7 +59,7 @@ module GisRobotSuite
     end
 
     def eight_bit?
-      cmd = "#{Settings.gdal_path}gdalinfo -json -norat -noct '#{output_filepath}'"
+      cmd = "#{Settings.gdal_path}gdal raster info -f json --no-ct '#{output_filepath}'"
       gdalinfo_json_str = GisRobotSuite.run_system_command(cmd, logger:)[:stdout_str]
       gdalinfo_json = JSON.parse(gdalinfo_json_str)
       bands = gdalinfo_json['bands']
