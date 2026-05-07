@@ -464,19 +464,19 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       if ci?
         [
           {
-            value: '-121.347916',
+            value: '-121.347866',
             type: 'west'
           },
           {
-            value: '34.897518',
+            value: '34.89752',
             type: 'south'
           },
           {
-            value: '-119.47262',
+            value: '-119.472601',
             type: 'east'
           },
           {
-            value: '35.795222',
+            value: '35.795197',
             type: 'north'
           }
         ]
@@ -696,7 +696,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
 
     def ci?
       cmd_result = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogr2ogr --version", logger: Logger.new($stdout)) # provide a throw away logger
-      cmd_result[:stdout_str].include?('GDAL 3.4')
+      cmd_result[:stdout_str].include?('GDAL 3.11')
     end
 
     it 'updates the cocina with the bounding box' do
