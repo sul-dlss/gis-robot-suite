@@ -58,14 +58,6 @@ RSpec.describe GisRobotSuite do
         expect(described_class).not_to be_raster(cocina_object)
       end
     end
-
-    context 'when an ArcGrid raster' do
-      let(:media_type) { 'application/x-ogc-aig' }
-
-      it 'raises' do
-        expect { described_class.raster?(cocina_object) }.to raise_error(RuntimeError, "druid:bc234fg5678 is ArcGrid format: 'application/x-ogc-aig'")
-      end
-    end
   end
 
   describe '.determine_rights' do

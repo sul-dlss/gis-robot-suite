@@ -21,7 +21,6 @@ module GisRobotSuite
     # Type of GIS data for this object
     def data_type
       file_name = File.basename(esri_metadata_file)
-      return 'ArcGRID' if file_name == 'metadata.xml'
       return 'Shapefile' if file_name.end_with?('.shp.xml')
       return 'GeoTIFF' if file_name.end_with?('.tif.xml')
       return 'GeoJSON' if file_name.end_with?('.geojson.xml')
@@ -61,8 +60,6 @@ module GisRobotSuite
         File.basename(esri_metadata_file, '.shp.xml')
       when 'GeoTIFF'
         File.basename(esri_metadata_file, '.tif.xml')
-      when 'ArcGRID'
-        File.basename(File.dirname(esri_metadata_file))
       when 'GeoJSON'
         File.basename(esri_metadata_file, '.geojson.xml')
       end
