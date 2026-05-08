@@ -17,7 +17,7 @@ module GisRobotSuite
     # @return [String] the path to the normalized raster
     def normalize
       raise "load-raster: #{bare_druid} cannot locate data type" unless data_format
-      raise "load-raster: #{bare_druid} has unsupported Raster data type: #{data_format}" unless geotiff? || arcgrid?
+      raise "load-raster: #{bare_druid} has unsupported Raster data type: #{data_format}" unless geotiff?
 
       FileUtils.mkdir_p tmpdir
 
@@ -89,10 +89,6 @@ module GisRobotSuite
       data_format == 'GeoTIFF'
     end
 
-    def arcgrid?
-      data_format == 'ArcGRID'
-    end
-
     def epsg4326_projection?
       projection_from_cocina_subject == 'EPSG:4326'
     end
@@ -103,11 +99,7 @@ module GisRobotSuite
     end
 
     def input_filepath
-      @input_filepath ||= if arcgrid?
-                            "#{content_dir}/#{geo_object_name}"
-                          else # GeoTIFF
-                            "#{content_dir}/#{geo_object_name}.tif"
-                          end
+      @input_filepath ||= "#{content_dir}/#{geo_object_name}.tif"
     end
 
     def output_filepath
@@ -115,13 +107,10 @@ module GisRobotSuite
     end
 
     def geo_object_name
-      @geo_object_name = if arcgrid?
-                           filepath = Dir.glob("#{content_dir}/*/metadata.xml").first
-                           filepath ? File.basename(File.dirname(filepath)) : nil
-                         else # GeoTIFF
-                           filepath = Dir.glob("#{content_dir}/*.tif.xml").first
-                           filepath ? File.basename(filepath, '.tif.xml') : nil
-                         end
+      @geo_object_name ||= begin
+        filepath = Dir.glob("#{content_dir}/*.tif.xml").first
+        filepath ? File.basename(filepath, '.tif.xml') : nil
+      end
     end
 
     def bare_druid

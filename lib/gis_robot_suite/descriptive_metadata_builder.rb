@@ -214,8 +214,6 @@ module GisRobotSuite
         ['application/x-esri-shapefile', 'Shapefile']
       elsif format_name == 'GeoJSON' || file_format == 'GeoJSON'
         ['application/geo+json', 'GeoJSON']
-      elsif format_name == 'Arc/Info Binary Grid' || file_format == 'ArcGRID'
-        ['application/x-ogc-aig', 'ArcGRID']
       elsif format_name == 'Arc/Info ASCII Grid'
         ['application/x-ogc-aaigrid']
       else
@@ -548,14 +546,9 @@ module GisRobotSuite
 
     def raster_file_format
       tif_file = Dir.glob("#{rootdir}/content/*.tif").first
-      if tif_file.nil?
-        metadata_xml_file = Dir.glob("#{rootdir}/content/*/metadata.xml").first
-        raise "generate-descriptive: #{bare_druid} cannot detect fileFormat: #{rootdir}/content" if metadata_xml_file.nil?
+      raise "generate-descriptive: #{bare_druid} cannot detect fileFormat: #{rootdir}/content" if tif_file.nil?
 
-        'ArcGRID'
-      else
-        'GeoTIFF'
-      end
+      'GeoTIFF'
     end
 
     def geometry_type

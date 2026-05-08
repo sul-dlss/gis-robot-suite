@@ -71,8 +71,6 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   RASTER_TYPES = %w[image/tiff].freeze
 
   def self.raster?(cocina_object)
-    raise "#{cocina_object.externalIdentifier} is ArcGrid format: 'application/x-ogc-aig'" if media_type(cocina_object) == 'application/x-ogc-aig'
-
     RASTER_TYPES.include?(media_type(cocina_object))
   end
 
@@ -119,7 +117,7 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
   end
 
   def self.locate_esri_metadata(dir, _opts = {})
-    extensions = ['.shp.xml', '.tif.xml', '/metadata.xml', '.geojson.xml']
+    extensions = ['.shp.xml', '.tif.xml', '.geojson.xml']
 
     filename = nil
     extensions.each do |ext|
