@@ -53,4 +53,4 @@ end
 
 gem 'benchmark', '~> 0.5.0'
 
-gem "preservation-client", "~> 7.2"
+gem 'preservation-client', '~> 7.2'

@@ -375,7 +375,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         end
       end
 
-      context 'with citation-only view rights and no download on the containing cocina object' do # rubocop:disable RSpec/NestedGroups
+      context 'with citation-only view rights and no download on the containing cocina object' do
         let(:cocina_object_access) do
           {
             view: 'citation-only',
@@ -671,7 +671,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         }
       end
 
-      context 'with a cloud optimized geotiff file' do # rubocop:disable RSpec/NestedGroups
+      context 'with a cloud optimized geotiff file' do
         before do
           allow(GisRobotSuite::CogValidator).to receive(:valid?).and_return(true)
         end
@@ -686,7 +686,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         end
       end
 
-      context 'with a regular geotiff file' do # rubocop:disable RSpec/NestedGroups
+      context 'with a regular geotiff file' do
         before do
           allow(GisRobotSuite::CogValidator).to receive(:valid?).and_return(false)
         end
@@ -767,7 +767,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateStructural do
         end
       end
 
-      context 'with citation-only view rights and no download on the containing cocina object' do # rubocop:disable RSpec/NestedGroups
+      context 'with citation-only view rights and no download on the containing cocina object' do
         let(:cocina_object_access) do
           {
             view: 'citation-only',

@@ -19,15 +19,12 @@ module GisRobotSuite
     # @param [Object] location to write the file (could be a Pathname object, a string representing a local path)
     # @param [Integer] max_tries the number of times to retry fetching the file
     # @return [Boolean] true if the file was fetched and written, false otherwise
-    def write_file_with_retries(filename:, location:, max_tries: 3)
+    def write_file_with_retries(filename:, location:, max_tries: 3) # rubocop:disable Naming/PredicateMethod
       tries = 0
-      written = false
       begin
-        written = if location.is_a?(String) || location.is_a?(Pathname)
-                    fetch_and_write_file_to_disk(filename:, path: Pathname.new(location))
-                  else
-                    raise "Unknown location type: #{location.class}"
-                  end
+        raise "Unknown location type: #{location.class}" unless location.is_a?(String) || location.is_a?(Pathname)
+
+        fetch_and_write_file_to_disk(filename:, path: Pathname.new(location))
       rescue Preservation::Client::NotFoundError, Faraday::ResourceNotFound
         tries += 1
         logger.warn("received NotFoundError from Preservation try ##{tries}")
@@ -42,9 +39,9 @@ module GisRobotSuite
 
         logger.error("Exceeded max_tries attempting to fetch file: #{context}")
         Honeybadger.notify('Exceeded max_tries attempting to fetch file', context:)
+        return false
       end
-
-      written
+      true
     end
 
     private
@@ -59,8 +56,6 @@ module GisRobotSuite
           on_data: proc { |data, _count| file_writer.write(data) }
         )
       end
-
-      true
     end
 
     def preservation_client

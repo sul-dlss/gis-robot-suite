@@ -12,10 +12,10 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - Gemfile.lock
-    - '**/*.md'
-    - 'bin/console'
-    - 'config/boot.rb'
-    - 'vendor/**/*' # avoid running rubocop on cached bundler
+    - "**/*.md"
+    - "bin/console"
+    - "config/boot.rb"
+    - "vendor/**/*" # avoid running rubocop on cached bundler
 
 Metrics/BlockLength:
   Exclude:
@@ -25,6 +25,9 @@ Naming/FileName:
   Exclude:
     - Capfile
     - Gemfile
+
+RSpec/NestedGroups:
+  Max: 5
 
 Style/SymbolArray:
   Exclude:
