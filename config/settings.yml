@@ -1,17 +1,23 @@
 connection_error_max_retries: 3
 
 dor_services:
-  url:  'https://dor-services-test.stanford.test'
+  url: "https://dor-services-test.stanford.test"
   token: secret-token
 
+preservation_catalog:
+  url: "https://preservation-catalog-stage.stanford.edu"
+  token: "mint-token-with-target-preservation-catalog-rake-generate-token"
+
+sleep_coefficient: 1
+
 geohydra:
-  stage: '/stage'
-  workspace: '/workspace'
-  tmpdir: '/tmp'
+  stage: "/stage"
+  workspace: "/workspace"
+  tmpdir: "/tmp"
   opengeometadata:
-    dir: '/opengeometadata'
+    dir: "/opengeometadata"
 
 purl:
-  url: 'http://localhost/purl'
+  url: "http://localhost/purl"
 
-gdal_path: ''
+gdal_path: ""
