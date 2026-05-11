@@ -26,8 +26,8 @@ module GisRobotSuite
 
     # See https://github.com/sul-dlss/gis-robot-suite/wiki/GIS-SSDI-Data-input-formats-and-derivatives
     def self.find(content_dir:)
-      FILE_MIMETYPES.map do |ext, _mimetype|
-        Dir.glob("#{content_dir}/*#{ext}").first
+      FILE_MIMETYPES.flat_map do |ext, _mimetype|
+        Dir.glob("#{content_dir}/*#{ext}")
       end.compact
     end
   end
