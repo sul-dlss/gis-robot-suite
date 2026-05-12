@@ -31,7 +31,6 @@ end
 group :development do
   gem 'rspec'
   gem 'rubocop', require: false
-  gem 'rubocop-capybara'
   gem 'rubocop-factory_bot'
   gem 'rubocop-rspec'
   gem 'rubocop-rspec_rails'
