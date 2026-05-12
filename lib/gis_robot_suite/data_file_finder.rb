@@ -21,14 +21,13 @@ module GisRobotSuite
         ['.sbx', 'application/octet-stream'], # spatial_index_x_shapefile
         ['.aux.xml', 'application/xml'], # auxiliary_stats_xml_raster_file
         ['.prj', 'text/plain'],
-        ['.tfw', 'text/plain'] # world_raster_file
+        ['.tfw', 'text/plain'], # world_raster_file
+        ['.fgb', 'application/vnd.fgb'] # flat geobuf vector data
       ].freeze
 
     # See https://github.com/sul-dlss/gis-robot-suite/wiki/GIS-SSDI-Data-input-formats-and-derivatives
     def self.find(content_dir:)
-      FILE_MIMETYPES.flat_map do |ext, _mimetype|
-        Dir.glob("#{content_dir}/*#{ext}")
-      end.compact
+      Dir.glob("#{content_dir}/*{#{FILE_MIMETYPES.map(&:first).join(',')}}")
     end
   end
 end
