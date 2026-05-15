@@ -8,15 +8,9 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
 
   let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_object, update: nil) }
 
-  let(:wkt) do
-    'GEOGCS["WGS 84", DATUM["WGS_1984", SPHEROID["WGS 84",6378137,298.257223563, AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich",0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.0174532925199433, AUTHORITY["EPSG","9122"]], AUTHORITY["EPSG","4326"]]' # rubocop:disable Layout/LineLength
-  end
-
   before do
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:run_system_command).and_call_original
-    stub_request(:get, 'https://spatialreference.org/ref/epsg/4326/prettywkt/')
-      .to_return(status: 200, body: wkt, headers: {})
   end
 
   context 'when raster' do
