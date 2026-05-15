@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Robots::DorRepo::GisAssembly::StartAccessionWorkflow do
+RSpec.describe Robots::DorRepo::GisDerivative::StartAccessionWorkflow do
   let(:robot) { described_class.new }
   let(:druid) { 'fx392st8577' }
   let(:object_client) { instance_double(Dor::Services::Client::Object, version: version_client) }

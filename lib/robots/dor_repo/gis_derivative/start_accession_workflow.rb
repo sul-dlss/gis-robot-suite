@@ -2,10 +2,10 @@
 
 module Robots
   module DorRepo
-    module GisAssembly
+    module GisDerivative
       class StartAccessionWorkflow < Base
         def initialize
-          super('gisAssemblyWF', 'start-accession-workflow')
+          super('gisDerivativeWF', 'start-accession-workflow')
         end
 
         def perform_work

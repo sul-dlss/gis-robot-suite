@@ -25,6 +25,9 @@ Naming/FileName:
     - Capfile
     - Gemfile
 
+RSpec/NestedGroups:
+  Max: 5
+
 Style/SymbolArray:
   Exclude:
     - Rakefile # because [:spec, :rubocop] isn't a big deal
