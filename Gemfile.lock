@@ -331,6 +331,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-shared_configs
+  cocina-models
   config
   csv
   debug

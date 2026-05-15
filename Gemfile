@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 # stanford dlss specific gems
 gem 'assembly-objectfile'
+gem 'cocina-models'
 gem 'dor-services-client', '~> 15.0'
 gem 'druid-tools'
 gem 'lyber-core', '~> 8.0'
