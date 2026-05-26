@@ -72,8 +72,8 @@ class Migrator
   end
 
   def start_workflow(version)
-    puts '  Starting workflow...'
-    object_client.workflow('gisDerivativeWF').create(version:)
+    puts '  Starting assembly workflow...'
+    object_client.workflow('gisAssemblyWF').create(version:)
   end
 end
 
