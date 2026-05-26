@@ -31,21 +31,21 @@ module Robots
           @file_fetcher ||= GisRobotSuite::FileFetcher.new(druid:, logger:)
         end
 
-        # return a list of filenames that should be OCR'd
+        # return a list of filenames that are the master files for the object
         # iterate over all files in cocina_object.structural.contains, looking at mimetypes
         # return a list of filenames that are correct mimetype
         def master_filenames
           @master_filenames ||= files.map(&:filename)
         end
 
-        # iterate through cocina structural contains and return all File objects
+        # iterate through cocina structural contains and return all relevant File objects
         def files
           cocina_object.structural.contains.flat_map do |fileset|
             preserved_files_for_fileset(fileset)
           end.compact
         end
 
-        # filter down fileset files that could possibly be OCRed to those that are in preservation and are of an allowed mimetype and dimensions
+        # filter down fileset files that are in preservation and have the master role
         def preserved_files_for_fileset(fileset)
           fileset.structural.contains.select do |file|
             file.administrative.sdrPreserve &&
