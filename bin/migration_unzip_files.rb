@@ -21,6 +21,7 @@ class Migrator
     puts "Processing #{@druid}..."
     fetch_files
     unzip
+    remove_derivative_metadata
     start_workflow(open_new_object_version)
   end
 
@@ -51,6 +52,13 @@ class Migrator
 
     puts '  Unzipping data.zip...'
     system("unzip -o -q #{zip_path} -d #{content_dir}")
+  end
+
+  def remove_derivative_metadata
+    GisRobotSuite.locate_derivative_metadata_files(content_dir).each do |file|
+      puts "  Removing derivative metadata #{file}..."
+      FileUtils.rm_f(file)
+    end
   end
 
   def object_client
