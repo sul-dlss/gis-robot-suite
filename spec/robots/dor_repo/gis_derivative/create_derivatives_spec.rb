@@ -69,6 +69,137 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     expect(object_client).to have_received(:update)
   end
 
+  context 'when shapefile' do
+    let(:master_file) do
+      Cocina::Models::File.new(
+        type: 'https://cocina.sul.stanford.edu/models/file',
+        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.shp',
+        label: 'data.shp',
+        filename: 'data.shp',
+        size: 100,
+        version: 2,
+        hasMimeType: 'application/vnd.shp',
+        use: 'master',
+        administrative: {
+          publish: true,
+          sdrPreserve: true,
+          shelve: true
+        }
+      )
+    end
+    let(:master_file_path) { workspace_path / 'data.shp' }
+    let(:fgb_file_path) { workspace_path / 'data.fgb' }
+    let(:pmtiles_file_path) { workspace_path / 'data.pmtiles' }
+
+    before do
+      File.write(fgb_file_path, 'fake fgb content')
+      File.write(pmtiles_file_path, 'fake pmtiles content')
+    end
+
+    after do
+      FileUtils.rm_f(fgb_file_path)
+      FileUtils.rm_f(pmtiles_file_path)
+    end
+
+    it 'creates a derivative FGB and PMTiles' do
+      perform
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=FlatGeobuf/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=PMTiles/, any_args)
+      expect(object_client).to have_received(:update) do |params:|
+        new_contains = params.structural.contains.first.structural.contains
+        expect(new_contains.count).to eq 3
+        expect(new_contains.map(&:use)).to eq %w[master derivative derivative]
+        expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles')
+      end
+    end
+
+    context 'when the derivatives already exist in cocina' do
+      let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
+
+      let(:derivative_fgb_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.fgb',
+          label: 'data.fgb',
+          filename: 'data.fgb',
+          size: 50,
+          version: 2,
+          hasMimeType: 'application/vnd.fgb',
+          use: 'derivative',
+          administrative: { publish: true, sdrPreserve: false, shelve: true }
+        )
+      end
+
+      let(:derivative_pmtiles_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.pmtiles',
+          label: 'data.pmtiles',
+          filename: 'data.pmtiles',
+          size: 50,
+          version: 2,
+          hasMimeType: 'application/vnd.pmtiles',
+          use: 'derivative',
+          administrative: { publish: true, sdrPreserve: false, shelve: true }
+        )
+      end
+
+      it 'replaces both derivatives' do
+        perform
+        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=FlatGeobuf/, any_args)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=PMTiles/, any_args)
+        expect(object_client).to have_received(:update) do |params:|
+          new_contains = params.structural.contains.first.structural.contains
+          expect(new_contains.count).to eq 3
+          # Ensure the old derivatives were removed and new ones added
+          derivatives = new_contains.select { |f| f.use == 'derivative' }
+          expect(derivatives.count).to eq 2
+          expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_fgb_file.externalIdentifier)
+          expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_pmtiles_file.externalIdentifier)
+        end
+      end
+    end
+  end
+
+  context 'when geojson' do
+    let(:master_file) do
+      Cocina::Models::File.new(
+        type: 'https://cocina.sul.stanford.edu/models/file',
+        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.geojson',
+        label: 'data.geojson',
+        filename: 'data.geojson',
+        size: 100,
+        version: 2,
+        hasMimeType: 'application/geo+json',
+        use: 'master',
+        administrative: {
+          publish: true,
+          sdrPreserve: true,
+          shelve: true
+        }
+      )
+    end
+    let(:master_file_path) { workspace_path / 'data.geojson' }
+    let(:fgb_file_path) { workspace_path / 'data.fgb' }
+    let(:pmtiles_file_path) { workspace_path / 'data.pmtiles' }
+
+    before do
+      File.write(fgb_file_path, 'fake fgb content')
+      File.write(pmtiles_file_path, 'fake pmtiles content')
+    end
+
+    after do
+      FileUtils.rm_f(fgb_file_path)
+      FileUtils.rm_f(pmtiles_file_path)
+    end
+
+    it 'creates derivatives' do
+      perform
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=FlatGeobuf/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --format=PMTiles/, any_args)
+    end
+  end
+
   context 'when the derivative already exists in cocina' do
     let(:files) { [master_file, derivative_file] }
 
