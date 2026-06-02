@@ -55,10 +55,18 @@ class Migrator
   end
 
   def remove_derivative_metadata
-    GisRobotSuite.locate_derivative_metadata_files(content_dir).each do |file|
+    locate_derivative_metadata_files(content_dir).each do |file|
       puts "  Removing derivative metadata #{file}..."
       FileUtils.rm_f(file)
     end
+  end
+
+  def locate_derivative_metadata_files(dir)
+    iso19139_xml_file = Dir.glob("#{dir}/*-iso19139.xml").first
+    iso19110_xml_file = Dir.glob("#{dir}/*-iso19110.xml").first
+    fgdc_xml_file = Dir.glob("#{dir}/*-fgdc.xml").first
+
+    [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
   end
 
   def object_client
