@@ -22,10 +22,16 @@ class Migrator
     fetch_files
     unzip
     remove_derivative_metadata
-    start_workflow(open_new_object_version)
+    version = open_new_object_version
+    create_structural
+    start_workflow(version)
   end
 
   private
+
+  def cocina_object
+    @cocina_object ||= object_client.find
+  end
 
   def content_dir
     @content_dir ||= create_content_dir
@@ -65,10 +71,35 @@ class Migrator
     @object_client ||= Dor::Services::Client.object("druid:#{@druid}")
   end
 
+  def create_structural
+    puts '  Creating structural metadata...'
+    updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
+    file_set = default_file_set
+
+    # Find all files in content_dir except data.zip
+    Dir.glob("#{content_dir}/**/*").each do |file_path|
+      next if File.directory?(file_path) || file_path.end_with?('data.zip')
+
+      updater.add_file(filename: file_path, use: 'master', file_set:)
+    end
+
+    object_client.update(params: updater.cocina_object)
+  end
+
+  def default_file_set
+    Cocina::Models::FileSet.new(
+      type: 'https://cocina.sul.stanford.edu/models/resources/object',
+      externalIdentifier: "https://cocina.sul.stanford.edu/fileset/#{SecureRandom.uuid}",
+      label: '',
+      version: cocina_object.version,
+      structural: { contains: [] }
+    )
+  end
+
   def open_new_object_version
     puts '  Opening new object version...'
-    cocina = object_client.version.open(description: 'Unzip data.zip')
-    cocina.version
+    @cocina_object = object_client.version.open(description: 'Unzip data.zip')
+    @cocina_object.version
   end
 
   def start_workflow(version)

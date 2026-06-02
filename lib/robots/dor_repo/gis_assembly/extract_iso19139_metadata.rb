@@ -19,7 +19,7 @@ module Robots
 
         def updated_cocina_with(output_file)
           updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
-          updater.add_file(filename: output_file, mimetype: 'application/xml', use: 'derivative', file_set:)
+          updater.add_file(filename: output_file, use: 'derivative', file_set:, mimetype: 'application/xml')
         end
 
         def file_set

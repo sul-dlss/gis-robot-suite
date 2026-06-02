@@ -16,10 +16,29 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
   let(:file_sets) { [] }
   let(:updater) { described_class.new(cocina_object) }
 
+  def new_file_set
+    Cocina::Models::FileSet.new(
+      type: 'https://cocina.sul.stanford.edu/models/resources/object',
+      externalIdentifier: "https://cocina.sul.stanford.edu/fileset/#{SecureRandom.uuid}",
+      label: '',
+      version: cocina_object.version,
+      structural: { contains: [] }
+    )
+  end
+
   describe '#add_file' do
     let(:filename) { File.join(fixture_dir, 'stage/bb045mm1234/content/somefile.txt') }
     let(:mimetype) { 'text/plain' }
     let(:use) { 'derivative' }
+
+    context 'when there are no file sets' do
+      it 'adds to the provided file set and creates structural contains' do
+        updated_object = updater.add_file(filename: filename, use: use, file_set: new_file_set, mimetype: mimetype)
+        expect(updated_object.structural.contains.size).to eq 1
+        expect(updated_object.structural.contains.first.structural.contains.size).to eq 1
+        expect(updated_object.structural.contains.first.structural.contains.first.filename).to eq File.basename(filename)
+      end
+    end
 
     context 'when there is one file set' do
       let(:file_sets) do
@@ -35,7 +54,7 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
       end
 
       it 'adds the file to the existing file set' do
-        updated_object = updater.add_file(filename: filename, mimetype: mimetype, use: use, file_set: file_sets.first)
+        updated_object = updater.add_file(filename: filename, use: use, file_set: file_sets.first, mimetype: mimetype)
         expect(updated_object.structural.contains.size).to eq 1
         expect(updated_object.structural.contains.first.externalIdentifier).to eq 'https://cocina.sul.stanford.edu/fileset/1234'
         expect(updated_object.structural.contains.first.structural.contains.size).to eq 1
@@ -63,14 +82,14 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
       end
 
       it 'adds the file to the provided file set' do
-        updated_object = updater.add_file(filename: filename, mimetype: mimetype, use: use, file_set: file_sets.first)
+        updated_object = updater.add_file(filename: filename, use: use, file_set: file_sets.first, mimetype: mimetype)
         expect(updated_object.structural.contains.size).to eq 2
         expect(updated_object.structural.contains.first.structural.contains.size).to eq 1
         expect(updated_object.structural.contains.last.structural.contains.size).to eq 0
       end
 
       it 'adds the file to a specific file set if provided' do
-        updated_object = updater.add_file(filename: filename, mimetype: mimetype, use: use, file_set: file_sets.last)
+        updated_object = updater.add_file(filename: filename, use: use, file_set: file_sets.last, mimetype: mimetype)
         expect(updated_object.structural.contains.size).to eq 2
         expect(updated_object.structural.contains.first.structural.contains.size).to eq 0
         expect(updated_object.structural.contains.last.structural.contains.size).to eq 1
