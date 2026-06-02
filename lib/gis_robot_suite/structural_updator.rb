@@ -2,9 +2,6 @@
 
 module GisRobotSuite
   class StructuralUpdator
-    FILESET_NAMESPACE = 'https://cocina.sul.stanford.edu/fileset/'
-    FILE_NAMESPACE = 'https://cocina.sul.stanford.edu/file/'
-
     def initialize(cocina_object)
       @cocina_object = cocina_object
     end
@@ -14,7 +11,7 @@ module GisRobotSuite
     delegate :version, to: :cocina_object
 
     # @return [Cocina::Models::DRO] the updated DRO with the new file added to the structural contains
-    def add_file(filename:, mimetype:, use:, file_set:, preserve: true)
+    def add_file(filename:, use:, file_set:, mimetype: nil, preserve: true)
       @cocina_object = cocina_object.new(structural: structural_with_file(filename:, mimetype:, use:, preserve:, file_set:))
     end
 
@@ -58,6 +55,9 @@ module GisRobotSuite
                          fs.externalIdentifier == new_file_set.externalIdentifier ? new_file_set : fs
                        end
                      end
+      # Ensure the new file set is added if it wasn't there
+      new_contains << new_file_set unless new_contains.any? { |fs| fs.externalIdentifier == new_file_set.externalIdentifier }
+
       cocina_object.structural.new(contains: new_contains)
     end
 

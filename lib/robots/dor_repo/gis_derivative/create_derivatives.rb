@@ -52,7 +52,7 @@ module Robots
           updater.remove_files(use: 'derivative', mimetype: COG_MIME_TYPE, file_set:)
 
           derivative_filename = create_cog(cocina_file.filename)
-          updater.add_file(filename: workspace_path(derivative_filename), mimetype: COG_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
+          updater.add_file(filename: workspace_path(derivative_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
         end
 
         def create_vector_derivatives(cocina_file, file_set)
@@ -61,8 +61,8 @@ module Robots
           updater.remove_files(use: 'derivative', mimetype: FGB_MIME_TYPE, file_set:)
 
           fgb_filename, pmtiles_filename = generate_vector_derivatives(cocina_file.filename)
-          updater.add_file(filename: workspace_path(fgb_filename), mimetype: FGB_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
-          updater.add_file(filename: workspace_path(pmtiles_filename), mimetype: PMTILES_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
+          updater.add_file(filename: workspace_path(fgb_filename), use: 'derivative', preserve: false, file_set:, mimetype: FGB_MIME_TYPE)
+          updater.add_file(filename: workspace_path(pmtiles_filename), use: 'derivative', preserve: false, file_set:, mimetype: PMTILES_MIME_TYPE)
         end
 
         def raster?(cocina_file)
