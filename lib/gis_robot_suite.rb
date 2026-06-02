@@ -69,14 +69,6 @@ module GisRobotSuite
     filename
   end
 
-  def self.locate_derivative_metadata_files(dir)
-    iso19139_xml_file = Dir.glob("#{dir}/*-iso19139.xml").first
-    iso19110_xml_file = Dir.glob("#{dir}/*-iso19110.xml").first
-    fgdc_xml_file = Dir.glob("#{dir}/*-fgdc.xml").first
-
-    [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
-  end
-
   class SystemCommandError < StandardError; end
   class SystemCommandNonzeroExit < SystemCommandError; end
   class SystemCommandExecutionError < SystemCommandError; end
