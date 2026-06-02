@@ -13,13 +13,37 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
   let(:cocina_model) do
     build(:dro, id: druid).new(
       structural: {
-        contains: [],
+        contains: [
+          {
+            type: 'https://cocina.sul.stanford.edu/models/resources/object',
+            externalIdentifier: 'https://cocina.sul.stanford.edu/fileset/1234',
+            label: 'Fileset 1',
+            version: 1,
+            structural: {
+              contains: [
+                {
+                  type: 'https://cocina.sul.stanford.edu/models/file',
+                  externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
+                  label: esri_filename,
+                  filename: esri_filename,
+                  version: 1,
+                  hasMimeType: 'application/xml',
+                  use: 'master',
+                  administrative: { publish: true, sdrPreserve: true, shelve: true },
+                  access: { view: 'world', download: 'world' },
+                  hasMessageDigests: []
+                }
+              ]
+            }
+          }
+        ],
         hasMemberOrders: [],
         isMemberOf: ['druid:rz415nf2825']
       },
       access: cocina_object_access
     )
   end
+  let(:esri_filename) { '' }
   let(:cocina_object_access) do
     {
       view: 'world',

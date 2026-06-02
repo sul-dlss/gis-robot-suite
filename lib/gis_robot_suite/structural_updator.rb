@@ -14,35 +14,51 @@ module GisRobotSuite
     delegate :version, to: :cocina_object
 
     # @return [Cocina::Models::DRO] the updated DRO with the new file added to the structural contains
-    def add_file(filename:, mimetype:, use:, preserve: true)
-      cocina_object.new(structural: structural_with(filename:, mimetype:, use:, preserve:))
+    def add_file(filename:, mimetype:, use:, file_set:, preserve: true)
+      @cocina_object = cocina_object.new(structural: structural_with_file(filename:, mimetype:, use:, preserve:, file_set:))
+    end
+
+    # @return [Cocina::Models::DRO] the updated DRO with the matching files removed from the structural contains
+    def remove_files(use:, file_set:, mimetype: nil)
+      @cocina_object = cocina_object.new(structural: structural_without_files(use:, mimetype:, file_set:))
     end
 
     private
 
-    def structural_with(filename:, mimetype:, use:, preserve: true)
-      files = file_set.structural.contains.to_a
-
+    def structural_with_file(filename:, mimetype:, use:, file_set:, preserve: true)
       objectfile = Assembly::ObjectFile.new(filename)
       file_params = GisRobotSuite::FileParamBuilder.build(objectfile:, file_access:, version:, mimetype:, use:, preserve:)
       file = Cocina::Models::File.new(file_params)
 
-      new_file_set = file_set.new(structural: { contains: files + [file] })
-      cocina_object.structural.new(contains: [new_file_set])
+      current_fs = find_file_set(file_set)
+      new_file_set = current_fs.new(structural: current_fs.structural.new(contains: current_fs.structural.contains + [file]))
+
+      update_structural_with_file_set(new_file_set)
     end
 
-    # Large assumption here: There is only one file set in the structural contains
-    def file_set
-      @file_set ||= cocina_object.structural.contains.first.presence || default_file_set
+    def structural_without_files(use:, file_set:, mimetype: nil)
+      current_fs = find_file_set(file_set)
+      new_contains = current_fs.structural.contains.reject do |file|
+        file.use == use && (mimetype.nil? || file.hasMimeType == mimetype)
+      end
+      new_file_set = current_fs.new(structural: current_fs.structural.new(contains: new_contains))
+
+      update_structural_with_file_set(new_file_set)
     end
 
-    def default_file_set
-      Cocina::Models::FileSet.new(
-        type: 'https://cocina.sul.stanford.edu/models/resources/object',
-        externalIdentifier: FILESET_NAMESPACE + SecureRandom.uuid,
-        label: '',
-        version: cocina_object.version
-      )
+    def find_file_set(file_set)
+      cocina_object.structural.contains.find { |fs| fs.externalIdentifier == file_set.externalIdentifier } || file_set
+    end
+
+    def update_structural_with_file_set(new_file_set)
+      new_contains = if cocina_object.structural.contains.empty?
+                       [new_file_set]
+                     else
+                       cocina_object.structural.contains.map do |fs|
+                         fs.externalIdentifier == new_file_set.externalIdentifier ? new_file_set : fs
+                       end
+                     end
+      cocina_object.structural.new(contains: new_contains)
     end
 
     def file_access
