@@ -81,27 +81,31 @@ class Migrator
 
   def create_structural
     puts '  Creating structural metadata...'
+    file_set = cocina_object.structural.contains.first
+    raise "No file set found for #{@druid}" unless file_set
+
+    # Clear existing files from the primary file set
+    cleared_file_set = file_set.new(structural: file_set.structural.new(contains: []))
+
+    # Remove any filesets labeled "Preview"
+    new_contains = cocina_object.structural.contains.reject { |fs| fs.label == 'Preview' }
+    # Ensure our primary (now cleared) file set is in the list
+    new_contains = new_contains.map do |fs|
+      fs.externalIdentifier == cleared_file_set.externalIdentifier ? cleared_file_set : fs
+    end
+
+    @cocina_object = cocina_object.new(structural: cocina_object.structural.new(contains: new_contains))
+
     updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
-    file_set = default_file_set
 
     # Find all files in content_dir except data.zip
     Dir.glob("#{content_dir}/**/*").each do |file_path|
       next if File.directory?(file_path) || file_path.end_with?('data.zip')
 
-      updater.add_file(filename: file_path, use: 'master', file_set:)
+      updater.add_file(filename: file_path, use: 'master', file_set: cleared_file_set)
     end
 
     object_client.update(params: updater.cocina_object)
-  end
-
-  def default_file_set
-    Cocina::Models::FileSet.new(
-      type: 'https://cocina.sul.stanford.edu/models/resources/object',
-      externalIdentifier: "https://cocina.sul.stanford.edu/fileset/#{SecureRandom.uuid}",
-      label: '',
-      version: cocina_object.version,
-      structural: { contains: [] }
-    )
   end
 
   def open_new_object_version
