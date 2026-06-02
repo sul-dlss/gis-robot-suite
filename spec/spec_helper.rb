@@ -25,6 +25,9 @@ require 'cocina/rspec'
 require 'zip'
 include LyberCore::Rspec # rubocop:disable Style/MixinUsage
 
+# Redirect log output to log/test.log instead of stdout
+Sidekiq.default_configuration.logger = Logger.new('log/test.log')
+
 def read_fixture(fname)
   File.read(File.join(fixture_dir, fname))
 end
