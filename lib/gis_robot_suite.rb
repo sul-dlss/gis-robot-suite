@@ -1,67 +1,6 @@
 # frozen_string_literal: true
 
-module GisRobotSuite # rubocop:disable Metrics/ModuleLength
-  # @return grayscale4, grayscale8, grayscale_N_M, rgb8, rgb16, rgb32
-  def self.determine_raster_style(tiff_filename, logger:)
-    info = {
-      nbands: 0,
-      type: 'Byte',
-      min: Float::MAX,
-      max: 0
-    }
-
-    gdalinfo_json_str = run_system_command("#{Settings.gdal_path}gdalinfo -json -stats -norat -noct -nomd '#{tiff_filename}'", logger:)[:stdout_str]
-    # gdalinfo output:
-    # a grayscale8 example:
-    # { "bands":[{ "band":1, "type":"Byte", "colorInterpretation":"Palette", "min":1.0, "max":255.0 }] } # plus many other keys at each level
-    #
-    # an rgb8 example:
-    # {
-    #   "bands":[
-    #       { "band":1, "type":"Byte", "colorInterpretation":"Red", "min":0.0, "max":232.0 },
-    #       { "band":2, "type":"Byte", "colorInterpretation":"Green", "min":0.0, "max":171.0, },
-    #       { "band":3, "type":"Byte", "colorInterpretation":"Blue", "min":0.0, "max":255.0 }
-    #     ]
-    # } # plus many other keys at each level
-    gdalinfo_json = JSON.parse(gdalinfo_json_str)
-    bands = gdalinfo_json['bands']
-
-    info[:nbands] = bands.size
-    info[:type] = bands.last['type']
-
-    min_from_bands = bands.min_by { |band| band['min'] }['min'] # the min value of all the min field values among the bands
-    info[:min] = min_from_bands if min_from_bands
-    max_from_bands = bands.max_by { |band| band['max'] }['max'] # the max value of all the max field values among the bands
-    info[:max] = max_from_bands if max_from_bands
-
-    # determine raster style
-    nbits = Math.log2([info[:min].abs, info[:max].abs].max + 1).ceil
-    case info[:nbands]
-    when 1
-      case info[:type]
-      when 'Byte'
-        "grayscale#{nbits > 4 ? 8 : 4}"
-      when 'Int16', 'UInt16', 'Int32', 'Float32', 'Float64'
-        "grayscale_#{info[:min].floor}_#{info[:max].ceil}"
-      else
-        raise "Unknown 1-band raster data type: #{info[:type]}"
-      end
-    when 3
-      case info[:type]
-      when 'Byte'
-        'rgb8'
-      when 'Int16', 'UInt16'
-        'rgb16'
-      when 'Int32'
-        'rgb32'
-      else
-        raise "Unknown 3-band raster data type: #{info[:type]}"
-      end
-    else
-      raise "Unsupported number of bands: #{info[:nbands]}"
-    end
-  end
-
+module GisRobotSuite
   VECTOR_TYPES = %w[application/x-esri-shapefile application/geo+json].freeze
 
   def self.vector?(cocina_object)
@@ -136,12 +75,6 @@ module GisRobotSuite # rubocop:disable Metrics/ModuleLength
     fgdc_xml_file = Dir.glob("#{dir}/*-fgdc.xml").first
 
     [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
-  end
-
-  def self.determine_rights(cocina_model)
-    return 'public' if cocina_model.access.view == 'world'
-
-    'restricted'
   end
 
   class SystemCommandError < StandardError; end
