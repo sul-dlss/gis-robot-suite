@@ -15,7 +15,6 @@ gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
 gem 'honeybadger'
 gem 'open-uri'
 gem 'rake'
-gem 'retries'
 gem 'scanf'
 gem 'sidekiq', '~> 8.0'
 gem 'slop' # for bin/run_robot

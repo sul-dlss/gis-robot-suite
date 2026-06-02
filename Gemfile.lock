@@ -233,7 +233,6 @@ GEM
     regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
-    retries (0.0.5)
     rexml (3.4.4)
     rspec (3.13.2)
       rspec-core (~> 3.13.0)
@@ -344,7 +343,6 @@ DEPENDENCIES
   open-uri
   preservation-client (~> 7.2)
   rake
-  retries
   rspec
   rspec_junit_formatter
   rubocop
