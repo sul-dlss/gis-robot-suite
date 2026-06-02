@@ -19,83 +19,58 @@ module Robots
         def perform_work
           @content_dir = Pathname(File.join(GisRobotSuite.locate_druid_path(bare_druid, type: :workspace), 'content'))
 
-          file_sets = create_derivatives
-          # Save the modified metadata
-          updated = cocina_object.new(structural: cocina_object.structural.new(contains: file_sets))
-          object_client.update(params: updated)
+          cocina_object.structural.contains.each do |file_set|
+            file_set.structural.contains.each do |cocina_file|
+              next if skip_cocina_file?(cocina_file)
+
+              filepath = workspace_path(cocina_file.filename)
+              raise NotImplementedError, "Unable to find #{cocina_file.filename} in the workspace" unless File.exist?(filepath)
+
+              create_derivatives_for_cocina_file(cocina_file, file_set)
+            end
+          end
+
+          object_client.update(params: updater.cocina_object)
         end
 
         private
 
-        def create_derivatives
-          file_sets = cocina_object.structural.to_h.fetch(:contains) # make this a mutable hash
-          file_sets.each do |file_set|
-            cocina_files = file_set.dig(:structural, :contains)
+        def updater
+          @updater ||= GisRobotSuite::StructuralUpdator.new(cocina_object)
+        end
 
-            new_cocina_files = cocina_files.dup
-            cocina_files.each do |cocina_file|
-              # If the cocina file is not a master file, skip it
-              next if skip_cocina_file?(cocina_file)
-
-              filepath = workspace_path(cocina_file.fetch(:filename))
-              raise NotImplementedError, "Unable to find #{cocina_file.fetch(:filename)} in the workspace" unless File.exist?(filepath)
-
-              create_derivatives_for_cocina_file(cocina_file, new_cocina_files)
-            end
-            file_set[:structural][:contains] = new_cocina_files
+        def create_derivatives_for_cocina_file(cocina_file, file_set)
+          if raster?(cocina_file)
+            create_raster_derivatives(cocina_file, file_set)
+          elsif vector?(cocina_file)
+            create_vector_derivatives(cocina_file, file_set)
           end
-
-          file_sets
         end
 
-        #  1. delete existing derivative cocina file
-        #  2. generate derivative(s)
-        #  3. add new derivative(s) to the cocina structure
-        def create_derivatives_for_cocina_file(cocina_file, new_cocina_files)
-          new_cocina_derivatives = if raster?(cocina_file)
-                                     create_cocina_raster_derivatives(cocina_file, new_cocina_files)
-                                   elsif vector?(cocina_file)
-                                     create_cocina_vector_derivatives(cocina_file, new_cocina_files)
-                                   end
+        def create_raster_derivatives(cocina_file, file_set)
+          # Discard existing COG derivative if it exists
+          updater.remove_files(use: 'derivative', mimetype: COG_MIME_TYPE, file_set:)
 
-          new_cocina_files.concat(new_cocina_derivatives)
+          derivative_filename = create_cog(cocina_file.filename)
+          updater.add_file(filename: workspace_path(derivative_filename), mimetype: COG_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
         end
 
-        def create_cocina_raster_derivatives(cocina_file, new_cocina_files)
-          derivative_cocina_file = find_derivative_cocina_file(new_cocina_files, COG_MIME_TYPE)
-          new_cocina_files.delete(derivative_cocina_file) if derivative_cocina_file
-          derivative_filename = create_cog(cocina_file.fetch(:filename))
-          [create_cocina_derivative_file(derivative_filename, COG_MIME_TYPE)]
-        end
-
-        def create_cocina_vector_derivatives(cocina_file, new_cocina_files)
+        def create_vector_derivatives(cocina_file, file_set)
           # Discard existing PMTile and FlatGeoBuf derivatives if they exist
-          find_derivative_cocina_files(new_cocina_files, [PMTILES_MIME_TYPE, FGB_MIME_TYPE]).each do |df|
-            new_cocina_files.delete(df)
-          end
-          fgb_filename, pmtiles_filename = create_vector_derivatives(cocina_file.fetch(:filename))
-          [create_cocina_derivative_file(fgb_filename, FGB_MIME_TYPE),
-           create_cocina_derivative_file(pmtiles_filename, PMTILES_MIME_TYPE)]
-        end
+          updater.remove_files(use: 'derivative', mimetype: PMTILES_MIME_TYPE, file_set:)
+          updater.remove_files(use: 'derivative', mimetype: FGB_MIME_TYPE, file_set:)
 
-        def find_derivative_cocina_file(cocina_files, mime_type)
-          cocina_files.find do |file|
-            file[:use] == 'derivative' && file[:hasMimeType] == mime_type
-          end
-        end
-
-        def find_derivative_cocina_files(cocina_files, mime_types)
-          cocina_files.select do |file|
-            file[:use] == 'derivative' && mime_types.include?(file[:hasMimeType])
-          end
+          fgb_filename, pmtiles_filename = generate_vector_derivatives(cocina_file.filename)
+          updater.add_file(filename: workspace_path(fgb_filename), mimetype: FGB_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
+          updater.add_file(filename: workspace_path(pmtiles_filename), mimetype: PMTILES_MIME_TYPE, use: 'derivative', preserve: false, file_set:)
         end
 
         def raster?(cocina_file)
-          cocina_file[:hasMimeType] == 'image/tiff; application=geotiff'
+          cocina_file.hasMimeType == 'image/tiff; application=geotiff'
         end
 
         def vector?(cocina_file)
-          ['application/vnd.shp', 'application/geo+json'].include?(cocina_file[:hasMimeType])
+          ['application/vnd.shp', 'application/geo+json'].include?(cocina_file.hasMimeType)
         end
 
         def create_cog(filename)
@@ -109,7 +84,7 @@ module Robots
           derivative_filename
         end
 
-        def create_vector_derivatives(filename)
+        def generate_vector_derivatives(filename)
           input = workspace_path(filename)
           basename = File.basename(filename, File.extname(filename))
           fgb_filename = "#{basename}.fgb"
@@ -122,29 +97,14 @@ module Robots
           [fgb_filename, pmtiles_filename]
         end
 
-        def create_cocina_derivative_file(filename, mimetype)
-          objectfile = Assembly::ObjectFile.new(workspace_path(filename))
-          GisRobotSuite::FileParamBuilder.build(objectfile:, file_access:, version:, mimetype:, use: 'derivative', preserve: false)
-        end
-
-        delegate :version, to: :cocina_object
-
-        def file_access
-          @file_access ||= cocina_object.access.to_h
-                                        .slice(:view, :download, :location, :controlledDigitalLending)
-                                        .tap do |access|
-            access[:view] = 'dark' if access[:view] == 'citation-only'
-          end
-        end
-
         def workspace_path(filename)
           @content_dir / filename
         end
 
         def skip_cocina_file?(cocina_file)
-          !cocina_file.dig(:administrative, :sdrPreserve) ||
-            cocina_file[:use] != 'master' ||
-            MASTER_MIME_TYPES.exclude?(cocina_file.fetch(:hasMimeType))
+          !cocina_file.administrative.sdrPreserve ||
+            cocina_file.use != 'master' ||
+            MASTER_MIME_TYPES.exclude?(cocina_file.hasMimeType)
         end
       end
     end

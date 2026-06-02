@@ -22,7 +22,17 @@ module Robots
 
         def updated_cocina_with(output_file)
           updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
-          updater.add_file(filename: output_file, mimetype: 'application/xml', use: 'derivative')
+          updater.add_file(filename: output_file, mimetype: 'application/xml', use: 'derivative', file_set:)
+        end
+
+        def file_set
+          staging_dir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+          esri_metadata_path = GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
+          esri_metadata_filename = File.basename(esri_metadata_path)
+
+          cocina_object.structural.contains.find do |fs|
+            fs.structural.contains.any? { |file| file.filename == esri_metadata_filename }
+          end
         end
 
         def generate_for_datatype?(data_type)
