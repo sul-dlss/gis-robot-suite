@@ -102,11 +102,25 @@ class Migrator
     Dir.glob("#{content_dir}/**/*").each do |file_path|
       next if File.directory?(file_path) || file_path.end_with?('data.zip')
 
-      updater.add_file(filename: file_path, use: 'master', file_set: cleared_file_set)
+      _ext, mimetype = DATA_FILE_MIMETYPES.find { |ext, _mt| file_path.downcase.end_with?(ext) }
+      updater.add_file(filename: file_path, use: 'master', file_set: cleared_file_set, mimetype:)
     end
 
     object_client.update(params: updater.cocina_object)
   end
+
+  DATA_FILE_MIMETYPES =
+    [['.shp', 'application/vnd.shp'],
+     ['.shx', 'application/vnd.shx'],
+     ['.vat.dbf', 'application/octet-stream'],
+     ['.dbf', 'application/vnd.dbf'],
+     ['.prj', 'text/plain'],
+     ['.cpg', 'text/plain'],
+     ['.geojson', 'application/geo+json'],
+     ['.tif', 'image/tiff'],
+     ['.tfw', 'text/plain'],
+     ['.xml', 'application/xml']].freeze
+  private_constant :DATA_FILE_MIMETYPES
 
   def open_new_object_version
     puts '  Opening new object version...'
