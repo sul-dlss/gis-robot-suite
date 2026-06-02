@@ -84,11 +84,11 @@ class Migrator
     file_set = cocina_object.structural.contains.first
     raise "No file set found for #{@druid}" unless file_set
 
-    # Clear existing files from the primary file set
-    cleared_file_set = file_set.new(structural: file_set.structural.new(contains: []))
+    # Clear existing files from the primary file set and reset label to 'Object'
+    cleared_file_set = file_set.new(structural: file_set.structural.new(contains: []), label: 'Object')
 
-    # Remove any filesets labeled "Preview"
-    new_contains = cocina_object.structural.contains.reject { |fs| fs.label == 'Preview' }
+    # Remove any filesets labeled "Preview" or "Metadata"
+    new_contains = cocina_object.structural.contains.reject { |fs| %w[Preview Metadata].include?(fs.label) }
     # Ensure our primary (now cleared) file set is in the list
     new_contains = new_contains.map do |fs|
       fs.externalIdentifier == cleared_file_set.externalIdentifier ? cleared_file_set : fs
@@ -117,7 +117,7 @@ class Migrator
      ['.prj', 'text/plain'],
      ['.cpg', 'text/plain'],
      ['.geojson', 'application/geo+json'],
-     ['.tif', 'image/tiff'],
+     ['.tif', 'image/tiff; application=geotiff'],
      ['.tfw', 'text/plain'],
      ['.xml', 'application/xml']].freeze
   private_constant :DATA_FILE_MIMETYPES
