@@ -81,28 +81,46 @@ class Migrator
 
   def create_structural
     puts '  Creating structural metadata...'
+    file_set = cocina_object.structural.contains.first
+    raise "No file set found for #{@druid}" unless file_set
+
+    # Clear existing files from the primary file set and reset label to 'Object'
+    cleared_file_set = file_set.new(structural: file_set.structural.new(contains: []), label: 'Object')
+
+    # Remove any filesets labeled "Preview" or "Metadata"
+    new_contains = cocina_object.structural.contains.reject { |fs| %w[Preview Metadata].include?(fs.label) }
+    # Ensure our primary (now cleared) file set is in the list
+    new_contains = new_contains.map do |fs|
+      fs.externalIdentifier == cleared_file_set.externalIdentifier ? cleared_file_set : fs
+    end
+
+    @cocina_object = cocina_object.new(structural: cocina_object.structural.new(contains: new_contains))
+
     updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
-    file_set = default_file_set
 
     # Find all files in content_dir except data.zip
     Dir.glob("#{content_dir}/**/*").each do |file_path|
       next if File.directory?(file_path) || file_path.end_with?('data.zip')
 
-      updater.add_file(filename: file_path, use: 'master', file_set:)
+      _ext, mimetype = DATA_FILE_MIMETYPES.find { |ext, _mt| file_path.downcase.end_with?(ext) }
+      updater.add_file(filename: file_path, use: 'master', file_set: cleared_file_set, mimetype:)
     end
 
     object_client.update(params: updater.cocina_object)
   end
 
-  def default_file_set
-    Cocina::Models::FileSet.new(
-      type: 'https://cocina.sul.stanford.edu/models/resources/object',
-      externalIdentifier: "https://cocina.sul.stanford.edu/fileset/#{SecureRandom.uuid}",
-      label: '',
-      version: cocina_object.version,
-      structural: { contains: [] }
-    )
-  end
+  DATA_FILE_MIMETYPES =
+    [['.shp', 'application/vnd.shp'],
+     ['.shx', 'application/vnd.shx'],
+     ['.vat.dbf', 'application/octet-stream'],
+     ['.dbf', 'application/vnd.dbf'],
+     ['.prj', 'text/plain'],
+     ['.cpg', 'text/plain'],
+     ['.geojson', 'application/geo+json'],
+     ['.tif', 'image/tiff; application=geotiff'],
+     ['.tfw', 'text/plain'],
+     ['.xml', 'application/xml']].freeze
+  private_constant :DATA_FILE_MIMETYPES
 
   def open_new_object_version
     puts '  Opening new object version...'
