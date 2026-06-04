@@ -46,7 +46,7 @@ class Migrator
 
   def fetch_files
     fetcher = GisRobotSuite::FileFetcher.new(druid: @druid)
-    ['data.zip', 'preview.jpg'].each do |filename|
+    ['data.zip'].each do |filename|
       puts "  Fetching #{filename}..."
       fetcher.write_file_with_retries(filename:, location: File.join(content_dir, filename))
     end
@@ -71,8 +71,9 @@ class Migrator
     iso19139_xml_file = Dir.glob("#{dir}/*-iso19139.xml").first
     iso19110_xml_file = Dir.glob("#{dir}/*-iso19110.xml").first
     fgdc_xml_file = Dir.glob("#{dir}/*-fgdc.xml").first
+    preview_file = Dir.glob("#{dir}/**/preview.jpg").first
 
-    [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file].compact
+    [iso19139_xml_file, iso19110_xml_file, fgdc_xml_file, preview_file].compact
   end
 
   def object_client
