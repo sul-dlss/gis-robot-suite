@@ -8,7 +8,8 @@ module Robots
         COG_MIME_TYPE = 'image/tiff; application=geotiff; profile=cloud-optimized'
         PMTILES_MIME_TYPE = 'application/vnd.pmtiles'
         FGB_MIME_TYPE = 'application/vnd.fgb'
-        DERIVATIVE_MIME_TYPES = [COG_MIME_TYPE, PMTILES_MIME_TYPE, FGB_MIME_TYPE].freeze
+        JP2_MIME_TYPE = 'image/jp2'
+        DERIVATIVE_MIME_TYPES = [COG_MIME_TYPE, PMTILES_MIME_TYPE, FGB_MIME_TYPE, JP2_MIME_TYPE].freeze
         MASTER_MIME_TYPES = ['image/tiff; application=geotiff', 'application/vnd.shp', 'application/geo+json'].freeze
 
         def initialize
@@ -48,21 +49,29 @@ module Robots
         end
 
         def create_raster_derivatives(cocina_file, file_set)
-          # Discard existing COG derivative if it exists
+          # Discard existing COG and JP2 derivatives if they exist
           updater.remove_files(use: 'derivative', mimetype: COG_MIME_TYPE, file_set:)
+          updater.remove_files(use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:)
 
-          derivative_filename = create_cog(cocina_file.filename)
-          updater.add_file(filename: workspace_path(derivative_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
+          cog_filename = create_cog(cocina_file.filename)
+          updater.add_file(filename: workspace_path(cog_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
+
+          jp2_filename = create_preview_jp2(cocina_file.filename)
+          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE)
         end
 
         def create_vector_derivatives(cocina_file, file_set)
-          # Discard existing PMTile and FlatGeoBuf derivatives if they exist
+          # Discard existing PMTile, FlatGeoBuf, and JP2 derivatives if they exist
           updater.remove_files(use: 'derivative', mimetype: PMTILES_MIME_TYPE, file_set:)
           updater.remove_files(use: 'derivative', mimetype: FGB_MIME_TYPE, file_set:)
+          updater.remove_files(use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:)
 
           fgb_filename, pmtiles_filename = generate_vector_derivatives(cocina_file.filename)
           updater.add_file(filename: workspace_path(fgb_filename), use: 'derivative', preserve: false, file_set:, mimetype: FGB_MIME_TYPE)
           updater.add_file(filename: workspace_path(pmtiles_filename), use: 'derivative', preserve: false, file_set:, mimetype: PMTILES_MIME_TYPE)
+
+          jp2_filename = create_preview_jp2(cocina_file.filename)
+          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE)
         end
 
         def raster?(cocina_file)
@@ -81,6 +90,18 @@ module Robots
           output = workspace_path(derivative_filename)
           # Make derivative COG file of the master file in location and add it to cocina_object
           GisRobotSuite::CogGenerator.generate(input_path: input, output_path: output, logger: logger)
+          derivative_filename
+        end
+
+        def create_preview_jp2(filename)
+          input = workspace_path(filename)
+
+          basename = File.basename(filename, File.extname(filename))
+          derivative_filename = "#{basename}.jp2"
+          output = workspace_path(derivative_filename)
+          # Make derivative JP2 file of the master file in location and add it to cocina_object
+          command = "gdal convert #{Shellwords.escape(input.to_s)} #{Shellwords.escape(output.to_s)}"
+          GisRobotSuite.run_system_command(command, logger: logger)
           derivative_filename
         end
 

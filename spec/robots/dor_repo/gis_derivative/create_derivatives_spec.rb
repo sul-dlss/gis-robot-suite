@@ -46,6 +46,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
   let(:workspace_path) { Pathname.new(Settings.geohydra.workspace) / 'bb' / '222' / 'cc' / '3333' / 'bb222cc3333' / 'content' }
   let(:master_file_path) { workspace_path / 'data.tif' }
   let(:cog_file_path) { workspace_path / 'data_cog.tif' }
+  let(:jp2_file_path) { workspace_path / 'data.jp2' }
 
   before do
     allow(robot).to receive(:druid).and_return(druid)
@@ -56,17 +57,25 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     File.write(master_file_path, 'fake content')
     # This exists because we're stubbing out the call to `gdal raster convert'
     File.write(cog_file_path, 'fake cog content')
+    File.write(jp2_file_path, 'fake jp2 content')
   end
 
   after do
     FileUtils.rm_f(master_file_path)
     FileUtils.rm_f(cog_file_path)
+    FileUtils.rm_f(jp2_file_path)
   end
 
-  it 'creates a derivative COG' do
+  it 'creates a derivative COG and a JP2 thumbnail' do
     perform
     expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --format=COG/, any_args)
-    expect(object_client).to have_received(:update)
+    expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+    expect(object_client).to have_received(:update) do |params:|
+      new_contains = params.structural.contains.first.structural.contains
+      expect(new_contains.count).to eq 3
+      expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+      expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+    end
   end
 
   context 'when shapefile' do
@@ -90,27 +99,31 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     let(:master_file_path) { workspace_path / 'data.shp' }
     let(:fgb_file_path) { workspace_path / 'data.fgb' }
     let(:pmtiles_file_path) { workspace_path / 'data.pmtiles' }
+    let(:jp2_file_path) { workspace_path / 'data.jp2' }
 
     before do
       File.write(fgb_file_path, 'fake fgb content')
       File.write(pmtiles_file_path, 'fake pmtiles content')
+      File.write(jp2_file_path, 'fake jp2 content')
     end
 
     after do
       FileUtils.rm_f(fgb_file_path)
       FileUtils.rm_f(pmtiles_file_path)
+      FileUtils.rm_f(jp2_file_path)
     end
 
-    it 'creates a derivative FGB and PMTiles' do
+    it 'creates a derivative FGB, PMTiles, and a JP2 thumbnail' do
       perform
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
-        expect(new_contains.count).to eq 3
-        expect(new_contains.map(&:use)).to eq %w[master derivative derivative]
-        expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles')
+        expect(new_contains.count).to eq 4
+        expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
+        expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
       end
     end
 
@@ -145,19 +158,23 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         )
       end
 
-      it 'replaces both derivatives' do
+      it 'replaces all derivatives' do
         perform
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
-          expect(new_contains.count).to eq 3
+          expect(new_contains.count).to eq 4
           # Ensure the old derivatives were removed and new ones added
+          expect(new_contains.count { |f| f.use == 'derivative' }).to eq 2
+          expect(new_contains.count { |f| f.use == 'thumbnail' }).to eq 1
           derivatives = new_contains.select { |f| f.use == 'derivative' }
-          expect(derivatives.count).to eq 2
           expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_fgb_file.externalIdentifier)
           expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_pmtiles_file.externalIdentifier)
+          expect(derivatives.map(&:hasMimeType)).to contain_exactly('application/vnd.fgb', 'application/vnd.pmtiles')
+          expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
         end
       end
     end
@@ -224,15 +241,16 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       )
     end
 
-    it 'replaces the derivative' do
+    it 'replaces the derivative and adds a thumbnail' do
       perform
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --format=COG/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
-        expect(new_contains.count).to eq 2
-        expect(new_contains.map(&:use)).to eq %w[master derivative]
+        expect(new_contains.count).to eq 3
+        expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
         # Ensure the old derivative was removed and a new one added (new externalIdentifier)
-        expect(new_contains.find { |f| f.use == 'derivative' }.externalIdentifier).not_to eq derivative_file.externalIdentifier
+        expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).not_to eq derivative_file.externalIdentifier
       end
     end
   end
