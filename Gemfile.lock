@@ -44,7 +44,7 @@ GEM
     capistrano-one_time_key (0.2.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.118.1)
+    cocina-models (0.119.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -82,9 +82,9 @@ GEM
       capistrano-shared_configs
       ed25519
     docile (1.4.1)
-    dor-services-client (15.43.0)
+    dor-services-client (15.44.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.118.0)
+      cocina-models (~> 0.119.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -125,7 +125,7 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-net_http (3.4.3)
+    faraday-net_http (3.4.4)
       net-http (~> 0.5)
     faraday-retry (2.4.0)
       faraday (~> 2.0)
@@ -146,7 +146,7 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.19.7)
+    json (2.19.8)
     json_schemer (2.5.0)
       bigdecimal
       hana (~> 1.3)
