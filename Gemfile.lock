@@ -134,7 +134,7 @@ GEM
     hashdiff (1.2.1)
     hashie (5.1.0)
       logger
-    honeybadger (6.6.2)
+    honeybadger (6.7.0)
       logger
       ostruct
     i18n (1.14.8)
@@ -216,7 +216,7 @@ GEM
     prettyprint (0.2.0)
     prism (1.9.0)
     pstore (0.2.1)
-    psych (5.3.1)
+    psych (5.4.0)
       date
       stringio
     public_suffix (7.0.5)
@@ -266,9 +266,10 @@ GEM
     rubocop-factory_bot (2.28.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
-    rubocop-rspec (3.9.0)
+    rubocop-rspec (3.10.2)
       lint_roller (~> 1.1)
-      rubocop (~> 1.81)
+      regexp_parser (>= 2.0)
+      rubocop (~> 1.86, >= 1.86.2)
     rubocop-rspec_rails (2.32.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
@@ -359,4 +360,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-  4.0.12
+  4.0.13
