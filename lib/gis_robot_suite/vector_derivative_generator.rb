@@ -21,7 +21,7 @@ module GisRobotSuite
       temp_fgb_output = fgb_path.parent / "#{basename}_temp.fgb"
 
       # Generate FlatGeoBuf
-      fgb_command = "gdal vector convert --output-format 'FlatGeoBuf' #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
+      fgb_command = "gdal vector convert --output-format 'FlatGeoBuf' --overwrite #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
       # Convert the FlatGeoBuf to EPSG:4326
