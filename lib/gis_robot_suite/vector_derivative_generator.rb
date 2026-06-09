@@ -24,7 +24,7 @@ module GisRobotSuite
       logger.info("Generating tmp fgb output to #{temp_fgb_output}")
 
       # Generate FlatGeoBuf
-      fgb_command = "#{Settings.gdal_path}gdal vector convert --output-format 'FlatGeoBuf' #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
+      fgb_command = "CPL_DEBUG=ON #{Settings.gdal_path}gdal vector convert --output-format 'FlatGeoBuf' #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
       raise "gdal vector convert failed to create #{temp_fgb_output}" unless File.size?(temp_fgb_output)
 
