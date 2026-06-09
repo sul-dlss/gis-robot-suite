@@ -102,7 +102,7 @@ module GisRobotSuite
     end
 
     logger.info "#{name}.#{__method__}: Successfully executed system command: '#{cmd}'"
-    logger.debug "#{name}.#{__method__}: System command result: #{cmd_result}"
+    logger.info "#{name}.#{__method__}: System command result: #{cmd_result}"
     cmd_result
   end
 end
