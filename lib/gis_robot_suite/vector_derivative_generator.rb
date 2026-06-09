@@ -26,6 +26,7 @@ module GisRobotSuite
       # Generate FlatGeoBuf
       fgb_command = "#{Settings.gdal_path}gdal vector convert --output-format 'FlatGeoBuf' #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
+      raise "gdal vector convert failed to create #{temp_fgb_output}" unless File.size?(temp_fgb_output)
 
       # Convert the FlatGeoBuf to EPSG:4326
       reproject_command = "#{Settings.gdal_path}gdal vector reproject --dst-crs=EPSG:4326 --overwrite #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(fgb_path.to_s)}"
