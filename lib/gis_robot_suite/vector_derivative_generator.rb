@@ -29,14 +29,14 @@ module GisRobotSuite
       raise "gdal vector convert failed to create #{temp_fgb_output}" unless File.size?(temp_fgb_output)
 
       # Convert the FlatGeoBuf to EPSG:4326
-      reproject_command = "CPL_DEBUG=ON #{Settings.gdal_path}gdal vector reproject --dst-crs=EPSG:4326 #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(fgb_path.to_s)}"
-      GisRobotSuite.run_system_command(reproject_command, logger: logger)
-      raise "gdal vector reproject failed to create #{fgb_path}" unless File.size?(fgb_path)
+      # reproject_command = "CPL_DEBUG=ON #{Settings.gdal_path}gdal vector reproject --dst-crs=EPSG:4326 #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(fgb_path.to_s)}"
+      # GisRobotSuite.run_system_command(reproject_command, logger: logger)
+      # raise "gdal vector reproject failed to create #{fgb_path}" unless File.size?(fgb_path)
 
       #FileUtils.rm_f(temp_fgb_output)
 
       # Generate PMTiles from FlatGeoBuf
-      pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(fgb_path.to_s)} --drop-densest-as-needed --extend-zooms-if-still-dropping"
+      pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(temp_fgb_output.to_s)} --drop-densest-as-needed --extend-zooms-if-still-dropping"
       GisRobotSuite.run_system_command(pmtiles_command, logger: logger)
     end
 
