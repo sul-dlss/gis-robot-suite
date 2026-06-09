@@ -20,6 +20,9 @@ module GisRobotSuite
       basename = File.basename(fgb_path, '.fgb')
       temp_fgb_output = fgb_path.parent / "#{basename}_temp.fgb"
 
+      logger.info("Generating FlatGeoBuf from #{input_path}")
+      logger.info("Generating tmp fgb output to #{temp_fgb_output}")
+
       # Generate FlatGeoBuf
       fgb_command = "gdal vector convert --output-format 'FlatGeoBuf' #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
@@ -28,7 +31,7 @@ module GisRobotSuite
       reproject_command = "gdal vector reproject --dst-crs=EPSG:4326 --overwrite #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(fgb_path.to_s)}"
       GisRobotSuite.run_system_command(reproject_command, logger: logger)
 
-      FileUtils.rm_f(temp_fgb_output)
+      #FileUtils.rm_f(temp_fgb_output)
 
       # Generate PMTiles from FlatGeoBuf
       pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(fgb_path.to_s)} --drop-densest-as-needed --extend-zooms-if-still-dropping"
