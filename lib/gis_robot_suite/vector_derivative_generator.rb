@@ -31,7 +31,8 @@ module GisRobotSuite
       FileUtils.rm_f(temp_fgb_output)
 
       # Generate PMTiles from FlatGeoBuf
-      pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(fgb_path.to_s)} --drop-densest-as-needed --extend-zooms-if-still-dropping"
+      pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(fgb_path.to_s)} " \
+                        '--drop-densest-as-needed --extend-zooms-if-still-dropping --force'
       GisRobotSuite.run_system_command(pmtiles_command, logger: logger)
     end
 
