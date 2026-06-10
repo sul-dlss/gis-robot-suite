@@ -18,7 +18,7 @@ module GisRobotSuite
 
     def generate
       basename = File.basename(fgb_path, '.fgb')
-      temp_fgb_output = fgb_path.parent / "#{basename}_temp.fgb"
+      temp_fgb_output = fgb_path.parent / "#{basename}_before.fgb"
 
       # Generate FlatGeoBuf
       fgb_command = "gdal vector convert --output-format 'FlatGeoBuf' --overwrite #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
