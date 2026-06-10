@@ -16,7 +16,7 @@ module GisRobotSuite
     end
 
     def generate
-      command = "gdal convert #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
+      command = "gdal convert --overwrite #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
       GisRobotSuite.run_system_command(command, logger: logger)
     end
 

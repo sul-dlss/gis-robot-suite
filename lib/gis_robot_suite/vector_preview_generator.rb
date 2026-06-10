@@ -26,7 +26,7 @@ module GisRobotSuite
         GisRobotSuite.run_system_command(rasterize_command, logger: logger)
 
         # Convert temporary TIFF to JP2
-        convert_command = "gdal convert #{Shellwords.escape(temp_tif_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
+        convert_command = "gdal convert --overwrite #{Shellwords.escape(temp_tif_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
         GisRobotSuite.run_system_command(convert_command, logger: logger)
       ensure
         # Make sure we clean up the temporary TIFF file

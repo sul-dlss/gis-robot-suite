@@ -16,7 +16,7 @@ RSpec.describe GisRobotSuite::RasterPreviewGenerator do
       described_class.generate(input_path: input_path, output_path: output_path, logger: logger)
 
       expect(GisRobotSuite).to have_received(:run_system_command).with(
-        "gdal convert #{Shellwords.escape(input_path)} #{Shellwords.escape(output_path)}",
+        "gdal convert --overwrite #{Shellwords.escape(input_path)} #{Shellwords.escape(output_path)}",
         logger: logger
       )
     end
