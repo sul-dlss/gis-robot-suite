@@ -11,8 +11,8 @@ module GisRobotSuite
     delegate :version, to: :cocina_object
 
     # @return [Cocina::Models::DRO] the updated DRO with the new file added to the structural contains
-    def add_file(filename:, use:, file_set:, mimetype: nil, preserve: true)
-      @cocina_object = cocina_object.new(structural: structural_with_file(filename:, mimetype:, use:, preserve:, file_set:))
+    def add_file(filename:, use:, file_set:, mimetype: nil, preserve: true, presentation: nil)
+      @cocina_object = cocina_object.new(structural: structural_with_file(filename:, mimetype:, use:, preserve:, file_set:, presentation:))
     end
 
     # @return [Cocina::Models::DRO] the updated DRO with the matching files removed from the structural contains
@@ -22,9 +22,13 @@ module GisRobotSuite
 
     private
 
-    def structural_with_file(filename:, mimetype:, use:, file_set:, preserve: true)
+    def structural_with_file(filename:, mimetype:, use:, file_set:, preserve: true, presentation: nil)
       objectfile = Assembly::ObjectFile.new(filename)
-      file_params = GisRobotSuite::FileParamBuilder.build(objectfile:, file_access:, version:, mimetype:, use:, preserve:)
+      file_params = if presentation
+                      GisRobotSuite::ImageFileParamBuilder.build(objectfile:, file_access:, version:, mimetype:, use:, preserve:, presentation:)
+                    else
+                      GisRobotSuite::FileParamBuilder.build(objectfile:, file_access:, version:, mimetype:, use:, preserve:)
+                    end
       file = Cocina::Models::File.new(file_params)
 
       current_fs = find_file_set(file_set)

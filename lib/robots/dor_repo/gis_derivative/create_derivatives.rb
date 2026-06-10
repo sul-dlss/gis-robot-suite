@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'json'
+require 'shellwords'
+
 module Robots
   module DorRepo
     module GisDerivative
@@ -56,8 +59,9 @@ module Robots
           cog_filename = create_cog(cocina_file.filename)
           updater.add_file(filename: workspace_path(cog_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
 
-          jp2_filename = create_preview_jp2(cocina_file.filename)
-          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE)
+          jp2_filename = create_preview_jp2(cocina_file.filename, GisRobotSuite::RasterPreviewGenerator)
+          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE,
+                           presentation: jp2_presentation(workspace_path(jp2_filename)))
         end
 
         def create_vector_derivatives(cocina_file, file_set)
@@ -70,8 +74,9 @@ module Robots
           updater.add_file(filename: workspace_path(fgb_filename), use: 'derivative', preserve: false, file_set:, mimetype: FGB_MIME_TYPE)
           updater.add_file(filename: workspace_path(pmtiles_filename), use: 'derivative', preserve: false, file_set:, mimetype: PMTILES_MIME_TYPE)
 
-          jp2_filename = create_preview_jp2(cocina_file.filename)
-          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE)
+          jp2_filename = create_preview_jp2(cocina_file.filename, GisRobotSuite::VectorPreviewGenerator)
+          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE,
+                           presentation: jp2_presentation(workspace_path(jp2_filename)))
         end
 
         def raster?(cocina_file)
@@ -93,15 +98,13 @@ module Robots
           derivative_filename
         end
 
-        def create_preview_jp2(filename)
+        def create_preview_jp2(filename, klass)
           input = workspace_path(filename)
-
           basename = File.basename(filename, File.extname(filename))
           derivative_filename = "#{basename}.jp2"
           output = workspace_path(derivative_filename)
-          # Make derivative JP2 file of the master file in location and add it to cocina_object
-          command = "gdal convert #{Shellwords.escape(input.to_s)} #{Shellwords.escape(output.to_s)}"
-          GisRobotSuite.run_system_command(command, logger: logger)
+
+          klass.generate(input_path: input, output_path: output, logger: logger)
           derivative_filename
         end
 
@@ -116,6 +119,12 @@ module Robots
           GisRobotSuite::VectorDerivativeGenerator.generate(input_path: input, fgb_path: fgb_output, pmtiles_path: pmtiles_output, logger: logger)
 
           [fgb_filename, pmtiles_filename]
+        end
+
+        def jp2_presentation(path)
+          result = GisRobotSuite.run_system_command("gdalinfo -json #{Shellwords.escape(path.to_s)}", logger: logger)
+          width, height = JSON.parse(result[:stdout_str])['size']
+          { height:, width: }
         end
 
         def workspace_path(filename)

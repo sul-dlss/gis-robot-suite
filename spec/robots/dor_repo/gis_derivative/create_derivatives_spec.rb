@@ -53,6 +53,8 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
     allow(GisRobotSuite).to receive(:run_system_command)
+    allow(GisRobotSuite).to receive(:run_system_command).with(/gdalinfo -json/, any_args)
+      .and_return({ stdout_str: '{"size": [1024, 768]}' })
     workspace_path.mkpath
     File.write(master_file_path, 'fake content')
     # This exists because we're stubbing out the call to `gdal raster convert'
@@ -74,7 +76,10 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       new_contains = params.structural.contains.first.structural.contains
       expect(new_contains.count).to eq 3
       expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
-      expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+      jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
+      expect(jp2_file.hasMimeType).to eq 'image/jp2'
+      expect(jp2_file.presentation.height).to eq 768
+      expect(jp2_file.presentation.width).to eq 1024
     end
   end
 
@@ -118,12 +123,16 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
         expect(new_contains.count).to eq 4
         expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
         expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
+        jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
+        expect(jp2_file.presentation.height).to eq 768
+        expect(jp2_file.presentation.width).to eq 1024
       end
     end
 
@@ -163,6 +172,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
@@ -217,6 +227,8 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
       expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
     end
   end
 
