@@ -11,11 +11,8 @@ gem 'lyber-core', '~> 8.0'
 
 gem 'config'
 gem 'csv'
-gem 'fastimage', '~> 2.2' # to get mimetype in GenerateStructural
 gem 'honeybadger'
-gem 'open-uri'
 gem 'rake'
-gem 'scanf'
 gem 'sidekiq', '~> 8.0'
 gem 'slop' # for bin/run_robot
 gem 'zeitwerk', '~> 2.1'
@@ -38,7 +35,6 @@ end
 
 group :test do
   gem 'rspec_junit_formatter' # For circleCI
-  gem 'rubyzip'
   gem 'simplecov', require: 'false'
   gem 'webmock'
 end
