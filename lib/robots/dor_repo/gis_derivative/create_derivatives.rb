@@ -52,12 +52,16 @@ module Robots
         end
 
         def create_raster_derivatives(cocina_file, file_set)
-          # Discard existing COG and JP2 derivatives if they exist
+          # Discard existing COG and JP2 derivatives if they exist and were SDR created (not provided by the user)
           updater.remove_files(use: 'derivative', mimetype: COG_MIME_TYPE, file_set:)
           updater.remove_files(use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:)
 
-          cog_filename = create_cog(cocina_file.filename)
-          updater.add_file(filename: workspace_path(cog_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
+          unless updater.has_file?(use: 'derivative', file_set:, mimetype: COG_MIME_TYPE)
+            cog_filename = create_cog(cocina_file.filename)
+            updater.add_file(filename: workspace_path(cog_filename), use: 'derivative', preserve: false, file_set:, mimetype: COG_MIME_TYPE)
+          end
+
+          return if updater.has_file?(use: 'thumbnail', file_set:, mimetype: JP2_MIME_TYPE)
 
           jp2_filename = create_preview_jp2(cocina_file.filename, GisRobotSuite::RasterPreviewGenerator)
           updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE,
@@ -70,9 +74,13 @@ module Robots
           updater.remove_files(use: 'derivative', mimetype: FGB_MIME_TYPE, file_set:)
           updater.remove_files(use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:)
 
-          fgb_filename, pmtiles_filename = generate_vector_derivatives(cocina_file.filename)
-          updater.add_file(filename: workspace_path(fgb_filename), use: 'derivative', preserve: false, file_set:, mimetype: FGB_MIME_TYPE)
-          updater.add_file(filename: workspace_path(pmtiles_filename), use: 'derivative', preserve: false, file_set:, mimetype: PMTILES_MIME_TYPE)
+          unless updater.has_file?(use: 'derivative', file_set:, mimetype: FGB_MIME_TYPE)
+            fgb_filename, pmtiles_filename = generate_vector_derivatives(cocina_file.filename)
+            updater.add_file(filename: workspace_path(fgb_filename), use: 'derivative', preserve: false, file_set:, mimetype: FGB_MIME_TYPE)
+            updater.add_file(filename: workspace_path(pmtiles_filename), use: 'derivative', preserve: false, file_set:, mimetype: PMTILES_MIME_TYPE)
+          end
+
+          return if updater.has_file?(use: 'thumbnail', file_set:, mimetype: JP2_MIME_TYPE)
 
           jp2_filename = create_preview_jp2(cocina_file.filename, GisRobotSuite::VectorPreviewGenerator)
           updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE,

@@ -29,6 +29,7 @@ module GisRobotSuite
         version:,
         hasMimeType: mimetype || objectfile.mimetype,
         use:,
+        sdrGeneratedText: use == 'derivative',
         hasMessageDigests: [
           {
             type: 'sha1',

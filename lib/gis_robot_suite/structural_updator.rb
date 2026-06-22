@@ -15,6 +15,10 @@ module GisRobotSuite
       @cocina_object = cocina_object.new(structural: structural_with_file(filename:, mimetype:, use:, preserve:, file_set:, presentation:))
     end
 
+    def has_file?(use:, mimetype:, file_set:) # rubocop:disable Naming/PredicatePrefix
+      find_file_set(file_set).structural.contains.any? { |file| file.hasMimeType == mimetype && file.use == use }
+    end
+
     # @return [Cocina::Models::DRO] the updated DRO with the matching files removed from the structural contains
     def remove_files(use:, file_set:, mimetype: nil)
       @cocina_object = cocina_object.new(structural: structural_without_files(use:, mimetype:, file_set:))
@@ -40,7 +44,7 @@ module GisRobotSuite
     def structural_without_files(use:, file_set:, mimetype: nil)
       current_fs = find_file_set(file_set)
       new_contains = current_fs.structural.contains.reject do |file|
-        file.use == use && (mimetype.nil? || file.hasMimeType == mimetype)
+        file.use == use && file.sdrGeneratedText == true && (mimetype.nil? || file.hasMimeType == mimetype)
       end
       new_file_set = current_fs.new(structural: current_fs.structural.new(contains: new_contains))
 
