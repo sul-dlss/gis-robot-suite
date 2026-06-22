@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'scanf'
-
 module Robots
   module DorRepo
     module GisAssembly

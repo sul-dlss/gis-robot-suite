@@ -200,10 +200,6 @@ GEM
       racc (~> 1.4)
     nokogiri-happymapper (0.10.1)
       nokogiri (~> 1.5)
-    open-uri (0.5.0)
-      stringio
-      time
-      uri
     optimist (3.2.1)
     ostruct (0.6.3)
     parallel (2.1.0)
@@ -310,8 +306,6 @@ GEM
       diff-lcs (~> 1.5)
       patience_diff (~> 1.2)
     thor (1.5.0)
-    time (0.4.2)
-      date
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -343,10 +337,8 @@ DEPENDENCIES
   dlss-capistrano
   dor-services-client (~> 15.0)
   druid-tools
-  fastimage (~> 2.2)
   honeybadger
   lyber-core (~> 8.0)
-  open-uri
   preservation-client (~> 7.2)
   rake
   rspec
@@ -355,8 +347,6 @@ DEPENDENCIES
   rubocop-factory_bot
   rubocop-rspec
   rubocop-rspec_rails
-  rubyzip
-  scanf
   sidekiq (~> 8.0)
   sidekiq-pro!
   simplecov

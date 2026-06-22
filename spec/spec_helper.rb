@@ -22,7 +22,6 @@ require File.expand_path("#{__dir__}/../config/boot")
 require 'debug'
 require 'rspec'
 require 'cocina/rspec'
-require 'zip'
 include LyberCore::Rspec # rubocop:disable Style/MixinUsage
 
 # Redirect log output to log/test.log instead of stdout
