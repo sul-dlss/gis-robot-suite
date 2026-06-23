@@ -410,10 +410,44 @@ module GisRobotSuite
     def coordinates_subjects
       # use coordinates in native projection only, no longer reproject
       extent = data_id_node.xpath('gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', NS)
-      return unless extent.any?
+      coords_val = if extent.any?
+                     coordinates(extent)
+                   else
+                     file = vector_filepath || raster_filepath
+                     if file
+                       gdal_coords = coordinates_from_gdal(file)
+                       to_coordinates_ddmmss(gdal_coords) if gdal_coords
+                     end
+                   end
 
-      { value: coordinates(extent),
+      return unless coords_val
+
+      { value: coords_val,
         type: 'map coordinates' } # also add field with the reference system
+    end
+
+    def coordinates_from_gdal(file)
+      cmd = "#{Settings.gdal_path}gdal info '#{file}' -f json"
+      result = GisRobotSuite.run_system_command(cmd, logger:)
+      json = JSON.parse(result[:stdout_str])
+
+      bbox = json.dig('stac', 'proj:projjson', 'bbox') ||
+             json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'projjson', 'bbox') ||
+             json.dig('coordinateSystem', 'projjson', 'bbox')
+
+      return unless bbox
+
+      west = bbox['west_longitude']
+      east = bbox['east_longitude']
+      north = bbox['north_latitude']
+      south = bbox['south_latitude']
+
+      return if [west, east, north, south].any?(&:nil?)
+
+      [west, east, north, south].map(&:to_f)
+    rescue StandardError => e
+      logger.error("Failed to obtain bounding box info using gdal info for #{bare_druid}: #{e.message}")
+      nil
     end
 
     def coordinates(extent)
