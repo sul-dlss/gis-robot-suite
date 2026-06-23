@@ -58,6 +58,51 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
           described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:map_projection)
         end.to raise_error(RuntimeError, "Map projection is missing for #{bare_druid}.")
       end
+
+      context 'when projection is missing from metadata but fallback works for vectors' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive_messages(vector_filepath: '/path/to/vector.shp', raster_filepath: nil)
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: '{"layers":[{"geometryFields":[{"coordinateSystem":{"projjson":{"id":{"authority":"EPSG","code":3309}}}}]}]}' }
+          )
+        end
+
+        it 'falls back to gdal info for vectors' do
+          expect(builder.send(:map_projection)).to eq({ value: 'EPSG::3309', type: 'map projection' })
+        end
+      end
+
+      context 'when projection is missing from metadata but fallback works for rasters' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive_messages(vector_filepath: nil, raster_filepath: '/path/to/raster.tif')
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: '{"stac":{"proj:projjson":{"id":{"authority":"EPSG","code":4326}}}}' }
+          )
+        end
+
+        it 'falls back to gdal info for rasters' do
+          expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+        end
+      end
+
+      context 'when projection is missing from metadata and fallback parsing falls back to WKT' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive_messages(vector_filepath: nil, raster_filepath: '/path/to/raster.tif')
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: '{"coordinateSystem":{"wkt":"GEOGCRS[\"WGS 84\", ID[\"EPSG\",4326]]"}}' }
+          )
+        end
+
+        it 'parses from WKT' do
+          expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+        end
+      end
     end
 
     describe '.language' do
