@@ -161,9 +161,41 @@ module GisRobotSuite
       proj = iso19139_ng.xpath('//gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier', NS)
       system = proj.xpath('gmd:codeSpace/gco:CharacterString', NS).text
       code = proj.xpath('gmd:code/gco:CharacterString', NS).text
-      raise "Map projection is missing for #{bare_druid}." if system.empty? || code.empty?
+
+      if system.empty? || code.empty?
+        file = vector_filepath || raster_filepath
+        system, code = projection_from_gdal(file) if file
+      end
+
+      raise "Map projection is missing for #{bare_druid}." if system.blank? || code.blank?
 
       { value: "#{system}::#{code}", type: 'map projection' } # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
+    end
+
+    def projection_from_gdal(file)
+      cmd = "#{Settings.gdal_path}gdal info '#{file}' -f json"
+      result = GisRobotSuite.run_system_command(cmd, logger:)
+      json = JSON.parse(result[:stdout_str])
+
+      id_node = json.dig('stac', 'proj:projjson', 'id') ||
+                json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'projjson', 'id') ||
+                json.dig('coordinateSystem', 'projjson', 'id')
+
+      if id_node && id_node['authority'] && id_node['code']
+        [id_node['authority'], id_node['code'].to_s]
+      else
+        wkt = json.dig('coordinateSystem', 'wkt') ||
+              json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'wkt')
+
+        if wkt && (m = wkt.match(/ID\["([^"]+)",\s*(\d+)\]\s*\]\s*\z/m))
+          [m[1], m[2]]
+        else
+          [nil, nil]
+        end
+      end
+    rescue StandardError => e
+      logger.error("Failed to obtain projection info using gdal info for #{bare_druid}: #{e.message}")
+      [nil, nil]
     end
 
     def extent_form
@@ -524,6 +556,14 @@ module GisRobotSuite
 
     def rootdir
       @rootdir ||= GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+    end
+
+    def vector_filepath
+      Dir.glob("#{rootdir}/content/*.{shp,geojson}").first
+    end
+
+    def raster_filepath
+      Dir.glob("#{rootdir}/content/*.tif").first
     end
 
     def vector_file
