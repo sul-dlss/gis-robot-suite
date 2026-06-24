@@ -32,11 +32,28 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
     let(:use) { 'derivative' }
 
     context 'when there are no file sets' do
+      let(:updated_object) do
+        updater.add_file(filename: filename, use: use, file_set: new_file_set, mimetype: mimetype)
+      end
+      let(:created_file_sets) { updated_object.structural.contains }
+      let(:files) { created_file_sets.first.structural.contains }
+
       it 'adds to the provided file set and creates structural contains' do
-        updated_object = updater.add_file(filename: filename, use: use, file_set: new_file_set, mimetype: mimetype)
-        expect(updated_object.structural.contains.size).to eq 1
-        expect(updated_object.structural.contains.first.structural.contains.size).to eq 1
-        expect(updated_object.structural.contains.first.structural.contains.first.filename).to eq File.basename(filename)
+        expect(created_file_sets.size).to eq 1
+        expect(files.size).to eq 1
+        expect(files.first.filename).to eq File.basename(filename)
+        expect(files.first.sdrGeneratedText).to be true
+      end
+
+      context 'when not a derivative' do
+        let(:use) { 'main' }
+
+        it 'adds to the provided file set and creates structural contains' do
+          expect(created_file_sets.size).to eq 1
+          expect(files.size).to eq 1
+          expect(files.first.filename).to eq File.basename(filename)
+          expect(files.first.sdrGeneratedText).to be false
+        end
       end
     end
 
@@ -98,6 +115,22 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
   end
 
   describe '#remove_files' do
+    let(:derivative_file) do
+      {
+        type: 'https://cocina.sul.stanford.edu/models/file',
+        externalIdentifier: 'https://cocina.sul.stanford.edu/file/2',
+        label: 'derivative.tif',
+        filename: 'derivative.tif',
+        version: 1,
+        hasMimeType: 'image/tiff',
+        use: 'derivative',
+        sdrGeneratedText: true,
+        administrative: { publish: true, sdrPreserve: false, shelve: true },
+        access: { view: 'world', download: 'world' },
+        hasMessageDigests: []
+      }
+    end
+
     let(:file_sets) do
       [
         Cocina::Models::FileSet.new(
@@ -119,18 +152,7 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
                 access: { view: 'world', download: 'world' },
                 hasMessageDigests: []
               },
-              {
-                type: 'https://cocina.sul.stanford.edu/models/file',
-                externalIdentifier: 'https://cocina.sul.stanford.edu/file/2',
-                label: 'derivative.tif',
-                filename: 'derivative.tif',
-                version: 1,
-                hasMimeType: 'image/tiff',
-                use: 'derivative',
-                administrative: { publish: true, sdrPreserve: false, shelve: true },
-                access: { view: 'world', download: 'world' },
-                hasMessageDigests: []
-              }
+              derivative_file
             ]
           }
         )
