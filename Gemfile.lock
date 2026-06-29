@@ -208,9 +208,10 @@ GEM
       optimist (~> 3.0)
     pp (0.6.4)
       prettyprint
-    preservation-client (7.4.0)
+    preservation-client (8.0.0)
       activesupport (>= 4.2)
       faraday (~> 2.0)
+      faraday-retry (~> 2.0)
       moab-versioning (>= 5.0.0, < 7)
       zeitwerk (~> 2.1)
     prettyprint (0.2.0)
@@ -332,11 +333,11 @@ DEPENDENCIES
   csv
   debug
   dlss-capistrano
-  dor-services-client (~> 15.0)
+  dor-services-client
   druid-tools
   honeybadger
-  lyber-core (~> 8.0)
-  preservation-client (~> 7.2)
+  lyber-core
+  preservation-client
   rake
   rspec
   rspec_junit_formatter
@@ -349,7 +350,7 @@ DEPENDENCIES
   simplecov
   slop
   webmock
-  zeitwerk (~> 2.1)
+  zeitwerk
 
 BUNDLED WITH
   4.0.15
