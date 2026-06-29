@@ -58,7 +58,7 @@ GEM
       super_diff
       thor
       zeitwerk (~> 2.1)
-    cocina_display (2.7.0)
+    cocina_display (2.8.0)
       activesupport (>= 7)
       edtf (~> 3.2)
       geo_coord (~> 0.2)
@@ -75,7 +75,6 @@ GEM
       bigdecimal
       rexml
     csv (3.3.5)
-    date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
@@ -124,7 +123,7 @@ GEM
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
     ed25519 (1.4.0)
-    edtf (3.2.0)
+    edtf (3.3.0)
       activesupport (>= 3.0, < 9.0)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
@@ -137,7 +136,6 @@ GEM
       net-http (~> 0.5)
     faraday-retry (2.4.0)
       faraday (~> 2.0)
-    fastimage (2.4.1)
     geo_coord (0.2.0)
     hashdiff (1.2.1)
     hashie (5.1.0)
@@ -156,10 +154,10 @@ GEM
       reline (>= 0.4.2)
     iso8601 (0.13.0)
     janeway-jsonpath (1.0.0)
-    json (2.19.9)
-    jsonschema_rs (0.46.5-arm64-darwin)
+    json (2.20.0)
+    jsonschema_rs (0.46.6-arm64-darwin)
       bigdecimal (>= 3.1, < 5)
-    jsonschema_rs (0.46.5-x86_64-linux)
+    jsonschema_rs (0.46.6-x86_64-linux)
       bigdecimal (>= 3.1, < 5)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
@@ -193,7 +191,7 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
-    net-ssh (7.3.2)
+    net-ssh (7.3.3)
     nokogiri (1.19.4-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
@@ -218,17 +216,19 @@ GEM
     prettyprint (0.2.0)
     prism (1.9.0)
     pstore (0.2.1)
-    psych (5.4.0)
-      date
-      stringio
     public_suffix (7.0.5)
     racc (1.8.1)
     rack (3.2.6)
     rainbow (3.1.1)
     rake (13.4.2)
-    rdoc (7.2.0)
+    rbs (4.0.3)
+      logger
+      prism (>= 1.6.0)
+      tsort
+    rdoc (8.0.0)
       erb
-      psych (>= 4.0.0)
+      prism (>= 1.6.0)
+      rbs (>= 4.0.0)
       tsort
     redis-client (0.30.0)
       connection_pool
@@ -277,8 +277,6 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
     ruby-progressbar (1.13.0)
-    rubyzip (3.4.0)
-    scanf (1.0.0)
     securerandom (0.4.1)
     sidekiq (8.1.6)
       connection_pool (>= 3.0.0)
@@ -300,7 +298,6 @@ GEM
       net-sftp (>= 2.1.2)
       net-ssh (>= 2.8.0)
       ostruct
-    stringio (3.2.0)
     super_diff (0.19.0)
       attr_extras (>= 6.2.4, < 8)
       diff-lcs (~> 1.5)
@@ -355,4 +352,4 @@ DEPENDENCIES
   zeitwerk (~> 2.1)
 
 BUNDLED WITH
-  4.0.14
+  4.0.15
