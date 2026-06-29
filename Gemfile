@@ -5,9 +5,10 @@ source 'https://rubygems.org'
 # stanford dlss specific gems
 gem 'assembly-objectfile'
 gem 'cocina-models'
-gem 'dor-services-client', '~> 15.0'
+gem 'dor-services-client'
 gem 'druid-tools'
-gem 'lyber-core', '~> 8.0'
+gem 'lyber-core'
+gem 'preservation-client'
 
 gem 'config'
 gem 'csv'
@@ -15,7 +16,7 @@ gem 'honeybadger'
 gem 'rake'
 gem 'sidekiq', '~> 8.0'
 gem 'slop' # for bin/run_robot
-gem 'zeitwerk', '~> 2.1'
+gem 'zeitwerk'
 
 source 'https://gems.contribsys.com/' do
   gem 'sidekiq-pro'
@@ -47,5 +48,3 @@ group :deployment do
 end
 
 gem 'benchmark', '~> 0.5.0'
-
-gem 'preservation-client', '~> 7.2'
