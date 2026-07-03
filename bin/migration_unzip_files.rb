@@ -9,8 +9,27 @@ require 'csv'
 
 # Orchestrates the migration of GIS files and starting the workflow
 class Migrator
+  # Raised when a druid has no data.zip to unzip; the druid is skipped.
+  class MissingDataZip < StandardError; end
+
   def self.migrate(druid:)
     new(druid:).migrate
+  end
+
+  # Migrate each druid in the CSV, skipping (but not halting on) any druid
+  # whose data.zip is missing.
+  def self.process_csv(csv_file)
+    CSV.foreach(csv_file, headers: true) do |row|
+      druid = row['druid']
+      next if druid.nil? || druid.empty?
+
+      begin
+        migrate(druid: druid.strip)
+      rescue MissingDataZip => e
+        warn "  Skipping #{druid.strip}: #{e.message}"
+        next
+      end
+    end
   end
 
   def initialize(druid:)
@@ -54,7 +73,7 @@ class Migrator
 
   def unzip
     zip_path = File.join(content_dir, 'data.zip')
-    return unless File.exist?(zip_path)
+    raise MissingDataZip, "No data.zip found for #{@druid} at #{zip_path}" unless File.exist?(zip_path)
 
     puts '  Unzipping data.zip...'
     system("unzip -o -q #{zip_path} -d #{content_dir}")
@@ -135,15 +154,12 @@ class Migrator
   end
 end
 
-csv_file = ARGV[0]
-if csv_file.nil? || !File.exist?(csv_file)
-  puts "Usage: #{$PROGRAM_NAME} <csv_file>"
-  exit 1
-end
+if $PROGRAM_NAME == __FILE__
+  csv_file = ARGV[0]
+  if csv_file.nil? || !File.exist?(csv_file)
+    puts "Usage: #{$PROGRAM_NAME} <csv_file>"
+    exit 1
+  end
 
-CSV.foreach(csv_file, headers: true) do |row|
-  druid = row['druid']
-  next if druid.nil? || druid.empty?
-
-  Migrator.migrate(druid: druid.strip)
+  Migrator.process_csv(csv_file)
 end
