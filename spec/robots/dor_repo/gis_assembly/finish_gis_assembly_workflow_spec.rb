@@ -12,6 +12,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::FinishGisAssemblyWorkflow do
 
   before do
     FileUtils.mkdir_p(tmpdir) unless File.directory?(tmpdir) # make a temp directory to be deleted
+    allow(FileUtils).to receive(:rm_rf) # don't actually delete the fixtures in tests!
   end
 
   after do
@@ -27,6 +28,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::FinishGisAssemblyWorkflow do
       test_perform(robot, bare_druid)
       expect(File.directory?(destdir)).to be true # dest directory created
       expect(count_files("#{destdir}/content")).to eq 2 # 2 files moved to dest content directory
+    end
+
+    it 'removes the staging area after the copy' do
+      test_perform(robot, bare_druid)
+      expect(FileUtils).to have_received(:rm_rf).with(rootdir)
     end
   end
 end
