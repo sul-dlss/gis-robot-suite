@@ -38,8 +38,8 @@ class Migrator
   end
 
   def create_content_dir
-    workspace_path = GisRobotSuite.locate_druid_path(@druid, type: :workspace)
-    dir = File.join(workspace_path, 'content')
+    stage_path = GisRobotSuite.locate_druid_path(@druid, type: :stage)
+    dir = File.join(stage_path, 'content')
     FileUtils.mkdir_p(dir)
     dir
   end
