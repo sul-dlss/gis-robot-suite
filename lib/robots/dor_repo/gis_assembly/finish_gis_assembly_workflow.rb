@@ -20,6 +20,9 @@ module Robots
 
           logger.info "finish-gis-assembly-workflow: #{bare_druid} migrating object to #{destdir} from #{rootdir}"
           FileUtils.cp_r("#{rootdir}/.", destdir)
+
+          # Clean up the staging area after the copy
+          FileUtils.rm_rf(rootdir)
         end
       end
     end
