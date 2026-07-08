@@ -164,12 +164,14 @@ module GisRobotSuite
 
       if system.empty? || code.empty?
         file = vector_filepath || raster_filepath
-        system, code = projection_from_gdal(file) if file
+        projection = projection_from_gdal(file) if file
+      else
+        projection = "#{system}::#{code}" # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
       end
 
-      raise "Map projection is missing for #{bare_druid}." if system.blank? || code.blank?
+      raise "Map projection is missing for #{bare_druid}." if projection.blank?
 
-      { value: "#{system}::#{code}", type: 'map projection' } # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
+      { value: projection, type: 'map projection' }
     end
 
     def projection_from_gdal(file)
@@ -181,17 +183,24 @@ module GisRobotSuite
                 json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'projjson', 'id') ||
                 json.dig('coordinateSystem', 'projjson', 'id')
 
-      if id_node && id_node['authority'] && id_node['code']
-        [id_node['authority'], id_node['code'].to_s]
-      else
-        wkt = json.dig('coordinateSystem', 'wkt') ||
-              json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'wkt')
+      system, code = if id_node && id_node['authority'] && id_node['code']
+                       [id_node['authority'], id_node['code'].to_s]
+                     else
+                       wkt = json.dig('coordinateSystem', 'wkt') ||
+                             json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'wkt')
 
-        if wkt && (m = wkt.match(/ID\["([^"]+)",\s*(\d+)\]\s*\]\s*\z/m))
-          [m[1], m[2]]
-        else
-          [nil, nil]
-        end
+                       if wkt && (m = wkt.match(/ID\["([^"]+)",\s*(\d+)\]\s*\]\s*\z/m))
+                         [m[1], m[2]]
+                       end
+                     end
+
+      if system.present? && code.present?
+        "#{system}::#{code}"
+      else
+        # Some projections don't have an authority or code, but do have a name
+        json.dig('stac', 'proj:projjson', 'name') ||
+          json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'projjson', 'name') ||
+          json.dig('coordinateSystem', 'projjson', 'name')
       end
     rescue StandardError => e
       logger.error("Failed to obtain projection info using gdal info for #{bare_druid}: #{e.message}")
