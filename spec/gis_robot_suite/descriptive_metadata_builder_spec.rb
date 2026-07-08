@@ -103,6 +103,21 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
           expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
         end
       end
+
+      context 'when the projection has a name but no ID' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive_messages(vector_filepath: '/path/to/vector.shp', raster_filepath: nil)
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: '{"coordinateSystem":{"wkt":"PROJCRS[\"California Albers\"]","projjson":{"name":"California Albers"}}}' }
+          )
+        end
+
+        it 'uses the name instead' do
+          expect(builder.send(:map_projection)).to eq({ value: 'California Albers', type: 'map projection' })
+        end
+      end
     end
 
     describe '.language' do
