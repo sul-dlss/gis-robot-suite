@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
-  # Removes the file named "preview.jpg" from an object's structural metadata.
+  # Removes the file named "preview.jpg" from an object's structural metadata and
+  # consolidates all remaining files into a single file set. Geo objects should have
+  # exactly one file set containing all of their files; any empty file sets are dropped.
   class PreviewJpgRemover
     FILENAME = 'preview.jpg'
 
@@ -20,17 +22,17 @@ module GisRobotSuite
       object_client = Dor::Services::Client.object("druid:#{bare_druid}")
       cocina_object = object_client.find
 
-      unless has_preview_jpg?(cocina_object)
-        @logger.info "  No #{FILENAME} file found for druid:#{bare_druid}."
+      unless needs_update?(cocina_object)
+        @logger.info "  Nothing to update for druid:#{bare_druid} (no #{FILENAME} and already a single file set)."
         return
       end
 
       @logger.info "  Opening new version for druid:#{bare_druid}..."
       # Open a new version. Note: object_client.version.open returns the Cocina representation of the opened version.
-      opened_cocina = object_client.version.open(description: "Remove #{FILENAME} from structural metadata")
+      opened_cocina = object_client.version.open(description: "Remove #{FILENAME} and consolidate files into a single file set")
 
-      @logger.info "  Removing #{FILENAME}..."
-      updated_cocina = remove_preview_jpg(opened_cocina)
+      @logger.info "  Removing #{FILENAME} and consolidating file sets..."
+      updated_cocina = consolidate_files(opened_cocina)
 
       @logger.info '  Saving updated Cocina object...'
       object_client.update(params: updated_cocina)
@@ -45,24 +47,30 @@ module GisRobotSuite
 
     private
 
-    def has_preview_jpg?(cocina_object) # rubocop:disable Naming/PredicatePrefix
-      cocina_object.structural.contains.any? do |file_set|
-        file_set.structural.contains.any? do |file|
-          file.filename == FILENAME
-        end
+    def needs_update?(cocina_object)
+      file_sets = cocina_object.structural.contains
+      return true if file_sets.size > 1
+
+      file_sets.any? do |file_set|
+        file_set.structural.contains.any? { |file| file.filename == FILENAME }
       end
     end
 
-    def remove_preview_jpg(cocina_object)
-      new_contains = cocina_object.structural.contains.map do |file_set|
-        next file_set unless file_set.respond_to?(:structural) && file_set.structural && file_set.structural.contains
+    # Removes preview.jpg and moves every remaining file into the first file set,
+    # leaving the object with a single file set and no empty ones.
+    def consolidate_files(cocina_object)
+      file_sets = cocina_object.structural.contains
+      first_file_set = file_sets.first
 
-        new_files = file_set.structural.contains.reject { |file| file.filename == FILENAME }
-
-        file_set.new(structural: file_set.structural.new(contains: new_files))
+      consolidated_files = file_sets.flat_map do |file_set|
+        file_set.structural.contains.reject { |file| file.filename == FILENAME }
       end
 
-      cocina_object.new(structural: cocina_object.structural.new(contains: new_contains))
+      new_first_file_set = first_file_set.new(
+        structural: first_file_set.structural.new(contains: consolidated_files)
+      )
+
+      cocina_object.new(structural: cocina_object.structural.new(contains: [new_first_file_set]))
     end
   end
 end
