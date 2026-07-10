@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
+  let(:robot) { described_class.new }
+
   let(:process_response) { instance_double(Dor::Services::Response::Process, status: 'queued') }
   let(:workflow_response) { instance_double(Dor::Services::Response::Workflow, process_for_recent_version: process_response) }
   let(:workflow_client) { instance_double(Dor::Services::Client::ObjectWorkflow, create: true, find: workflow_response) }
@@ -61,7 +63,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
     cleanup
     allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_client)
     allow(workflow_client).to receive(:process).with('extract-iso19139-metadata').and_return(process_client)
-    described_class.new.perform(druid)
+    test_perform(robot, druid)
   end
 
   after { cleanup }

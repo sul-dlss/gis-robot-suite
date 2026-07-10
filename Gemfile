@@ -7,7 +7,7 @@ gem 'assembly-objectfile'
 gem 'cocina-models'
 gem 'dor-services-client'
 gem 'druid-tools'
-gem 'lyber-core'
+gem 'lyber-core' # For robots
 gem 'preservation-client'
 
 gem 'config'
