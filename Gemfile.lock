@@ -162,7 +162,7 @@ GEM
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
-    lyber-core (8.2.0)
+    lyber-core (9.0.0)
       activesupport
       config
       dor-services-client
@@ -336,7 +336,7 @@ DEPENDENCIES
   dor-services-client
   druid-tools
   honeybadger
-  lyber-core (~> 8.0)
+  lyber-core
   preservation-client
   rake
   rspec
