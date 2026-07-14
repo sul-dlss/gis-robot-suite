@@ -120,6 +120,99 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
       end
     end
 
+    describe '.coordinates_subjects' do
+      context 'when coordinates are present in the XML' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        it 'returns map coordinates from metadata' do
+          expect(builder.send(:coordinates_subjects)).to eq(
+            { value: 'W 158°1ʹ3ʺ--W 65°35ʹ41ʺ/N 64°51ʹ16ʺ--N 18°7ʺ', type: 'map coordinates' }
+          )
+        end
+      end
+
+      context 'when coordinates are missing and no fallback files are present' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive(:data_id_node).and_return(Nokogiri::XML('<empty/>'))
+          allow(builder).to receive_messages(vector_filepath: nil, raster_filepath: nil)
+        end
+
+        it 'returns nil' do
+          expect(builder.send(:coordinates_subjects)).to be_nil
+        end
+      end
+
+      context 'when coordinates are missing from metadata but fallback works for vectors' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive(:data_id_node).and_return(Nokogiri::XML('<empty/>'))
+          allow(builder).to receive_messages(vector_filepath: '/path/to/vector.shp', raster_filepath: nil)
+          vector_json = {
+            layers: [
+              {
+                geometryFields: [
+                  {
+                    coordinateSystem: {
+                      projjson: {
+                        bbox: {
+                          south_latitude: 32.53,
+                          west_longitude: -124.45,
+                          north_latitude: 42.01,
+                          east_longitude: -114.12
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }.to_json
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: vector_json }
+          )
+        end
+
+        it 'falls back to gdal info for vectors' do
+          expect(builder.send(:coordinates_subjects)).to eq(
+            { value: 'W 124°27ʹ--W 114°7ʹ12ʺ/N 42°36ʺ--N 32°31ʹ48ʺ', type: 'map coordinates' }
+          )
+        end
+      end
+
+      context 'when coordinates are missing from metadata but fallback works for rasters' do
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        before do
+          allow(builder).to receive(:data_id_node).and_return(Nokogiri::XML('<empty/>'))
+          allow(builder).to receive_messages(vector_filepath: nil, raster_filepath: '/path/to/raster.tif')
+          raster_json = {
+            stac: {
+              'proj:projjson': {
+                bbox: {
+                  south_latitude: 49.75,
+                  west_longitude: -9.01,
+                  north_latitude: 61.01,
+                  east_longitude: 2.01
+                }
+              }
+            }
+          }.to_json
+          allow(GisRobotSuite).to receive(:run_system_command).with(/gdal info .* -f json/, any_args).and_return(
+            { stdout_str: raster_json }
+          )
+        end
+
+        it 'falls back to gdal info for rasters' do
+          expect(builder.send(:coordinates_subjects)).to eq(
+            { value: 'W 9°36ʺ--E 2°36ʺ/N 61°36ʺ--N 49°45ʹ', type: 'map coordinates' }
+          )
+        end
+      end
+    end
+
     describe '.language' do
       it 'raises when language is missing' do
         expect { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:language) }.to raise_error(RuntimeError, "Language missing for #{bare_druid}.")
