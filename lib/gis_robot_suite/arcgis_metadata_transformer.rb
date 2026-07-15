@@ -73,9 +73,14 @@ module GisRobotSuite
       File.join(basepath, 'config', 'ArcGIS', 'Transforms')
     end
 
-    # Comand to invoke xsltproc to transform XML
+    # Comand to invoke xsltproc to transform XML.
+    # --maxdepth is raised well above the default (3000) because the fixHTML
+    # template in the ArcGIS transforms strips HTML tags via per-tag recursion;
+    # descriptions containing large embedded HTML tables (i.e. hundreds of tags)
+    # will cause it to abort the transform otherwise.
+    # See: https://github.com/sul-dlss/gis-robot-suite/issues/1162
     def xslt_command
-      'xsltproc --novalid --xinclude'
+      'xsltproc --novalid --xinclude --maxdepth 20000'
     end
 
     # Command to post-process transformed XML with xmllint
