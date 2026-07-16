@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'shellwords'
-
 module GisRobotSuite
   # Generates raster preview JP2 derivatives.
   class RasterPreviewGenerator
@@ -16,8 +14,7 @@ module GisRobotSuite
     end
 
     def generate
-      command = "gdal convert --overwrite #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
-      GisRobotSuite.run_system_command(command, logger: logger)
+      Jp2Converter.convert(input_path: input_path, output_path: output_path, logger: logger)
     end
 
     private
