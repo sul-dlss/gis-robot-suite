@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.describe GisRobotSuite::RasterPreviewGenerator do
-  describe '.generate' do
+RSpec.describe GisRobotSuite::Jp2Converter do
+  describe '.convert' do
     let(:input_path) { '/path/to/input.tif' }
     let(:output_path) { '/path/to/output.jp2' }
     let(:logger) { instance_double(Logger, info: nil, debug: nil) }
@@ -12,8 +12,8 @@ RSpec.describe GisRobotSuite::RasterPreviewGenerator do
       allow(GisRobotSuite).to receive(:run_system_command)
     end
 
-    it 'executes the correct gdal convert command' do
-      described_class.generate(input_path: input_path, output_path: output_path, logger: logger)
+    it 'executes a lossy gdal convert command' do
+      described_class.convert(input_path: input_path, output_path: output_path, logger: logger)
 
       expect(GisRobotSuite).to have_received(:run_system_command).with(
         "gdal convert --overwrite --co QUALITY=25 --co REVERSIBLE=NO #{Shellwords.escape(input_path)} #{Shellwords.escape(output_path)}",

@@ -23,7 +23,7 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
       )
 
       expect(GisRobotSuite).to have_received(:run_system_command).with(
-        "gdal convert --overwrite #{Shellwords.escape(temp_tif_path.to_s)} #{Shellwords.escape(output_path.to_s)}",
+        "gdal convert --overwrite --co QUALITY=25 --co REVERSIBLE=NO #{Shellwords.escape(temp_tif_path.to_s)} #{Shellwords.escape(output_path.to_s)}",
         logger: logger
       )
 
