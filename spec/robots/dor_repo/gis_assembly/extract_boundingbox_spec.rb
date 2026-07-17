@@ -689,7 +689,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
     end
 
     def ci?
-      cmd_result = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogr2ogr --version", logger: Logger.new($stdout)) # provide a throw away logger
+      cmd_result = GisRobotSuite.run_system_command("#{Settings.gdal_path}ogr2ogr --version", logger: Logger.new(File::NULL)) # provide a throw away logger
       cmd_result[:stdout_str].include?('GDAL 3.11')
     end
 
