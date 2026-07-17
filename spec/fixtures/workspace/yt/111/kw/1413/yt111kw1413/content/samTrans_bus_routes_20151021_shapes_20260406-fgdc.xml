@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <pubdate>20240122</pubdate>
+        <title>SamTrans Bus Routes, 2024</title>
+        <pubinfo>
+          <pubplace/>
+          <publish>County of San Mateo Information Services Department</publish>
+        </pubinfo>
+        <onlink>https://purl.stanford.edu/yt111kw1413</onlink>
+        <lworkcit>
+          <citeinfo>
+            <title>San Mateo County, California GIS Maps and Data</title>
+          </citeinfo>
+        </lworkcit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>San Mateo County bus route network created from samTrans General Transit Feed Specification (GTFS) data. (April 24, 2024)</abstract>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <sngdate>
+          <caldate>20240424</caldate>
+        </sngdate>
+      </timeinfo>
+      <current>ground condition</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>Unknown</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-122.524715</westbc>
+        <eastbc>-122.071995</eastbc>
+        <northbc>37.714433</northbc>
+        <southbc>37.103114</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>lcsh</themekt>
+        <themekey>Local transit</themekey>
+        <themekey>Buses</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>transportation</themekey>
+      </theme>
+      <place>
+        <placekt>geonames</placekt>
+        <placekey>San Mateo County (Calif.)</placekey>
+      </place>
+    </keywords>
+    <accconst>This item is in the public domain. There are no restrictions on use.</accconst>
+    <useconst>None</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>County of San Mateo Information Services Department</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>455 County Center</address>
+          <city>Redwood City</city>
+          <state>California</state>
+          <postal>94063</postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>650-363-4548</cntvoice>
+        <cntemail>countygis@co.sanmateo.ca.us</cntemail>
+      </cntinfo>
+    </ptcontac>
+  </idinfo>
+  <spdoinfo>
+    <ptvctinf>
+      <sdtsterm>
+        <sdtstype>Entity point</sdtstype>
+        <ptvctcnt>0</ptvctcnt>
+      </sdtsterm>
+    </ptvctinf>
+  </spdoinfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>Branner Earth Sciences Library</address>
+          <address>Mitchell Building, 2nd Floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </distrib>
+    <distliab>See access and use constraints information.</distliab>
+  </distinfo>
+  <metainfo>
+    <metd>20260406</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>Mitchell Bldg. 2nd floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <mettc>local time</mettc>
+  </metainfo>
+</metadata>
