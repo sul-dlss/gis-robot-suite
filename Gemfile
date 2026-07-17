@@ -13,6 +13,7 @@ gem 'preservation-client'
 gem 'config'
 gem 'csv'
 gem 'honeybadger'
+gem 'json_schemer' # For validating generated GeoJSON against the OpenIndexMaps schema
 gem 'rake'
 gem 'sidekiq', '~> 8.0'
 gem 'slop' # for bin/run_robot
