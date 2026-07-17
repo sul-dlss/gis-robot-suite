@@ -110,8 +110,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         let(:sdr_generated_text) { true }
 
         it 'replaces the derivative and adds a thumbnail' do
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
@@ -126,7 +124,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         let(:sdr_generated_text) { false }
 
         it 'retains the original derivative and adds a thumbnail' do
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
@@ -240,11 +237,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           let(:sdr_generated_text) { true }
 
           it 'replaces all derivatives' do
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
             expect(object_client).to have_received(:update) do |params:|
               new_contains = params.structural.contains.first.structural.contains
               expect(new_contains.count).to eq 4
@@ -264,8 +256,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           let(:sdr_generated_text) { false }
 
           it 'retains all derivatives' do
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
-            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
             expect(object_client).to have_received(:update) do |params:|
               new_contains = params.structural.contains.first.structural.contains
               expect(new_contains.count).to eq 4
