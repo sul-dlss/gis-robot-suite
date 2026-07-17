@@ -29,7 +29,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     allow(robot).to receive(:druid).and_return(druid)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
-    perform
   end
 
   after do
@@ -65,14 +64,17 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     end
 
     it 'creates a COG' do
+      perform
       expect(cog_file_path).to exist
     end
 
     it 'creates a JP2 thumbnail' do
+      perform
       expect(jp2_file_path).to exist
     end
 
     it 'updates structural metadata' do
+      perform
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
         expect(new_contains.count).to eq 3
@@ -109,6 +111,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         let(:sdr_generated_text) { true }
 
         it 'replaces the derivative and adds a thumbnail' do
+          perform
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
@@ -123,6 +126,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         let(:sdr_generated_text) { false }
 
         it 'retains the original derivative and adds a thumbnail' do
+          perform
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
@@ -166,18 +170,22 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       end
 
       it 'creates a FlatGeoBuf' do
+        perform
         expect(fgb_file_path).to exist
       end
 
       it 'creates a PMTiles archive' do
+        perform
         expect(pmtiles_file_path).to exist
       end
 
       it 'creates a JP2 thumbnail' do
+        perform
         expect(jp2_file_path).to exist
       end
 
       it 'updates structural metadata' do
+        perform
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
           expect(new_contains.count).to eq 4
@@ -197,6 +205,22 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           perform
           expect(fgb_file_path).to exist
           expect(pmtiles_file_path).to exist
+        end
+      end
+
+      context 'with an index map' do
+        after do
+          FileUtils.rm_f(geojson_file_path)
+        end
+
+        context 'when the input shapefile does not match OpenIndexMaps schema' do
+          let(:druid) { 'druid:gn042sy3396' }
+          let(:layer_name) { 'Index_a3243538' }
+          let(:geojson_file_path) { workspace_path / "#{layer_name}.geojson" }
+
+          it 'raises an error because the generated GeoJSON is not valid' do
+            expect { perform }.to raise_error(GisRobotSuite::IndexMapDerivativeGenerator::InvalidGeoJsonError)
+          end
         end
       end
 
@@ -236,6 +260,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           let(:sdr_generated_text) { true }
 
           it 'replaces all derivatives' do
+            perform
             expect(object_client).to have_received(:update) do |params:|
               new_contains = params.structural.contains.first.structural.contains
               expect(new_contains.count).to eq 4
@@ -255,6 +280,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           let(:sdr_generated_text) { false }
 
           it 'retains all derivatives' do
+            perform
             expect(object_client).to have_received(:update) do |params:|
               new_contains = params.structural.contains.first.structural.contains
               expect(new_contains.count).to eq 4
@@ -294,18 +320,22 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       end
 
       it 'creates a FlatGeoBuf' do
+        perform
         expect(fgb_file_path).to exist
       end
 
       it 'creates a PMTiles archive' do
+        perform
         expect(pmtiles_file_path).to exist
       end
 
       it 'creates a JP2 thumbnail' do
+        perform
         expect(jp2_file_path).to exist
       end
 
       it 'updates structural metadata' do
+        perform
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
           expect(new_contains.count).to eq 4

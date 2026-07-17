@@ -46,6 +46,8 @@ module Robots
         def create_derivatives_for_cocina_file(cocina_file, file_set)
           if raster?(cocina_file)
             create_raster_derivatives(cocina_file, file_set)
+          elsif index_map?(cocina_file)
+            create_index_map_derivatives(cocina_file, file_set)
           elsif vector?(cocina_file)
             create_vector_derivatives(cocina_file, file_set)
           end
@@ -87,12 +89,38 @@ module Robots
                            presentation: jp2_presentation(workspace_path(jp2_filename)))
         end
 
+        def create_index_map_derivatives(cocina_file, file_set)
+          # Discard existing GeoJSON and JP2 derivatives if they exist
+          updater.remove_files(use: 'derivative', mimetype: 'application/geo+json', file_set:)
+          updater.remove_files(use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:)
+
+          unless updater.has_file?(use: 'derivative', file_set:, mimetype: 'application/geo+json')
+            geojson_filename = "#{File.basename(cocina_file.filename, File.extname(cocina_file.filename))}.geojson"
+            geojson_path = workspace_path(geojson_filename)
+            GisRobotSuite::IndexMapDerivativeGenerator.generate(input_path: workspace_path(cocina_file.filename), geojson_path: geojson_path, logger: logger)
+            updater.add_file(filename: geojson_path, use: 'derivative', preserve: false, file_set:, mimetype: 'application/geo+json')
+          end
+
+          return if updater.has_file?(use: 'thumbnail', file_set:, mimetype: JP2_MIME_TYPE)
+
+          jp2_filename = create_preview_jp2(cocina_file.filename, GisRobotSuite::VectorPreviewGenerator)
+          updater.add_file(filename: workspace_path(jp2_filename), use: 'thumbnail', preserve: false, file_set:, mimetype: JP2_MIME_TYPE,
+                           presentation: jp2_presentation(workspace_path(jp2_filename)))
+        end
+
         def raster?(cocina_file)
           cocina_file.hasMimeType == 'image/tiff; application=geotiff'
         end
 
         def vector?(cocina_file)
           ['application/vnd.shp', 'application/geo+json'].include?(cocina_file.hasMimeType)
+        end
+
+        def index_map?(cocina_file)
+          return false unless vector?(cocina_file)
+
+          doc = Nokogiri::XML(File.read(esri_metadata_file))
+          doc.xpath("//keyword[text()='Index maps']").any?
         end
 
         def create_cog(filename)
@@ -143,6 +171,10 @@ module Robots
           !cocina_file.administrative.sdrPreserve ||
             cocina_file.use != 'master' ||
             MASTER_MIME_TYPES.exclude?(cocina_file.hasMimeType)
+        end
+
+        def esri_metadata_file
+          GisRobotSuite.locate_esri_metadata(@content_dir)
         end
       end
     end
