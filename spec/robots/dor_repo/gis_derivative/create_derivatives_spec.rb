@@ -54,7 +54,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
     allow(GisRobotSuite).to receive(:run_system_command)
     allow(GisRobotSuite).to receive(:run_system_command).with(/gdalinfo -json/, any_args)
-                                                        .and_return({ stdout_str: '{"size": [1024, 768]}' })
+                                                        .and_return({ stdout_str: '{"size": [1024, 768], "bands": [{"type": "Byte"}]}' })
     workspace_path.mkpath
     File.write(master_file_path, 'fake content')
     # This exists because we're stubbing out the call to `gdal raster convert'
@@ -70,7 +70,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
 
   it 'creates a derivative COG and a JP2 thumbnail' do
     perform
-    expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --format=COG/, any_args)
+    expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
     expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
     expect(object_client).to have_received(:update) do |params:|
       new_contains = params.structural.contains.first.structural.contains
@@ -284,7 +284,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       let(:sdr_generated_text) { true }
 
       it 'replaces the derivative and adds a thumbnail' do
-        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --format=COG/, any_args)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
         expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains

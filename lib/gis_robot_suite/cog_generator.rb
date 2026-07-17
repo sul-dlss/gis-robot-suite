@@ -14,7 +14,7 @@ module GisRobotSuite
     end
 
     def generate
-      command = "gdal raster convert --format=COG --co TILING_SCHEME=GoogleMapsCompatible #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
+      command = "gdal raster convert --overwrite --format=COG --co TILING_SCHEME=GoogleMapsCompatible #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
       GisRobotSuite.run_system_command(command, logger: logger)
     end
 
