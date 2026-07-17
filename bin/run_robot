@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 # Will run one robot as specified, either for a druid a file containing one druid per line
+# Run on the server only
 #
 # To run With Options
 # Options must be placed AFTER workflow and robot name
@@ -14,6 +15,7 @@ slop = Slop.parse do |o|
   o.string '-e', '--environment', 'Environment to run in (i.e. test, production). Defaults to development', default: 'development'
   o.string '-d', '--druid', 'One druid to run the robot with', required: true
   o.string '-f', '--file', 'One file containing a druid per line'
+  o.integer '-v', '--version', 'Object version to run the robot for. Defaults to the current version'
   o.on '--help' do
     puts o
     exit
@@ -40,5 +42,6 @@ druids = if opts[:file]
          end
 
 druids.each do |druid|
-  bot.perform druid
+  version = opts[:version] || Dor::Services::Client.object(druid).find.version
+  bot.perform druid, version
 end
