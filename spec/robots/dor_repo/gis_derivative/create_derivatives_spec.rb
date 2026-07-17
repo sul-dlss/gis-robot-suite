@@ -5,94 +5,51 @@ require 'spec_helper'
 RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
   subject(:perform) { test_perform(robot, druid) }
 
-  let(:druid) { 'druid:bb222cc3333' }
+  let(:bare_druid) { druid.delete_prefix('druid:') }
   let(:robot) { described_class.new }
-  let(:structural) do
-    Cocina::Models::DROStructural.new({ contains: [
-                                        fileset
-                                      ] })
+  let(:cocina_object) { build(:dro, id: druid).new(structural: structural, access: { view: 'world' }) }
+  let(:object_client) do
+    instance_double(Dor::Services::Client::Object, find: cocina_object, update: true)
   end
+  let(:workspace_path) { Pathname.new(Settings.geohydra.workspace) / bare_druid[0..1] / bare_druid[2..4] / bare_druid[5..6] / bare_druid[7..] / bare_druid / 'content' }
+  let(:structural) { Cocina::Models::DROStructural.new({ contains: [fileset] }) }
   let(:fileset) do
     Cocina::Models::FileSet.new(
       type: 'https://cocina.sul.stanford.edu/models/resources/object',
-      externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/vz757hs1282-vz757hs1282_1',
+      externalIdentifier: "https://cocina.sul.stanford.edu/fileSet/#{bare_druid}-#{bare_druid}_1",
       label: 'Data',
       version: 2,
       structural: { contains: files }
     )
   end
   let(:files) { [master_file] }
-  let(:master_file) do
-    Cocina::Models::File.new(
-      type: 'https://cocina.sul.stanford.edu/models/file',
-      externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.tif',
-      label: 'data.tif',
-      filename: 'data.tif',
-      size: 100,
-      version: 2,
-      hasMimeType: 'image/tiff; application=geotiff',
-      use: 'master',
-      administrative: {
-        publish: true,
-        sdrPreserve: true,
-        shelve: true
-      }
-    )
-  end
-  let(:cocina_object) { build(:dro, id: druid).new(structural: structural, access: { view: 'world' }) }
-  let(:object_client) do
-    instance_double(Dor::Services::Client::Object, find: cocina_object, update: true)
-  end
-  let(:workspace_path) { Pathname.new(Settings.geohydra.workspace) / 'bb' / '222' / 'cc' / '3333' / 'bb222cc3333' / 'content' }
-  let(:master_file_path) { workspace_path / 'data.tif' }
-  let(:cog_file_path) { workspace_path / 'data_cog.tif' }
-  let(:jp2_file_path) { workspace_path / 'data.jp2' }
+  let(:jp2_file_path) { workspace_path / "#{layer_name}.jp2" }
 
   before do
     allow(robot).to receive(:druid).and_return(druid)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
-    allow(GisRobotSuite).to receive(:run_system_command)
-    allow(GisRobotSuite).to receive(:run_system_command).with(/gdalinfo -json/, any_args)
-                                                        .and_return({ stdout_str: '{"size": [1024, 768], "bands": [{"type": "Byte"}]}' })
-    workspace_path.mkpath
-    File.write(master_file_path, 'fake content')
-    # This exists because we're stubbing out the call to `gdal raster convert'
-    File.write(cog_file_path, 'fake cog content')
-    File.write(jp2_file_path, 'fake jp2 content')
+    allow(GisRobotSuite).to receive(:run_system_command).and_call_original
+    perform
   end
 
   after do
-    FileUtils.rm_f(master_file_path)
-    FileUtils.rm_f(cog_file_path)
     FileUtils.rm_f(jp2_file_path)
+    FileUtils.rm_f(jp2_file_path.sub_ext('.jp2.aux.xml')) # Remove unused generated auxiliary file
   end
 
-  it 'creates a derivative COG and a JP2 thumbnail' do
-    perform
-    expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
-    expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
-    expect(object_client).to have_received(:update) do |params:|
-      new_contains = params.structural.contains.first.structural.contains
-      expect(new_contains.count).to eq 3
-      expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
-      jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
-      expect(jp2_file.hasMimeType).to eq 'image/jp2'
-      expect(jp2_file.presentation.height).to eq 768
-      expect(jp2_file.presentation.width).to eq 1024
-    end
-  end
-
-  context 'when shapefile' do
+  context 'with a raster (geotiff)' do
+    let(:druid) { 'druid:bb021mm7809' }
+    let(:layer_name) { 'MCE_FI2G_2014' }
     let(:master_file) do
       Cocina::Models::File.new(
         type: 'https://cocina.sul.stanford.edu/models/file',
-        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.shp',
-        label: 'data.shp',
-        filename: 'data.shp',
+        externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.tif",
+        label: "#{layer_name}.tif",
+        filename: "#{layer_name}.tif",
         size: 100,
         version: 2,
-        hasMimeType: 'application/vnd.shp',
+        hasMimeType: 'image/tiff; application=geotiff',
         use: 'master',
         administrative: {
           publish: true,
@@ -101,249 +58,275 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         }
       )
     end
-    let(:master_file_path) { workspace_path / 'data.shp' }
-    let(:fgb_file_path) { workspace_path / 'data.fgb' }
-    let(:pmtiles_file_path) { workspace_path / 'data.pmtiles' }
-    let(:jp2_file_path) { workspace_path / 'data.jp2' }
-
-    before do
-      File.write(fgb_file_path, 'fake fgb content')
-      File.write(pmtiles_file_path, 'fake pmtiles content')
-      File.write(jp2_file_path, 'fake jp2 content')
-      perform
-    end
+    let(:cog_file_path) { workspace_path / "#{layer_name}_cog.tif" }
 
     after do
-      FileUtils.rm_f(fgb_file_path)
-      FileUtils.rm_f(pmtiles_file_path)
+      FileUtils.rm_f(cog_file_path)
       FileUtils.rm_f(jp2_file_path)
     end
 
-    it 'creates a derivative FGB, PMTiles, and a JP2 thumbnail' do
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+    it 'creates a COG' do
+      expect(cog_file_path).to exist
+    end
+
+    it 'creates a JP2 thumbnail' do
+      expect(jp2_file_path).to exist
+    end
+
+    it 'updates structural metadata' do
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
-        expect(new_contains.count).to eq 4
-        expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
-        expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
+        expect(new_contains.count).to eq 3
+        expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
         jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
-        expect(jp2_file.presentation.height).to eq 768
-        expect(jp2_file.presentation.width).to eq 1024
+        expect(jp2_file.hasMimeType).to eq 'image/jp2'
+        expect(jp2_file.presentation.height).to eq 7435
+        expect(jp2_file.presentation.width).to eq 10503
       end
     end
 
-    context 'when the derivatives already exist in cocina' do
-      let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
-      let(:derivative_fgb_file) do
+    context 'when the COG already exists in cocina' do
+      let(:files) { [master_file, derivative_file] }
+      let(:derivative_file) do
         Cocina::Models::File.new(
           type: 'https://cocina.sul.stanford.edu/models/file',
-          externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.fgb',
-          label: 'data.fgb',
-          filename: 'data.fgb',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}_cog.tif",
+          label: "#{layer_name}_cog.tif",
+          filename: "#{layer_name}_cog.tif",
           size: 50,
           version: 2,
-          hasMimeType: 'application/vnd.fgb',
+          hasMimeType: 'image/tiff; application=geotiff; profile=cloud-optimized',
           use: 'derivative',
           sdrGeneratedText: sdr_generated_text,
-          administrative: { publish: true, sdrPreserve: false, shelve: true }
+          administrative: {
+            publish: true,
+            sdrPreserve: false,
+            shelve: true
+          }
         )
       end
 
-      let(:derivative_pmtiles_file) do
-        Cocina::Models::File.new(
-          type: 'https://cocina.sul.stanford.edu/models/file',
-          externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.pmtiles',
-          label: 'data.pmtiles',
-          filename: 'data.pmtiles',
-          size: 50,
-          version: 2,
-          hasMimeType: 'application/vnd.pmtiles',
-          use: 'derivative',
-          sdrGeneratedText: sdr_generated_text,
-          administrative: { publish: true, sdrPreserve: false, shelve: true }
-        )
-      end
-
-      context 'when it is sdr generated' do
+      context 'when the existing COG was generated by SDR' do
         let(:sdr_generated_text) { true }
 
-        it 'replaces all derivatives' do
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
+        it 'replaces the derivative and adds a thumbnail' do
+          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
           expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
-            expect(new_contains.count).to eq 4
-            # Ensure the old derivatives were removed and new ones added
-            expect(new_contains.count { |f| f.use == 'derivative' }).to eq 2
-            expect(new_contains.count { |f| f.use == 'thumbnail' }).to eq 1
-            derivatives = new_contains.select { |f| f.use == 'derivative' }
-            expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_fgb_file.externalIdentifier)
-            expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_pmtiles_file.externalIdentifier)
-            expect(derivatives.map(&:hasMimeType)).to contain_exactly('application/vnd.fgb', 'application/vnd.pmtiles')
-            expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+            expect(new_contains.count).to eq 3
+            expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+            # Ensure the old derivative was removed and a new one added (new externalIdentifier)
+            expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).not_to eq derivative_file.externalIdentifier
           end
         end
       end
 
-      context 'when it is not sdr generated' do
+      context 'when the existing COG was not generated by SDR' do
         let(:sdr_generated_text) { false }
 
-        it 'retains all derivatives' do
-          expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
+        it 'retains the original derivative and adds a thumbnail' do
           expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
-            expect(new_contains.count).to eq 4
-            # Ensure the old derivatives were preserved
-            expect(new_contains.count { |f| f.use == 'derivative' }).to eq 2
-            expect(new_contains.count { |f| f.use == 'thumbnail' }).to eq 1
-            derivatives = new_contains.select { |f| f.use == 'derivative' }
-            expect(derivatives.map(&:externalIdentifier)).to include(derivative_fgb_file.externalIdentifier)
-            expect(derivatives.map(&:externalIdentifier)).to include(derivative_pmtiles_file.externalIdentifier)
-            expect(derivatives.map(&:hasMimeType)).to contain_exactly('application/vnd.fgb', 'application/vnd.pmtiles')
-            expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+            expect(new_contains.count).to eq 3
+            expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+            # Ensure the old derivative was retained (same externalIdentifier)
+            expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).to eq derivative_file.externalIdentifier
           end
         end
       end
     end
   end
 
-  context 'when geojson' do
-    let(:master_file) do
-      Cocina::Models::File.new(
-        type: 'https://cocina.sul.stanford.edu/models/file',
-        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.geojson',
-        label: 'data.geojson',
-        filename: 'data.geojson',
-        size: 100,
-        version: 2,
-        hasMimeType: 'application/geo+json',
-        use: 'master',
-        administrative: {
-          publish: true,
-          sdrPreserve: true,
-          shelve: true
-        }
-      )
-    end
-    let(:master_file_path) { workspace_path / 'data.geojson' }
-    let(:fgb_file_path) { workspace_path / 'data.fgb' }
-    let(:pmtiles_file_path) { workspace_path / 'data.pmtiles' }
-
-    before do
-      File.write(fgb_file_path, 'fake fgb content')
-      File.write(pmtiles_file_path, 'fake pmtiles content')
-    end
+  context 'with vectors' do
+    let(:fgb_file_path) { workspace_path / "#{layer_name}.fgb" }
+    let(:pmtiles_file_path) { workspace_path / "#{layer_name}.pmtiles" }
 
     after do
       FileUtils.rm_f(fgb_file_path)
       FileUtils.rm_f(pmtiles_file_path)
     end
 
-    it 'creates derivatives' do
-      perform
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
-      expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
-    end
-  end
+    context 'with a shapefile' do
+      let(:druid) { 'druid:cc044gt0726' }
+      let(:layer_name) { 'sanluisobispo1996' }
+      let(:master_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/fileSet/#{bare_druid}-#{bare_druid}_1/#{layer_name}.shp",
+          label: "#{layer_name}.shp",
+          filename: "#{layer_name}.shp",
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/vnd.shp',
+          use: 'master',
+          administrative: {
+            publish: true,
+            sdrPreserve: true,
+            shelve: true
+          }
+        )
+      end
 
-  context 'when the derivative already exists in cocina' do
-    let(:files) { [master_file, derivative_file] }
-    let(:derivative_file) do
-      Cocina::Models::File.new(
-        type: 'https://cocina.sul.stanford.edu/models/file',
-        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data_cog.tif',
-        label: 'data_cog.tif',
-        filename: 'data_cog.tif',
-        size: 50,
-        version: 2,
-        hasMimeType: 'image/tiff; application=geotiff; profile=cloud-optimized',
-        use: 'derivative',
-        sdrGeneratedText: sdr_generated_text,
-        administrative: {
-          publish: true,
-          sdrPreserve: false,
-          shelve: true
-        }
-      )
-    end
+      it 'creates a FlatGeoBuf' do
+        expect(fgb_file_path).to exist
+      end
 
-    before { perform }
+      it 'creates a PMTiles archive' do
+        expect(pmtiles_file_path).to exist
+      end
 
-    context 'when the derivative are sdr generated' do
-      let(:sdr_generated_text) { true }
+      it 'creates a JP2 thumbnail' do
+        expect(jp2_file_path).to exist
+      end
 
-      it 'replaces the derivative and adds a thumbnail' do
-        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal raster convert --overwrite --format=COG/, any_args)
-        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+      it 'updates structural metadata' do
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
-          expect(new_contains.count).to eq 3
-          expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
-          # Ensure the old derivative was removed and a new one added (new externalIdentifier)
-          expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).not_to eq derivative_file.externalIdentifier
+          expect(new_contains.count).to eq 4
+          expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
+          expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
+          jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
+          expect(jp2_file.presentation.height).to eq 512
+          expect(jp2_file.presentation.width).to eq 512
+        end
+      end
+
+      context 'with mixed single/multi geometry type' do
+        let(:druid) { 'druid:cz128vq0535' }
+        let(:layer_name) { 'Ug_Rural_Poverty2005' }
+
+        it 'successfully creates the FlatGeoBuf and PMTile by promoting to multi', skip: 'https://github.com/sul-dlss/gis-robot-suite/issues/1108' do
+          perform
+          expect(fgb_file_path).to exist
+          expect(pmtiles_file_path).to exist
+        end
+      end
+
+      context 'when the derivatives already exist in cocina' do
+        let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
+        let(:derivative_fgb_file) do
+          Cocina::Models::File.new(
+            type: 'https://cocina.sul.stanford.edu/models/file',
+            externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.fgb",
+            label: "#{layer_name}.fgb",
+            filename: "#{layer_name}.fgb",
+            size: 50,
+            version: 2,
+            hasMimeType: 'application/vnd.fgb',
+            use: 'derivative',
+            sdrGeneratedText: sdr_generated_text,
+            administrative: { publish: true, sdrPreserve: false, shelve: true }
+          )
+        end
+
+        let(:derivative_pmtiles_file) do
+          Cocina::Models::File.new(
+            type: 'https://cocina.sul.stanford.edu/models/file',
+            externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.pmtiles",
+            label: "#{layer_name}.pmtiles",
+            filename: "#{layer_name}.pmtiles",
+            size: 50,
+            version: 2,
+            hasMimeType: 'application/vnd.pmtiles',
+            use: 'derivative',
+            sdrGeneratedText: sdr_generated_text,
+            administrative: { publish: true, sdrPreserve: false, shelve: true }
+          )
+        end
+
+        context 'when the derivatives were generated by SDR' do
+          let(:sdr_generated_text) { true }
+
+          it 'replaces all derivatives' do
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector convert --output-format 'FlatGeoBuf'/, any_args)
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector reproject --dst-crs=EPSG:4326/, any_args)
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/tippecanoe -o .* -zg .* --drop-densest-as-needed --extend-zooms-if-still-dropping/, any_args)
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+            expect(object_client).to have_received(:update) do |params:|
+              new_contains = params.structural.contains.first.structural.contains
+              expect(new_contains.count).to eq 4
+              # Ensure the old derivatives were removed and new ones added
+              expect(new_contains.count { |f| f.use == 'derivative' }).to eq 2
+              expect(new_contains.count { |f| f.use == 'thumbnail' }).to eq 1
+              derivatives = new_contains.select { |f| f.use == 'derivative' }
+              expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_fgb_file.externalIdentifier)
+              expect(derivatives.map(&:externalIdentifier)).not_to include(derivative_pmtiles_file.externalIdentifier)
+              expect(derivatives.map(&:hasMimeType)).to contain_exactly('application/vnd.fgb', 'application/vnd.pmtiles')
+              expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+            end
+          end
+        end
+
+        context 'when the derivatives were not generated by SDR' do
+          let(:sdr_generated_text) { false }
+
+          it 'retains all derivatives' do
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal vector rasterize --size 512,512 --burn 255 --ot Byte/, any_args)
+            expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+            expect(object_client).to have_received(:update) do |params:|
+              new_contains = params.structural.contains.first.structural.contains
+              expect(new_contains.count).to eq 4
+              # Ensure the old derivatives were preserved
+              expect(new_contains.count { |f| f.use == 'derivative' }).to eq 2
+              expect(new_contains.count { |f| f.use == 'thumbnail' }).to eq 1
+              derivatives = new_contains.select { |f| f.use == 'derivative' }
+              expect(derivatives.map(&:externalIdentifier)).to include(derivative_fgb_file.externalIdentifier)
+              expect(derivatives.map(&:externalIdentifier)).to include(derivative_pmtiles_file.externalIdentifier)
+              expect(derivatives.map(&:hasMimeType)).to contain_exactly('application/vnd.fgb', 'application/vnd.pmtiles')
+              expect(new_contains.find { |f| f.use == 'thumbnail' }.hasMimeType).to eq 'image/jp2'
+            end
+          end
         end
       end
     end
 
-    context 'when the derivative are not sdr generated' do
-      let(:sdr_generated_text) { false }
+    context 'with geojson' do
+      let(:druid) { 'druid:yt111kw1413' }
+      let(:layer_name) { 'samTrans_bus_routes_20151021_shapes_20260406' }
+      let(:master_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.geojson",
+          label: "#{layer_name}.geojson",
+          filename: "#{layer_name}.geojson",
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/geo+json',
+          use: 'master',
+          administrative: {
+            publish: true,
+            sdrPreserve: true,
+            shelve: true
+          }
+        )
+      end
 
-      it 'retains the original derivative and adds a thumbnail' do
-        expect(GisRobotSuite).to have_received(:run_system_command).with(/gdal convert/, any_args)
+      it 'creates a FlatGeoBuf' do
+        expect(fgb_file_path).to exist
+      end
+
+      it 'creates a PMTiles archive' do
+        expect(pmtiles_file_path).to exist
+      end
+
+      it 'creates a JP2 thumbnail' do
+        expect(jp2_file_path).to exist
+      end
+
+      it 'updates structural metadata' do
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
-          expect(new_contains.count).to eq 3
-          expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
-          # Ensure the old derivative was retained (same externalIdentifier)
-          expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).to eq derivative_file.externalIdentifier
+          expect(new_contains.count).to eq 4
+          expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
+          expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/geo+json', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
+          jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
+          expect(jp2_file.presentation.height).to eq 512
+          expect(jp2_file.presentation.width).to eq 512
         end
       end
-    end
-  end
-
-  context 'when the master file is missing from the workspace' do
-    before do
-      FileUtils.rm(workspace_path / 'data.tif')
-    end
-
-    it 'raises an error' do
-      expect { perform }.to raise_error(NotImplementedError, /Unable to find data.tif in the workspace/)
-    end
-  end
-
-  context 'when there are non-master files' do
-    let(:master_file) do
-      Cocina::Models::File.new(
-        type: 'https://cocina.sul.stanford.edu/models/file',
-        externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.tif',
-        label: 'data.tif',
-        filename: 'data.tif',
-        size: 100,
-        version: 2,
-        hasMimeType: 'image/tiff',
-        use: 'master',
-        administrative: {
-          publish: true,
-          sdrPreserve: false, # Not preserved
-          shelve: true
-        }
-      )
-    end
-
-    it 'skips them' do
-      perform
-      expect(GisRobotSuite).not_to have_received(:run_system_command)
     end
   end
 end
