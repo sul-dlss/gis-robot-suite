@@ -29,7 +29,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
     allow(robot).to receive(:druid).and_return(druid)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
-    allow(GisRobotSuite).to receive(:run_system_command).and_call_original
     perform
   end
 
@@ -194,7 +193,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         let(:druid) { 'druid:cz128vq0535' }
         let(:layer_name) { 'Ug_Rural_Poverty2005' }
 
-        it 'successfully creates the FlatGeoBuf and PMTile by promoting to multi', skip: 'https://github.com/sul-dlss/gis-robot-suite/issues/1108' do
+        it 'successfully creates the FlatGeoBuf and PMTile by promoting to multi' do
           perform
           expect(fgb_file_path).to exist
           expect(pmtiles_file_path).to exist

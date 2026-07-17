@@ -20,8 +20,12 @@ module GisRobotSuite
       basename = File.basename(fgb_path, '.fgb')
       temp_fgb_output = fgb_path.parent / "#{basename}_before.fgb"
 
-      # Generate FlatGeoBuf
-      fgb_command = "gdal vector convert --output-format 'FlatGeoBuf' --overwrite #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_fgb_output.to_s)}"
+      # Generate FlatGeoBuf, promoting geometry to multi
+      # See issue: https://github.com/OSGeo/gdal/issues/2828
+      # And fix: https://github.com/OSGeo/gdal/pull/14662
+      # Note: this behavior will be automatic in GDAL 3.14 (as yet unreleased);
+      # when it is released we can install it switch back to the `gdal convert` API.
+      fgb_command = "ogr2ogr -of 'FlatGeoBuf' -overwrite -nlt PROMOTE_TO_MULTI #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(input_path.to_s)} #{basename}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
       # Convert the FlatGeoBuf to EPSG:4326
