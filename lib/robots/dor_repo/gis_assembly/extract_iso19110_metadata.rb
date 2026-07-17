@@ -12,6 +12,7 @@ module Robots
           logger.debug "extract-iso19110 working on #{bare_druid}"
 
           arcgis_transformer = GisRobotSuite::ArcgisMetadataTransformer.new(bare_druid, 'arcgis_to_iso19110.xsl', 'iso19110.xml', logger)
+          return missing_metadata_return_state unless arcgis_transformer.metadata?
           return unless generate_for_datatype?(arcgis_transformer.data_type)
 
           output_file = arcgis_transformer.transform
@@ -19,6 +20,10 @@ module Robots
         end
 
         private
+
+        def missing_metadata_return_state
+          LyberCore::ReturnState.new(status: :skipped, note: "#{bare_druid} has no ESRI metadata file in staging")
+        end
 
         def updated_cocina_with(output_file)
           updater = GisRobotSuite::StructuralUpdator.new(cocina_object)

@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
+  subject(:perform) { test_perform(robot, druid) }
+
   let(:robot) { described_class.new }
 
   let(:process_response) { instance_double(Dor::Services::Response::Process, status: 'queued') }
@@ -63,7 +65,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
     cleanup
     allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_client)
     allow(workflow_client).to receive(:process).with('extract-iso19110-metadata').and_return(process_client)
-    test_perform(robot, druid)
+    perform
   end
 
   after { cleanup }
@@ -96,6 +98,18 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19110Metadata do
 
     it 'generates an ISO 19110 XML document' do
       expect(File).to exist(File.join(staging_dir, 'CLOWNS_OF_AMERICA-iso19110.xml'))
+    end
+  end
+
+  context 'without ESRI metadata' do
+    let(:druid) { 'druid:bb045mm1234' }
+    let(:esri_filename) { 'somefile.txt' }
+
+    it 'skips the step without updating the object' do
+      expect(perform).to be_a(LyberCore::ReturnState)
+      expect(perform.status).to eq 'skipped'
+      expect(perform.note).to eq 'bb045mm1234 has no ESRI metadata file in staging'
+      expect(object_client).not_to have_received(:update)
     end
   end
 end

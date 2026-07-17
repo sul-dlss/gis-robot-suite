@@ -19,6 +19,13 @@ module GisRobotSuite
       output_file
     end
 
+    def metadata?
+      esri_metadata_file
+      true
+    rescue RuntimeError
+      false
+    end
+
     # Type of GIS data for this object
     def data_type
       file_name = File.basename(esri_metadata_file)
@@ -49,9 +56,6 @@ module GisRobotSuite
     # XML metadata file exported from ArcGIS
     def esri_metadata_file
       GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
-    rescue RuntimeError => e
-      logger&.error "extract-#{output}-metadata: #{bare_druid} is missing ESRI metadata file"
-      raise e
     end
 
     # Filename of the original GIS metadata without any extensions
