@@ -4,10 +4,9 @@ require 'simplecov'
 require 'webmock/rspec'
 
 SimpleCov.start do
-  track_files 'bin/**/*'
-  track_files 'lib/**/*.rb'
-  track_files 'robots/**/*.rb'
-  add_filter '/spec/'
+  cover 'lib/**/*.rb'
+  cover 'robots/**/*.rb'
+  skip '/spec/'
 
   if ENV['CI']
     require 'simplecov_json_formatter'
