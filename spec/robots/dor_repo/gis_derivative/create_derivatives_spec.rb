@@ -200,6 +200,17 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         end
       end
 
+      context 'with features that have invalid geometry' do
+        let(:druid) { 'druid:cq376yf4339' }
+        let(:layer_name) { 'BIO_CA_Mammal_Pinnipeds_Haulouts_MLPAcompilation' }
+
+        it 'successfully creates the FlatGeoBuf and PMTiles archive by dropping invalid geometries' do
+          perform
+          expect(fgb_file_path).to exist
+          expect(pmtiles_file_path).to exist
+        end
+      end
+
       context 'when the derivatives already exist in cocina' do
         let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
         let(:derivative_fgb_file) do
