@@ -9,20 +9,10 @@ module GisRobotSuite
     LOC_NAMES_URI = 'http://id.loc.gov/authorities/names/'
     LOC_SUBJECTS_URI = 'http://id.loc.gov/authorities/subjects/'
 
-    def initialize
-      @registry = {}
-      CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |row|
-        keyword = row['l_kw']&.strip
-        lc_id = row['lc_id']&.strip
-        lc_id = nil if lc_id == ''
-        @registry[keyword] = lc_id unless keyword.nil? || keyword.empty?
-      end
-    end
-
     # @return [Hash, nil] properties for a Cocina place subject
     def find_placename(keyword)
-      lc_id = @registry[keyword.strip]
-      return nil if lc_id.nil? || lc_id.empty?
+      _found, lc_id = lookup(keyword)
+      return nil if lc_id.blank?
 
       if lc_id.start_with?('sh')
         {
@@ -38,7 +28,26 @@ module GisRobotSuite
     end
 
     def blank?(keyword)
-      @registry.include?(keyword) && @registry[keyword].nil?
+      found, lc_id = lookup(keyword)
+      found && lc_id.blank?
+    end
+
+    private
+
+    def lookup(keyword)
+      normalized_keyword = keyword.strip
+      return @last_result if normalized_keyword == @last_keyword
+
+      @last_keyword = normalized_keyword
+      @last_result = [false, nil]
+      CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |row|
+        next unless row['l_kw'] == normalized_keyword
+
+        lc_id = row['lc_id']
+        @last_result = [true, lc_id]
+        break
+      end
+      @last_result
     end
   end
 end

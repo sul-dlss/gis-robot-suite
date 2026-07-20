@@ -27,4 +27,13 @@ RSpec.describe GisRobotSuite::Gazetteer do
     expect(described_class.new.find_placename('Dichpalli (India)')).to be_nil
     expect(described_class.new.find_placename('Albion River Watershed (Calif.)')).to be_nil
   end
+
+  it 'streams the CSV and caches only the most recent lookup' do
+    allow(CSV).to receive(:foreach).and_call_original
+    gazetteer = described_class.new
+
+    expect(gazetteer.find_placename('Dichpalli (India)')).to be_nil
+    expect(gazetteer.blank?('Dichpalli (India)')).to be true
+    expect(CSV).to have_received(:foreach).once
+  end
 end
