@@ -30,10 +30,7 @@ opts = slop.to_h
 ENV['ROBOT_ENVIRONMENT'] = opts[:environment] unless opts[:environment].nil?
 require File.expand_path("#{File.dirname(__FILE__)}/../config/boot")
 
-# instantiate a Robot object using the name
 klazz = robot.split('::').inject(Robots::DorRepo) { |o, c| o.const_get c }
-bot = klazz.new
-bot.check_queued_status = false # skipping the queued workflow status check
 
 druids = if opts[:file]
            File.readlines(opts[:file]).map(&:strip)
@@ -42,6 +39,9 @@ druids = if opts[:file]
          end
 
 druids.each do |druid|
+  # Sidekiq creates a new robot instance for each unit of work.
+  bot = klazz.new
+  bot.check_queued_status = false # skipping the queued workflow status check
   version = opts[:version] || Dor::Services::Client.object(druid).find.version
   bot.perform druid, version
 end
