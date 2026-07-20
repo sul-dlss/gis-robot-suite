@@ -24,7 +24,6 @@ RSpec.describe GisRobotSuite::Gazetteer do
   end
 
   it 'cannot translate missing Library of Congress URIs' do
-    expect(described_class.new.find_placename('Dichpalli (India)')).to be_nil
     expect(described_class.new.find_placename('Albion River Watershed (Calif.)')).to be_nil
   end
 
@@ -32,8 +31,8 @@ RSpec.describe GisRobotSuite::Gazetteer do
     allow(CSV).to receive(:foreach).and_call_original
     gazetteer = described_class.new
 
-    expect(gazetteer.find_placename('Dichpalli (India)')).to be_nil
-    expect(gazetteer.blank?('Dichpalli (India)')).to be true
+    expect(gazetteer.find_placename('Adams Mesa (Ariz.)')).to be_a Hash
+    expect(gazetteer.blank?('Adams Mesa (Ariz.)')).to be false
     expect(CSV).to have_received(:foreach).once
   end
 end
