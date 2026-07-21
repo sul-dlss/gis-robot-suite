@@ -28,25 +28,18 @@ module Robots
         def resolve_placenames
           place_subjects.each do |subject|
             value = subject[:value]
-            uri = gazetteer.find_placename_uri(value)
-            if uri.nil?
+            placename_props = gazetteer.find_placename(value)
+            if placename_props.nil?
               logger.warn "assign-placenames: #{bare_druid} is missing gazetteer entry for '#{value}'" unless gazetteer.blank?(value)
               next
             end
-            add_uri_to_subject(subject, uri)
+
+            subject.merge!(placename_props)
           end
         end
 
         def place_subjects
           description_props[:subject].select { |subject| subject[:type] == 'place' }
-        end
-
-        def add_uri_to_subject(subject, uri)
-          subject[:uri] = uri
-          subject[:source] = {
-            code: 'geonames',
-            uri: 'http://www.geonames.org/ontology#'
-          }
         end
       end
     end

@@ -147,10 +147,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::AssignPlacenames do
           },
           value: 'Afghanistan',
           type: 'place',
-          uri: 'http://sws.geonames.org/1149361/',
+          uri: 'http://id.loc.gov/authorities/names/n79063030',
           source: {
-            code: 'geonames',
-            uri: 'http://www.geonames.org/ontology#'
+            code: 'naf',
+            uri: 'http://id.loc.gov/authorities/names/'
           }
         },
         # This place isn't found in gazetteer.

@@ -1,47 +1,44 @@
 # frozen_string_literal: true
 
 # Gazetteer data look like this:
-#   "l_kw","geonames_kw","geonames_id","lc_kw","lc_id"
-#   "Ahmadābād District (India)","Ahmadābād",1279234,"Ahmadābād (India : District)","n78019943"
+#   "l_kw","lc_id"
+#   "Ahmadābād District (India)","n78019943"
 module GisRobotSuite
   class Gazetteer
     CSV_FN = File.join(File.dirname(__FILE__), 'gazetteer.csv')
+    LOC_NAMES_URI = 'http://id.loc.gov/authorities/names/'
+    LOC_SUBJECTS_URI = 'http://id.loc.gov/authorities/subjects/'
 
     def initialize
       @registry = {}
       CSV.foreach(CSV_FN, encoding: 'UTF-8', headers: true) do |row|
-        row = row.each { |_k, v2| v2.to_s.strip } # rubocop:disable Style/HashEachMethods --rubocop thinks row is a regular Hash; it's not, and CSV::Row doesn't have #each_value
-        keyword = row[0]
-        keyword = row[1] if keyword.nil? || keyword.empty?
-        keyword.strip!
-        @registry[keyword] = {
-          geonames_placename: row[1],
-          geonames_id: row[2].to_i
-          # For legacy reasons, CSV contains loc keyword in row[3] and loc id in row[4]
-        }
-        @registry[keyword] = nil if @registry[keyword][:geonames_placename].nil?
+        keyword = row['l_kw']&.strip
+        lc_id = row['lc_id']&.strip
+        lc_id = nil if lc_id == ''
+        @registry[keyword] = lc_id unless keyword.nil? || keyword.empty?
       end
     end
 
-    # @see http://www.geonames.org/ontology/documentation.html
-    # @return <String> geonames uri (includes trailing / as specified)
-    def find_placename_uri(keyword)
-      return nil if _get(keyword, :geonames_id).nil?
+    # @return [Hash, nil] properties for a Cocina place subject
+    def find_placename(keyword)
+      lc_id = @registry[keyword.strip]
+      return nil if lc_id.nil? || lc_id.empty?
 
-      "http://sws.geonames.org/#{_get(keyword, :geonames_id)}/"
+      if lc_id.start_with?('sh')
+        {
+          uri: "#{LOC_SUBJECTS_URI}#{lc_id}",
+          source: { code: 'lcsh', uri: LOC_SUBJECTS_URI }
+        }
+      else
+        {
+          uri: "#{LOC_NAMES_URI}#{lc_id}",
+          source: { code: 'naf', uri: LOC_NAMES_URI }
+        }
+      end
     end
 
     def blank?(keyword)
       @registry.include?(keyword) && @registry[keyword].nil?
-    end
-
-    private
-
-    def _get(keyword, hash_key)
-      return nil unless @registry.include?(keyword.strip)
-      raise ArgumentError unless hash_key.is_a? Symbol
-
-      @registry[keyword.strip].nil? ? nil : @registry[keyword.strip][hash_key]
     end
   end
 end
