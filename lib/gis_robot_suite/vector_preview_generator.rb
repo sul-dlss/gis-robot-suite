@@ -19,6 +19,7 @@ module GisRobotSuite
     def generate
       basename = File.basename(output_path, '.jp2')
       temp_tif_path = output_path.parent / "#{basename}_temp.tif"
+      temp_tif_aux_path = output_path.parent / "#{basename}_temp.tif.aux.xml"
 
       begin
         # Rasterize vector to a temporary TIFF file first
@@ -28,8 +29,9 @@ module GisRobotSuite
         # Convert temporary TIFF to JP2
         Jp2Converter.convert(input_path: temp_tif_path, output_path: output_path, logger: logger)
       ensure
-        # Make sure we clean up the temporary TIFF file
+        # Make sure we clean up the temporary TIFF file and any associated auxiliary file
         FileUtils.rm_f(temp_tif_path)
+        FileUtils.rm_f(temp_tif_aux_path)
       end
     end
 
