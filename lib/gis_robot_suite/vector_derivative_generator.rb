@@ -25,7 +25,7 @@ module GisRobotSuite
       # And fix: https://github.com/OSGeo/gdal/pull/14662
       # Note: this behavior will be automatic in GDAL 3.14 (as yet unreleased);
       # when it is released we can install it switch back to the `gdal convert` API.
-      fgb_command = "ogr2ogr -of 'FlatGeoBuf' -overwrite -nlt PROMOTE_TO_MULTI #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(input_path.to_s)} #{basename}"
+      fgb_command = "ogr2ogr -of 'FlatGeoBuf' -lco OVERWRITE=yes -nlt PROMOTE_TO_MULTI #{Shellwords.escape(temp_fgb_output.to_s)} #{Shellwords.escape(input_path.to_s)} #{basename}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
       # Convert the FlatGeoBuf to EPSG:4326
