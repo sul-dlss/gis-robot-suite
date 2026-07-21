@@ -280,10 +280,8 @@ module GisRobotSuite
 
     def extract_language(lang)
       code = lang.xpath('@codeListValue', NS).text
-      code_source = lang.xpath('@codeSpace', NS).text
-      raise "Missing language code or code source for #{bare_druid}." if code.empty? || code_source.empty?
-
-      { code:, source: { code: code_source } }
+      source = lang.xpath('@codeSpace', NS).text
+      DescriptiveMetadata::Language.new(code:, source:).build
     end
 
     def contributor
@@ -548,12 +546,7 @@ module GisRobotSuite
       langs = iso19139_ng.xpath('//gmd:MD_Metadata/gmd:language/gmd:LanguageCode', NS)
       return unless langs.any?
 
-      data = langs.map do |lang|
-        { code: lang.xpath('@codeListValue', NS).text,
-          source: { code: lang.xpath('@codeSpace', NS).text } }
-      end
-
-      { language: data }
+      { language: langs.map { |lang| extract_language(lang) } }
     end
 
     def admin_events
