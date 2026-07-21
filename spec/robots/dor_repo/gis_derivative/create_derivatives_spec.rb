@@ -24,9 +24,10 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
   end
   let(:files) { [master_file] }
   let(:jp2_file_path) { workspace_path / "#{layer_name}.jp2" }
+  let(:logger) { instance_double(Logger, info: nil, warn: nil, error: nil, debug: nil) }
 
   before do
-    allow(robot).to receive(:druid).and_return(druid)
+    allow(robot).to receive_messages(druid: druid, logger: logger)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
     perform
@@ -81,6 +82,40 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         expect(jp2_file.hasMimeType).to eq 'image/jp2'
         expect(jp2_file.presentation.height).to eq 7435
         expect(jp2_file.presentation.width).to eq 10503
+      end
+    end
+
+    context 'with a continuous raster (Float64)' do
+      let(:druid) { 'druid:sm159qy6116' }
+      let(:layer_name) { 'PAR_CLIM_M' }
+
+      it 'warns about rescaling the data' do
+        expect(logger).to have_received(:warn).with(/Scaling Float64 to unsigned Byte/)
+      end
+
+      it 'creates a COG' do
+        expect(cog_file_path).to exist
+      end
+
+      it 'creates a JP2 thumbnail' do
+        expect(jp2_file_path).to exist
+      end
+    end
+
+    context 'with a signed raster (Int8)' do
+      let(:druid) { 'druid:bk526xr2877' }
+      let(:layer_name) { 'SeafloorCharacter_OffshoreSantaBarbara' }
+
+      it 'warns about rescaling the data' do
+        expect(logger).to have_received(:warn).with(/Scaling Int8 to unsigned Byte/)
+      end
+
+      it 'creates a COG' do
+        expect(cog_file_path).to exist
+      end
+
+      it 'creates a JP2 thumbnail' do
+        expect(jp2_file_path).to exist
       end
     end
 
