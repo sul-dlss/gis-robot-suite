@@ -35,6 +35,7 @@ module GisRobotSuite
     def scale_then_convert_to_jp2
       basename = File.basename(output_path, '.jp2')
       temp_tif_path = output_path.parent / "#{basename}_temp.tif"
+      temp_tif_aux_path = output_path.parent / "#{basename}_temp.tif.aux.xml"
 
       begin
         scale_command = "gdal raster scale --overwrite --ot Int16 #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_tif_path.to_s)}"
@@ -43,6 +44,7 @@ module GisRobotSuite
         convert_to_jp2(temp_tif_path)
       ensure
         FileUtils.rm_f(temp_tif_path)
+        FileUtils.rm_f(temp_tif_aux_path)
       end
     end
 
