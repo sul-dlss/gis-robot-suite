@@ -59,7 +59,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::AssignPlacenames do
             code: 'ISO19115TopicCategory',
             uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode'
           },
-          uri: 'utilitiesCommunication',
           value: 'Utilities and Communication',
           type: 'topic'
         },
@@ -176,7 +175,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::AssignPlacenames do
             code: 'ISO19115TopicCategory',
             uri: 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode'
           },
-          uri: 'utilitiesCommunication',
           value: 'Utilities and Communication',
           type: 'topic'
         },

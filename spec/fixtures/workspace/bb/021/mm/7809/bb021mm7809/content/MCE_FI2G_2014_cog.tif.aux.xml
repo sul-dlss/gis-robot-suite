@@ -1,0 +1,24 @@
+<PAMDataset>
+  <PAMRasterBand band="1">
+    <GDALRasterAttributeTable tableType="thematic">
+      <FieldDefn index="0">
+        <Name>Value</Name>
+        <Type typeAsString="Integer">0</Type>
+        <Usage usageAsString="MinMax">5</Usage>
+      </FieldDefn>
+      <FieldDefn index="1">
+        <Name>Count</Name>
+        <Type typeAsString="Real">1</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <Row index="0">
+        <F>1</F>
+        <F>32386498</F>
+      </Row>
+      <Row index="1">
+        <F>2</F>
+        <F>3733881</F>
+      </Row>
+    </GDALRasterAttributeTable>
+  </PAMRasterBand>
+</PAMDataset>

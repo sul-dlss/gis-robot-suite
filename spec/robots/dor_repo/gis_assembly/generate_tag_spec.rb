@@ -16,7 +16,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateTag do
     let(:cocina) do
       Cocina::Models::DRO.new(externalIdentifier: 'druid:bb000dd1111',
                               type: Cocina::Models::ObjectType.geo,
-                              label: 'my repository object',
                               version: 1,
                               access: {},
                               description: {
