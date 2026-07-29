@@ -1,0 +1,140 @@
+<PAMDataset>
+  <PAMRasterBand band="1">
+    <GDALRasterAttributeTable tableType="thematic">
+      <FieldDefn index="0">
+        <Name>Value</Name>
+        <Type typeAsString="Integer">0</Type>
+        <Usage usageAsString="MinMax">5</Usage>
+      </FieldDefn>
+      <FieldDefn index="1">
+        <Name>Count</Name>
+        <Type typeAsString="Real">1</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <FieldDefn index="2">
+        <Name>SLOPE</Name>
+        <Type typeAsString="Integer">0</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <FieldDefn index="3">
+        <Name>DEPTH_ZONE</Name>
+        <Type typeAsString="Integer">0</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <FieldDefn index="4">
+        <Name>SUBSTRATE</Name>
+        <Type typeAsString="Integer">0</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <FieldDefn index="5">
+        <Name>SUBSTR_DES</Name>
+        <Type typeAsString="String">2</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <FieldDefn index="6">
+        <Name>FULL_DESC</Name>
+        <Type typeAsString="String">2</Type>
+        <Usage usageAsString="Generic">0</Usage>
+      </FieldDefn>
+      <Row index="0">
+        <F>1</F>
+        <F>6086772</F>
+        <F>1</F>
+        <F>2</F>
+        <F>1</F>
+        <F>Fine to medium grained smooth</F>
+        <F>Low backscatter, low rugosity; typically mud to medium-grained sand; often rippled and/or burrowed</F>
+      </Row>
+      <Row index="1">
+        <F>2</F>
+        <F>238120</F>
+        <F>1</F>
+        <F>2</F>
+        <F>2</F>
+        <F>Mixed smooth sediment and rock</F>
+        <F>Moderate to very high backscatter, low rugosity; typically coarse-grained sand, gravel, cobble and bedrock</F>
+      </Row>
+      <Row index="2">
+        <F>3</F>
+        <F>18188</F>
+        <F>1</F>
+        <F>2</F>
+        <F>3</F>
+        <F>Rock and boulders, rugose</F>
+        <F>High backscatter, and high rugosity: typically boulder and rugose bedrock</F>
+      </Row>
+      <Row index="3">
+        <F>4</F>
+        <F>5643</F>
+        <F>1</F>
+        <F>2</F>
+        <F>4</F>
+        <F>Rugged anthropogenic material</F>
+        <F>High backscatter, high rugosity; related to development by humans</F>
+      </Row>
+      <Row index="4">
+        <F>5</F>
+        <F>1468</F>
+        <F>1</F>
+        <F>2</F>
+        <F>5</F>
+        <F>Smooth anthropogenic material</F>
+        <F>High backscatter, low rugosity; related to development by humans</F>
+      </Row>
+      <Row index="5">
+        <F>6</F>
+        <F>10261</F>
+        <F>1</F>
+        <F>2</F>
+        <F>6</F>
+        <F>Medium to coarse grained (Mobile Sed Features)</F>
+        <F>Very high backscatter, low rugosity; typically medium- to coarse-grained sediment with some shell hash in rippled shallow depressions</F>
+      </Row>
+      <Row index="6">
+        <F>11</F>
+        <F>21427558</F>
+        <F>1</F>
+        <F>3</F>
+        <F>1</F>
+        <F>Fine to medium grained smooth</F>
+        <F>Low backscatter, low rugosity; typically mud to medium-grained sand; often rippled and/or burrowed</F>
+      </Row>
+      <Row index="7">
+        <F>12</F>
+        <F>230842</F>
+        <F>1</F>
+        <F>3</F>
+        <F>2</F>
+        <F>Mixed smooth sediment and rock</F>
+        <F>Moderate to very high backscatter, low rugosity; typically coarse-grained sand, gravel, cobble and bedrock</F>
+      </Row>
+      <Row index="8">
+        <F>13</F>
+        <F>38702</F>
+        <F>1</F>
+        <F>3</F>
+        <F>3</F>
+        <F>Rock and boulders, rugose</F>
+        <F>High backscatter, and high rugosity: typically boulder and rugose bedrock</F>
+      </Row>
+      <Row index="9">
+        <F>14</F>
+        <F>3285</F>
+        <F>1</F>
+        <F>3</F>
+        <F>4</F>
+        <F>Rugged anthropogenic material</F>
+        <F>High backscatter, high rugosity; related to development by humans</F>
+      </Row>
+      <Row index="10">
+        <F>15</F>
+        <F>9709</F>
+        <F>1</F>
+        <F>3</F>
+        <F>5</F>
+        <F>Smooth anthropogenic material</F>
+        <F>High backscatter, low rugosity; related to development by humans</F>
+      </Row>
+    </GDALRasterAttributeTable>
+  </PAMRasterBand>
+</PAMDataset>
