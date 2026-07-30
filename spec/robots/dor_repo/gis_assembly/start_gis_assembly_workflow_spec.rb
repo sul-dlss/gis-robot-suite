@@ -39,7 +39,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::StartGisAssemblyWorkflow do
         filename: 'metadata.xml',
         version: 1,
         hasMimeType: 'application/xml',
-        use: 'master',
         administrative: { publish: true, sdrPreserve: true, shelve: true },
         access: { view: 'world', download: 'world' },
         hasMessageDigests: []
@@ -75,7 +74,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::StartGisAssemblyWorkflow do
             filename: 'map.tif',
             version: 1,
             hasMimeType: 'image/tiff',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []

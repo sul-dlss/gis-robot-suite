@@ -50,7 +50,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         size: 100,
         version: 2,
         hasMimeType: 'image/tiff; application=geotiff',
-        use: 'master',
         administrative: {
           publish: true,
           sdrPreserve: true,
@@ -77,7 +76,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       expect(object_client).to have_received(:update) do |params:|
         new_contains = params.structural.contains.first.structural.contains
         expect(new_contains.count).to eq 3
-        expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+        expect(new_contains.map(&:use)).to eq [nil, 'derivative', 'thumbnail']
         jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
         expect(jp2_file.hasMimeType).to eq 'image/jp2'
         expect(jp2_file.presentation.height).to eq 7435
@@ -147,7 +146,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
-            expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+            expect(new_contains.map(&:use)).to eq [nil, 'derivative', 'thumbnail']
             # Ensure the old derivative was removed and a new one added (new externalIdentifier)
             expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).not_to eq derivative_file.externalIdentifier
           end
@@ -161,7 +160,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           expect(object_client).to have_received(:update) do |params:|
             new_contains = params.structural.contains.first.structural.contains
             expect(new_contains.count).to eq 3
-            expect(new_contains.map(&:use)).to eq %w[master derivative thumbnail]
+            expect(new_contains.map(&:use)).to eq [nil, 'derivative', 'thumbnail']
             # Ensure the old derivative was retained (same externalIdentifier)
             expect(new_contains.find { |f| f.hasMimeType.include?('profile=cloud-optimized') }.externalIdentifier).to eq derivative_file.externalIdentifier
           end
@@ -191,7 +190,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           size: 100,
           version: 2,
           hasMimeType: 'application/vnd.shp',
-          use: 'master',
           administrative: {
             publish: true,
             sdrPreserve: true,
@@ -216,7 +214,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
           expect(new_contains.count).to eq 4
-          expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
+          expect(new_contains.map(&:use)).to eq [nil, 'derivative', 'derivative', 'thumbnail']
           expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/vnd.shp', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
           jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
           expect(jp2_file.presentation.height).to eq 512
@@ -330,7 +328,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           size: 100,
           version: 2,
           hasMimeType: 'application/geo+json',
-          use: 'master',
           administrative: {
             publish: true,
             sdrPreserve: true,
@@ -355,7 +352,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         expect(object_client).to have_received(:update) do |params:|
           new_contains = params.structural.contains.first.structural.contains
           expect(new_contains.count).to eq 4
-          expect(new_contains.map(&:use)).to eq %w[master derivative derivative thumbnail]
+          expect(new_contains.map(&:use)).to eq [nil, 'derivative', 'derivative', 'thumbnail']
           expect(new_contains.map(&:hasMimeType)).to contain_exactly('application/geo+json', 'application/vnd.fgb', 'application/vnd.pmtiles', 'image/jp2')
           jp2_file = new_contains.find { |f| f.use == 'thumbnail' }
           expect(jp2_file.presentation.height).to eq 512

@@ -23,7 +23,6 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
             filename: 'preview.jpg',
             version: 1,
             hasMimeType: 'image/jpeg',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -31,11 +30,10 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
           {
             type: 'https://cocina.sul.stanford.edu/models/file',
             externalIdentifier: 'https://cocina.sul.stanford.edu/file/2',
-            label: 'master.tif',
-            filename: 'master.tif',
+            label: 'original.tif',
+            filename: 'original.tif',
             version: 1,
             hasMimeType: 'image/tiff',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -56,11 +54,10 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
           {
             type: 'https://cocina.sul.stanford.edu/models/file',
             externalIdentifier: 'https://cocina.sul.stanford.edu/file/3',
-            label: 'master.tif',
-            filename: 'master.tif',
+            label: 'original.tif',
+            filename: 'original.tif',
             version: 1,
             hasMimeType: 'image/tiff',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -85,7 +82,6 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
             filename: 'data.zip',
             version: 1,
             hasMimeType: 'application/zip',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -162,7 +158,7 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
 
           filenames = file_sets.first.structural.contains.map(&:filename)
           expect(filenames).not_to include('preview.jpg')
-          expect(filenames).to contain_exactly('master.tif', 'data.zip')
+          expect(filenames).to contain_exactly('original.tif', 'data.zip')
         end
         expect(version_client).to have_received(:close)
       end
@@ -196,7 +192,7 @@ RSpec.describe GisRobotSuite::PreviewJpgRemover do
           file_sets = params.structural.contains
 
           expect(file_sets.size).to eq(1)
-          expect(file_sets.first.structural.contains.map(&:filename)).to contain_exactly('master.tif', 'data.zip')
+          expect(file_sets.first.structural.contains.map(&:filename)).to contain_exactly('original.tif', 'data.zip')
         end
         expect(version_client).to have_received(:close)
       end

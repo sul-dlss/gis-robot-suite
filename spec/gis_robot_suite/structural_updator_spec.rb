@@ -143,11 +143,10 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
               {
                 type: 'https://cocina.sul.stanford.edu/models/file',
                 externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
-                label: 'master.tif',
-                filename: 'master.tif',
+                label: 'original.tif',
+                filename: 'original.tif',
                 version: 1,
                 hasMimeType: 'image/tiff',
-                use: 'master',
                 administrative: { publish: true, sdrPreserve: true, shelve: true },
                 access: { view: 'world', download: 'world' },
                 hasMessageDigests: []
@@ -162,7 +161,7 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
     it 'removes files by use' do
       updater.remove_files(use: 'derivative', file_set: file_sets.first)
       expect(updater.cocina_object.structural.contains.first.structural.contains.size).to eq 1
-      expect(updater.cocina_object.structural.contains.first.structural.contains.first.use).to eq 'master'
+      expect(updater.cocina_object.structural.contains.first.structural.contains.first.use).to be_nil
     end
 
     it 'removes files by use and mimetype' do

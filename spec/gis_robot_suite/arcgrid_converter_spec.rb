@@ -43,7 +43,6 @@ RSpec.describe GisRobotSuite::ArcgridConverter do
       filename: filename,
       version: 3,
       hasMimeType: mimetype,
-      use: 'master',
       administrative: { publish: true, sdrPreserve: true, shelve: true },
       access: { view: 'world', download: 'world' },
       hasMessageDigests: []
@@ -85,8 +84,7 @@ RSpec.describe GisRobotSuite::ArcgridConverter do
         expect(files.map(&:filename)).to contain_exactly('elevation_grid.tif.xml', 'metadata-iso19139.xml', 'elevation_grid.tif', 'elevation_grid.tfw')
 
         geotiff = files.find { |file| file.filename == 'elevation_grid.tif' }
-        expect(geotiff.hasMimeType).to eq('image/tiff; application=geotiff')
-        expect(geotiff.size).to eq(7)
+        expect(geotiff).to have_attributes(hasMimeType: 'image/tiff; application=geotiff', use: nil, size: 7)
         expect(geotiff.hasMessageDigests.map(&:type)).to contain_exactly('sha1', 'md5')
 
         mimetypes = files.to_h { |file| [file.filename, file.hasMimeType] }
