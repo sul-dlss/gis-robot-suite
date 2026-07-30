@@ -111,7 +111,6 @@ RSpec.describe GisRobotSuite::SubdirectoryFileRemover do
       filename:,
       version: 1,
       hasMimeType: 'application/octet-stream',
-      use: 'master',
       administrative: { publish: true, sdrPreserve: true, shelve: true },
       access: { view: 'world', download: 'world' },
       hasMessageDigests: []

@@ -141,7 +141,7 @@ module Robots
 
         def skip_cocina_file?(cocina_file)
           !cocina_file.administrative.sdrPreserve ||
-            cocina_file.use != 'master' ||
+            (cocina_file.use && cocina_file.use != 'master') ||
             MASTER_MIME_TYPES.exclude?(cocina_file.hasMimeType)
         end
       end

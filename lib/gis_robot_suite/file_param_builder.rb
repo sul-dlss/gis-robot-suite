@@ -4,11 +4,11 @@ module GisRobotSuite
   # This class is responsible for building the Cocina File metadata for a given file
   class FileParamBuilder
     # @return [Hash<Symbol, Object>]
-    def self.build(objectfile:, file_access:, version:, mimetype:, use: 'master', preserve: true)
+    def self.build(objectfile:, file_access:, version:, mimetype:, use: nil, preserve: true)
       new(objectfile:, file_access:, version:, mimetype:, use:, preserve:).build
     end
 
-    def initialize(objectfile:, version:, file_access:, mimetype:, use: 'master', preserve: true)
+    def initialize(objectfile:, version:, file_access:, mimetype:, use: nil, preserve: true)
       @objectfile = objectfile
       @version = version
       @file_access = file_access
@@ -20,7 +20,7 @@ module GisRobotSuite
     attr_reader :objectfile, :version, :file_access, :mimetype, :use, :preserve
 
     def build
-      {
+      params = {
         type: 'https://cocina.sul.stanford.edu/models/file',
         externalIdentifier: "https://cocina.sul.stanford.edu/file/#{SecureRandom.uuid}",
         label: objectfile.filename,
@@ -28,7 +28,6 @@ module GisRobotSuite
         size: objectfile.filesize,
         version:,
         hasMimeType: mimetype || objectfile.mimetype,
-        use:,
         sdrGeneratedText: use == 'derivative',
         hasMessageDigests: [
           {
@@ -47,6 +46,8 @@ module GisRobotSuite
           shelve: true
         }
       }
+      params[:use] = use unless use.nil? || use == 'master'
+      params
     end
   end
 end

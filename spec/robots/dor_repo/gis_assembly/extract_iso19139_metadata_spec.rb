@@ -32,7 +32,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
                   filename: esri_filename,
                   version: 1,
                   hasMimeType: 'application/xml',
-                  use: 'master',
                   administrative: { publish: true, sdrPreserve: true, shelve: true },
                   access: { view: 'world', download: 'world' },
                   hasMessageDigests: []

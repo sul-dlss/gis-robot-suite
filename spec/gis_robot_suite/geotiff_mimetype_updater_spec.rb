@@ -19,11 +19,10 @@ RSpec.describe GisRobotSuite::GeotiffMimetypeUpdater do
           {
             type: 'https://cocina.sul.stanford.edu/models/file',
             externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
-            label: 'master.tif',
-            filename: 'master.tif',
+            label: 'original.tif',
+            filename: 'original.tif',
             version: 1,
             hasMimeType: 'image/tiff',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -35,7 +34,6 @@ RSpec.describe GisRobotSuite::GeotiffMimetypeUpdater do
             filename: 'doc.txt',
             version: 1,
             hasMimeType: 'text/plain',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -60,7 +58,6 @@ RSpec.describe GisRobotSuite::GeotiffMimetypeUpdater do
             filename: 'doc.txt',
             version: 1,
             hasMimeType: 'text/plain',
-            use: 'master',
             administrative: { publish: true, sdrPreserve: true, shelve: true },
             access: { view: 'world', download: 'world' },
             hasMessageDigests: []
@@ -119,7 +116,7 @@ RSpec.describe GisRobotSuite::GeotiffMimetypeUpdater do
         expect(version_client).to have_received(:open).with(description: 'Update image/tiff mimetype to image/tiff; application=geotiff')
         expect(object_client).to have_received(:update) do |params:|
           files = params.structural.contains.first.structural.contains
-          tiff_file = files.find { |f| f.filename == 'master.tif' }
+          tiff_file = files.find { |f| f.filename == 'original.tif' }
           txt_file = files.find { |f| f.filename == 'doc.txt' }
 
           expect(tiff_file.hasMimeType).to eq('image/tiff; application=geotiff')
