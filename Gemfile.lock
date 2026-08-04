@@ -44,7 +44,7 @@ GEM
     capistrano-one_time_key (0.3.0)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.132.0)
+    cocina-models (0.133.0)
       activesupport
       cocina_display
       deprecation
@@ -88,9 +88,9 @@ GEM
       capistrano-one_time_key (>= 0.2.0)
       capistrano-shared_configs
       ed25519
-    dor-services-client (15.66.0)
+    dor-services-client (15.67.0)
       activesupport (>= 7.0.0)
-      cocina-models (~> 0.132.0)
+      cocina-models (~> 0.133.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -154,9 +154,9 @@ GEM
     iso8601 (0.13.0)
     janeway-jsonpath (1.1.0)
     json (2.21.2)
-    jsonschema_rs (0.49.3-arm64-darwin)
+    jsonschema_rs (0.49.4-arm64-darwin)
       bigdecimal (>= 3.1, < 5)
-    jsonschema_rs (0.49.3-x86_64-linux)
+    jsonschema_rs (0.49.4-x86_64-linux)
       bigdecimal (>= 3.1, < 5)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
