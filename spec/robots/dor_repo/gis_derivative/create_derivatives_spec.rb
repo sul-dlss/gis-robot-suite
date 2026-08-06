@@ -244,6 +244,17 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         end
       end
 
+      context 'with a single-feature point layer (tippecanoe -zg cannot guess a maxzoom)' do
+        let(:druid) { 'druid:bc041ny0861' }
+        let(:layer_name) { 'Pusan_CBD' }
+
+        it 'successfully creates the FlatGeoBuf and PMTiles archive by falling back to a fixed maxzoom' do
+          perform
+          expect(fgb_file_path).to exist
+          expect(pmtiles_file_path).to exist
+        end
+      end
+
       context 'when the derivatives already exist in cocina' do
         let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
         let(:derivative_fgb_file) do
