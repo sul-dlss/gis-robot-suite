@@ -3,7 +3,7 @@
 module Robots
   module DorRepo
     module GisDerivative
-      # Pulls all of the master object files from preservation into the staging area if they are not there already
+      # Pulls all of the files from preservation into the staging area if they are not there already
       class FetchFiles < Base
         def initialize
           super('gisDerivativeWF', 'fetch-files')
@@ -12,7 +12,7 @@ module Robots
         # available from LyberCore::Robot: druid, bare_druid, object_workflow, object_client, cocina_object, logger
         def perform_work
           @content_dir = Pathname(File.join(GisRobotSuite.locate_druid_path(bare_druid, type: :workspace), 'content'))
-          master_filenames.each do |filename|
+          original_filenames.each do |filename|
             location = workspace_path(filename)
             location.parent.mkpath unless location.parent.directory?
             next if location.exist?
@@ -31,11 +31,11 @@ module Robots
           @file_fetcher ||= GisRobotSuite::FileFetcher.new(druid:, logger:)
         end
 
-        # return a list of filenames that are the master files for the object
+        # return a list of filenames that are the source files for the object
         # iterate over all files in cocina_object.structural.contains, looking at mimetypes
         # return a list of filenames that are correct mimetype
-        def master_filenames
-          @master_filenames ||= files.map(&:filename)
+        def original_filenames
+          @original_filenames ||= files.map(&:filename)
         end
 
         # iterate through cocina structural contains and return all relevant File objects
@@ -45,11 +45,10 @@ module Robots
           end.compact
         end
 
-        # filter down fileset files that are in preservation and have the master role
+        # filter down fileset files that are in preservation and are not derivatives
         def preserved_files_for_fileset(fileset)
           fileset.structural.contains.select do |file|
-            file.administrative.sdrPreserve &&
-              file.use == 'master'
+            file.administrative.sdrPreserve && (file.use.nil? || file.use == 'master')
           end
         end
       end

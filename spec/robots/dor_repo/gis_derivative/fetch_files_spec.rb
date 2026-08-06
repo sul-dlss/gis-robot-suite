@@ -33,7 +33,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
       size: 46_508_117,
       version: 2,
       hasMimeType: 'application/zip',
-      use: 'master',
       administrative: {
         publish: true,
         sdrPreserve: true,
@@ -49,7 +48,6 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
                              size: 46_508_117,
                              version: 2,
                              hasMimeType: 'application/zip',
-                             use: 'master',
                              administrative: {
                                publish: true,
                                sdrPreserve: true,
@@ -78,12 +76,57 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
   context 'when fetching files is successful' do
     let(:fetch_success) { true }
 
-    it 'calls the write_file_with_retries method with correct files' do
-      expect(perform).to eq ['data.zip', 'data2.zip']
-      expect(file_fetcher).to have_received(:write_file_with_retries)
-        .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
-      expect(file_fetcher).to have_received(:write_file_with_retries)
-        .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3)
+    context 'when use: "master"' do
+      let(:data_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.zip',
+          label: 'data.zip',
+          filename: 'data.zip',
+          size: 46_508_117,
+          version: 2,
+          hasMimeType: 'application/zip',
+          use: 'master',
+          administrative: {
+            publish: true,
+            sdrPreserve: true,
+            shelve: true
+          }
+        )
+      end
+      let(:also_data) do
+        Cocina::Models::File.new(filename: 'data2.zip',
+                                 label: 'data2.zip',
+                                 type: 'https://cocina.sul.stanford.edu/models/file',
+                                 externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.zip',
+                                 size: 46_508_117,
+                                 version: 2,
+                                 hasMimeType: 'application/zip',
+                                 use: 'master',
+                                 administrative: {
+                                   publish: true,
+                                   sdrPreserve: true,
+                                   shelve: true
+                                 })
+      end
+
+      it 'calls the write_file_with_retries method with correct files' do
+        expect(perform).to eq ['data.zip', 'data2.zip']
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3)
+      end
+    end
+
+    context 'when use: nil' do
+      it 'calls the write_file_with_retries method with correct files' do
+        expect(perform).to eq ['data.zip', 'data2.zip']
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3)
+      end
     end
   end
 
