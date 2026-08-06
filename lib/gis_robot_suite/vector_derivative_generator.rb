@@ -59,7 +59,7 @@ module GisRobotSuite
     # just points. 1e9 keeps every real-world coordinate (degrees, meters, feet)
     # while excluding the DBL_MAX sentinel.
     def select_valid_geometry
-      sql = "select * from #{layer_name} where geometry is not null " \
+      sql = "select * from \"#{layer_name}\" where geometry is not null " \
             'and ST_MinX(geometry) between -1e9 and 1e9 and ST_MaxX(geometry) between -1e9 and 1e9 ' \
             'and ST_MinY(geometry) between -1e9 and 1e9 and ST_MaxY(geometry) between -1e9 and 1e9'
       "-dialect sqlite -sql '#{sql}'"

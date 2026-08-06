@@ -244,6 +244,17 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         end
       end
 
+      context 'with a layer name that starts with a digit' do
+        let(:druid) { 'druid:dj123fg4567' }
+        let(:layer_name) { '123_BIO_CA_Mammal_Pinnipeds_Haulouts_MLPAcompilation' }
+
+        it 'successfully creates the FlatGeoBuf and PMTiles archive' do
+          perform
+          expect(fgb_file_path).to exist
+          expect(pmtiles_file_path).to exist
+        end
+      end
+
       context 'when the derivatives already exist in cocina' do
         let(:files) { [master_file, derivative_fgb_file, derivative_pmtiles_file] }
         let(:derivative_fgb_file) do
