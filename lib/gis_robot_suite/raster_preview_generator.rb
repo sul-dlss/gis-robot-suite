@@ -4,9 +4,11 @@ module GisRobotSuite
   # Generates raster preview JP2 derivatives.
   class RasterPreviewGenerator
     # Data types the JP2 (OpenJPEG) driver is able to write directly.
-    # Continuous raster data (e.g. Float32/Float64) is not supported and must
+    # Int32/UInt32/Float32/Float64 are not supported in practice: the JP2OpenJPEG
+    # driver is backed by OpenJPEG, which caps component precision at 31 bits, so a
+    # 32-bit source always produces an invalid prec=32 component. These must
     # be scaled to one of these types before a JP2 can be created.
-    JP2_COMPATIBLE_DATA_TYPES = %w[Byte Int16 UInt16 Int32 UInt32].freeze
+    JP2_COMPATIBLE_DATA_TYPES = %w[Byte Int16 UInt16].freeze
 
     def self.generate(input_path:, output_path:, logger: nil)
       new(input_path: input_path, output_path: output_path, logger: logger).generate

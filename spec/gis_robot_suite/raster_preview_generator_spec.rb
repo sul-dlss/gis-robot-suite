@@ -52,5 +52,33 @@ RSpec.describe GisRobotSuite::RasterPreviewGenerator do
         expect(FileUtils).to have_received(:rm_f).with(Pathname(temp_tif_path))
       end
     end
+
+    context 'when the raster has 32-bit precision unsupported by the JP2OpenJPEG/OpenJPEG driver' do
+      let(:temp_tif_path) { '/path/to/output_temp.tif' }
+
+      before do
+        allow(FileUtils).to receive(:rm_f)
+      end
+
+      %w[Int32 UInt32].each do |type|
+        context "when the data type is #{type}" do
+          let(:data_type) { type }
+
+          it 'scales to an Int16 intermediate before converting to JP2' do
+            described_class.generate(input_path: input_path, output_path: output_path, logger: logger)
+
+            expect(GisRobotSuite).to have_received(:run_system_command).with(
+              "gdal raster scale --overwrite --ot Int16 #{Shellwords.escape(input_path)} #{Shellwords.escape(temp_tif_path)}",
+              logger: logger
+            )
+            expect(GisRobotSuite).to have_received(:run_system_command).with(
+              "gdal convert --overwrite --co QUALITY=25 --co REVERSIBLE=NO #{Shellwords.escape(temp_tif_path)} #{Shellwords.escape(output_path.to_s)}",
+              logger: logger
+            )
+            expect(FileUtils).to have_received(:rm_f).with(Pathname(temp_tif_path))
+          end
+        end
+      end
+    end
   end
 end
