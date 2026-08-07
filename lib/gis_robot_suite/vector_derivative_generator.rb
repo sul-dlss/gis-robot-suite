@@ -3,6 +3,16 @@
 module GisRobotSuite
   # Generates vector derivatives (FlatGeoBuf and PMTiles).
   class VectorDerivativeGenerator
+    # tippecanoe's stderr text when -zg has too little data to guess a maxzoom from
+    # (e.g. a single-feature layer, or several features at the same coordinates).
+    # tippecanoe exits 110 (EXIT_NODATA) for this *and* other unrelated "no data"
+    # conditions, so we match on this exact message rather than the exit code
+    CANNOT_GUESS_MAXZOOM_MESSAGE = "Can't guess maxzoom (-zg) without at least two distinct feature locations"
+
+    # tippecanoe's own documented default maxzoom (see `tippecanoe --help`), used
+    # as a fallback when there isn't enough spatial spread for -zg to guess one
+    FALLBACK_MAXZOOM = 14
+
     def self.generate(input_path:, fgb_path:, pmtiles_path:, logger: nil)
       new(input_path: input_path, fgb_path: fgb_path, pmtiles_path: pmtiles_path, logger: logger).generate
     end
@@ -22,13 +32,26 @@ module GisRobotSuite
                     "#{Shellwords.escape(fgb_path.to_s)} #{Shellwords.escape(input_path.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
-      # Generate PMTiles from FlatGeoBuf
-      pmtiles_command = "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} -zg #{Shellwords.escape(fgb_path.to_s)} " \
-                        '--drop-densest-as-needed --extend-zooms-if-still-dropping --force'
-      GisRobotSuite.run_system_command(pmtiles_command, logger: logger)
+      generate_pmtiles
     end
 
     private
+
+    # Generate PMTiles from FlatGeoBuf. Tries to auto-guess an appropriate maxzoom
+    # first; falls back to a fixed maxzoom if that fails
+    def generate_pmtiles
+      GisRobotSuite.run_system_command(pmtiles_command(zoom_flag: '-zg'), logger: logger)
+    rescue GisRobotSuite::SystemCommandNonzeroExit => e
+      raise unless e.message.include?(CANNOT_GUESS_MAXZOOM_MESSAGE)
+
+      logger&.warn("Falling back to maxzoom=#{FALLBACK_MAXZOOM} for #{fgb_path}: tippecanoe could not guess a maxzoom (-zg)")
+      GisRobotSuite.run_system_command(pmtiles_command(zoom_flag: "-z#{FALLBACK_MAXZOOM}"), logger: logger)
+    end
+
+    def pmtiles_command(zoom_flag:)
+      "tippecanoe -o #{Shellwords.escape(pmtiles_path.to_s)} #{zoom_flag} #{Shellwords.escape(fgb_path.to_s)} " \
+        '--drop-densest-as-needed --extend-zooms-if-still-dropping --force'
+    end
 
     # Filename minus extension is assumed to be layer name in the data, also
     # used as basename for all files
