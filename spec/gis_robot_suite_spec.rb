@@ -26,7 +26,7 @@ RSpec.describe GisRobotSuite do
 
   describe '.vector?' do
     context 'when a vector' do
-      let(:media_type) { 'application/x-esri-shapefile' }
+      let(:media_type) { 'application/vnd.shp' }
 
       it 'returns true' do
         expect(described_class).to be_vector(cocina_object)
@@ -52,7 +52,7 @@ RSpec.describe GisRobotSuite do
     end
 
     context 'when not a raster' do
-      let(:media_type) { 'application/x-esri-shapefile' }
+      let(:media_type) { 'application/vnd.shp' }
 
       it 'returns false' do
         expect(described_class).not_to be_raster(cocina_object)
@@ -77,7 +77,7 @@ RSpec.describe GisRobotSuite do
     end
 
     context 'when a vector' do
-      let(:media_type) { 'application/x-esri-shapefile' }
+      let(:media_type) { 'application/vnd.shp' }
 
       it 'has layertype PostGIS' do
         expect(described_class.layertype(cocina_object)).to eq 'PostGIS'

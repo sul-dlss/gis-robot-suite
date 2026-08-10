@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module GisRobotSuite
-  VECTOR_TYPES = %w[application/x-esri-shapefile application/geo+json].freeze
+  VECTOR_TYPES = %w[application/vnd.shp application/geo+json].freeze
 
   def self.vector?(cocina_object)
     VECTOR_TYPES.include? media_type(cocina_object)
