@@ -28,7 +28,7 @@ module Robots
               next if skip_cocina_file?(cocina_file)
 
               filepath = workspace_path(cocina_file.filename)
-              raise NotImplementedError, "Unable to find #{cocina_file.filename} in the workspace" unless File.exist?(filepath)
+              raise "Unable to find #{cocina_file.filename} in the workspace" unless File.exist?(filepath)
 
               create_derivatives_for_cocina_file(cocina_file, file_set)
             end
