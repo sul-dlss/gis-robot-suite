@@ -557,7 +557,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
           {
             form: [
               {
-                value: 'application/x-esri-shapefile',
+                value: 'application/vnd.shp',
                 type: 'media type',
                 source: {
                   value: 'IANA media type terms'
@@ -658,7 +658,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
           {
             form: [
               {
-                value: 'application/x-esri-shapefile',
+                value: 'application/vnd.shp',
                 type: 'media type',
                 source: {
                   value: 'IANA media type terms'

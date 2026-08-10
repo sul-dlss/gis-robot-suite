@@ -212,7 +212,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                                      date: [{ value: '2022-06-01', encoding: { code: 'w3cdtf' } }] },
                                    { type: 'modification',
                                      date: [{ value: '2024-01-16', encoding: { code: 'w3cdtf' } }] }] },
-          geographic: [{ form: [{ value: 'application/x-esri-shapefile', type: 'media type', source: { value: 'IANA media type terms' } },
+          geographic: [{ form: [{ value: 'application/vnd.shp', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'Shapefile', type: 'data format' },
                                 { value: 'Dataset#Polygon', type: 'type' }] }] }
       end

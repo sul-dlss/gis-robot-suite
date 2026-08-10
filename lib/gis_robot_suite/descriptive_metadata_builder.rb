@@ -252,7 +252,7 @@ module GisRobotSuite
       if format_name == 'GeoTIFF' || file_format == 'GeoTIFF'
         ['image/tiff', 'GeoTIFF']
       elsif format_name == 'Shapefile' || file_format == 'Shapefile'
-        ['application/x-esri-shapefile', 'Shapefile']
+        ['application/vnd.shp', 'Shapefile']
       elsif format_name == 'GeoJSON' || file_format == 'GeoJSON'
         ['application/geo+json', 'GeoJSON']
       elsif format_name == 'Arc/Info ASCII Grid'
