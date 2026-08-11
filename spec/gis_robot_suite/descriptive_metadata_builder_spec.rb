@@ -40,8 +40,30 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
     end
 
     describe '.event' do
-      it 'raises when publication is missing' do
+      it 'raises when the citation carries no date at all' do
         expect { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:event) }.to raise_error(RuntimeError, "Publication date is missing for #{bare_druid}.")
+      end
+
+      context 'when the citation has a revision date but no publication date' do
+        let(:bare_druid) { 'dt652gp5026' }
+
+        # Cocina has no 'revision' date type; 'modification' is its term for the same
+        # idea, and the one that maps to MODS dateModified.
+        it 'falls back to the revision date, recorded as a modification date' do
+          expect(described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:event).first[:date]).to eq(
+            [{ value: '2008', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'modification' }]
+          )
+        end
+      end
+
+      context 'when the citation has a creation date but no publication date' do
+        let(:bare_druid) { 'jp529sh7785' }
+
+        it 'falls back to the creation date, recorded as such' do
+          expect(described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:event).first[:date]).to eq(
+            [{ value: '2014', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'creation' }]
+          )
+        end
       end
     end
 
@@ -131,6 +153,19 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
         end
       end
 
+      context 'when the record states more than one bounding box' do
+        # The authored extent and the extent ArcGIS computed from the geometry. Reading
+        # both concatenated their values into "5049.38562", which failed the range check.
+        let(:bare_druid) { 'pv886qw6092' }
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+        it 'uses the computed extent instead of concatenating the two' do
+          expect(builder.send(:coordinates_subjects)).to eq(
+            { value: 'W 124°45ʹ21ʺ--W 66°57ʹ14ʺ/N 49°23ʹ8ʺ--N 24°31ʹ6ʺ', type: 'map coordinates' }
+          )
+        end
+      end
+
       context 'when coordinates are missing and no fallback files are present' do
         let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
 
@@ -209,6 +244,56 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
           expect(builder.send(:coordinates_subjects)).to eq(
             { value: 'W 9°36ʺ--E 2°36ʺ/N 61°36ʺ--N 49°45ʹ', type: 'map coordinates' }
           )
+        end
+      end
+    end
+
+    describe '.temporal_subjects' do
+      let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+
+      context 'when a date is unknown' do
+        let(:bare_druid) { 'sz975gc6511' }
+
+        it 'omits the time subject rather than parsing an empty timePosition' do
+          expect(builder.send(:temporal_subjects)).to be_nil
+        end
+      end
+
+      context 'when a range is open ended' do
+        let(:bare_druid) { 'vm772xm4689' }
+
+        it 'keeps the year it has, and the other extents' do
+          expect(builder.send(:temporal_subjects)).to eq(
+            [{ value: '2004', type: 'time', encoding: { code: 'w3cdtf' } },
+             { value: '1997', type: 'time', encoding: { code: 'w3cdtf' } }]
+          )
+        end
+      end
+
+      context 'when a date is present but malformed' do
+        # A value that will not parse is corrupt data, not an absent date, so it must
+        # keep failing loudly instead of being dropped like an indeterminate position.
+        # This is the shape seen in druid:gf380zd3022, where a year range was written
+        # into a date: <tmPosition>1975-2012-01-01T00:00:00</tmPosition>.
+        before do
+          xml = <<~XML
+            <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml">
+              <identificationInfo>
+                <MD_DataIdentification>
+                  <extent><EX_Extent><temporalElement><EX_TemporalExtent><extent>
+                    <gml:TimeInstant><gml:timePosition>1975-2012-01-01T00:00:00</gml:timePosition></gml:TimeInstant>
+                  </extent></EX_TemporalExtent></temporalElement></EX_Extent></extent>
+                </MD_DataIdentification>
+              </identificationInfo>
+            </MD_Metadata>
+          XML
+          data_id_node = Nokogiri::XML(xml).xpath('//gmd:MD_DataIdentification',
+                                                  'gmd' => 'http://www.isotc211.org/2005/gmd')
+          allow(builder).to receive(:data_id_node).and_return(data_id_node)
+        end
+
+        it 'raises' do
+          expect { builder.send(:temporal_subjects) }.to raise_error(Date::Error, 'invalid date')
         end
       end
     end

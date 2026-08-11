@@ -39,6 +39,21 @@ module GisRobotSuite
     }.freeze
     private_constant :NS
 
+    # Which CI_Date to date the resource by, in order of preference, mapped from the
+    # ISO 19139 dateType code to the cocina date type to record. Some records date the
+    # resource only with a revision or creation date, and failing the object outright
+    # loses the date we do have.
+    #
+    # Cocina's date vocabulary has no "revision", so an ISO revision date is recorded
+    # as a modification date, which is the term it uses for the same idea and the one
+    # that maps to MODS dateModified.
+    CITATION_DATE_TYPES = {
+      'publication' => 'publication',
+      'revision' => 'modification',
+      'creation' => 'creation'
+    }.freeze
+    private_constant :CITATION_DATE_TYPES
+
     private
 
     def data_id_node
@@ -102,14 +117,26 @@ module GisRobotSuite
     end
 
     def extract_pubdate(node)
-      pub_date_node = node.xpath('gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue="publication"]', NS)
-      raise "Publication date is missing for #{bare_druid}." unless pub_date_node.any?
+      date_type, date_node = citation_date(node)
+      raise "Publication date is missing for #{bare_druid}." unless date_node
 
-      pub_date = pub_date_node.xpath('../../gmd:date/gco:Date', NS).text
+      pub_date = date_node.xpath('gmd:date/gco:Date', NS).text
       pub_year = Date.parse(pub_date).strftime('%Y')
-      dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }]
+      dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: date_type }]
       dates << extract_keyword_dates
       { date: dates.compact }
+    end
+
+    # Returns the cocina date type and the single CI_Date to read it from, or nil when
+    # the citation carries none of the types we accept. Selecting one node also stops
+    # repeated dates of the same type from being concatenated by NodeSet#text.
+    def citation_date(nodes)
+      CITATION_DATE_TYPES.each do |iso_date_type, cocina_date_type|
+        node = nodes.xpath("gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='#{iso_date_type}']]", NS).first
+        return [cocina_date_type, node] if node
+      end
+
+      nil
     end
 
     def extract_keyword_dates
@@ -397,28 +424,48 @@ module GisRobotSuite
       nodes = data_id_node.xpath('gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent', NS)
       return unless nodes.any?
 
-      nodes.map do |node|
-        { value: extract_time(node),
+      subjects = nodes.filter_map do |node|
+        value = extract_time(node)
+        next unless value
+
+        { value:,
           type: 'time',
           encoding: { code: 'w3cdtf' } }
       end
+
+      subjects.presence
     end
 
     def extract_time(node)
       if node.xpath('gml:TimePeriod', NS).any?
-        begin_date = Date.parse(node.xpath('gml:TimePeriod/gml:beginPosition', NS).text).strftime('%Y')
-        end_date = Date.parse(node.xpath('gml:TimePeriod/gml:endPosition', NS).text).strftime('%Y')
-        "#{begin_date}-#{end_date}"
+        years = [extract_year(node.xpath('gml:TimePeriod/gml:beginPosition', NS)),
+                 extract_year(node.xpath('gml:TimePeriod/gml:endPosition', NS))].compact
+        years.join('-').presence
       else
-        Date.parse(node.xpath('gml:TimeInstant/gml:timePosition', NS).text).strftime('%Y')
+        extract_year(node.xpath('gml:TimeInstant/gml:timePosition', NS))
       end
+    end
+
+    # GML states an unknown or open-ended date as an empty element carrying
+    # indeterminatePosition, e.g. <gml:endPosition indeterminatePosition="unknown"/>.
+    # Those are skipped rather than handed to Date.parse as "". A value that is
+    # present but will not parse still raises: that is corrupt data, not an absent
+    # date, and it should be fixed at the source rather than silently dropped.
+    def extract_year(nodes)
+      node = nodes.first
+      return if node.nil?
+
+      value = node.text.strip
+      return if value.empty?
+
+      Date.parse(value).strftime('%Y')
     end
 
     def coordinates_subjects
       # use coordinates in native projection only, no longer reproject
-      extent = data_id_node.xpath('gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', NS)
-      coords_val = if extent.any?
-                     coordinates(extent)
+      bounding_box = geographic_bounding_box
+      coords_val = if bounding_box
+                     coordinates(bounding_box)
                    else
                      file = vector_filepath || raster_filepath
                      if file
@@ -457,11 +504,31 @@ module GisRobotSuite
       nil
     end
 
-    def coordinates(extent)
-      west = extent.xpath('gmd:westBoundLongitude/gco:Decimal', NS).text
-      east = extent.xpath('gmd:eastBoundLongitude/gco:Decimal', NS).text
-      north = extent.xpath('gmd:northBoundLatitude/gco:Decimal', NS).text
-      south = extent.xpath('gmd:southBoundLatitude/gco:Decimal', NS).text
+    # Returns the one EX_GeographicBoundingBox to read coordinates from, or nil when
+    # the record states none.
+    #
+    # A record may carry several: the extent authored in the original record, and the
+    # extent ArcGIS computed from the geometry, which it flags with an extentTypeCode.
+    # The computed one is preferred, because for a subset such as PAD-US Guam the
+    # authored extent is inherited from the parent dataset and spans the whole world.
+    # Where more than one carries the flag, ESRI's stylesheet emits the synced extent
+    # last.
+    #
+    # Reading them together would concatenate their values, since NodeSet#text joins
+    # every match: boxes stating 50 and 49.38562 yielded "5049.38562", which then
+    # failed the range check in to_coordinates_ddmmss.
+    def geographic_bounding_box
+      boxes = data_id_node.xpath('gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', NS)
+      return if boxes.empty?
+
+      boxes.select { |box| box.xpath('gmd:extentTypeCode', NS).any? }.last || boxes.last
+    end
+
+    def coordinates(bounding_box)
+      west = bounding_box.xpath('gmd:westBoundLongitude/gco:Decimal', NS).text
+      east = bounding_box.xpath('gmd:eastBoundLongitude/gco:Decimal', NS).text
+      north = bounding_box.xpath('gmd:northBoundLatitude/gco:Decimal', NS).text
+      south = bounding_box.xpath('gmd:southBoundLatitude/gco:Decimal', NS).text
 
       values = [west, east, north, south].map(&:to_f)
       to_coordinates_ddmmss(values)
