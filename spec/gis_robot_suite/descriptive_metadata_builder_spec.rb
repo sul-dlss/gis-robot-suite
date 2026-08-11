@@ -47,9 +47,21 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
       context 'when the citation has a revision date but no publication date' do
         let(:bare_druid) { 'dt652gp5026' }
 
-        it 'falls back to the revision date' do
+        # Cocina has no 'revision' date type; 'modification' is its term for the same
+        # idea, and the one that maps to MODS dateModified.
+        it 'falls back to the revision date, recorded as a modification date' do
           expect(described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:event).first[:date]).to eq(
-            [{ value: '2008', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }]
+            [{ value: '2008', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'modification' }]
+          )
+        end
+      end
+
+      context 'when the citation has a creation date but no publication date' do
+        let(:bare_druid) { 'jp529sh7785' }
+
+        it 'falls back to the creation date, recorded as such' do
+          expect(described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:event).first[:date]).to eq(
+            [{ value: '2014', encoding: { code: 'w3cdtf' }, status: 'primary', type: 'creation' }]
           )
         end
       end

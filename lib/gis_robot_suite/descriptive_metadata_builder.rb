@@ -39,10 +39,19 @@ module GisRobotSuite
     }.freeze
     private_constant :NS
 
-    # Which CI_Date to treat as the publication date, in order of preference. Some
-    # records date the resource only with a revision or creation date, and failing
-    # the object outright loses the date we do have.
-    CITATION_DATE_TYPES = %w[publication revision creation].freeze
+    # Which CI_Date to date the resource by, in order of preference, mapped from the
+    # ISO 19139 dateType code to the cocina date type to record. Some records date the
+    # resource only with a revision or creation date, and failing the object outright
+    # loses the date we do have.
+    #
+    # Cocina's date vocabulary has no "revision", so an ISO revision date is recorded
+    # as a modification date, which is the term it uses for the same idea and the one
+    # that maps to MODS dateModified.
+    CITATION_DATE_TYPES = {
+      'publication' => 'publication',
+      'revision' => 'modification',
+      'creation' => 'creation'
+    }.freeze
     private_constant :CITATION_DATE_TYPES
 
     private
@@ -108,23 +117,23 @@ module GisRobotSuite
     end
 
     def extract_pubdate(node)
-      pub_date_node = citation_date_node(node)
-      raise "Publication date is missing for #{bare_druid}." unless pub_date_node
+      date_type, date_node = citation_date(node)
+      raise "Publication date is missing for #{bare_druid}." unless date_node
 
-      pub_date = pub_date_node.xpath('gmd:date/gco:Date', NS).text
+      pub_date = date_node.xpath('gmd:date/gco:Date', NS).text
       pub_year = Date.parse(pub_date).strftime('%Y')
-      dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: 'publication' }]
+      dates = [{ value: pub_year, encoding: { code: 'w3cdtf' }, status: 'primary', type: date_type }]
       dates << extract_keyword_dates
       { date: dates.compact }
     end
 
-    # Returns the single CI_Date to read the publication date from, or nil when the
-    # citation carries none of the types we accept. Selecting one node also stops
+    # Returns the cocina date type and the single CI_Date to read it from, or nil when
+    # the citation carries none of the types we accept. Selecting one node also stops
     # repeated dates of the same type from being concatenated by NodeSet#text.
-    def citation_date_node(nodes)
-      CITATION_DATE_TYPES.each do |date_type|
-        node = nodes.xpath("gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='#{date_type}']]", NS).first
-        return node if node
+    def citation_date(nodes)
+      CITATION_DATE_TYPES.each do |iso_date_type, cocina_date_type|
+        node = nodes.xpath("gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='#{iso_date_type}']]", NS).first
+        return [cocina_date_type, node] if node
       end
 
       nil
