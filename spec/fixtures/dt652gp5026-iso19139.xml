@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- Trimmed from the staged record for druid:dt652gp5026 (Forests of India). The
+     citation carries a revision date and no publication date, which used to fail the
+     object outright even though a usable date is present. -->
+<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>Forests of India, 2001</gco:CharacterString>
+          </title>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2008-01-01</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision" codeSpace="ISOTC211/19115">revision</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+        </CI_Citation>
+      </citation>
+    </MD_DataIdentification>
+  </identificationInfo>
+</MD_Metadata>

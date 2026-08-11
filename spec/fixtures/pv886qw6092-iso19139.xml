@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!-- Trimmed from the staged record for druid:pv886qw6092 (National Atlas landslide
+     overview). ArcGIS emits two bounding boxes: the extent authored in the original
+     record, and the extent it computed from the geometry, flagged with an
+     extentTypeCode. Reading both at once concatenated their values into
+     "5049.38562", which failed the latitude range check. -->
+<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
+  <identificationInfo>
+    <MD_DataIdentification>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <westBoundLongitude>
+                <gco:Decimal>-125</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>-66</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>24</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>50</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+      <extent>
+        <EX_Extent>
+          <description>
+            <gco:CharacterString>Publication date</gco:CharacterString>
+          </description>
+          <temporalElement>
+            <EX_TemporalExtent>
+              <extent>
+                <gml:TimeInstant gml:id="id1">
+                  <gml:timePosition>2001-01-01</gml:timePosition>
+                </gml:TimeInstant>
+              </extent>
+            </EX_TemporalExtent>
+          </temporalElement>
+        </EX_Extent>
+      </extent>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>true</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>-124.755791</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>-66.954002</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>24.518322</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>49.38562</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+    </MD_DataIdentification>
+  </identificationInfo>
+</MD_Metadata>
