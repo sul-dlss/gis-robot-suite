@@ -84,12 +84,25 @@ module GisRobotSuite
         '-of', 'GTiff',
         '-co', 'COMPRESS=LZW',
         '-co', 'TFW=YES',
+        *srs_args,
         grid_dir.to_s,
         output_path.to_s
       ].shelljoin
       GisRobotSuite.run_system_command(command, logger:)
       raise "gdal_translate failed to create #{output_path}" unless output_path.size?
       raise "gdal_translate failed to create #{world_file_path}" unless world_file_path.size?
+    end
+
+    # Assign the projection the descriptive metadata recorded. GDAL's ArcGRID driver cannot always
+    # map the projection named in a grid's prj.adf to a known CRS -- a bare "Projection MOLLWEIDE"
+    # becomes ENGCRS["MOLLWEIDE"], which nothing can reproject from -- and whatever it produces is
+    # then baked into the GeoTIFF we preserve and deliver.
+    def srs_args
+      projection = GisRobotSuite.map_projection(cocina_object)
+      return [] if projection.blank?
+
+      logger.info "  Assigning #{projection} to #{output_path.basename}..."
+      ['-a_srs', projection]
     end
 
     def replace_arcgrid_files

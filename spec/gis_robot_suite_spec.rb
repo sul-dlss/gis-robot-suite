@@ -24,6 +24,46 @@ RSpec.describe GisRobotSuite do
     end
   end
 
+  describe '.map_projection' do
+    let(:cocina_object) do
+      dro = build(:dro)
+      dro.new(description: dro.description.new(form:))
+    end
+    let(:form) { [{ type: 'map projection', value: projection }] }
+
+    context 'when cocina records an EPSG code' do
+      let(:projection) { 'EPSG::26910' }
+
+      it 'returns it in the form GDAL and PROJ accept' do
+        expect(described_class.map_projection(cocina_object)).to eq('EPSG:26910')
+      end
+    end
+
+    context 'when cocina records an ESRI code' do
+      let(:projection) { 'ESRI::54009' }
+
+      it 'keeps the authority, since ESRI defines projections EPSG has no code for' do
+        expect(described_class.map_projection(cocina_object)).to eq('ESRI:54009')
+      end
+    end
+
+    context 'when cocina records a projection name rather than a code' do
+      let(:projection) { 'World_Mollweide' }
+
+      it 'returns nil' do
+        expect(described_class.map_projection(cocina_object)).to be_nil
+      end
+    end
+
+    context 'when cocina records no map projection' do
+      let(:form) { [] }
+
+      it 'returns nil' do
+        expect(described_class.map_projection(cocina_object)).to be_nil
+      end
+    end
+  end
+
   describe '.vector?' do
     context 'when a vector' do
       let(:media_type) { 'application/vnd.shp' }
