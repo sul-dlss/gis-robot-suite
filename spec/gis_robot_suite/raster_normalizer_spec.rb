@@ -117,5 +117,39 @@ RSpec.describe GisRobotSuite::RasterNormalizer do
         )
       end
     end
+
+    # GDAL's ArcGRID driver could not map the bare "Projection MOLLWEIDE" in the grid's prj.adf to
+    # a known CRS, so it produced ENGCRS["MOLLWEIDE"] and gdal_translate baked that into the tif.
+    context 'when a GeoTIFF whose projection is an engineering CRS' do
+      let(:bare_druid) { 'mk892hd7761' }
+
+      let(:description) do
+        {
+          title: [{ value: 'Artisanal Fishing, 2007-2008' }],
+          form: [{ value: 'ESRI::54009', type: 'map projection' }],
+          geographic: [
+            {
+              form: [
+                { value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
+                { value: 'GeoTIFF', type: 'data format' }
+              ]
+            }
+          ],
+          purl: 'https://purl.stanford.edu/mk892hd7761'
+        }
+      end
+
+      it 'reprojects it using the projection cocina recorded' do
+        expect(normalizer.normalize).to eq(tmpdir)
+        expect(File).to exist(File.join(tmpdir, 'artisanal.tif'))
+
+        expect(GisRobotSuite).to have_received(:run_system_command).with(
+          'gdal raster reproject -r bilinear -s ESRI:54009 -d EPSG:4326 ' \
+          "-i 'spec/fixtures/workspace/mk/892/hd/7761/mk892hd7761/content/artisanal.tif' " \
+          "-o '/tmp/normalizeraster_mk892hd7761/artisanal_uncompressed.tif' --co 'COMPRESS=NONE'",
+          logger:
+        )
+      end
+    end
   end
 end

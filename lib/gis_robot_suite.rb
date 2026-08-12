@@ -31,6 +31,21 @@ module GisRobotSuite
     geographic_form(cocina_object, 'data format')
   end
 
+  # The projection the data was authored in, in a form GDAL and PROJ accept.
+  #
+  # Cocina records it as "AUTHORITY::CODE": the ISO 19115 spec wants a version between the
+  # colons, but it is generally left blank. Where the source metadata named no authority,
+  # DescriptiveMetadataBuilder falls back to a bare projection name, which is not something
+  # we can hand to GDAL, so return nil for anything that does not parse.
+  #
+  # @return [String, nil] e.g. "EPSG:26910" or "ESRI:54009"
+  def self.map_projection(cocina_object)
+    value = cocina_object.description.form&.find { |form| form.type == 'map projection' }&.value
+    authority, _version, code = value.to_s.split(':')
+
+    "#{authority}:#{code}" if authority.present? && code.present?
+  end
+
   def self.geographic_form(cocina_object, type)
     cocina_object.description.geographic&.first&.form&.find { |form| form.type == type }&.value
   end

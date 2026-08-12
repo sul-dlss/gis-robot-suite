@@ -93,6 +93,28 @@ RSpec.describe GisRobotSuite::ArcgridConverter do
       expect(object_client).not_to have_received(:version)
     end
 
+    # GDAL's ArcGRID driver cannot always map the projection named in a grid's prj.adf to a known
+    # CRS, so name the one the descriptive metadata recorded rather than trusting what it reads.
+    context 'when cocina records a map projection' do
+      let(:cocina_object) do
+        dro = build(:dro, id: druid)
+        dro.new(
+          structural: { contains: [file_set] },
+          access: { view: 'world', download: 'world' },
+          version: 3,
+          description: dro.description.new(form: [{ type: 'map projection', value: 'ESRI::54009' }])
+        )
+      end
+
+      it 'assigns it to the GeoTIFF' do
+        described_class.run(druid:, logger:)
+
+        expect(GisRobotSuite).to have_received(:run_system_command) do |command, **|
+          expect(command).to include('-a_srs ESRI:54009')
+        end
+      end
+    end
+
     context 'when there is no ArcGRID' do
       before do
         FileUtils.rm_rf(grid_dir)

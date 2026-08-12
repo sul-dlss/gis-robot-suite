@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en">
+	<Esri>
+		<DataProperties>
+			<coordRef>
+				<type Sync="TRUE">Projected</type>
+				<geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn>
+				<csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits>
+				<projcsn Sync="TRUE">World_Mollweide</projcsn>
+			</coordRef>
+		</DataProperties>
+	</Esri>
+	<dataIdInfo>
+		<idCitation>
+			<resTitle>Artisanal Fishing, 2007-2008</resTitle>
+		</idCitation>
+	</dataIdInfo>
+	<refSysInfo>
+		<RefSystem dimension="">
+			<refSysID xmlns="">
+				<identCode code="54009" Sync="TRUE" value="54009"/>
+				<idCodeSpace Sync="TRUE">ESRI</idCodeSpace>
+				<idVersion Sync="TRUE">10.1.0</idVersion>
+			</refSysID>
+		</RefSystem>
+	</refSysInfo>
+</metadata>

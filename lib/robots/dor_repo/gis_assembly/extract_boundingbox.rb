@@ -31,7 +31,7 @@ module Robots
 
         def normalizer
           if GisRobotSuite.vector?(cocina_object)
-            GisRobotSuite::VectorNormalizer.new(bare_druid:, logger:, rootdir:)
+            GisRobotSuite::VectorNormalizer.new(cocina_object:, logger:, rootdir:)
           else
             GisRobotSuite::RasterNormalizer.new(cocina_object:, logger:, rootdir:)
           end
