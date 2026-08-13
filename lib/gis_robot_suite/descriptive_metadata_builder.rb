@@ -202,7 +202,11 @@ module GisRobotSuite
       code = node.xpath('gmd:code/gco:CharacterString', NS).text
       return if system.empty? || code.empty?
 
-      "#{system}::#{code}" # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
+      # Joined in the OGC URN form for a CRS identifier, AUTHORITY:VERSION:CODE, as in
+      # urn:ogc:def:crs:EPSG:7.4:4326 (OGC 07-092r3, "Definition identifier URNs in OGC namespace").
+      # The version is the EPSG dataset release, which ISO 19139 carries as a gmd:version next to
+      # gmd:codeSpace and gmd:code, but it is generally left blank -- hence the empty middle slot.
+      "#{system}::#{code}"
     end
 
     def projection_from_data

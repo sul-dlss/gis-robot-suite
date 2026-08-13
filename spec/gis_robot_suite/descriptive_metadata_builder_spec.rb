@@ -127,9 +127,10 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
       end
 
       context 'when the record states more than one reference system' do
+        # The ESRI metadata staged for this druid marks 4326 as the synced one.
+        let(:bare_druid) { 'jw435fb1185' }
         let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
         let(:iso19139_ng) { Nokogiri::XML(reference_systems('4326', '26910')) }
-        let(:synced_code) { '4326' }
 
         def reference_systems(*codes)
           identifiers = codes.map do |code|
@@ -147,34 +148,23 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
           XML
         end
 
-        before do
-          esri_xml = <<~XML
-            <metadata>
-              <refSysInfo><RefSystem><refSysID>
-                <identCode Sync="#{synced_code == '4326' ? 'TRUE' : 'FALSE'}" code="4326"/>
-              </refSysID></RefSystem></refSysInfo>
-              <refSysInfo><RefSystem><refSysID><identCode code="26910"/></refSysID></RefSystem></refSysInfo>
-            </metadata>
-          XML
-          allow(builder).to receive(:esri_ng).and_return(Nokogiri::XML(esri_xml))
-        end
-
         it 'uses the one ArcGIS synced from the data instead of concatenating the two' do
           expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
-        end
-
-        context 'when the ESRI metadata marks neither as synced' do
-          let(:synced_code) { nil }
-
-          it 'uses the first one stated' do
-            expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
-          end
         end
 
         context 'when the synced one is stated second' do
           let(:iso19139_ng) { Nokogiri::XML(reference_systems('26910', '4326')) }
 
           it 'still uses the synced one' do
+            expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+          end
+        end
+
+        context 'when the ESRI metadata marks none of the systems the record states' do
+          # This druid's ESRI metadata marks 3309, which is neither of the two stated above.
+          let(:bare_druid) { 'cc044gt0726' }
+
+          it 'uses the first one stated' do
             expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
           end
         end
