@@ -3,7 +3,7 @@
 module Robots
   module DorRepo
     module GisAssembly
-      class ExtractIso19139Metadata < Base
+      class ExtractIso19139Metadata < ExtractMetadataBase
         def initialize
           super('gisAssemblyWF', 'extract-iso19139-metadata')
         end
@@ -11,7 +11,6 @@ module Robots
         def perform_work
           logger.debug "extract-iso19139 working on #{bare_druid}"
 
-          arcgis_transformer = GisRobotSuite::ArcgisMetadataTransformer.new(bare_druid, 'ArcGIS2ISO19139.xsl', 'iso19139.xml', logger)
           return missing_metadata_return_state unless arcgis_transformer.metadata?
 
           output_file = arcgis_transformer.transform
@@ -20,23 +19,8 @@ module Robots
 
         private
 
-        def missing_metadata_return_state
-          LyberCore::ReturnState.new(status: :skipped, note: "#{bare_druid} has no ESRI metadata file in staging")
-        end
-
-        def updated_cocina_with(output_file)
-          updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
-          updater.add_file(filename: output_file, use: 'derivative', file_set:, mimetype: 'application/xml')
-        end
-
-        def file_set
-          staging_dir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
-          esri_metadata_path = GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
-          esri_metadata_filename = File.basename(esri_metadata_path)
-
-          cocina_object.structural.contains.find do |fs|
-            fs.structural.contains.any? { |file| file.filename == esri_metadata_filename }
-          end
+        def arcgis_transformer
+          @arcgis_transformer ||= GisRobotSuite::ArcgisMetadataTransformer.new(bare_druid, 'ArcGIS2ISO19139.xsl', 'iso19139.xml', logger)
         end
       end
     end
