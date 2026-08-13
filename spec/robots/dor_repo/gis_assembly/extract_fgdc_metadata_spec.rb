@@ -11,8 +11,49 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
   let(:workflow_response) { instance_double(Dor::Services::Response::Workflow, process_for_recent_version: process_response) }
   let(:workflow_client) { instance_double(Dor::Services::Client::ObjectWorkflow, create: true, find: workflow_response) }
   let(:process_client) { instance_double(Dor::Services::Client::Process, update: nil, update_error: nil) }
-  let(:object_client) { instance_double(Dor::Services::Client::Object, workflow: workflow_client) }
-  let(:staging_dir) { File.join(DruidTools::Druid.new(druid, File.join(fixture_dir, 'stage')).path, 'content') }
+  let(:object_client) { instance_double(Dor::Services::Client::Object, workflow: workflow_client, find: cocina_model, update: true) }
+  let(:staging_dir) { File.join(DruidTools::Druid.new(namespaceless_druid, File.join(fixture_dir, 'stage')).path, 'content') }
+  let(:namespaceless_druid) { druid.delete_prefix('druid:') }
+  let(:cocina_model) do
+    build(:dro, id: druid).new(
+      structural: {
+        contains: [
+          {
+            type: 'https://cocina.sul.stanford.edu/models/resources/object',
+            externalIdentifier: 'https://cocina.sul.stanford.edu/fileset/1234',
+            label: 'Fileset 1',
+            version: 1,
+            structural: {
+              contains: [
+                {
+                  type: 'https://cocina.sul.stanford.edu/models/file',
+                  externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
+                  label: esri_filename,
+                  filename: esri_filename,
+                  version: 1,
+                  hasMimeType: 'application/xml',
+                  administrative: { publish: true, sdrPreserve: true, shelve: true },
+                  access: { view: 'world', download: 'world' },
+                  hasMessageDigests: []
+                }
+              ]
+            }
+          }
+        ],
+        hasMemberOrders: [],
+        isMemberOf: ['druid:rz415nf2825']
+      },
+      access: cocina_object_access
+    )
+  end
+  let(:esri_filename) { '' }
+  let(:cocina_object_access) do
+    {
+      view: 'world',
+      download: 'world',
+      controlledDigitalLending: false
+    }
+  end
 
   # Get rid of any generated XML files
   def cleanup
@@ -21,7 +62,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
 
   before do
     cleanup
-    allow(Dor::Services::Client).to receive(:object).with("druid:#{druid}").and_return(object_client)
+    allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_client)
     allow(workflow_client).to receive(:process).with('extract-fgdc-metadata').and_return(process_client)
     perform
   end
@@ -29,39 +70,59 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractFgdcMetadata do
   after { cleanup }
 
   context 'with ESRI metadata for a shapefile' do
-    let(:druid) { 'cv676dy5796' }
+    let(:druid) { 'druid:cv676dy5796' }
     let(:esri_filename) { 'WATER_BODY.shp.xml' }
 
-    it 'generates an FGDC XML document' do
+    it 'generates an FGDC XML document and adds it to the structural metadata' do
       expect(File).to exist(File.join(staging_dir, 'WATER_BODY-fgdc.xml'))
+      expect(object_client).to have_received(:update) do |args|
+        file = args[:params].structural.contains.first.structural.contains.last
+        expect(file.filename).to eq 'WATER_BODY-fgdc.xml'
+        expect(file.use).to eq 'derivative'
+        expect(file.hasMimeType).to eq 'application/xml'
+      end
     end
   end
 
   context 'with ESRI metadata for a geoTIFF' do
-    let(:druid) { 'qt609tt2964' }
+    let(:druid) { 'druid:qt609tt2964' }
     let(:esri_filename) { '26257_e.tif.xml' }
 
-    it 'generates an FGDC XML document' do
+    it 'generates an FGDC XML document and adds it to the structural metadata' do
       expect(File).to exist(File.join(staging_dir, '26257_e-fgdc.xml'))
+      expect(object_client).to have_received(:update) do |args|
+        file = args[:params].structural.contains.first.structural.contains.last
+        expect(file.filename).to eq '26257_e-fgdc.xml'
+        expect(file.use).to eq 'derivative'
+        expect(file.hasMimeType).to eq 'application/xml'
+      end
     end
   end
 
   context 'with ESRI metadata for a geoJSON' do
-    let(:druid) { 'vx813cc5549' }
+    let(:druid) { 'druid:vx813cc5549' }
     let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
 
-    it 'generates an FGDC XML document' do
+    it 'generates an FGDC XML document and adds it to the structural metadata' do
       expect(File).to exist(File.join(staging_dir, 'CLOWNS_OF_AMERICA-fgdc.xml'))
+      expect(object_client).to have_received(:update) do |args|
+        file = args[:params].structural.contains.first.structural.contains.last
+        expect(file.filename).to eq 'CLOWNS_OF_AMERICA-fgdc.xml'
+        expect(file.use).to eq 'derivative'
+        expect(file.hasMimeType).to eq 'application/xml'
+      end
     end
   end
 
   context 'without ESRI metadata' do
-    let(:druid) { 'bb045mm1234' }
+    let(:druid) { 'druid:bb045mm1234' }
+    let(:esri_filename) { 'somefile.txt' }
 
-    it 'skips the step' do
+    it 'skips the step without updating the object' do
       expect(perform).to be_a(LyberCore::ReturnState)
       expect(perform.status).to eq 'skipped'
       expect(perform.note).to eq 'bb045mm1234 has no ESRI metadata file in staging'
+      expect(object_client).not_to have_received(:update)
     end
   end
 end
