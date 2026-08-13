@@ -32,8 +32,10 @@ module Robots
         def normalizer
           if GisRobotSuite.vector?(cocina_object)
             GisRobotSuite::VectorNormalizer.new(cocina_object:, logger:, rootdir:)
-          else
+          elsif GisRobotSuite.raster?(cocina_object)
             GisRobotSuite::RasterNormalizer.new(cocina_object:, logger:, rootdir:)
+          else
+            raise "extract-boundingbox: #{bare_druid} has unknown format: #{GisRobotSuite.media_type(cocina_object)}"
           end
         end
 

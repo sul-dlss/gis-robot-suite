@@ -185,20 +185,57 @@ module GisRobotSuite
     end
 
     def map_projection
-      proj = iso19139_ng.xpath('//gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier', NS)
-      system = proj.xpath('gmd:codeSpace/gco:CharacterString', NS).text
-      code = proj.xpath('gmd:code/gco:CharacterString', NS).text
-
-      if system.empty? || code.empty?
-        file = vector_filepath || raster_filepath
-        projection = projection_from_gdal(file) if file
-      else
-        projection = "#{system}::#{code}" # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
-      end
+      projection = projection_from_reference_system || projection_from_data
 
       raise "Map projection is missing for #{bare_druid}." if projection.blank?
 
       { value: projection, type: 'map projection' }
+    end
+
+    # @return [String, nil] nil when the record states no reference system, or states one
+    #   without a code, in which case the projection has to come from the data
+    def projection_from_reference_system
+      node = reference_system_node
+      return if node.nil?
+
+      system = node.xpath('gmd:codeSpace/gco:CharacterString', NS).text
+      code = node.xpath('gmd:code/gco:CharacterString', NS).text
+      return if system.empty? || code.empty?
+
+      "#{system}::#{code}" # Uses '::' since the spec requires a version here (e.g., :7.4:) but it's generally left blank
+    end
+
+    def projection_from_data
+      file = vector_filepath || raster_filepath
+      projection_from_gdal(file) if file
+    end
+
+    # Returns the one RS_Identifier to read the projection from, or nil when the record states none.
+    #
+    # A record may carry several: the reference system authored in the original record, and the one
+    # ArcGIS synced from the data. Reading them together would concatenate their values, since
+    # NodeSet#text joins every match: blocks stating EPSG 4326 and EPSG 26910 yielded
+    # "EPSGEPSG::432626910", which is not a projection anything can reproject from.
+    #
+    # Prefer the synced one, since it describes the data rather than what the record claims about
+    # it -- for the Monterey Bay coverages the authored 26910 is stale and the data really is 4326.
+    # ArcGIS marks it with Sync="TRUE", but our XSLT does not carry the marking into the ISO 19139,
+    # so read it from the ESRI metadata instead.
+    def reference_system_node
+      nodes = iso19139_ng.xpath('//gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier', NS)
+      return nodes.first if nodes.size <= 1
+
+      synced_code = synced_projection_code
+      nodes.find { |node| node.xpath('gmd:code/gco:CharacterString', NS).text == synced_code } || nodes.first
+    end
+
+    # @return [String, nil] the projection code ArcGIS synced from the data, e.g. "4326"
+    def synced_projection_code
+      esri_ng.at_xpath('//refSysInfo/RefSystem/refSysID/identCode[@Sync="TRUE"]/@code')&.value
+    end
+
+    def esri_ng
+      @esri_ng ||= Nokogiri::XML(File.read(GisRobotSuite.locate_esri_metadata("#{rootdir}/content")))
     end
 
     def projection_from_gdal(file)
