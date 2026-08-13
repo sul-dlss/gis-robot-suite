@@ -126,6 +126,50 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
         end
       end
 
+      context 'when the record states more than one reference system' do
+        # The ESRI metadata staged for this druid marks 4326 as the synced one.
+        let(:bare_druid) { 'jw435fb1185' }
+        let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+        let(:iso19139_ng) { Nokogiri::XML(reference_systems('4326', '26910')) }
+
+        def reference_systems(*codes)
+          identifiers = codes.map do |code|
+            <<~XML
+              <referenceSystemInfo><MD_ReferenceSystem><referenceSystemIdentifier><RS_Identifier>
+                <code><gco:CharacterString>#{code}</gco:CharacterString></code>
+                <codeSpace><gco:CharacterString>EPSG</gco:CharacterString></codeSpace>
+              </RS_Identifier></referenceSystemIdentifier></MD_ReferenceSystem></referenceSystemInfo>
+            XML
+          end
+          <<~XML
+            <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+              #{identifiers.join}
+            </MD_Metadata>
+          XML
+        end
+
+        it 'uses the one ArcGIS synced from the data instead of concatenating the two' do
+          expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+        end
+
+        context 'when the synced one is stated second' do
+          let(:iso19139_ng) { Nokogiri::XML(reference_systems('26910', '4326')) }
+
+          it 'still uses the synced one' do
+            expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+          end
+        end
+
+        context 'when the ESRI metadata marks none of the systems the record states' do
+          # This druid's ESRI metadata marks 3309, which is neither of the two stated above.
+          let(:bare_druid) { 'cc044gt0726' }
+
+          it 'uses the first one stated' do
+            expect(builder.send(:map_projection)).to eq({ value: 'EPSG::4326', type: 'map projection' })
+          end
+        end
+      end
+
       context 'when the projection has a name but no ID' do
         let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
 

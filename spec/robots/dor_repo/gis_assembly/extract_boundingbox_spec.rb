@@ -699,4 +699,29 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       expect(GisRobotSuite).to have_received(:run_system_command).with("gdal vector info -f json '/tmp/normalizevector_cc044gt0726/sanluisobispo1996.shp'", logger: robot.logger)
     end
   end
+
+  context 'when the media type is one neither normalizer handles' do
+    let(:druid) { 'druid:cc044gt0726' }
+    let(:original_description) do
+      {
+        title: [{ value: 'Important Farmland, San Luis Obispo County, California, 1996' }],
+        purl: 'https://purl.stanford.edu/cc044gt0726',
+        geographic: [
+          {
+            form: [
+              { value: 'application/x-esri-shapefile', type: 'media type', source: { value: 'IANA media type terms' } },
+              { value: 'Shapefile', type: 'data format' }
+            ]
+          }
+        ]
+      }
+    end
+
+    it 'names the media type rather than reporting a vector as an unsupported raster' do
+      expect { test_perform(robot, druid) }.to raise_error(
+        'extract-boundingbox: cc044gt0726 has unknown format: application/x-esri-shapefile'
+      )
+      expect(object_client).not_to have_received(:update)
+    end
+  end
 end
