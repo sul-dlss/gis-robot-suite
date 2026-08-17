@@ -36,6 +36,11 @@ module GisRobotSuite
       raise "extracting metadata: #{bare_druid} has unknown GIS data type"
     end
 
+    # Filename of the XML metadata file exported from ArcGIS
+    def esri_metadata_filename
+      File.basename(esri_metadata_file)
+    end
+
     attr_reader :bare_druid, :xslt, :output, :logger
 
     private
