@@ -154,9 +154,9 @@ GEM
     iso8601 (0.13.0)
     janeway-jsonpath (1.1.0)
     json (2.21.2)
-    jsonschema_rs (0.49.9-arm64-darwin)
+    jsonschema_rs (0.51.0-arm64-darwin)
       bigdecimal (>= 3.1, < 5)
-    jsonschema_rs (0.49.9-x86_64-linux)
+    jsonschema_rs (0.51.0-x86_64-linux)
       bigdecimal (>= 3.1, < 5)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
@@ -221,7 +221,7 @@ GEM
     rack (3.2.7)
     rainbow (3.1.1)
     rake (13.4.2)
-    rbs (4.1.3)
+    rbs (4.2.0)
       logger
       prism (>= 1.6.0)
       tsort
@@ -278,7 +278,7 @@ GEM
       rubocop-rspec (~> 3.5)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
-    sidekiq (8.1.6)
+    sidekiq (8.1.7)
       connection_pool (>= 3.0.0)
       json (>= 2.16.0)
       logger (>= 1.7.0)
@@ -305,7 +305,7 @@ GEM
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
     uri (1.1.1)
-    webmock (3.26.2)
+    webmock (3.26.3)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -347,4 +347,4 @@ DEPENDENCIES
   zeitwerk
 
 BUNDLED WITH
-  4.0.18
+  4.0.19
