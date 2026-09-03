@@ -124,7 +124,10 @@ module Robots
           pmtiles_filename = "#{basename}.pmtiles"
           pmtiles_output = workspace_path(pmtiles_filename)
 
-          GisRobotSuite::VectorDerivativeGenerator.generate(input_path: input, fgb_path: fgb_output, pmtiles_path: pmtiles_output, logger: logger)
+          # Legacy ESRI shapefiles were frequently accessioned without a .prj, leaving the data with
+          # no projection to reproject from; the one the descriptive metadata records stands in.
+          GisRobotSuite::VectorDerivativeGenerator.generate(input_path: input, fgb_path: fgb_output, pmtiles_path: pmtiles_output,
+                                                            fallback_crs: GisRobotSuite.map_projection(cocina_object), logger: logger)
 
           [fgb_filename, pmtiles_filename]
         end

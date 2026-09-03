@@ -13,29 +13,38 @@ module GisRobotSuite
     # as a fallback when there isn't enough spatial spread for -zg to guess one
     FALLBACK_MAXZOOM = 14
 
-    def self.generate(input_path:, fgb_path:, pmtiles_path:, logger: nil)
-      new(input_path: input_path, fgb_path: fgb_path, pmtiles_path: pmtiles_path, logger: logger).generate
+    # Raised when neither the data nor the descriptive metadata names a projection to reproject from
+    class MissingSourceCrs < StandardError; end
+
+    def self.generate(input_path:, fgb_path:, pmtiles_path:, fallback_crs: nil, logger: nil)
+      new(input_path: input_path, fgb_path: fgb_path, pmtiles_path: pmtiles_path, fallback_crs: fallback_crs, logger: logger).generate
     end
 
-    def initialize(input_path:, fgb_path:, pmtiles_path:, logger: nil)
+    def initialize(input_path:, fgb_path:, pmtiles_path:, fallback_crs: nil, logger: nil)
       @input_path = input_path
       @fgb_path = fgb_path
       @pmtiles_path = pmtiles_path
+      @fallback_crs = fallback_crs
       @logger = logger
     end
 
     def generate
-      # Generate FlatGeoBuf in a single pass: drop unusable geometry, promote
-      # mixed geometry to multi, and reproject to EPSG:4326.
-      fgb_command = "ogr2ogr -of 'FlatGeoBuf' #{overwrite_output} #{reproject_to_wgs84} " \
-                    "#{promote_to_multi} #{select_valid_geometry} " \
-                    "#{Shellwords.escape(fgb_path.to_s)} #{Shellwords.escape(input_path.to_s)}"
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
       generate_pmtiles
     end
 
     private
+
+    # Generate FlatGeoBuf in a single pass: drop unusable geometry, promote
+    # mixed geometry to multi, and reproject to EPSG:4326.
+    def fgb_command
+      options = ["-of 'FlatGeoBuf'", overwrite_output, source_crs_option, reproject_to_wgs84,
+                 promote_to_multi, select_valid_geometry].compact
+
+      "ogr2ogr #{options.join(' ')} " \
+        "#{Shellwords.escape(fgb_path.to_s)} #{Shellwords.escape(input_path.to_s)}"
+    end
 
     # Generate PMTiles from FlatGeoBuf. Tries to auto-guess an appropriate maxzoom
     # first; falls back to a fixed maxzoom if that fails
@@ -63,6 +72,35 @@ module GisRobotSuite
     # the input FlatGeoBuf to that projection.
     def reproject_to_wgs84
       '-t_srs EPSG:4326'
+    end
+
+    # ogr2ogr transforms from the CRS the data declares, so only name a source CRS when it
+    # declares none: overriding a projection the file does state would silently misplace the
+    # data if the two disagreed.
+    #
+    # @return [String, nil] nil when the data declares its own CRS and GDAL needs no help
+    def source_crs_option
+      return if declared_coordinate_system
+      return "-s_srs #{Shellwords.escape(fallback_crs)}" if fallback_crs.present?
+
+      raise MissingSourceCrs, "#{input_path} has no spatial reference system " \
+                              'and no map projection was supplied to fall back on'
+    end
+
+    # The coordinate system the data file itself declares, which for a shapefile means its .prj.
+    # Legacy ESRI datasets were frequently accessioned without one.
+    def declared_coordinate_system
+      return @declared_coordinate_system if defined?(@declared_coordinate_system)
+
+      @declared_coordinate_system = vector_info.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem')
+    end
+
+    def vector_info
+      @vector_info ||= JSON.parse(
+        GisRobotSuite.run_system_command(
+          "#{Settings.gdal_path}gdal vector info -f json #{Shellwords.escape(input_path.to_s)}", logger: logger
+        )[:stdout_str]
+      )
     end
 
     # The -overwrite output switch doesn't work for FlatGeoBuf because it
@@ -99,6 +137,6 @@ module GisRobotSuite
       '-nlt PROMOTE_TO_MULTI'
     end
 
-    attr_reader :input_path, :fgb_path, :pmtiles_path, :logger
+    attr_reader :input_path, :fgb_path, :pmtiles_path, :fallback_crs, :logger
   end
 end
