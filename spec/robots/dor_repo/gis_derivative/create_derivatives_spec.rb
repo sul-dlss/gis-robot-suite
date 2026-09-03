@@ -327,6 +327,45 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       end
     end
 
+    context 'with a shapefile that has no .prj' do
+      let(:druid) { 'druid:cf920rt3856' }
+      let(:layer_name) { 'Pusan_CBD' }
+      let(:cocina_object) do
+        build(:dro, id: druid).new(structural: structural, access: { view: 'world' }, description: description)
+      end
+      let(:description) do
+        {
+          title: [{ value: 'Pusan CBD' }],
+          form: [{ value: 'EPSG::32652', type: 'map projection' }],
+          purl: "https://purl.stanford.edu/#{bare_druid}"
+        }
+      end
+      let(:master_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.shp",
+          label: "#{layer_name}.shp",
+          filename: "#{layer_name}.shp",
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/vnd.shp',
+          administrative: {
+            publish: true,
+            sdrPreserve: true,
+            shelve: true
+          }
+        )
+      end
+
+      it 'creates a FlatGeoBuf using the projection cocina recorded' do
+        expect(fgb_file_path).to exist
+      end
+
+      it 'creates a PMTiles archive' do
+        expect(pmtiles_file_path).to exist
+      end
+    end
+
     context 'with geojson' do
       let(:druid) { 'druid:yt111kw1413' }
       let(:layer_name) { 'samTrans_bus_routes_20151021_shapes_20260406' }
