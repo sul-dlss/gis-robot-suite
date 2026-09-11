@@ -25,11 +25,13 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
   let(:files) { [master_file] }
   let(:jp2_file_path) { workspace_path / "#{layer_name}.jp2" }
   let(:logger) { instance_double(Logger, info: nil, warn: nil, error: nil, debug: nil) }
+  let(:esri_metadata_present) { true }
 
   before do
     allow(robot).to receive_messages(druid: druid, logger: logger)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(GisRobotSuite).to receive(:locate_druid_path).and_return(workspace_path.parent)
+    allow(GisRobotSuite).to receive(:locate_esri_metadata).and_raise('Missing ESRI metadata files') unless esri_metadata_present
     perform
   end
 
@@ -64,14 +66,23 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       FileUtils.rm_f(jp2_file_path)
     end
 
-    # The data type of the generated COG's first band, as reported by gdalinfo.
-    def cog_data_type
+    # The generated COG's first band, as reported by gdalinfo.
+    def cog_band
       result = GisRobotSuite.run_system_command("gdalinfo -json #{Shellwords.escape(cog_file_path.to_s)}", logger: logger)
-      JSON.parse(result[:stdout_str])['bands'].first['type']
+      JSON.parse(result[:stdout_str])['bands'].first
+    end
+
+    def cog_data_type
+      cog_band['type']
     end
 
     it 'creates a COG' do
       expect(cog_file_path).to exist
+    end
+
+    # No unit info in the fixture
+    it 'does not declare a band unit' do
+      expect(cog_band['unit']).to be_blank
     end
 
     it 'creates a JP2 thumbnail' do
@@ -101,6 +112,27 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
 
       it 'creates a JP2 thumbnail' do
         expect(jp2_file_path).to exist
+      end
+    end
+
+    context 'with a raster whose ESRI metadata declares a vertical coordinate system' do
+      let(:druid) { 'druid:sf815vr1246' }
+      let(:layer_name) { 'MONT_DEM' }
+
+      it 'creates a COG that records the unit in the band' do
+        expect(cog_file_path).to exist
+        expect(cog_band['unit']).to eq 'm'
+      end
+
+      # Whole collections of rasters were accessioned with no ArcGIS metadata at all, and
+      # locate_esri_metadata raises for those rather than returning nil.
+      context 'when the sidecar is missing' do
+        let(:esri_metadata_present) { false }
+
+        it 'still creates a COG, just without a unit' do
+          expect(cog_file_path).to exist
+          expect(cog_band['unit']).to be_blank
+        end
       end
     end
 

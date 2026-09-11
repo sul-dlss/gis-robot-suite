@@ -102,8 +102,19 @@ module Robots
           derivative_filename = "#{basename}_cog.tif"
           output = workspace_path(derivative_filename)
           # Make derivative COG file of the master file in location and add it to cocina_object
-          GisRobotSuite::CogGenerator.generate(input_path: input, output_path: output, logger: logger)
+          GisRobotSuite::CogGenerator.generate(input_path: input, output_path: output,
+                                               unit: vertical_crs&.unit_label, logger: logger)
           derivative_filename
+        end
+
+        # Generate vertical CRS info from the ESRI XML metadata, if present
+        def vertical_crs
+          return @vertical_crs if defined?(@vertical_crs)
+
+          esri_metadata_file = GisRobotSuite.locate_esri_metadata(@content_dir)
+          @vertical_crs = GisRobotSuite::EsriVerticalCrs.new(Nokogiri::XML(File.read(esri_metadata_file)))
+        rescue RuntimeError
+          @vertical_crs = nil
         end
 
         def create_preview_jp2(filename, klass)
