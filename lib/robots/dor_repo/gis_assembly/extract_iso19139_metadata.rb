@@ -14,7 +14,7 @@ module Robots
           return missing_metadata_return_state unless arcgis_transformer.metadata?
 
           output_file = arcgis_transformer.transform
-          GisRobotSuite::Iso19139BandUnits.apply(output_file, logger:)
+          GisRobotSuite::Iso19139BandUnits.apply(output_file, esri_ng:, logger:)
           object_client.update(params: updated_cocina_with(output_file))
         end
 
@@ -22,6 +22,12 @@ module Robots
 
         def arcgis_transformer
           @arcgis_transformer ||= GisRobotSuite::ArcgisMetadataTransformer.new(bare_druid, 'ArcGIS2ISO19139.xsl', 'iso19139.xml', logger)
+        end
+
+        # The stylesheet drops the vertical coordinate system, so the band units have to be
+        # patched in afterwards from the ESRI metadata the transform read.
+        def esri_ng
+          Nokogiri::XML(File.read(arcgis_transformer.esri_metadata_file))
         end
       end
     end

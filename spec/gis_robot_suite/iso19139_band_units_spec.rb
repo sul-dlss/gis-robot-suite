@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require 'cgi'
 require 'spec_helper'
 require 'tmpdir'
 
 RSpec.describe GisRobotSuite::Iso19139BandUnits do
-  subject(:apply) { described_class.apply(iso19139_file, logger:) }
+  subject(:apply) { described_class.apply(iso19139_file, esri_ng: Nokogiri::XML(esri_xml), logger:) }
 
   let(:logger) { instance_double(Logger, info: nil, warn: nil, debug: nil, error: nil) }
   let(:iso19139_file) do
@@ -57,7 +58,80 @@ RSpec.describe GisRobotSuite::Iso19139BandUnits do
     XML
   end
 
-  context 'with the placeholder the stylesheet emits' do
+  def esri_metadata(vertcs: nil, quantity_type: 'length')
+    wkt = ['GEOGCS["GCS_WGS_1984",UNIT["Degree",0.0174532925199433]]', vertcs].compact.join(',')
+    pe_xml = "<GeographicCoordinateSystem><WKT>#{CGI.escapeHTML(wkt)}</WKT></GeographicCoordinateSystem>"
+    uom = quantity_type ? %(<UOM type="#{quantity_type}"/>) : '<UOM/>'
+
+    <<~XML
+      <metadata xml:lang="en">
+        <Esri><DataProperties><coordRef><peXml Sync="TRUE">#{CGI.escapeHTML(pe_xml)}</peXml></coordRef></DataProperties></Esri>
+        <contInfo><ImgDesc><covDim><Band><valUnit>#{uom}</valUnit></Band></covDim></ImgDesc></contInfo>
+      </metadata>
+    XML
+  end
+
+  context 'when the export declares a vertical unit' do
+    let(:esri_xml) do
+      esri_metadata(vertcs: 'VERTCS["Unknown VCS",VDATUM["Unknown"],PARAMETER["Direction",1.0],UNIT["Meter",1.0]]')
+    end
+
+    before { apply }
+
+    it 'records the unit in UCUM terms, keeping the name ArcGIS used' do
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier', namespaces).text).to eq 'm'
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier/@codeSpace', namespaces).value)
+        .to eq 'http://www.opengis.net/def/uom/UCUM/'
+      expect(units.at_xpath('gml:UnitDefinition/gml:name', namespaces).text).to eq 'Meter'
+      expect(units.at_xpath('gml:UnitDefinition/gml:catalogSymbol', namespaces).text).to eq 'm'
+    end
+
+    it 'carries the quantity kind the ESRI metadata recorded' do
+      expect(units.at_xpath('gml:UnitDefinition/gml:quantityType', namespaces).text).to eq 'length'
+    end
+
+    it 'keeps the gml:id the stylesheet generated' do
+      expect(units.at_xpath('gml:UnitDefinition/@gml:id', namespaces).value).to eq 'idp84848'
+    end
+
+    it 'drops the placeholder identifier' do
+      expect(iso19139_file.read).not_to include 'Unified Code of Units of Measure'
+    end
+
+    it 'notes that the unit carries no reference surface' do
+      expect(logger).to have_received(:info).with(/recording band units as Meter/)
+      expect(logger).to have_received(:info).with(/vertical datum is "Unknown"/)
+    end
+  end
+
+  context 'when the vertical unit has no UCUM symbol' do
+    let(:esri_xml) { esri_metadata(vertcs: 'VERTCS["Unknown VCS",VDATUM["Unknown"],UNIT["Smoot",1.7018]]') }
+
+    before { apply }
+
+    it 'keeps the unit and reports it as ESRI' do
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier', namespaces).text).to eq 'Smoot'
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier/@codeSpace', namespaces).value).to eq 'ESRI'
+      expect(units.at_xpath('gml:UnitDefinition/gml:catalogSymbol', namespaces)).to be_nil
+    end
+  end
+
+  context 'when the ESRI metadata records no quantity kind' do
+    let(:esri_xml) do
+      esri_metadata(vertcs: 'VERTCS["Unknown VCS",VDATUM["Unknown"],UNIT["Meter",1.0]]', quantity_type: nil)
+    end
+
+    before { apply }
+
+    it 'omits the quantity type rather than guessing one' do
+      expect(units.at_xpath('gml:UnitDefinition/gml:quantityType', namespaces)).to be_nil
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier', namespaces).text).to eq 'm'
+    end
+  end
+
+  context 'when the export declares no vertical coordinate system' do
+    let(:esri_xml) { esri_metadata }
+
     before { apply }
 
     it 'records the units as missing instead of naming a code system' do
@@ -65,44 +139,12 @@ RSpec.describe GisRobotSuite::Iso19139BandUnits do
       expect(units.at_xpath('gml:UnitDefinition', namespaces)).to be_nil
     end
 
-    it 'does not leave the placeholder behind' do
+    it 'does not leave the useless placeholder behind' do
       expect(iso19139_file.read).not_to include 'Unified Code of Units of Measure'
     end
 
     it 'says how many bands it nilled' do
-      expect(logger).to have_received(:info).with(/recording 1 band unit\(s\) as missing/)
-    end
-  end
-
-  context 'with a band whose units element has no unit definition at all' do
-    let(:iso19139_xml) { iso19139_with('<units/>') }
-
-    before { apply }
-
-    it 'records the units as missing' do
-      expect(units.at_xpath('@gco:nilReason', namespaces).value).to eq 'missing'
-    end
-  end
-
-  context 'with more than one band' do
-    let(:iso19139_xml) do
-      iso19139_with(placeholder_units).sub('</dimension>', <<~XML)
-        </dimension>
-        <dimension>
-          <MD_Band>
-            <descriptor><gco:CharacterString>Band_2</gco:CharacterString></descriptor>
-            #{placeholder_units}
-          </MD_Band>
-        </dimension>
-      XML
-    end
-
-    before { apply }
-
-    it 'nils every band' do
-      all_units = patched.xpath('//gmd:MD_Band/gmd:units', namespaces)
-      expect(all_units.size).to eq 2
-      expect(all_units.map { |u| u.at_xpath('@gco:nilReason', namespaces)&.value }).to all(eq('missing'))
+      expect(logger).to have_received(:info).with(/no vertical coordinate system declared; recording 1 band unit\(s\) as missing/)
     end
   end
 
@@ -116,16 +158,18 @@ RSpec.describe GisRobotSuite::Iso19139BandUnits do
         </units>
       XML
     end
+    let(:esri_xml) { esri_metadata(vertcs: 'VERTCS["Unknown VCS",VDATUM["Unknown"],UNIT["Meter",1.0]]') }
 
     before { apply }
 
-    it 'leaves it alone' do
+    it 'leaves it alone rather than overwriting it from the vertical CRS' do
       expect(units.at_xpath('gml:UnitDefinition/gml:identifier', namespaces).text).to eq 'ft'
     end
   end
 
   context 'when the units are already recorded as missing' do
     let(:iso19139_xml) { iso19139_with('<units gco:nilReason="missing"/>') }
+    let(:esri_xml) { esri_metadata }
 
     it 'leaves the document untouched' do
       expect { apply }.not_to change(iso19139_file, :read)
@@ -133,7 +177,10 @@ RSpec.describe GisRobotSuite::Iso19139BandUnits do
   end
 
   context 'when the document has no bands' do
-    let(:iso19139_xml) { '<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd"><contentInfo/></MD_Metadata>' }
+    let(:iso19139_xml) do
+      '<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd"><contentInfo/></MD_Metadata>'
+    end
+    let(:esri_xml) { esri_metadata(vertcs: 'VERTCS["Unknown VCS",VDATUM["Unknown"],UNIT["Meter",1.0]]') }
 
     it 'leaves the document untouched' do
       expect { apply }.not_to change(iso19139_file, :read)
