@@ -108,11 +108,26 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
       end
     end
 
-    # The export names no unit, so the stylesheet substitutes the name of a code system for
-    # one. Nothing is known about the units, and that is what the document should say.
     it 'records the band units as missing rather than naming a code system' do
       expect(band_units('26257_e').at_xpath('@gco:nilReason', namespaces).value).to eq 'missing'
       expect(File.read(File.join(staging_dir, '26257_e-iso19139.xml'))).not_to include 'Unified Code of Units of Measure'
+    end
+  end
+
+  context 'with ESRI metadata for a geoTIFF that declares a vertical coordinate system' do
+    let(:druid) { 'druid:sf815vr1246' }
+    let(:esri_filename) { 'MONT_DEM.tif.xml' }
+
+    it 'generates an ISO 19139 XML document' do
+      expect(File).to exist(File.join(staging_dir, 'MONT_DEM-iso19139.xml'))
+    end
+
+    it 'records the band units from the vertical coordinate system' do
+      units = band_units('MONT_DEM')
+
+      expect(units.at_xpath('gml:UnitDefinition/gml:identifier', namespaces).text).to eq 'm'
+      expect(units.at_xpath('gml:UnitDefinition/gml:name', namespaces).text).to eq 'Meter'
+      expect(units.at_xpath('gml:UnitDefinition/gml:quantityType', namespaces).text).to eq 'length'
     end
   end
 

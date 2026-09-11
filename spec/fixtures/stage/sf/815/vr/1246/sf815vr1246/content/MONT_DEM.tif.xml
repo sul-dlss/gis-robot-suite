@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Reduced from the ArcGIS export accessioned as druid:sf815vr1246, keeping the elements the
+  ISO 19139 transform and the band units patch read. The coordRef/peXml value is verbatim,
+  including its two layers of escaping: that is the only place the export says the elevation
+  values are in metres, and it is what EsriVerticalCrs has to dig the vertical unit out of.
+-->
+<metadata xml:lang="en">
+  <Esri>
+    <CreaDate>20130426</CreaDate>
+    <CreaTime>09585200</CreaTime>
+    <ArcGISFormat>1.0</ArcGISFormat>
+    <ArcGISstyle>FGDC CSDGM Metadata</ArcGISstyle>
+    <SyncOnce>FALSE</SyncOnce>
+    <DataProperties>
+      <itemProps>
+        <itemName Sync="TRUE">MONT_DEM</itemName>
+        <imsContentType Sync="TRUE" export="False">002</imsContentType>
+      </itemProps>
+      <coordRef>
+        <type Sync="TRUE">Geographic</type>
+        <geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn>
+        <csUnits Sync="TRUE">Angular Unit: Degree (0.017453)</csUnits>
+        <peXml Sync="TRUE">&lt;GeographicCoordinateSystem xsi:type=&#39;typens:GeographicCoordinateSystem&#39; xmlns:xsi=&#39;http://www.w3.org/2001/XMLSchema-instance&#39; xmlns:xs=&#39;http://www.w3.org/2001/XMLSchema&#39; xmlns:typens=&#39;http://www.esri.com/schemas/ArcGIS/10.3&#39;&gt;&lt;WKT&gt;GEOGCS[&amp;quot;GCS_WGS_1984&amp;quot;,DATUM[&amp;quot;D_WGS_1984&amp;quot;,SPHEROID[&amp;quot;WGS_1984&amp;quot;,6378137.0,298.257223563]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433],AUTHORITY[&amp;quot;EPSG&amp;quot;,4326]],VERTCS[&amp;quot;Unknown VCS&amp;quot;,VDATUM[&amp;quot;Unknown&amp;quot;],PARAMETER[&amp;quot;Vertical_Shift&amp;quot;,0.0],PARAMETER[&amp;quot;Direction&amp;quot;,1.0],UNIT[&amp;quot;Meter&amp;quot;,1.0]]&lt;/WKT&gt;&lt;XOrigin&gt;-400&lt;/XOrigin&gt;&lt;YOrigin&gt;-400&lt;/YOrigin&gt;&lt;XYScale&gt;11258999068426.238&lt;/XYScale&gt;&lt;ZOrigin&gt;-100000&lt;/ZOrigin&gt;&lt;ZScale&gt;10000&lt;/ZScale&gt;&lt;MOrigin&gt;-100000&lt;/MOrigin&gt;&lt;MScale&gt;10000&lt;/MScale&gt;&lt;XYTolerance&gt;8.983152841195215e-09&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;LeftLongitude&gt;-180&lt;/LeftLongitude&gt;&lt;WKID&gt;4326&lt;/WKID&gt;&lt;LatestWKID&gt;4326&lt;/LatestWKID&gt;&lt;/GeographicCoordinateSystem&gt;</peXml>
+      </coordRef>
+    </DataProperties>
+  </Esri>
+  <dataIdInfo>
+    <idCitation>
+      <resTitle>1-Degree Digital Elevation Model: Monterey Bay, California, 1994</resTitle>
+      <date>
+        <pubDate>1994-01-06T00:00:00</pubDate>
+      </date>
+    </idCitation>
+    <idAbs>This raster dataset is a 1-degree Digital Elevation Model (DEM) showing Monterey Bay, California.</idAbs>
+    <dataLang>
+      <languageCode value="eng"/>
+      <countryCode value="US"/>
+    </dataLang>
+    <spatRpType>
+      <SpatRepTypCd value="002"/>
+    </spatRpType>
+  </dataIdInfo>
+  <contInfo>
+    <ImgDesc>
+      <contentTyp>
+        <ContentTypCd Sync="TRUE" value="003"/>
+      </contentTyp>
+      <covDim>
+        <Band>
+          <dimDescrp Sync="TRUE">MONT_DEM</dimDescrp>
+          <maxVal Sync="TRUE">1767.375244</maxVal>
+          <minVal Sync="TRUE">0.000000</minVal>
+          <bitsPerVal Sync="TRUE">32</bitsPerVal>
+          <valUnit><UOM type="length"/></valUnit>
+        </Band>
+      </covDim>
+    </ImgDesc>
+  </contInfo>
+  <mdDateSt Sync="TRUE">20140430</mdDateSt>
+</metadata>
