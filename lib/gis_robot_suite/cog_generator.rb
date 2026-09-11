@@ -3,79 +3,68 @@
 module GisRobotSuite
   # Generates Cloud Optimized GeoTIFF (COG) derivatives.
   class CogGenerator
-    # Unsigned-integer data types (TIFF SampleFormat=1) that the deck.gl COG
-    # viewer can render directly. Signed-integer and floating-point rasters
-    # (SampleFormat 2 and 3) are not supported and must first be scaled into an
-    # unsigned type. See https://github.com/sul-dlss/gis-robot-suite/issues/1200
-    #
-    # NOTE: deck.gl-geotiff has an unmerged PR for support for signed integer
-    # rasters; see: https://github.com/developmentseed/deck.gl-raster/pull/180
-    UNSIGNED_DATA_TYPES = %w[Byte UInt16 UInt32 UInt64].freeze
-
-    def self.generate(input_path:, output_path:, logger: nil)
-      new(input_path: input_path, output_path: output_path, logger: logger).generate
+    def self.generate(input_path:, output_path:, unit: nil, logger: nil)
+      new(input_path: input_path, output_path: output_path, unit: unit, logger: logger).generate
     end
 
-    def initialize(input_path:, output_path:, logger: nil)
+    # @param [String] unit the unit the band values are in, e.g. "m". GDAL records it as the
+    #   band's unit type, which is the only place a COG can say what its values measure.
+    def initialize(input_path:, output_path:, unit: nil, logger: nil)
       @input_path = input_path
       @output_path = output_path
+      @unit = unit
       @logger = logger
     end
 
     def generate
-      if unsigned?
-        convert_to_cog(input_path)
-      else
-        scale_then_convert_to_cog
-      end
+      return convert_to_cog(input_path) if unit.blank?
+
+      convert_with_unit
     end
 
     private
 
-    attr_reader :input_path, :output_path, :logger
+    attr_reader :input_path, :output_path, :unit, :logger
 
-    # Signed-integer and floating-point rasters can't be rendered by the deck.gl
-    # COG viewer, so first scale the data into an unsigned Byte raster. The data
-    # range is mapped to [1, 255] and NoData is remapped to 0, keeping it out of
-    # the data range so the viewer can filter it out.
-    def scale_then_convert_to_cog
-      basename = File.basename(output_path.to_s, '.tif')
-      temp_tif_path = output_path.parent / "#{basename}_scaled.tif"
-
-      logger&.warn("Scaling #{data_type} to unsigned Byte for COG generation; data loss may occur!")
+    # `gdal raster convert` takes no band metadata options, and a COG cannot be edited in
+    # place afterwards without losing the layout that makes it a COG, so the unit has to be
+    # set on the conversion's input. A VRT carries it without copying any raster data and
+    # leaves the master alone -- editing the master would invalidate the checksums cocina
+    # recorded for it during assembly.
+    def convert_with_unit
+      vrt_path = output_path.parent / "#{File.basename(output_path.to_s, '.tif')}.vrt"
 
       begin
-        min, max = data_min_max
-        scale_command = "gdal_translate -scale #{min} #{max} 1 255 -ot Byte -a_nodata 0 " \
-                        "#{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_tif_path.to_s)}"
-        GisRobotSuite.run_system_command(scale_command, logger:)
-
-        convert_to_cog(temp_tif_path)
+        convert_to_vrt(vrt_path)
+        declare_unit(vrt_path)
+        convert_to_cog(vrt_path)
       ensure
-        FileUtils.rm_f(temp_tif_path)
+        FileUtils.rm_f(vrt_path)
       end
     end
 
-    def convert_to_cog(input_path)
-      command = "gdal raster convert --overwrite --format=COG --co TILING_SCHEME=GoogleMapsCompatible #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(output_path.to_s)}"
+    # GDAL reads a band's unit from the VRT's <UnitType> and writes it through to the COG's
+    # GDALMetadata tag, where gdalinfo reports it as "Unit Type".
+    def declare_unit(vrt_path)
+      logger&.info("Recording #{unit} as the band unit of #{output_path}")
+
+      vrt = Nokogiri::XML(vrt_path.read)
+      vrt.xpath('/VRTDataset/VRTRasterBand').each do |band|
+        unit_type = Nokogiri::XML::Node.new('UnitType', vrt)
+        unit_type.content = unit
+        band.prepend_child(unit_type)
+      end
+      vrt_path.write(vrt.to_xml)
+    end
+
+    def convert_to_vrt(vrt_path)
+      command = "gdal raster convert --overwrite --format=VRT #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(vrt_path.to_s)}"
       GisRobotSuite.run_system_command(command, logger: logger)
     end
 
-    def unsigned?
-      UNSIGNED_DATA_TYPES.include?(data_type)
-    end
-
-    # The data type of the first band, e.g. "Byte", "Float64", as reported by gdalinfo.
-    def data_type
-      result = GisRobotSuite.run_system_command("gdalinfo -json #{Shellwords.escape(input_path.to_s)}", logger: logger)
-      JSON.parse(result[:stdout_str])['bands'].first['type']
-    end
-
-    # The first band's computed minimum and maximum values, excluding NoData.
-    def data_min_max
-      result = GisRobotSuite.run_system_command("gdalinfo -json -mm #{Shellwords.escape(input_path.to_s)}", logger: logger)
-      band = JSON.parse(result[:stdout_str])['bands'].first
-      [band['computedMin'], band['computedMax']]
+    def convert_to_cog(path)
+      command = "gdal raster convert --overwrite --format=COG --co TILING_SCHEME=GoogleMapsCompatible #{Shellwords.escape(path.to_s)} #{Shellwords.escape(output_path.to_s)}"
+      GisRobotSuite.run_system_command(command, logger: logger)
     end
   end
 end
