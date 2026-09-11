@@ -14,6 +14,7 @@ module Robots
           return missing_metadata_return_state unless arcgis_transformer.metadata?
 
           output_file = arcgis_transformer.transform
+          GisRobotSuite::Iso19139BandUnits.apply(output_file, logger:)
           object_client.update(params: updated_cocina_with(output_file))
         end
 
