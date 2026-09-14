@@ -64,6 +64,12 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       FileUtils.rm_f(jp2_file_path)
     end
 
+    # The data type of the generated COG's first band, as reported by gdalinfo.
+    def cog_data_type
+      result = GisRobotSuite.run_system_command("gdalinfo -json #{Shellwords.escape(cog_file_path.to_s)}", logger: logger)
+      JSON.parse(result[:stdout_str])['bands'].first['type']
+    end
+
     it 'creates a COG' do
       expect(cog_file_path).to exist
     end
@@ -88,12 +94,9 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       let(:druid) { 'druid:sm159qy6116' }
       let(:layer_name) { 'PAR_CLIM_M' }
 
-      it 'warns about rescaling the data' do
-        expect(logger).to have_received(:warn).with(/Scaling Float64 to unsigned Byte/)
-      end
-
-      it 'creates a COG' do
+      it 'creates a COG that keeps the source data type' do
         expect(cog_file_path).to exist
+        expect(cog_data_type).to eq 'Float64'
       end
 
       it 'creates a JP2 thumbnail' do
@@ -105,12 +108,9 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       let(:druid) { 'druid:bk526xr2877' }
       let(:layer_name) { 'SeafloorCharacter_OffshoreSantaBarbara' }
 
-      it 'warns about rescaling the data' do
-        expect(logger).to have_received(:warn).with(/Scaling Int8 to unsigned Byte/)
-      end
-
-      it 'creates a COG' do
+      it 'creates a COG that keeps the source data type' do
         expect(cog_file_path).to exist
+        expect(cog_data_type).to eq 'Int8'
       end
 
       it 'creates a JP2 thumbnail' do
