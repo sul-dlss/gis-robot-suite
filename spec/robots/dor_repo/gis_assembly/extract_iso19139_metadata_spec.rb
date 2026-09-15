@@ -55,9 +55,23 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
     }
   end
 
+  # ISO 19139 leaves gmd as the default namespace, so queries have to map the prefix themselves.
+  let(:namespaces) do
+    {
+      'gmd' => 'http://www.isotc211.org/2005/gmd',
+      'gco' => 'http://www.isotc211.org/2005/gco',
+      'gml' => 'http://www.opengis.net/gml'
+    }
+  end
+
   # Get rid of any generated XML files
   def cleanup
     Dir.glob("#{staging_dir}/*-iso*.xml").each { |f| File.delete(f) }
+  end
+
+  def band_units(layer_name)
+    iso19139 = Nokogiri::XML(File.read(File.join(staging_dir, "#{layer_name}-iso19139.xml")))
+    iso19139.at_xpath('//gmd:MD_Band/gmd:units', namespaces)
   end
 
   before do
@@ -92,6 +106,13 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
         file = args[:params].structural.contains.first.structural.contains.last
         expect(file.filename).to eq '26257_e-iso19139.xml'
       end
+    end
+
+    # The export names no unit, so the stylesheet substitutes the name of a code system for
+    # one. Nothing is known about the units, and that is what the document should say.
+    it 'records the band units as missing rather than naming a code system' do
+      expect(band_units('26257_e').at_xpath('@gco:nilReason', namespaces).value).to eq 'missing'
+      expect(File.read(File.join(staging_dir, '26257_e-iso19139.xml'))).not_to include 'Unified Code of Units of Measure'
     end
   end
 
