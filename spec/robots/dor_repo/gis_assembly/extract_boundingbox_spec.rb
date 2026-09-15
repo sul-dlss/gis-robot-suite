@@ -158,7 +158,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(GisRobotSuite).to have_received(:run_system_command).with("gdal raster info -f json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdalwarp -of VRT', '-t_srs EPSG:4326'), logger: robot.logger)
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('gdal raster reproject'), logger: robot.logger)
       end
     end
 
@@ -286,7 +287,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(GisRobotSuite).to have_received(:run_system_command).with("gdal raster info -f json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdalwarp -of VRT', '-t_srs EPSG:4326'), logger: robot.logger)
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('gdal raster reproject'), logger: robot.logger)
       end
     end
 
@@ -444,7 +446,8 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
       it 'updates the cocina with the new bounding box' do
         test_perform(robot, druid)
         expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-        expect(GisRobotSuite).to have_received(:run_system_command).with("gdal raster info -f json '/tmp/normalizeraster_nj441df9572/MCE_AF2G_2010.tif'", logger: robot.logger)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdalwarp -of VRT', '-t_srs EPSG:4326'), logger: robot.logger)
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('gdal raster reproject'), logger: robot.logger)
       end
     end
   end
@@ -452,9 +455,11 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
   context 'when shapefile' do
     let(:druid) { 'druid:cc044gt0726' }
     let(:bounding_box) do
-      # ogr2ogr produces slightly different bounding boxes depending on the version.
-      # CI and production have an older version; brew installs a newer version.
-      # Following accounts for this, but might break as versions change.
+      # PROJ picks a different NAD27 -> WGS84 pipeline depending on whether the NADCON grid
+      # (us_noaa_conus.tif, from proj-data) is installed: without it the best pipeline is
+      # unavailable and a lower-accuracy one is used, moving the box by about 4.5m. CI and
+      # production have no grid; homebrew ships one. Keyed off the GDAL version because that
+      # is what we can cheaply detect, so it may need revisiting if the environments diverge.
       if ci?
         [
           {
@@ -696,11 +701,12 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractBoundingbox do
     it 'updates the cocina with the bounding box' do
       test_perform(robot, druid)
       expect(object_client).to have_received(:update) { |args| expect(args[:params].description.to_h).to match Cocina::Models::Description.new(expected_description).to_h }
-      expect(GisRobotSuite).to have_received(:run_system_command).with("gdal vector info -f json '/tmp/normalizevector_cc044gt0726/sanluisobispo1996.shp'", logger: robot.logger)
+      expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('--dialect sqlite', 'ST_Transform', '4326'), logger: robot.logger)
+      expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('gdal vector reproject'), logger: robot.logger)
     end
   end
 
-  context 'when the media type is one neither normalizer handles' do
+  context 'when the media type is one no bounding box calculator handles' do
     let(:druid) { 'druid:cc044gt0726' }
     let(:original_description) do
       {
