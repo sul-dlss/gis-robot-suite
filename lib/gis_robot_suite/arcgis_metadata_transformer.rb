@@ -41,6 +41,11 @@ module GisRobotSuite
       File.basename(esri_metadata_file)
     end
 
+    # XML metadata file exported from ArcGIS
+    def esri_metadata_file
+      GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
+    end
+
     attr_reader :bare_druid, :xslt, :output, :logger
 
     private
@@ -56,11 +61,6 @@ module GisRobotSuite
     # Staging directory for this object
     def staging_dir
       GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
-    end
-
-    # XML metadata file exported from ArcGIS
-    def esri_metadata_file
-      GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
     end
 
     # Filename of the original GIS metadata without any extensions
