@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'tmpdir'
 
 RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
   subject(:perform) { test_perform(robot, druid) }
@@ -259,6 +260,55 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         end
       end
     end
+
+    # Re-accessioning through pre-assembly stages the previous run's COG back into the object, and
+    # nothing left on it distinguishes a COG from the GeoTIFF it was derived from.
+    context 'when a previous run has left its COG in the object as an ordinary GeoTIFF' do
+      # Point the robot at a scratch copy of the content, since this rewrites what is in it
+      let(:workspace_path) { staged_content_dir }
+      let(:staged_content_dir) do
+        Pathname(Dir.mktmpdir).join('content').tap do |dir|
+          dir.mkpath
+          FileUtils.cp(Dir.glob("spec/fixtures/workspace/bb/021/mm/7809/#{bare_druid}/content/#{layer_name}.*"), dir)
+        end
+      end
+      let(:files) { [master_file, restaged_cog_file] }
+      let(:restaged_cog_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}_cog.tif",
+          label: "#{layer_name}_cog.tif",
+          filename: "#{layer_name}_cog.tif",
+          size: restaged_cog_size,
+          version: 2,
+          hasMimeType: 'image/tiff; application=geotiff',
+          sdrGeneratedText: false,
+          administrative: { publish: true, sdrPreserve: true, shelve: true }
+        )
+      end
+      # Staging the file has to happen before the robot runs, so hang it off a let the cocina object
+      # pulls on rather than a before hook, which would fire after the outermost one has performed
+      let(:restaged_cog_size) do
+        FileUtils.cp(workspace_path / "#{layer_name}.tif", cog_file_path)
+        File.size(cog_file_path)
+      end
+
+      after { FileUtils.remove_entry(staged_content_dir.parent) }
+
+      it 'does not derive from it again' do
+        expect(workspace_path / "#{layer_name}_cog_cog.tif").not_to exist
+      end
+
+      it 'takes it over as the COG derivative instead of recording a second one' do
+        expect(object_client).to have_received(:update) do |params:|
+          recorded = params.structural.contains.first.structural.contains
+          expect(recorded.map(&:filename)).to contain_exactly("#{layer_name}.tif", "#{layer_name}_cog.tif", "#{layer_name}.jp2")
+          cog = recorded.find { |file| file.filename == "#{layer_name}_cog.tif" }
+          expect(cog).to have_attributes(use: 'derivative', hasMimeType: described_class::COG_MIME_TYPE,
+                                         size: File.size(cog_file_path))
+        end
+      end
+    end
   end
 
   context 'with vectors' do
@@ -501,6 +551,167 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
           expect(jp2_file.presentation.height).to eq 512
           expect(jp2_file.presentation.width).to eq 512
         end
+      end
+    end
+
+    # Both of these arise from re-accessioning an already-derived object through pre-assembly, which
+    # stages an earlier run's derivatives back into the object as ordinary content.
+    context 'when a previous run has left its derivatives in the object' do
+      let(:druid) { 'druid:cc044gt0726' }
+      let(:layer_name) { 'sanluisobispo1996' }
+      # Point the robot at a scratch copy of the content, since these examples rewrite what is in it
+      let(:workspace_path) { staged_content_dir }
+      let(:staged_content_dir) do
+        Pathname(Dir.mktmpdir).join('content').tap do |dir|
+          dir.mkpath
+          FileUtils.cp(Dir.glob("#{fixture_content_dir}/#{layer_name}.*"), dir)
+        end
+      end
+      let(:fixture_content_dir) { "spec/fixtures/workspace/cc/044/gt/0726/#{bare_druid}/content" }
+      let(:master_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.shp",
+          label: "#{layer_name}.shp",
+          filename: "#{layer_name}.shp",
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/vnd.shp',
+          administrative: { publish: true, sdrPreserve: true, shelve: true }
+        )
+      end
+
+      # Pre-assembly records the staged file as plain content: no use, and a mimetype it did not
+      # recognize. It is a valid FlatGeoBuf, so ogr2ogr will happily rewrite it in place.
+      let(:files) { [master_file, restaged_fgb_file] }
+      let(:restaged_fgb_file) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.fgb",
+          label: "#{layer_name}.fgb",
+          filename: "#{layer_name}.fgb",
+          size: restaged_fgb_size,
+          version: 2,
+          hasMimeType: 'application/octet-stream',
+          sdrGeneratedText: false,
+          administrative: { publish: true, sdrPreserve: true, shelve: true }
+        )
+      end
+      let(:restaged_fgb_size) do
+        GisRobotSuite::VectorDerivativeGenerator.generate(
+          input_path: staged_content_dir / "#{layer_name}.shp", fgb_path: fgb_file_path,
+          pmtiles_path: staged_content_dir / "#{layer_name}.pmtiles", logger: logger
+        )
+        # Truncating stands in for the earlier run having produced different bytes than this one will
+        File.truncate(fgb_file_path, File.size(fgb_file_path) - 1)
+        File.size(fgb_file_path)
+      end
+
+      after { FileUtils.remove_entry(staged_content_dir.parent) }
+
+      it 'records the derivative it wrote rather than leaving the stale record behind' do
+        expect(object_client).to have_received(:update) do |params:|
+          recorded = params.structural.contains.first.structural.contains
+                           .select { |file| file.filename == "#{layer_name}.fgb" }
+          expect(recorded.size).to eq 1
+          expect(recorded.first).to have_attributes(use: 'derivative', hasMimeType: 'application/vnd.fgb',
+                                                    size: File.size(fgb_file_path))
+          expect(recorded.first.size).not_to eq restaged_fgb_size
+        end
+      end
+
+      it 'stops preserving the file it has taken over as a derivative' do
+        expect(object_client).to have_received(:update) do |params:|
+          recorded = params.structural.contains.first.structural.contains
+                           .find { |file| file.filename == "#{layer_name}.fgb" }
+          expect(recorded.administrative.sdrPreserve).to be false
+        end
+      end
+
+      context 'when the file it left behind is not a readable FlatGeoBuf' do
+        let(:restaged_fgb_size) do
+          File.binwrite(fgb_file_path, 'not a FlatGeoBuf')
+          File.size(fgb_file_path)
+        end
+
+        it 'still generates the derivative' do
+          expect(fgb_file_path).to exist
+          expect(File.size(fgb_file_path)).to be > restaged_fgb_size
+        end
+      end
+    end
+
+    context 'when the file set holds more than one vector master' do
+      let(:druid) { 'druid:cc044gt0726' }
+      let(:layer_name) { 'sanluisobispo1996' }
+      let(:workspace_path) { staged_content_dir }
+      let(:staged_content_dir) do
+        Pathname(Dir.mktmpdir).join('content').tap do |dir|
+          dir.mkpath
+          FileUtils.cp(Dir.glob("spec/fixtures/workspace/cc/044/gt/0726/#{bare_druid}/content/#{layer_name}.*"), dir)
+          FileUtils.cp('spec/fixtures/workspace/yt/111/kw/1413/yt111kw1413/content/' \
+                       'samTrans_bus_routes_20151021_shapes_20260406.geojson', dir / 'index_map.geojson')
+        end
+      end
+      let(:files) { [shapefile_master, geojson_master] }
+      let(:shapefile_master) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/#{layer_name}.shp",
+          label: "#{layer_name}.shp",
+          filename: "#{layer_name}.shp",
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/vnd.shp',
+          administrative: { publish: true, sdrPreserve: true, shelve: true }
+        )
+      end
+      let(:geojson_master) do
+        Cocina::Models::File.new(
+          type: 'https://cocina.sul.stanford.edu/models/file',
+          externalIdentifier: "https://cocina.sul.stanford.edu/file/#{bare_druid}-#{bare_druid}_1/index_map.geojson",
+          label: 'index_map.geojson',
+          filename: 'index_map.geojson',
+          size: 100,
+          version: 2,
+          hasMimeType: 'application/geo+json',
+          administrative: { publish: true, sdrPreserve: true, shelve: true }
+        )
+      end
+
+      after { FileUtils.remove_entry(staged_content_dir.parent) }
+
+      it 'records the derivatives of every master, not just the last one' do
+        expect(object_client).to have_received(:update) do |params:|
+          derivatives = params.structural.contains.first.structural.contains
+                              .select { |file| file.use == 'derivative' }
+          expect(derivatives.map(&:filename)).to contain_exactly(
+            "#{layer_name}.fgb", "#{layer_name}.pmtiles", 'index_map.fgb', 'index_map.pmtiles'
+          )
+        end
+      end
+
+      it 'records a size for each derivative matching the file it wrote' do
+        expect(object_client).to have_received(:update) do |params:|
+          params.structural.contains.first.structural.contains
+                .select { |file| file.use == 'derivative' }
+                .each { |file| expect(file.size).to eq File.size(staged_content_dir / file.filename) }
+        end
+      end
+
+      it 'still records a single thumbnail for the file set' do
+        expect(object_client).to have_received(:update) do |params:|
+          thumbnails = params.structural.contains.first.structural.contains
+                             .select { |file| file.use == 'thumbnail' }
+          expect(thumbnails.map(&:filename)).to eq ["#{layer_name}.jp2"]
+        end
+      end
+
+      # Generating a thumbnail per master would leave every JP2 but the last one on disk with no
+      # record of it, since each master's thumbnail discards the record the previous one wrote
+      it 'writes only the thumbnail it records' do
+        expect(Dir.glob("#{staged_content_dir}/*.jp2").map { |path| File.basename(path) })
+          .to eq ["#{layer_name}.jp2"]
       end
     end
   end

@@ -29,6 +29,10 @@ module GisRobotSuite
     end
 
     def generate
+      # Always write a new file rather than replacing the layer in an existing one. FlatGeoBuf has no
+      # DeleteLayer(), and even the -lco=OVERWRITE switch can fail when GDAL doesn't read the
+      # existing FlatGeoBuf correctly. Safer to just blow it away and regenerate.
+      FileUtils.rm_f(fgb_path)
       GisRobotSuite.run_system_command(fgb_command, logger: logger)
 
       generate_pmtiles
@@ -39,7 +43,7 @@ module GisRobotSuite
     # Generate FlatGeoBuf in a single pass: drop unusable geometry, promote
     # mixed geometry to multi, and reproject to EPSG:4326.
     def fgb_command
-      options = ["-of 'FlatGeoBuf'", overwrite_output, source_crs_option, reproject_to_wgs84,
+      options = ["-of 'FlatGeoBuf'", source_crs_option, reproject_to_wgs84,
                  promote_to_multi, select_valid_geometry].compact
 
       "ogr2ogr #{options.join(' ')} " \
@@ -101,12 +105,6 @@ module GisRobotSuite
           "#{Settings.gdal_path}gdal vector info -f json #{Shellwords.escape(input_path.to_s)}", logger: logger
         )[:stdout_str]
       )
-    end
-
-    # The -overwrite output switch doesn't work for FlatGeoBuf because it
-    # doesn't support DeleteLayer(), but this does.
-    def overwrite_output
-      '-lco OVERWRITE=yes'
     end
 
     # Selects only geometry that can be indexed by FlatGeoBuf and reprojected:
