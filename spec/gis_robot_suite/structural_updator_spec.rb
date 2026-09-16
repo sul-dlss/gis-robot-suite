@@ -16,6 +16,50 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
   let(:file_sets) { [] }
   let(:updater) { described_class.new(cocina_object) }
 
+  # A file set holding a depositor original alongside an SDR-generated derivative
+  let(:derivative_file) do
+    {
+      type: 'https://cocina.sul.stanford.edu/models/file',
+      externalIdentifier: 'https://cocina.sul.stanford.edu/file/2',
+      label: 'derivative.tif',
+      filename: 'derivative.tif',
+      version: 1,
+      hasMimeType: 'image/tiff',
+      use: 'derivative',
+      sdrGeneratedText: true,
+      administrative: { publish: true, sdrPreserve: false, shelve: true },
+      access: { view: 'world', download: 'world' },
+      hasMessageDigests: []
+    }
+  end
+
+  let(:file_sets_with_derivative) do
+    [
+      Cocina::Models::FileSet.new(
+        type: 'https://cocina.sul.stanford.edu/models/resources/object',
+        externalIdentifier: 'https://cocina.sul.stanford.edu/fileset/1',
+        label: 'Fileset 1',
+        version: 1,
+        structural: {
+          contains: [
+            {
+              type: 'https://cocina.sul.stanford.edu/models/file',
+              externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
+              label: 'original.tif',
+              filename: 'original.tif',
+              version: 1,
+              hasMimeType: 'image/tiff',
+              administrative: { publish: true, sdrPreserve: true, shelve: true },
+              access: { view: 'world', download: 'world' },
+              hasMessageDigests: []
+            },
+            derivative_file
+          ]
+        }
+      )
+    ]
+  end
+
   def new_file_set
     Cocina::Models::FileSet.new(
       type: 'https://cocina.sul.stanford.edu/models/resources/object',
@@ -123,48 +167,7 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
   end
 
   describe '#remove_files' do
-    let(:derivative_file) do
-      {
-        type: 'https://cocina.sul.stanford.edu/models/file',
-        externalIdentifier: 'https://cocina.sul.stanford.edu/file/2',
-        label: 'derivative.tif',
-        filename: 'derivative.tif',
-        version: 1,
-        hasMimeType: 'image/tiff',
-        use: 'derivative',
-        sdrGeneratedText: true,
-        administrative: { publish: true, sdrPreserve: false, shelve: true },
-        access: { view: 'world', download: 'world' },
-        hasMessageDigests: []
-      }
-    end
-
-    let(:file_sets) do
-      [
-        Cocina::Models::FileSet.new(
-          type: 'https://cocina.sul.stanford.edu/models/resources/object',
-          externalIdentifier: 'https://cocina.sul.stanford.edu/fileset/1',
-          label: 'Fileset 1',
-          version: 1,
-          structural: {
-            contains: [
-              {
-                type: 'https://cocina.sul.stanford.edu/models/file',
-                externalIdentifier: 'https://cocina.sul.stanford.edu/file/1',
-                label: 'original.tif',
-                filename: 'original.tif',
-                version: 1,
-                hasMimeType: 'image/tiff',
-                administrative: { publish: true, sdrPreserve: true, shelve: true },
-                access: { view: 'world', download: 'world' },
-                hasMessageDigests: []
-              },
-              derivative_file
-            ]
-          }
-        )
-      ]
-    end
+    let(:file_sets) { file_sets_with_derivative }
 
     it 'removes files by use' do
       updater.remove_files(use: 'derivative', file_set: file_sets.first)
@@ -191,6 +194,37 @@ RSpec.describe GisRobotSuite::StructuralUpdator do
       fresh_updater = described_class.new(cocina_object)
       fresh_updater.remove_files(use: 'derivative', mimetype: 'text/plain', file_set: file_sets.first)
       expect(fresh_updater.cocina_object.structural.contains.first.structural.contains.size).to eq 2
+    end
+  end
+
+  describe '#find_file' do
+    let(:file_sets) { file_sets_with_derivative }
+
+    it 'returns the file with that filename' do
+      expect(updater.find_file(filename: 'derivative.tif', file_set: file_sets.first).externalIdentifier)
+        .to eq 'https://cocina.sul.stanford.edu/file/2'
+    end
+
+    it 'returns nil when the file set holds no such file' do
+      expect(updater.find_file(filename: 'nonexistent.tif', file_set: file_sets.first)).to be_nil
+    end
+  end
+
+  describe '#remove_file' do
+    let(:file_sets) { file_sets_with_derivative }
+
+    # Unlike #remove_files, this does not care whether SDR generated the file: the point is to drop
+    # a record that no longer describes what is on disk.
+    it 'removes the file with that filename regardless of use or sdrGeneratedText' do
+      updater.remove_file(filename: 'original.tif', file_set: file_sets.first)
+      remaining = updater.cocina_object.structural.contains.first.structural.contains
+      expect(remaining.map(&:filename)).to eq ['derivative.tif']
+    end
+
+    it 'leaves the file set alone when it holds no such file' do
+      updater.remove_file(filename: 'nonexistent.tif', file_set: file_sets.first)
+      remaining = updater.cocina_object.structural.contains.first.structural.contains
+      expect(remaining.map(&:filename)).to eq ['original.tif', 'derivative.tif']
     end
   end
 end
