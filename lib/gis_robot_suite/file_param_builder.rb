@@ -3,6 +3,11 @@
 module GisRobotSuite
   # This class is responsible for building the Cocina File metadata for a given file
   class FileParamBuilder
+    # Uses given to the files the robots generate themselves, as opposed to the ones the
+    # depositor supplied. Marking them lets a robot tell its own output apart from a
+    # depositor's derivative, which it must not overwrite.
+    SDR_GENERATED_USES = %w[derivative thumbnail].freeze
+
     # @return [Hash<Symbol, Object>]
     def self.build(objectfile:, file_access:, version:, mimetype:, use: nil, preserve: true)
       new(objectfile:, file_access:, version:, mimetype:, use:, preserve:).build
@@ -28,7 +33,7 @@ module GisRobotSuite
         size: objectfile.filesize,
         version:,
         hasMimeType: mimetype || objectfile.mimetype,
-        sdrGeneratedText: use == 'derivative',
+        sdrGeneratedText: SDR_GENERATED_USES.include?(use),
         hasMessageDigests: [
           {
             type: 'sha1',
