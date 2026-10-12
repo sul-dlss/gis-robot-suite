@@ -161,8 +161,9 @@ GEM
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
-    lyber-core (9.0.1)
+    lyber-core (9.1.0)
       activesupport
+      benchmark
       config
       dor-services-client
       druid-tools
@@ -322,7 +323,6 @@ PLATFORMS
 
 DEPENDENCIES
   assembly-objectfile
-  benchmark (~> 0.5.0)
   capistrano
   capistrano-bundler
   capistrano-shared_configs
