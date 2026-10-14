@@ -20,6 +20,8 @@ There are many ways to execute commands on the host OS in Ruby. For calling the 
 
 ## Tests
 
+Use Ruby 4.0.7 for development and testing.
+
 You can run the tests with `bundle exec rspec`. The tests are organized by workflow, and each robot has its own test file.
 
 Because the robots move content around on the filesystem, the tests make use of temporary directories as well as some setup/teardown to ensure files aren't left behind.
