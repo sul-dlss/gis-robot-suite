@@ -606,7 +606,7 @@ module GisRobotSuite
       end
     end
 
-    # rubocop:disable Layout/LineLength
+    # rubocop:disable-next Layout/LineLength
     def related_pubs_note
       related_publications = data_id_node.xpath(
         'gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:otherCitationDetails/gco:CharacterString[contains(text(), "Related publication")]', NS
@@ -619,7 +619,6 @@ module GisRobotSuite
           value: related_citation(node) }
       end
     end
-    # rubocop:enable Layout/LineLength
 
     def related_citation(node)
       authors = node.xpath('../../gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString', NS).map(&:text)

@@ -37,7 +37,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
       let(:druid) { 'druid:bh432xr2264' }
       let(:bare_druid) { 'bh432xr2264' }
 
-      # rubocop:disable Layout/LineLength
+      # rubocop:disable-next Layout/LineLength
       let(:description_props) do
         { title: [{ value: 'North Atlantic Ocean, Arquipélago dos Açores (Raster Image)' }, { value: 'North Atlantic Ocean', type: 'alternative', displayLabel: 'Alternative title' }],
           contributor: [{ name: [{ value: 'Land Info (Firm)' }], type: 'organization', role: [{ source: { code: 'marcrelator' }, value: 'creator' }] },
@@ -127,7 +127,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                          value: 'https://doi.org/10.25740/bh432xr2264',
                          source: { code: 'doi' } }] }
       end
-      # rubocop:enable Layout/LineLength
 
       it 'generates cocina descriptive metadata' do
         perform
@@ -165,7 +164,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
         }
       end
 
-      # rubocop:disable Layout/LineLength
+      # rubocop:disable-next Layout/LineLength
       let(:description_props) do
         { title: [{ value: 'Road Bridge Districts, Riverside County California, 2019' }],
           purl: 'https://purl.stanford.edu/mx245jd3310',
@@ -216,7 +215,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                                 { value: 'Shapefile', type: 'data format' },
                                 { value: 'Dataset#Polygon', type: 'type' }] }] }
       end
-      # rubocop:enable Layout/LineLength
 
       it 'generates cocina descriptive metadata' do
         perform
@@ -230,7 +228,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
       let(:druid) { 'druid:vx813cc5549' }
       let(:bare_druid) { 'vx813cc5549' }
 
-      # rubocop:disable Layout/LineLength
+      # rubocop:disable-next Layout/LineLength
       let(:description_props) do
         { title: [{ value: 'Clowns of America, International Membership Point GeoJSON (anonymized)' }],
           purl: 'https://purl.stanford.edu/vx813cc5549',
@@ -270,7 +268,6 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                                 { value: 'GeoJSON', type: 'data format' },
                                 { value: 'Dataset#Point', type: 'type' }] }] }
       end
-      # rubocop:enable Layout/LineLength
 
       it 'generates cocina descriptive metadata' do
         perform

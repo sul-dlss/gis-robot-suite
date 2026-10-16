@@ -14,7 +14,7 @@ gem 'config'
 gem 'csv'
 gem 'honeybadger'
 gem 'rake'
-gem 'sidekiq', '~> 8.0'
+gem 'sidekiq'
 gem 'slop' # for bin/run_robot
 gem 'zeitwerk'
 
