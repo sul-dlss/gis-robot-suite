@@ -139,4 +139,26 @@ RSpec.describe GisRobotSuite::VectorDerivativeGenerator do
       end
     end
   end
+
+  describe 'FlatGeoBuf layer name' do
+    let(:tmpdir) { Dir.mktmpdir('vector_derivative_generator') }
+    let(:input_path) { Pathname.new('spec/fixtures/workspace/cc/044/gt/0726/cc044gt0726/content/sanluisobispo1996.shp') }
+    let(:fgb_path) { Pathname.new(File.join(tmpdir, 'output.fgb')) }
+    let(:pmtiles_path) { Pathname.new(File.join(tmpdir, 'output.pmtiles')) }
+
+    def fgb_layer_names
+      info = GisRobotSuite.run_system_command("gdal vector info -f json #{Shellwords.escape(fgb_path.to_s)}", logger:)
+      JSON.parse(info[:stdout_str])['layers'].map { |layer| layer['name'] }
+    end
+
+    after do
+      FileUtils.remove_entry(tmpdir)
+    end
+
+    it 'names the layer after the source data rather than the SQL that selects from it' do
+      generate
+
+      expect(fgb_layer_names).to eq ['sanluisobispo1996']
+    end
+  end
 end

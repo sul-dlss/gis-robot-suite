@@ -44,7 +44,7 @@ module GisRobotSuite
     # mixed geometry to multi, and reproject to EPSG:4326.
     def fgb_command
       options = ["-of 'FlatGeoBuf'", source_crs_option, reproject_to_wgs84,
-                 promote_to_multi, select_valid_geometry].compact
+                 promote_to_multi, select_valid_geometry, output_layer_name].compact
 
       "ogr2ogr #{options.join(' ')} " \
         "#{Shellwords.escape(fgb_path.to_s)} #{Shellwords.escape(input_path.to_s)}"
@@ -124,6 +124,12 @@ module GisRobotSuite
             'and ST_MinX(geometry) between -1e9 and 1e9 and ST_MaxX(geometry) between -1e9 and 1e9 ' \
             'and ST_MinY(geometry) between -1e9 and 1e9 and ST_MaxY(geometry) between -1e9 and 1e9'
       "-dialect sqlite -sql '#{sql}'"
+    end
+
+    # Without -nln, ogr2ogr names the output layer after the -sql statement ("SELECT")
+    # rather than the layer it reads from.
+    def output_layer_name
+      "-nln #{Shellwords.escape(layer_name)}"
     end
 
     # Promote mixed geometry to multi
