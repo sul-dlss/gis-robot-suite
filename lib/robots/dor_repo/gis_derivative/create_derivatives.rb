@@ -87,13 +87,20 @@ module Robots
           return if updater.has_file?(use: 'thumbnail', file_set:, mimetype: JP2_MIME_TYPE)
 
           jp2 = jp2_filename(cocina_file.filename)
-          create_preview_jp2(cocina_file.filename, preview_generator_for(cocina_file))
+          create_preview_jp2(preview_source(cocina_file), jp2, preview_generator_for(cocina_file))
           store_derivative(filename: jp2, use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:,
                            presentation: jp2_presentation(workspace_path(jp2)))
         end
 
         def preview_generator_for(cocina_file)
           raster?(cocina_file) ? GisRobotSuite::RasterPreviewGenerator : GisRobotSuite::VectorPreviewGenerator
+        end
+
+        # For vectors, we pick just the FlatGeoBuf to render into a thumbnail,
+        # so that we don't try to generate it multiple times
+        def preview_source(cocina_file)
+          fgb = workspace_path(fgb_filename(cocina_file.filename))
+          vector?(cocina_file) && fgb.exist? ? fgb : workspace_path(cocina_file.filename)
         end
 
         # Whether we should keep an existing derivative instead of re-generating it
@@ -145,8 +152,8 @@ module Robots
           @vertical_crs = nil
         end
 
-        def create_preview_jp2(filename, klass)
-          klass.generate(input_path: workspace_path(filename), output_path: workspace_path(jp2_filename(filename)), logger: logger)
+        def create_preview_jp2(input_path, jp2, klass)
+          klass.generate(input_path:, output_path: workspace_path(jp2), logger: logger)
         end
 
         def generate_vector_derivatives(filename)
