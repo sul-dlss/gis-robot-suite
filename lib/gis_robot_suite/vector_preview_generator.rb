@@ -3,14 +3,46 @@
 require 'fileutils'
 require 'json'
 require 'shellwords'
+require 'tmpdir'
 
 module GisRobotSuite
-  # Generates vector preview JP2 derivatives by first rasterizing the vector.
+  # Generates vector preview JP2 derivatives by first rasterizing the vector, then drawing it over a
+  # Natural Earth basemap (see NaturalEarthBasemap).
   class VectorPreviewGenerator
-    # gdal's stderr text when it can't derive a raster extent from the vector's
-    # own bounding box: this happens for a layer with a single feature, or
-    # several features that all sit at the same location, which has zero area.
-    CANNOT_DETERMINE_BOUNDS_MESSAGE = 'Could not determine bounds'
+    include GdalCommands
+
+    SIZE = 512 # pixels along each side of the thumbnail
+    SUPERSAMPLE = 2
+    PADDING = 0.1 # of the data's larger dimension, on every side
+    MIN_SIDE = 1000.0 # metres; used for data with no extent, like a single point
+    WEB_MERCATOR_LAT = 85.0511 # Web Mercator is undefined beyond this
+
+    # Based on ogm-viewer's light-theme defaults
+    DATA_COLOR = [0, 113, 236].freeze
+    STROKE_COLOR = [0, 22, 148].freeze
+    OPACITY = 0.8
+
+    # Larger than what the viewer draws, so they're easy to see in a small image
+    OUTLINE_WIDTH = 2.0
+    LINE_WIDTH = 6.0
+    POINT_RADIUS = 8.0
+    POINT_MIN_RADIUS = 1.0
+    POINT_STROKE = 2.0
+    POINT_COVERAGE = 0.1
+    LINE_COVERAGE = 0.2
+    SPECK_SIZE = 4.0 # a polygon part smaller than this is drawn as a dot this wide
+
+    # SQL queries used to determine the geometry type
+    POLYGONS = "OGR_GEOMETRY IN ('POLYGON','MULTIPOLYGON')"
+    LINES = "OGR_GEOMETRY IN ('LINESTRING','MULTILINESTRING')"
+    POINTS = "OGR_GEOMETRY IN ('POINT','MULTIPOINT')"
+
+    # "Burn" values, i.e. how dark the corresponding feature is drawn
+    MAX_STACK = 4
+    OUTLINE = 100
+    LINE = 150
+    POINT_EDGE = 200
+    POINT_FILL = 201
 
     def self.generate(input_path:, output_path:, logger: nil)
       new(input_path: input_path, output_path: output_path, logger: logger).generate
@@ -23,57 +55,189 @@ module GisRobotSuite
     end
 
     def generate
-      basename = File.basename(output_path, '.jp2')
-      temp_tif_path = output_path.parent / "#{basename}_temp.tif"
-      temp_tif_aux_path = output_path.parent / "#{basename}_temp.tif.aux.xml"
-
-      begin
-        rasterize(temp_tif_path)
-
-        # Convert temporary TIFF to JP2
-        Jp2Converter.convert(input_path: temp_tif_path, output_path: output_path, logger: logger)
-      ensure
-        # Make sure we clean up the temporary TIFF file and any associated auxiliary file
-        FileUtils.rm_f(temp_tif_path)
-        FileUtils.rm_f(temp_tif_aux_path)
-      end
+      @work = Pathname(Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent))
+      reproject
+      rasterize
+      colorize
+    ensure
+      FileUtils.rm_rf(@work) if @work
     end
 
     private
 
-    # Rasterize vector to a temporary TIFF file. Tries the vector's own extent
-    # first; falls back to an explicit, padded extent if that fails
-    def rasterize(temp_tif_path)
-      GisRobotSuite.run_system_command(rasterize_command(temp_tif_path), logger: logger)
-    rescue GisRobotSuite::SystemCommandNonzeroExit => e
-      raise unless e.message.include?(CANNOT_DETERMINE_BOUNDS_MESSAGE)
+    attr_reader :input_path, :output_path, :logger, :work
 
-      logger&.warn("Falling back to a padded extent for #{input_path}: gdal could not determine bounds (e.g. a single-point layer)")
-      GisRobotSuite.run_system_command(rasterize_command(temp_tif_path, extent: padded_extent), logger: logger)
+    # Make the thumbnail in Web Mercator, since that's what the viewer uses. Then simplify to a quarter
+    # of a thumbnail pixel, which can't be seen, so later steps never handle more detail than they can
+    # draw (a kelp canopy traced from raster pixels can hold millions of vertices).
+    def reproject
+      pipeline input_path, 'wgs84.fgb', ['reproject', '--dst-crs', 'EPSG:4326'], *drop_attributes, promote_to_multi
+      pipeline path('wgs84.fgb'), 'projected.fgb', *fit_to_projection, ['reproject', '--dst-crs', crs], promote_to_multi
+      pipeline path('projected.fgb'), 'merc.fgb', geom('simplify', '--tolerance', pixel_size / (2 * SUPERSAMPLE)), promote_to_multi
     end
 
-    def rasterize_command(temp_tif_path, extent: nil)
-      extent_option = extent ? "--extent #{extent.join(',')} " : ''
-      "gdal vector rasterize --size 512,512 --burn 255 --ot Byte #{extent_option}" \
-        "#{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(temp_tif_path.to_s)}"
+    # Clip to only where Web Mercator is reasonably defined. Polar data is segmentized instead, so
+    # long edges still curve around the pole once they're reprojected.
+    def fit_to_projection
+      return [geom('segmentize', '--max-length', 1)] if polar_projection
+
+      # Also clip to ±180°, since reprojecting wraps anything a hair past it round to the other side
+      xmin, ymin, xmax, ymax = wgs84_extent
+      return [] if [ymin, ymax].all? { |lat| lat.abs <= WEB_MERCATOR_LAT } && xmin >= -180 && xmax <= 180
+
+      [['clip', '--bbox', [-180, -WEB_MERCATOR_LAT, 180, WEB_MERCATOR_LAT].join(',')]]
     end
 
-    # Pads a zero-width and/or zero-height extent so gdal has a nonzero area to
-    # compute a pixel size from. Generates padding proportional to the coordinate
-    # system in use, so it works for any coordinate values.
-    def padded_extent
-      xmin, ymin, xmax, ymax = layer_extent
-      pad = [xmax - xmin, ymax - ymin].max
-      pad = [xmin.abs, ymin.abs, xmax.abs, ymax.abs, 1].max * 0.001 if pad.zero?
-      [xmin - pad, ymin - pad, xmax + pad, ymax + pad]
+    def crs = @crs ||= polar_projection || mercator
+
+    # Data entirely beyond Web Mercator's limits (e.g. a station at a pole) would be clipped away
+    # completely, so it's drawn in north or south polar stereographic instead
+    def polar_projection = { 'EPSG:3413' => wgs84_extent[1] > WEB_MERCATOR_LAT, 'EPSG:3031' => wgs84_extent[3] < -WEB_MERCATOR_LAT }.key(true)
+
+    def wgs84_extent = @wgs84_extent ||= extent_of(path('wgs84.fgb'))
+
+    # Regular EPSG:3857, unless the data has a wider gap around 0° than around 180° (e.g. Pacific
+    # islands either side of 180°), in which case wrap around the world the other way, putting the
+    # seam in that gap so the data is centered and nothing crosses it
+    def mercator
+      xmin, _, xmax, = wgs84_extent
+      return 'EPSG:3857' if xmax - xmin <= 180
+
+      east = extent_between(0, 180)
+      west = extent_between(-180, 0)
+      return 'EPSG:3857' unless east && west && east[0] - west[2] > (180 - east[2]) + (west[0] + 180)
+
+      @central_meridian = (east[0] + west[2] + 360) / 2
+      @central_meridian -= 360 if @central_meridian > 180
+      "+proj=merc +a=6378137 +b=6378137 +lon_0=#{@central_meridian} +x_0=0 +y_0=0 +k=1 +units=m +no_defs"
     end
 
-    def layer_extent
-      info_command = "gdal vector info -f json #{Shellwords.escape(input_path.to_s)}"
-      result = GisRobotSuite.run_system_command(info_command, logger: logger)
-      JSON.parse(result[:stdout_str])['layers'].first['geometryFields'].first['extent']
+    # Where the Mercator is centred: 0° unless it's been flipped round to the other side of the world
+    def central_meridian
+      crs
+      @central_meridian || 0
     end
 
-    attr_reader :input_path, :output_path, :logger
+    # The extent of the data between two meridians, or nil if there's none there
+    def extent_between(west, east)
+      dest = pipeline path('wgs84.fgb'), "between_#{west}.fgb", ['clip', '--bbox', [west, -90, east, 90].join(',')], promote_to_multi
+      extent_of(dest) if feature_count(dest).positive?
+    end
+
+    def rasterize
+      canvas = path('canvas.tif')
+      # --add only adds to a raster that already exists, so an empty one is made first
+      gdal 'vector', 'rasterize', '--size', "#{pixels},#{pixels}", '--extent', extent.join(','), '--init', '0', '--burn', '0', '--ot', 'Byte', path('merc.fgb'), canvas
+      gdal 'vector', 'rasterize', '--update', '--add', '--burn', '1', '--where', POLYGONS, path('merc.fgb'), canvas if any?(POLYGONS)
+
+      # In the viewer's layer order: fills, outlines, lines, points
+      burn canvas, OUTLINE, outlines
+      burn canvas, OUTLINE, specks
+      burn canvas, LINE, buffered('lines', LINES, thinned('ST_Length', 1, LINE_WIDTH) / 2) if any?(LINES)
+      burn canvas, POINT_EDGE, buffered('point_edges', POINTS, point_radius + point_stroke) if point_stroke.positive?
+      burn canvas, POINT_FILL, buffered('point_fills', POINTS, point_radius)
+    end
+
+    # The thumbnail doesn't draw attributes, so they're dropped up front rather than carried through
+    # every step, which also means one whose encoding is broken (a .dbf with no .cpg) can't fail a write.
+    # After reprojecting, since 3.11's select loses the layer's CRS.
+    def drop_attributes
+      fields = info(input_path)['layers'].first['fields'].flat_map { |field| ['--fields', field['name']] }
+      fields.empty? ? [] : [['select', '--exclude', *fields]]
+    end
+
+    # Polygon boundaries as lines, widened to the outline width
+    def outlines
+      rings = geom('set-type', '--geometry-type', 'MULTILINESTRING')
+      pipeline path('merc.fgb'), 'outlines.fgb', select(POLYGONS), rings, *buffer(thinned('ST_Perimeter', 2, OUTLINE_WIDTH) / 2 * pixel_size) if any?(POLYGONS)
+    end
+
+    # A dot for each polygon part too small to see at thumbnail scale (atolls across an ocean), so the
+    # data doesn't vanish into its own extent. Needs GDAL's SQLite dialect to have SpatiaLite.
+    def specks
+      small = "ST_Dimension(GEOMETRY) = 2 AND ST_Area(GEOMETRY) < #{(SPECK_SIZE * pixel_size)**2}"
+      centroids = ['sql', '--dialect', 'SQLITE', '--sql', %(SELECT ST_Centroid(GEOMETRY) AS geometry FROM "#{layer}" WHERE #{small})]
+      pipeline path('merc.fgb'), 'specks.fgb', geom('explode-collections'), centroids, *buffer(SPECK_SIZE / 2 * pixel_size) if any?(POLYGONS)
+    end
+
+    # Features matching 'where', grown by a distance in thumbnail pixels: a point or a hairline
+    # becomes something with area at thumbnail scale
+    def buffered(name, where, radius)
+      pipeline path('merc.fgb'), "#{name}.fgb", select(where), *buffer(radius * pixel_size) if any?(where)
+    end
+
+    # 3.11's `vector filter --where` writes nothing when the clause tests OGR_GEOMETRY (`vector info
+    # --where` and `rasterize --where` count the same clause correctly), so select with OGR SQL instead
+    def select(where)
+      ['sql', '--dialect', 'OGRSQL', '--sql', %(SELECT * FROM "#{layer}" WHERE #{where})]
+    end
+
+    # Points shrink as there are more of them, so a dense layer still reads as points rather than as
+    # one merged shape: the radius at which they'd cover POINT_COVERAGE of the canvas if none
+    # overlapped, kept between POINT_MIN_RADIUS and POINT_RADIUS
+    def point_radius
+      @point_radius ||= Math.sqrt(POINT_COVERAGE * (SIZE**2) / (Math::PI * [count(POINTS), 1].max)).clamp(POINT_MIN_RADIUS, POINT_RADIUS)
+    end
+
+    # A dot too small for its edge to show is drawn without one
+    def point_stroke = point_radius >= 3 ? POINT_STROKE : 0
+
+    # Lines and outlines thin out as there's more of them, for the reason points shrink: the width at
+    # which they'd cover LINE_COVERAGE of the canvas if none overlapped, kept between 1 pixel and widest
+    def thinned(measure, dimension, widest)
+      sql = %(SELECT SUM(#{measure}(GEOMETRY)) AS total FROM "#{layer}" WHERE ST_Dimension(GEOMETRY) = #{dimension})
+      total = info(path('merc.fgb'), '--features', '--dialect', 'SQLITE', '--sql', sql)['layers'].first['features'].first['properties']['total'].to_f
+      (LINE_COVERAGE * (SIZE**2) * pixel_size / [total, pixel_size].max).clamp(1.0, widest)
+    end
+
+    # The data as a translucent overlay, composited over the basemap by gdalwarp: warping an image with
+    # an alpha band onto one that already exists blends the two by that alpha
+    def colorize
+      File.write(path('colors.txt'), color_map)
+      gdal 'raster', 'color-map', '--add-alpha', '--color-map', path('colors.txt'), path('canvas.tif'), path('overlay.tif')
+      basemap = NaturalEarthBasemap.render(output_path: path('basemap.tif'), extent:, crs:, size: pixels, central_meridian:, logger:)
+      GisRobotSuite.run_system_command(Shellwords.join(['gdalwarp', '-q', path('overlay.tif').to_s, basemap.to_s]), logger:)
+      gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', basemap, path('rgb.tif')
+      Jp2Converter.convert(input_path: path('rgb.tif'), output_path: output_path, logger: logger)
+    end
+
+    # "value R G B A" lines for `raster color-map`, each the color and opacity the viewer draws that
+    # mark with. Values between entries are interpolated, which only matters across the plateau that
+    # keeps a stack deeper than MAX_STACK at the deepest fill.
+    def color_map
+      fill = ->(stack) { [DATA_COLOR, 1 - ((1 - OPACITY)**stack)] }
+      fills = (1..MAX_STACK).to_h { |stack| [stack, fill.call(stack)] }
+      marks = { OUTLINE => over([STROKE_COLOR, OPACITY], fill.call(1)), LINE => [DATA_COLOR, OPACITY],
+                POINT_EDGE => [STROKE_COLOR, OPACITY], POINT_FILL => [DATA_COLOR, OPACITY] }
+      entries = { 0 => [[0, 0, 0], 0], **fills, OUTLINE - 1 => fill.call(MAX_STACK), **marks }
+      entries.map { |value, (rgb, alpha)| "#{value} #{rgb.map(&:round).join(' ')} #{(alpha * 255).round}\n" }.join
+    end
+
+    # One translucent [color, alpha] drawn over another, the way the browser composites the viewer's layers
+    def over((top, top_alpha), (bottom, bottom_alpha))
+      alpha = top_alpha + (bottom_alpha * (1 - top_alpha))
+      [top.zip(bottom).map { |t, b| ((t * top_alpha) + (b * bottom_alpha * (1 - top_alpha))) / alpha }, alpha]
+    end
+
+    # A square canvas centred on the data, padded, in metres
+    def extent
+      @extent ||= begin
+        xmin, ymin, xmax, ymax = extent_of(path('projected.fgb'))
+        side = [[xmax - xmin, ymax - ymin].max * (1 + (2 * PADDING)), MIN_SIDE].max
+        x, y = [xmin + xmax, ymin + ymax].map { |sum| sum / 2 }
+        [x - (side / 2), y - (side / 2), x + (side / 2), y + (side / 2)]
+      end
+    end
+
+    def pixels = SIZE * SUPERSAMPLE
+
+    # Metres per thumbnail pixel
+    def pixel_size = (extent[2] - extent[0]) / SIZE
+
+    def any?(where) = count(where).positive?
+
+    def count(where) = ((@counts ||= {})[where] ||= feature_count(path('merc.fgb'), '--where', where))
+
+    def layer = @layer ||= info(path('merc.fgb'))['layers'].first['name']
   end
 end
