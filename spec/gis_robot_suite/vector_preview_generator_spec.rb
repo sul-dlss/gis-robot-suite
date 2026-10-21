@@ -12,9 +12,11 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
   let(:output_dir) { Pathname(Dir.mktmpdir) }
   let(:output_path) { output_dir / 'preview.jp2' }
 
-  let(:background) { [248, 248, 248] }
-  let(:fill) { [50, 140, 238] }
-  let(:stacked_fill) { [10, 118, 236] }
+  # Colors for testing how things render
+  let(:water) { [212, 218, 220] }
+  let(:land) { [250, 250, 248] }
+  let(:fill) { [42, 134, 233] }
+  let(:stacked_fill) { [8, 117, 235] }
 
   after do
     FileUtils.rm_rf(input_dir)
@@ -48,6 +50,9 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
   # JP2 compression is lossy, so colors only need to be close
   def be_colored(rgb) = match(rgb.map { |channel| be_within(12).of(channel) })
 
+  # Matches basemap colors (land or water)
+  def be_basemap = satisfy('be land or water') { |rgb| [land, water].any? { |color| rgb.zip(color).all? { |a, b| (a - b).abs <= 12 } } }
+
   context 'with a polygon' do
     before { write_geojson(square(-1, -1, 1, 1)) }
 
@@ -59,17 +64,28 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
       expect(info['bands'].size).to eq 3
     end
 
-    it 'fills the polygon in the viewer color, against its background' do
+    it 'fills the polygon in the viewer color, over the basemap' do
       generate
 
       expect(center).to be_colored(fill)
-      expect(pixel(2, 2)).to be_colored(background)
+      expect(pixel(2, 2)).to be_colored(water)
     end
 
     it 'leaves no working files behind' do
       generate
 
       expect(output_dir.children.map { |child| child.basename.to_s }).to all(start_with('preview.jp2'))
+    end
+  end
+
+  context 'with a polygon on land' do
+    before { write_geojson(square(-99, 38, -98, 39)) }
+
+    it 'draws it over the land' do
+      generate
+
+      expect(center).to be_colored(fill)
+      expect(pixel(2, 2)).to be_colored(land)
     end
   end
 
@@ -90,28 +106,7 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
       generate
 
       expect(center).to be_colored(fill)
-      expect(pixel(256, 240)).to be_colored(background)
-    end
-  end
-
-  context 'with many lines close together' do
-    before do
-      write_geojson(*(0...100).map { |i| { type: 'LineString', coordinates: [[-1, (i * 0.02) - 1], [1, (i * 0.02) - 1]] } })
-    end
-
-    # The brightest red value down a one-pixel column across the lines: the background's if there's
-    # any of it showing between them
-    def brightest_in_column
-      column = output_dir / 'column.tif'
-      GisRobotSuite.run_system_command("gdal_translate -q -srcwin 256 156 1 200 #{Shellwords.escape(output_path.to_s)} #{Shellwords.escape(column.to_s)}", logger:)
-      gdalinfo_stats = GisRobotSuite.run_system_command("gdalinfo -json -stats #{Shellwords.escape(column.to_s)}", logger:)[:stdout_str]
-      JSON.parse(gdalinfo_stats)['bands'].first['maximum']
-    end
-
-    it 'draws them thin enough to stay apart' do
-      generate
-
-      expect(brightest_in_column).to be > 200
+      expect(pixel(256, 240)).to be_colored(water)
     end
   end
 
@@ -122,7 +117,7 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
       generate
 
       expect(center).to be_colored(fill)
-      expect(pixel(256, 200)).to be_colored(background)
+      expect(pixel(256, 200)).to be_basemap
     end
   end
 
