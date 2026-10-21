@@ -6,8 +6,11 @@ require 'shellwords'
 require 'tmpdir'
 
 module GisRobotSuite
-  # Generates vector preview JP2 derivatives by first rasterizing the vector.
+  # Generates vector preview JP2 derivatives by first rasterizing the vector, then drawing it over a
+  # Natural Earth basemap (see NaturalEarthBasemap).
   class VectorPreviewGenerator
+    include GdalCommands
+
     SIZE = 512 # pixels along each side of the thumbnail
     SUPERSAMPLE = 2
     PADDING = 0.1 # of the data's larger dimension, on every side
@@ -15,7 +18,6 @@ module GisRobotSuite
     WEB_MERCATOR_LAT = 85.0511 # Web Mercator is undefined beyond this
 
     # Based on ogm-viewer's light-theme defaults
-    BACKGROUND = [248, 248, 248].freeze
     DATA_COLOR = [0, 113, 236].freeze
     STROKE_COLOR = [0, 22, 148].freeze
     OPACITY = 0.8
@@ -42,9 +44,6 @@ module GisRobotSuite
     POINT_EDGE = 200
     POINT_FILL = 201
 
-    # GDAL 3.12 moved 3.11's `vector geom <step>`s up a level, and renamed set-type
-    RENAMED_GEOM_STEPS = { 'set-type' => 'set-geom-type' }.freeze
-
     def self.generate(input_path:, output_path:, logger: nil)
       new(input_path: input_path, output_path: output_path, logger: logger).generate
     end
@@ -68,14 +67,12 @@ module GisRobotSuite
 
     attr_reader :input_path, :output_path, :logger, :work
 
-    def path(name) = work / name
-
     # Make the thumbnail in Web Mercator, since that's what the viewer uses. Then simplify to a quarter
     # of a thumbnail pixel, which can't be seen, so later steps never handle more detail than they can
     # draw (a kelp canopy traced from raster pixels can hold millions of vertices).
     def reproject
       pipeline input_path, 'wgs84.fgb', ['reproject', '--dst-crs', 'EPSG:4326'], *drop_attributes, promote_to_multi
-      pipeline path('wgs84.fgb'), 'projected.fgb', *fit_to_projection, ['reproject', '--dst-crs', polar_projection || mercator], promote_to_multi
+      pipeline path('wgs84.fgb'), 'projected.fgb', *fit_to_projection, ['reproject', '--dst-crs', crs], promote_to_multi
       pipeline path('projected.fgb'), 'merc.fgb', geom('simplify', '--tolerance', pixel_size / (2 * SUPERSAMPLE)), promote_to_multi
     end
 
@@ -90,6 +87,8 @@ module GisRobotSuite
 
       [['clip', '--bbox', [-180, -WEB_MERCATOR_LAT, 180, WEB_MERCATOR_LAT].join(',')]]
     end
+
+    def crs = @crs ||= polar_projection || mercator
 
     # Data entirely beyond Web Mercator's limits (e.g. a station at a pole) would be clipped away
     # completely, so it's drawn in north or south polar stereographic instead
@@ -108,9 +107,15 @@ module GisRobotSuite
       west = extent_between(-180, 0)
       return 'EPSG:3857' unless east && west && east[0] - west[2] > (180 - east[2]) + (west[0] + 180)
 
-      central_meridian = (east[0] + west[2] + 360) / 2
-      central_meridian -= 360 if central_meridian > 180
-      "+proj=merc +a=6378137 +b=6378137 +lon_0=#{central_meridian} +x_0=0 +y_0=0 +k=1 +units=m +no_defs"
+      @central_meridian = (east[0] + west[2] + 360) / 2
+      @central_meridian -= 360 if @central_meridian > 180
+      "+proj=merc +a=6378137 +b=6378137 +lon_0=#{@central_meridian} +x_0=0 +y_0=0 +k=1 +units=m +no_defs"
+    end
+
+    # Where the Mercator is centred: 0° unless it's been flipped round to the other side of the world
+    def central_meridian
+      crs
+      @central_meridian || 0
     end
 
     # The extent of the data between two meridians, or nil if there's none there
@@ -133,10 +138,6 @@ module GisRobotSuite
       burn canvas, POINT_FILL, buffered('point_fills', POINTS, point_radius)
     end
 
-    def burn(canvas, value, source)
-      gdal 'vector', 'rasterize', '--update', '--burn', value, source, canvas if source
-    end
-
     # The thumbnail doesn't draw attributes, so they're dropped up front rather than carried through
     # every step, which also means one whose encoding is broken (a .dbf with no .cpg) can't fail a write.
     # After reprojecting, since 3.11's select loses the layer's CRS.
@@ -148,7 +149,7 @@ module GisRobotSuite
     # Polygon boundaries as lines, widened to the outline width
     def outlines
       rings = geom('set-type', '--geometry-type', 'MULTILINESTRING')
-      pipeline path('merc.fgb'), 'outlines.fgb', select(POLYGONS), rings, *buffer(thinned('ST_Perimeter', 2, OUTLINE_WIDTH) / 2) if any?(POLYGONS)
+      pipeline path('merc.fgb'), 'outlines.fgb', select(POLYGONS), rings, *buffer(thinned('ST_Perimeter', 2, OUTLINE_WIDTH) / 2 * pixel_size) if any?(POLYGONS)
     end
 
     # A dot for each polygon part too small to see at thumbnail scale (atolls across an ocean), so the
@@ -156,13 +157,13 @@ module GisRobotSuite
     def specks
       small = "ST_Dimension(GEOMETRY) = 2 AND ST_Area(GEOMETRY) < #{(SPECK_SIZE * pixel_size)**2}"
       centroids = ['sql', '--dialect', 'SQLITE', '--sql', %(SELECT ST_Centroid(GEOMETRY) AS geometry FROM "#{layer}" WHERE #{small})]
-      pipeline path('merc.fgb'), 'specks.fgb', geom('explode-collections'), centroids, *buffer(SPECK_SIZE / 2) if any?(POLYGONS)
+      pipeline path('merc.fgb'), 'specks.fgb', geom('explode-collections'), centroids, *buffer(SPECK_SIZE / 2 * pixel_size) if any?(POLYGONS)
     end
 
     # Features matching 'where', grown by a distance in thumbnail pixels: a point or a hairline
     # becomes something with area at thumbnail scale
     def buffered(name, where, radius)
-      pipeline path('merc.fgb'), "#{name}.fgb", select(where), *buffer(radius) if any?(where)
+      pipeline path('merc.fgb'), "#{name}.fgb", select(where), *buffer(radius * pixel_size) if any?(where)
     end
 
     # 3.11's `vector filter --where` writes nothing when the clause tests OGR_GEOMETRY (`vector info
@@ -170,25 +171,6 @@ module GisRobotSuite
     def select(where)
       ['sql', '--dialect', 'OGRSQL', '--sql', %(SELECT * FROM "#{layer}" WHERE #{where})]
     end
-
-    # Exploded first so each line is buffered on its own: buffering a multi-part geometry unions every
-    # part's buffer, which for a polygon with thousands of rings can run out of memory. Rounded with
-    # 3 segments per quarter circle rather than 8, which can't be seen at this size but saves a lot
-    # of vertices. 3.11's buffer leaves the layer declaring the points or lines it started with,
-    # which FlatGeoBuf then refuses to write polygons into, so the type is set to match.
-    def buffer(radius)
-      [geom('explode-collections'), geom('buffer', '--distance', radius * pixel_size, '--quadrant-segments', 3),
-       geom('set-type', '--geometry-type', 'MULTIPOLYGON')]
-    end
-
-    # FlatGeoBuf takes one geometry type per layer, so mixed single and multi geometry is promoted
-    def promote_to_multi = geom('set-type', '--multi')
-
-    # Figure out the right name for the GDAL command depending on the version
-    def geom(step, *options) = legacy_geom_steps? ? ['geom', step, *options] : [RENAMED_GEOM_STEPS.fetch(step, step), *options]
-
-    def legacy_geom_steps? = gdal_version < Gem::Version.new('3.12')
-    def gdal_version = @gdal_version ||= Gem::Version.new(gdal('--version')[/GDAL (\d+\.\d+\.\d+)/, 1])
 
     # Points shrink as there are more of them, so a dense layer still reads as points rather than as
     # one merged shape: the radius at which they'd cover POINT_COVERAGE of the canvas if none
@@ -208,26 +190,34 @@ module GisRobotSuite
       (LINE_COVERAGE * (SIZE**2) * pixel_size / [total, pixel_size].max).clamp(1.0, widest)
     end
 
+    # The data as a translucent overlay, composited over the basemap by gdalwarp: warping an image with
+    # an alpha band onto one that already exists blends the two by that alpha
     def colorize
       File.write(path('colors.txt'), color_map)
-      gdal 'raster', 'color-map', '--color-map', path('colors.txt'), path('canvas.tif'), path('rgb_big.tif')
-      gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', path('rgb_big.tif'), path('rgb.tif')
+      gdal 'raster', 'color-map', '--add-alpha', '--color-map', path('colors.txt'), path('canvas.tif'), path('overlay.tif')
+      basemap = NaturalEarthBasemap.render(output_path: path('basemap.tif'), extent:, crs:, size: pixels, central_meridian:, logger:)
+      GisRobotSuite.run_system_command(Shellwords.join(['gdalwarp', '-q', path('overlay.tif').to_s, basemap.to_s]), logger:)
+      gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', basemap, path('rgb.tif')
       Jp2Converter.convert(input_path: path('rgb.tif'), output_path: output_path, logger: logger)
     end
 
-    # "value R G B" lines for `raster color-map`, each the color the viewer composites for that mark.
-    # Values between entries are interpolated, which only matters across the plateau that keeps a
-    # stack deeper than MAX_STACK at the deepest fill.
+    # "value R G B A" lines for `raster color-map`, each the color and opacity the viewer draws that
+    # mark with. Values between entries are interpolated, which only matters across the plateau that
+    # keeps a stack deeper than MAX_STACK at the deepest fill.
     def color_map
-      fill = ->(stack) { over(DATA_COLOR, BACKGROUND, 1 - ((1 - OPACITY)**stack)) }
+      fill = ->(stack) { [DATA_COLOR, 1 - ((1 - OPACITY)**stack)] }
       fills = (1..MAX_STACK).to_h { |stack| [stack, fill.call(stack)] }
-      marks = { OUTLINE => over(STROKE_COLOR, fill.call(1), OPACITY), LINE => over(DATA_COLOR, BACKGROUND, OPACITY),
-                POINT_EDGE => over(STROKE_COLOR, BACKGROUND, OPACITY), POINT_FILL => over(DATA_COLOR, BACKGROUND, OPACITY) }
-      { 0 => BACKGROUND, **fills, OUTLINE - 1 => fill.call(MAX_STACK), **marks }.map { |value, rgb| "#{value} #{rgb.map(&:round).join(' ')}\n" }.join
+      marks = { OUTLINE => over([STROKE_COLOR, OPACITY], fill.call(1)), LINE => [DATA_COLOR, OPACITY],
+                POINT_EDGE => [STROKE_COLOR, OPACITY], POINT_FILL => [DATA_COLOR, OPACITY] }
+      entries = { 0 => [[0, 0, 0], 0], **fills, OUTLINE - 1 => fill.call(MAX_STACK), **marks }
+      entries.map { |value, (rgb, alpha)| "#{value} #{rgb.map(&:round).join(' ')} #{(alpha * 255).round}\n" }.join
     end
 
-    # One color drawn over another at an opacity, the way the browser composites the viewer's layers
-    def over(top, bottom, alpha) = top.zip(bottom).map { |t, b| (t * alpha) + (b * (1 - alpha)) }
+    # One translucent [color, alpha] drawn over another, the way the browser composites the viewer's layers
+    def over((top, top_alpha), (bottom, bottom_alpha))
+      alpha = top_alpha + (bottom_alpha * (1 - top_alpha))
+      [top.zip(bottom).map { |t, b| ((t * top_alpha) + (b * bottom_alpha * (1 - top_alpha))) / alpha }, alpha]
+    end
 
     # A square canvas centred on the data, padded, in metres
     def extent
@@ -249,21 +239,5 @@ module GisRobotSuite
     def count(where) = ((@counts ||= {})[where] ||= feature_count(path('merc.fgb'), '--where', where))
 
     def layer = @layer ||= info(path('merc.fgb'))['layers'].first['name']
-    def extent_of(file) = info(file)['layers'].first['geometryFields'].first['extent']
-    def feature_count(file, *options) = info(file, *options)['layers'].first['featureCount']
-    def info(file, *options) = JSON.parse(gdal('vector', 'info', '-f', 'json', *options, file))
-
-    # One `gdal vector pipeline` from source through steps into the working file name, whose path it
-    # returns. FlatGeoBuf in between because GeoJSON can't record a CRS that has no EPSG code, and
-    # the flipped Mercator we sometimes use would come back from it as WGS 84.
-    def pipeline(source, name, *steps)
-      dest = path(name)
-      gdal 'vector', 'pipeline', 'read', source, *steps.flat_map { |step| ['!', *step] }, '!', 'write', dest
-      dest
-    end
-
-    def gdal(*args)
-      GisRobotSuite.run_system_command(Shellwords.join(['gdal', *args.map(&:to_s)]), logger: logger)[:stdout_str]
-    end
   end
 end
