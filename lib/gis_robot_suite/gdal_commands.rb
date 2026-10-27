@@ -4,9 +4,8 @@ require 'json'
 require 'shellwords'
 
 module GisRobotSuite
-  # `gdal` commands shared by the vector preview and the basemap drawn under it. The including class
-  # provides the `work` directory they write into and the `logger` they log to. Written for GDAL 3.11,
-  # prod's version, and works the same on later ones.
+  # `gdal` commands shared by preview generators.
+  # Written for GDAL 3.11 (prod's version) but works on later ones.
   module GdalCommands
     # GDAL 3.12 moved 3.11's `vector geom <step>`s up a level, and renamed set-type
     RENAMED_GEOM_STEPS = { 'set-type' => 'set-geom-type' }.freeze
@@ -15,9 +14,10 @@ module GisRobotSuite
 
     def path(name) = work / name
 
-    # One `gdal vector pipeline` from source through steps into the working file name, whose path it
-    # returns. FlatGeoBuf in between because GeoJSON can't record a CRS that has no EPSG code, and
-    # the flipped Mercator we sometimes use would come back from it as WGS 84.
+    # A `gdal vector pipeline` that applies all of our transform steps and returns
+    # the path of the finished output file. We use FlatGeoBuf in between because
+    # GeoJSON can't record a CRS that has no EPSG code, and the flipped Mercator
+    # we sometimes use would come back from it as WGS 84.
     def pipeline(source, name, *steps)
       dest = path(name)
       gdal 'vector', 'pipeline', 'read', source, *steps.flat_map { |step| ['!', *step] }, '!', 'write', dest
@@ -47,12 +47,13 @@ module GisRobotSuite
     def legacy_geom_steps? = gdal_version < Gem::Version.new('3.12')
     def gdal_version = @gdal_version ||= Gem::Version.new(gdal('--version')[/GDAL (\d+\.\d+\.\d+)/, 1])
 
-    def extent_of(file) = info(file)['layers'].first['geometryFields'].first['extent']
-    def feature_count(file, *options) = info(file, *options)['layers'].first['featureCount']
-    def info(file, *options) = JSON.parse(gdal('vector', 'info', '-f', 'json', *options, file))
+    def extent_of(file) = vector_info(file)['layers'].first['geometryFields'].first['extent']
+    def feature_count(file, *options) = vector_info(file, *options)['layers'].first['featureCount']
+    def vector_info(file, *options) = JSON.parse(gdal('vector', 'info', '-f', 'json', *options, file))
 
-    def gdal(*args)
-      GisRobotSuite.run_system_command(Shellwords.join(['gdal', *args.map(&:to_s)]), logger: logger)[:stdout_str]
-    end
+    def gdal(*) = run('gdal', *)[:stdout_str]
+
+    # Any command, like the classic gdalwarp and gdal_translate
+    def run(*args) = GisRobotSuite.run_system_command(Shellwords.join(args.map(&:to_s)), logger: logger)
   end
 end

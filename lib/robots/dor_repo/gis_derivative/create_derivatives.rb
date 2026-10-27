@@ -96,11 +96,12 @@ module Robots
           raster?(cocina_file) ? GisRobotSuite::RasterPreviewGenerator : GisRobotSuite::VectorPreviewGenerator
         end
 
-        # For vectors, we pick just the FlatGeoBuf to render into a thumbnail,
-        # so that we don't try to generate it multiple times
+        # We render the thumbnail from the derivative where there is one: the FlatGeoBuf for vectors,
+        # so that we don't try to generate it multiple times, and the COG for rasters, which is
+        # already in Web Mercator with overviews to read from
         def preview_source(cocina_file)
-          fgb = workspace_path(fgb_filename(cocina_file.filename))
-          vector?(cocina_file) && fgb.exist? ? fgb : workspace_path(cocina_file.filename)
+          derivative = workspace_path(raster?(cocina_file) ? cog_filename(cocina_file.filename) : fgb_filename(cocina_file.filename))
+          derivative.exist? ? derivative : workspace_path(cocina_file.filename)
         end
 
         # Whether we should keep an existing derivative instead of re-generating it

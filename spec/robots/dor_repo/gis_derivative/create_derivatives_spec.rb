@@ -99,8 +99,8 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
         expect(jp2_file.hasMimeType).to eq 'image/jp2'
         # Marked so a later run can tell this thumbnail apart from one the depositor supplied
         expect(jp2_file.sdrGeneratedText).to be true
-        expect(jp2_file.presentation.height).to eq 7435
-        expect(jp2_file.presentation.width).to eq 10503
+        expect(jp2_file.presentation.height).to eq 512
+        expect(jp2_file.presentation.width).to eq 512
       end
     end
 
@@ -240,8 +240,8 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
             # Ensure the stale thumbnail was removed and a new one added (new externalIdentifier)
             expect(jp2_file.externalIdentifier).not_to eq thumbnail_file.externalIdentifier
             expect(jp2_file.sdrGeneratedText).to be true
-            expect(jp2_file.presentation.height).to eq 7435
-            expect(jp2_file.presentation.width).to eq 10503
+            expect(jp2_file.presentation.height).to eq 512
+            expect(jp2_file.presentation.width).to eq 512
           end
         end
       end
