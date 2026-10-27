@@ -10,6 +10,7 @@ module GisRobotSuite
   # Natural Earth basemap (see NaturalEarthBasemap).
   class VectorPreviewGenerator
     include GdalCommands
+    include PreviewMercator
 
     SIZE = 512 # pixels along each side of the thumbnail
     SUPERSAMPLE = 2
@@ -94,35 +95,7 @@ module GisRobotSuite
     # completely, so it's drawn in north or south polar stereographic instead
     def polar_projection = { 'EPSG:3413' => wgs84_extent[1] > WEB_MERCATOR_LAT, 'EPSG:3031' => wgs84_extent[3] < -WEB_MERCATOR_LAT }.key(true)
 
-    def wgs84_extent = @wgs84_extent ||= extent_of(path('wgs84.fgb'))
-
-    # Regular EPSG:3857, unless the data has a wider gap around 0° than around 180° (e.g. Pacific
-    # islands either side of 180°), in which case wrap around the world the other way, putting the
-    # seam in that gap so the data is centered and nothing crosses it
-    def mercator
-      xmin, _, xmax, = wgs84_extent
-      return 'EPSG:3857' if xmax - xmin <= 180
-
-      east = extent_between(0, 180)
-      west = extent_between(-180, 0)
-      return 'EPSG:3857' unless east && west && east[0] - west[2] > (180 - east[2]) + (west[0] + 180)
-
-      @central_meridian = (east[0] + west[2] + 360) / 2
-      @central_meridian -= 360 if @central_meridian > 180
-      "+proj=merc +a=6378137 +b=6378137 +lon_0=#{@central_meridian} +x_0=0 +y_0=0 +k=1 +units=m +no_defs"
-    end
-
-    # Where the Mercator is centred: 0° unless it's been flipped round to the other side of the world
-    def central_meridian
-      crs
-      @central_meridian || 0
-    end
-
-    # The extent of the data between two meridians, or nil if there's none there
-    def extent_between(west, east)
-      dest = pipeline path('wgs84.fgb'), "between_#{west}.fgb", ['clip', '--bbox', [west, -90, east, 90].join(',')], promote_to_multi
-      extent_of(dest) if feature_count(dest).positive?
-    end
+    def wgs84_path = path('wgs84.fgb')
 
     def rasterize
       canvas = path('canvas.tif')
@@ -142,7 +115,7 @@ module GisRobotSuite
     # every step, which also means one whose encoding is broken (a .dbf with no .cpg) can't fail a write.
     # After reprojecting, since 3.11's select loses the layer's CRS.
     def drop_attributes
-      fields = info(input_path)['layers'].first['fields'].flat_map { |field| ['--fields', field['name']] }
+      fields = vector_info(input_path)['layers'].first['fields'].flat_map { |field| ['--fields', field['name']] }
       fields.empty? ? [] : [['select', '--exclude', *fields]]
     end
 
@@ -186,7 +159,7 @@ module GisRobotSuite
     # which they'd cover LINE_COVERAGE of the canvas if none overlapped, kept between 1 pixel and widest
     def thinned(measure, dimension, widest)
       sql = %(SELECT SUM(#{measure}(GEOMETRY)) AS total FROM "#{layer}" WHERE ST_Dimension(GEOMETRY) = #{dimension})
-      total = info(path('merc.fgb'), '--features', '--dialect', 'SQLITE', '--sql', sql)['layers'].first['features'].first['properties']['total'].to_f
+      total = vector_info(path('merc.fgb'), '--features', '--dialect', 'SQLITE', '--sql', sql)['layers'].first['features'].first['properties']['total'].to_f
       (LINE_COVERAGE * (SIZE**2) * pixel_size / [total, pixel_size].max).clamp(1.0, widest)
     end
 
@@ -196,7 +169,7 @@ module GisRobotSuite
       File.write(path('colors.txt'), color_map)
       gdal 'raster', 'color-map', '--add-alpha', '--color-map', path('colors.txt'), path('canvas.tif'), path('overlay.tif')
       basemap = NaturalEarthBasemap.render(output_path: path('basemap.tif'), extent:, crs:, size: pixels, central_meridian:, logger:)
-      GisRobotSuite.run_system_command(Shellwords.join(['gdalwarp', '-q', path('overlay.tif').to_s, basemap.to_s]), logger:)
+      run 'gdalwarp', '-q', path('overlay.tif'), basemap
       gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', basemap, path('rgb.tif')
       Jp2Converter.convert(input_path: path('rgb.tif'), output_path: output_path, logger: logger)
     end
@@ -238,6 +211,6 @@ module GisRobotSuite
 
     def count(where) = ((@counts ||= {})[where] ||= feature_count(path('merc.fgb'), '--where', where))
 
-    def layer = @layer ||= info(path('merc.fgb'))['layers'].first['name']
+    def layer = @layer ||= vector_info(path('merc.fgb'))['layers'].first['name']
   end
 end
