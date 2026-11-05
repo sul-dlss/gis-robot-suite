@@ -33,14 +33,14 @@ module GisRobotSuite
     end
 
     def generate
-      @work = Pathname(Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent))
-      trace_outline
-      basemap = NaturalEarthBasemap.render(output_path: path('basemap.tif'), extent:, crs: mercator, size: pixels, central_meridian:, logger:)
-      run 'gdalwarp', '-q', '-srcalpha', overlay, basemap
-      gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', basemap, path('rgb.tif')
-      Jp2Converter.convert(input_path: path('rgb.tif'), output_path: output_path, logger: logger)
-    ensure
-      FileUtils.rm_rf(@work) if @work
+      Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent) do |dir|
+        @work = Pathname(dir)
+        trace_outline
+        basemap = NaturalEarthBasemap.render(output_path: path('basemap.tif'), extent:, crs: mercator, size: pixels, central_meridian:, logger:)
+        run 'gdalwarp', '-q', '-srcalpha', overlay, basemap
+        gdal 'raster', 'resize', '--size', "#{SIZE},#{SIZE}", '--resampling', 'average', basemap, path('rgb.tif')
+        Jp2Converter.convert(input_path: path('rgb.tif'), output_path: output_path, logger: logger)
+      end
     end
 
     private
