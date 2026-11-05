@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'fileutils'
 require 'json'
 require 'shellwords'
 require 'tmpdir'
@@ -54,13 +53,14 @@ module GisRobotSuite
       @logger = logger
     end
 
+    # Works in a scratch directory beside the output, which Dir.mktmpdir removes once the block exits
     def generate
-      @work = Pathname(Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent))
-      reproject
-      rasterize
-      colorize
-    ensure
-      FileUtils.rm_rf(@work) if @work
+      Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent) do |dir|
+        @work = Pathname(dir)
+        reproject
+        rasterize
+        colorize
+      end
     end
 
     private
