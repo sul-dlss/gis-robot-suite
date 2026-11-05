@@ -24,6 +24,8 @@ module GisRobotSuite
       dest
     end
 
+    # Write pixels with 'value' where a vector's data is. See:
+    # https://gdal.org/en/stable/programs/gdal_vector_rasterize.html
     def burn(canvas, value, source)
       gdal 'vector', 'rasterize', '--update', '--burn', value, source, canvas if source
     end
