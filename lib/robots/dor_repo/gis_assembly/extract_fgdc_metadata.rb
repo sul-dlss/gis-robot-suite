@@ -29,7 +29,7 @@ module Robots
         end
 
         def file_set
-          staging_dir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+          staging_dir = GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
           esri_metadata_path = GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
           esri_metadata_filename = File.basename(esri_metadata_path)
 

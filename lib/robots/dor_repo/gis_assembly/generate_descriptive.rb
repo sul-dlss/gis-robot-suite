@@ -19,7 +19,7 @@ module Robots
         private
 
         def iso19139_ng
-          rootdir = GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+          rootdir = GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
           iso19139_xml_file = Dir.glob("#{rootdir}/content/**/*-iso19139.xml").first
           raise "Missing iso19139.xml in #{rootdir}/content" unless iso19139_xml_file
 

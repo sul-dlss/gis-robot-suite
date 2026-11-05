@@ -54,15 +54,12 @@ module GisRobotSuite
   def self.locate_druid_path(druid, opts = {})
     rootdir = '.'
 
-    # :type => :stage indicates the path to the druid in the local stage area
-    # :type => :workspace indicates the path to the druid in the SDR dor workspace
+    # :type => :workspace indicates the path to the druid in the SDR dor workspace; use StagedContent for staged content
     case opts[:type]
-    when :stage
-      rootdir = DruidTools::Druid.new(druid, Settings.geohydra.stage).path
     when :workspace
       rootdir = DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
     else
-      raise 'Only :stage, :workspace are supported'
+      raise 'Only :workspace is supported'
     end
 
     raise "Missing #{rootdir}" if opts[:validate] && !File.directory?(rootdir)

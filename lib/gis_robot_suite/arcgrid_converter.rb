@@ -4,7 +4,7 @@ require 'find'
 require 'shellwords'
 
 module GisRobotSuite
-  # Converts the ArcGRID in an object's workspace to a GeoTIFF and replaces the
+  # Converts the ArcGRID in an object's staged content to a GeoTIFF and replaces the
   # ArcGRID files in Cocina. The caller is responsible for version management.
   class ArcgridConverter
     GEOTIFF_MIMETYPE = 'image/tiff; application=geotiff'
@@ -45,13 +45,13 @@ module GisRobotSuite
     end
 
     def content_dir
-      @content_dir ||= Pathname(GisRobotSuite.locate_druid_path(bare_druid, type: :stage)) / 'content'
+      @content_dir ||= GisRobotSuite::StagedContent.find!(bare_druid).pathname / 'content'
     end
 
     def grid_dir
       return @grid_dir if defined?(@grid_dir)
 
-      raise "Workspace content directory does not exist: #{content_dir}" unless content_dir.directory?
+      raise "Staged content directory does not exist: #{content_dir}" unless content_dir.directory?
 
       grid_dirs = Find.find(content_dir).filter_map do |path|
         next unless File.file?(path) && File.basename(path).casecmp?('hdr.adf')

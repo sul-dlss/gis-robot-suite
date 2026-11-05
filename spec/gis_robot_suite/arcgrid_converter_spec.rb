@@ -57,7 +57,7 @@ RSpec.describe GisRobotSuite::ArcgridConverter do
 
     allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_client)
     allow(object_client).to receive(:version)
-    allow(GisRobotSuite).to receive(:locate_druid_path).with('bb045mm1234', type: :stage).and_return(workspace_dir.to_s)
+    allow(GisRobotSuite::StagedContent).to receive(:find!).with('bb045mm1234').and_return(instance_double(GisRobotSuite::StagedContent, pathname: workspace_dir))
     allow(GisRobotSuite).to receive(:run_system_command) do |_command, **|
       (content_dir / 'elevation_grid.tif').binwrite('geotiff')
       (content_dir / 'elevation_grid.tfw').write('world file')

@@ -60,7 +60,7 @@ module GisRobotSuite
 
     # Staging directory for this object
     def staging_dir
-      GisRobotSuite.locate_druid_path(bare_druid, type: :stage)
+      GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
     end
 
     # Filename of the original GIS metadata without any extensions
