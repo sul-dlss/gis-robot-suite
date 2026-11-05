@@ -76,9 +76,9 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
 
     describe '.map_projection' do
       it 'raises when map projection data is missing' do
-        expect do
-          described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:).send(:map_projection)
-        end.to raise_error(RuntimeError, "Map projection is missing for #{bare_druid}.")
+        builder = described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:)
+        allow(builder).to receive_messages(vector_filepath: nil, raster_filepath: nil)
+        expect { builder.send(:map_projection) }.to raise_error(RuntimeError, "Map projection is missing for #{bare_druid}.")
       end
 
       context 'when projection is missing from metadata but fallback works for vectors' do

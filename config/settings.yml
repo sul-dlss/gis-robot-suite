@@ -12,6 +12,7 @@ sleep_coefficient: 1
 
 geohydra:
   stage: "/stage"
+  assembly: "/dor/assembly"
   workspace: "/workspace"
   tmpdir: "/tmp"
   opengeometadata:

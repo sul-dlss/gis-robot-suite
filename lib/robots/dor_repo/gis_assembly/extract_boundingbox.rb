@@ -35,7 +35,7 @@ module Robots
         end
 
         def rootdir
-          @rootdir ||= GisRobotSuite.locate_druid_path bare_druid, type: :stage
+          @rootdir ||= GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
         end
 
         def description_props

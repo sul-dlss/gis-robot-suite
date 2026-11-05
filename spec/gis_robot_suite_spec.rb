@@ -136,27 +136,23 @@ RSpec.describe GisRobotSuite do
   describe '.locate_druid_path' do
     let(:druid) { 'druid:bc123df4567' }
 
-    context 'when type is :stage' do
-      it 'returns the stage path' do
-        expect(described_class.locate_druid_path(druid, type: :stage)).to eq File.join(Settings.geohydra.stage, 'bc', '123', 'df', '4567', 'bc123df4567')
-      end
-    end
-
     context 'when type is :workspace' do
       it 'returns the workspace path' do
         expect(described_class.locate_druid_path(druid, type: :workspace)).to eq DruidTools::Druid.new(druid, Settings.geohydra.workspace).path
       end
     end
 
-    context 'when type is not :stage or :workspace' do
+    context 'when type is not :workspace' do
       it 'raises' do
-        expect { described_class.locate_druid_path(druid, type: :something_else) }.to raise_error(RuntimeError, 'Only :stage, :workspace are supported')
+        expect { described_class.locate_druid_path(druid, type: :stage) }.to raise_error(RuntimeError, 'Only :workspace is supported')
       end
     end
 
     context 'when validate is true and the directory does not exist' do
       it 'raises' do
-        expect { described_class.locate_druid_path(druid, type: :stage, validate: true) }.to raise_error(RuntimeError, "Missing #{Settings.geohydra.stage}/bc/123/df/4567/bc123df4567")
+        expect do
+          described_class.locate_druid_path(druid, type: :workspace, validate: true)
+        end.to raise_error(RuntimeError, "Missing #{Settings.geohydra.workspace}/bc/123/df/4567/bc123df4567")
       end
     end
   end
