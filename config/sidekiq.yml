@@ -1,5 +1,9 @@
 ---
 :concurrency: 1
 :queues:
+  - gisAssemblyWF_high
+  - gisDerivativeWF_high
   - gisAssemblyWF_default
   - gisDerivativeWF_default
+  - gisAssemblyWF_low
+  - gisDerivativeWF_low
