@@ -15,6 +15,9 @@ module GisRobotSuite
     # we've observed inconsistency in QA and Stage with the NFS volumes
     # where files are written, we need to recheck.
     # This method will retry fetching the file up to `max_tries` times.
+    # The file is only moved into place once it has been fetched in full, so
+    # a failed fetch leaves nothing at `location` (and leaves any file already
+    # there untouched).
     # @param [String] filename the filename to fetch
     # @param [Object] location to write the file (could be a Pathname object, a string representing a local path)
     # @param [Integer] max_tries the number of times to retry fetching the file
@@ -46,16 +49,29 @@ module GisRobotSuite
 
     private
 
-    # fetch a file from perservation and write to disk
+    # Fetch a file from preservation into a temporary file alongside `path`, then
+    # rename it into place. Opening `path` itself before the fetch would leave an
+    # empty (or partial) file there whenever the fetch fails, and later runs would
+    # take that file as already fetched.
     def fetch_and_write_file_to_disk(filename:, path:)
-      path.open('wb') do |file_writer|
-        logger.info("fetching #{filename} for #{druid} and saving to #{path}")
+      temp_path = temp_path_for(path)
+      logger.info("fetching #{filename} for #{druid} and saving to #{path}")
+      temp_path.open('wb') do |file_writer|
         preservation_client.objects.content(
           druid:,
           filepath: filename,
           on_data: proc { |data, _count| file_writer.write(data) }
         )
       end
+      temp_path.rename(path)
+    ensure
+      temp_path&.delete if temp_path&.exist?
+    end
+
+    # A dotfile in the same directory, so that the rename stays on one filesystem
+    # and globs over the content directory don't pick it up.
+    def temp_path_for(path)
+      path.dirname / ".#{path.basename}.#{SecureRandom.hex(8)}.part"
     end
 
     def preservation_client
