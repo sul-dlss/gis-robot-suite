@@ -41,6 +41,26 @@ RSpec.describe GisRobotSuite::FileFetcher do
           expect(logger).to have_received(:info).once
           expect(File.read(file_path)).to eq("Content for: #{filename}")
         end
+
+        context 'when the fetched file has the expected md5' do
+          let(:expected_md5) { Digest::MD5.hexdigest("Content for: #{filename}") }
+
+          it 'writes the file' do
+            expect(file_fetcher.write_file_with_retries(filename:, location:, expected_md5:)).to be(true)
+            expect(File.read(file_path)).to eq("Content for: #{filename}")
+          end
+        end
+
+        context 'when the fetched file does not have the expected md5' do
+          let(:expected_md5) { Digest::MD5.hexdigest('other content') }
+
+          it 'raises and leaves nothing in the destination directory' do
+            expect { file_fetcher.write_file_with_retries(filename:, location:, expected_md5:) }
+              .to raise_error(Preservation::Client::IntegrityError)
+            expect(location).not_to exist
+            expect(Dir.children(base_dir)).to be_empty
+          end
+        end
       end
 
       context 'when preservation is still processing' do
@@ -65,6 +85,50 @@ RSpec.describe GisRobotSuite::FileFetcher do
             expect(Honeybadger).to have_received(:notify).with('Exceeded max_tries attempting to fetch file', context:)
             expect(file_fetcher).to have_received(:sleep).with((Settings.sleep_coefficient * 2)**3) # should have hit max backoff time of 2^3 seconds
           end
+
+          it 'leaves nothing in the destination directory' do
+            file_fetcher.write_file_with_retries(filename:, location:)
+            expect(location).not_to exist
+            expect(Dir.children(base_dir)).to be_empty
+          end
+        end
+      end
+
+      context 'when a file is already at the location' do
+        before { File.write(file_path, 'stale content') }
+
+        it 'replaces it with the fetched file' do
+          file_fetcher.write_file_with_retries(filename:, location:)
+          expect(File.read(file_path)).to eq("Content for: #{filename}")
+          expect(Dir.children(base_dir)).to eq([filename])
+        end
+
+        context 'when retries are exhausted' do
+          let(:response) { not_found_response }
+
+          it 'returns false and leaves the existing file alone' do
+            expect(file_fetcher.write_file_with_retries(filename:, location:)).to be(false)
+            expect(File.read(file_path)).to eq('stale content')
+            expect(Dir.children(base_dir)).to eq([filename])
+          end
+        end
+      end
+
+      context 'when the fetch fails partway through' do
+        let(:objects) { Preservation::Client.configure(url: Settings.preservation_catalog.url, token: Settings.preservation_catalog.token).objects }
+
+        before do
+          # stub only the streaming request, so the real content_to_file handles the failure
+          allow(objects).to receive(:content) do |on_data:, **|
+            on_data.call('partial content', 15, nil)
+            raise Faraday::ConnectionFailed, 'connection reset'
+          end
+        end
+
+        it 'raises and leaves nothing in the destination directory' do
+          expect { file_fetcher.write_file_with_retries(filename:, location:) }.to raise_error(Faraday::ConnectionFailed)
+          expect(location).not_to exist
+          expect(Dir.children(base_dir)).to be_empty
         end
       end
     end
