@@ -30,9 +30,10 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
       externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.zip',
       label: 'data.zip',
       filename: 'data.zip',
-      size: 46_508_117,
+      size: data_file_size,
       version: 2,
       hasMimeType: 'application/zip',
+      hasMessageDigests: [{ type: 'md5', digest: data_file_md5 }],
       administrative: {
         publish: true,
         sdrPreserve: true,
@@ -41,19 +42,22 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
     )
   end
   let(:also_data) do
-    Cocina::Models::File.new(filename: 'data2.zip',
-                             label: 'data2.zip',
-                             type: 'https://cocina.sul.stanford.edu/models/file',
-                             externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.zip',
-                             size: 46_508_117,
-                             version: 2,
-                             hasMimeType: 'application/zip',
-                             administrative: {
-                               publish: true,
-                               sdrPreserve: true,
-                               shelve: true
-                             })
+    Cocina::Models::File.new({ filename: 'data2.zip',
+                               label: 'data2.zip',
+                               type: 'https://cocina.sul.stanford.edu/models/file',
+                               externalIdentifier: 'https://cocina.sul.stanford.edu/file/vz757hs1282-vz757hs1282_1/data.zip',
+                               size: also_data_size,
+                               version: 2,
+                               hasMimeType: 'application/zip',
+                               administrative: {
+                                 publish: true,
+                                 sdrPreserve: true,
+                                 shelve: true
+                               } }.compact)
   end
+  let(:data_file_size) { 46_508_117 }
+  let(:data_file_md5) { '6a2b3c8e0f6f3b9c1d2e4f5a6b7c8d9e' }
+  let(:also_data_size) { 46_508_117 }
   let(:cocina_model) { build(:dro, id: druid).new(structural: structural, type: object_type, access: { view: 'world' }) }
   let(:object_type) { Cocina::Models::ObjectType.geo }
   let(:file_fetcher) { instance_double(GisRobotSuite::FileFetcher, write_file_with_retries: fetch_success) }
@@ -111,21 +115,84 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
       end
 
       it 'calls the write_file_with_retries method with correct files' do
-        expect(perform).to eq ['data.zip', 'data2.zip']
+        perform
         expect(file_fetcher).to have_received(:write_file_with_retries)
-          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
+          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3, expected_md5: nil)
         expect(file_fetcher).to have_received(:write_file_with_retries)
-          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3, expected_md5: nil)
       end
     end
 
     context 'when use: nil' do
       it 'calls the write_file_with_retries method with correct files' do
-        expect(perform).to eq ['data.zip', 'data2.zip']
+        perform
         expect(file_fetcher).to have_received(:write_file_with_retries)
-          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
+          .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3, expected_md5: data_file_md5)
         expect(file_fetcher).to have_received(:write_file_with_retries)
-          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3, expected_md5: nil)
+      end
+    end
+  end
+
+  context 'when files are already in the workspace' do
+    let(:data_file_size) { 'data.zip content'.bytesize }
+    let(:also_data_size) { 'data2.zip content'.bytesize }
+
+    before do
+      workspace_path.mkpath
+      File.write(workspace_path / 'data.zip', 'data.zip content')
+      File.write(workspace_path / 'data2.zip', existing_also_data)
+    end
+
+    context 'when an existing file matches the cocina size' do
+      let(:existing_also_data) { 'data2.zip content' }
+
+      it 'does not fetch it again' do
+        perform
+        expect(file_fetcher).not_to have_received(:write_file_with_retries)
+      end
+    end
+
+    context 'when an existing file is empty' do
+      let(:existing_also_data) { '' }
+
+      it 'fetches it again' do
+        perform
+        expect(file_fetcher).to have_received(:write_file_with_retries).once
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3, expected_md5: nil)
+      end
+    end
+
+    context 'when an existing file is the wrong size' do
+      let(:existing_also_data) { 'data2.zip cont' }
+
+      it 'fetches it again' do
+        perform
+        expect(file_fetcher).to have_received(:write_file_with_retries).once
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3, expected_md5: nil)
+      end
+    end
+
+    context 'when the cocina has no size for an existing file' do
+      let(:existing_also_data) { 'data2.zip content' }
+      let(:also_data_size) { nil }
+
+      it 'fetches it again' do
+        perform
+        expect(file_fetcher).to have_received(:write_file_with_retries).once
+        expect(file_fetcher).to have_received(:write_file_with_retries)
+          .with(filename: 'data2.zip', location: workspace_path / 'data2.zip', max_tries: 3, expected_md5: nil)
+      end
+    end
+
+    context 'when re-fetching a mismatched file fails' do
+      let(:existing_also_data) { '' }
+      let(:fetch_success) { false }
+
+      it 'raises an exception' do
+        expect { perform }.to raise_error(RuntimeError, 'Unable to fetch data2.zip for druid:bb222cc3333')
       end
     end
   end
@@ -136,7 +203,7 @@ RSpec.describe Robots::DorRepo::GisDerivative::FetchFiles do
     it 'raises an exception' do
       expect { perform }.to raise_error(RuntimeError, 'Unable to fetch data.zip for druid:bb222cc3333')
       expect(file_fetcher).to have_received(:write_file_with_retries)
-        .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3)
+        .with(filename: 'data.zip', location: workspace_path / 'data.zip', max_tries: 3, expected_md5: data_file_md5)
     end
   end
 end

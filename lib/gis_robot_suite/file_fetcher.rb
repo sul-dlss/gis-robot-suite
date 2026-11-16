@@ -18,13 +18,15 @@ module GisRobotSuite
     # @param [String] filename the filename to fetch
     # @param [Object] location to write the file (could be a Pathname object, a string representing a local path)
     # @param [Integer] max_tries the number of times to retry fetching the file
+    # @param [String, nil] expected_md5 if given, the fetched file must have this md5
     # @return [Boolean] true if the file was fetched and written, false otherwise
-    def write_file_with_retries(filename:, location:, max_tries: 3) # rubocop:disable Naming/PredicateMethod
+    # @raise [Preservation::Client::IntegrityError] if the fetched file doesn't match expected_md5
+    def write_file_with_retries(filename:, location:, max_tries: 3, expected_md5: nil) # rubocop:disable Naming/PredicateMethod
       tries = 0
       begin
         raise "Unknown location type: #{location.class}" unless location.is_a?(String) || location.is_a?(Pathname)
 
-        fetch_and_write_file_to_disk(filename:, path: Pathname.new(location))
+        fetch_and_write_file_to_disk(filename:, path: Pathname.new(location), expected_md5:)
       rescue Preservation::Client::NotFoundError, Faraday::ResourceNotFound
         tries += 1
         logger.warn("received NotFoundError from Preservation try ##{tries}")
@@ -46,16 +48,19 @@ module GisRobotSuite
 
     private
 
-    # fetch a file from perservation and write to disk
-    def fetch_and_write_file_to_disk(filename:, path:)
-      path.open('wb') do |file_writer|
-        logger.info("fetching #{filename} for #{druid} and saving to #{path}")
-        preservation_client.objects.content(
-          druid:,
-          filepath: filename,
-          on_data: proc { |data, _count| file_writer.write(data) }
-        )
-      end
+    # content_to_file fetches into a temporary file alongside `path`, checks its md5,
+    # and renames it into place only if both succeed, removing the temporary file
+    # otherwise. Opening `path` itself before the fetch would leave an empty (or
+    # partial) file there whenever the fetch fails, and later runs would take that
+    # file as already fetched.
+    def fetch_and_write_file_to_disk(filename:, path:, expected_md5:)
+      logger.info("fetching #{filename} for #{druid} and saving to #{path}")
+      preservation_client.objects.content_to_file(
+        druid:,
+        filepath: filename,
+        destination_filepath: path.to_s,
+        expected_md5:
+      )
     end
 
     def preservation_client
