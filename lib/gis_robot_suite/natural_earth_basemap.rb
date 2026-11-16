@@ -76,7 +76,7 @@ module GisRobotSuite
       return [POLAR_BOXES.fetch(crs)] if POLAR_BOXES.key?(crs)
 
       limit = VectorPreviewGenerator::WEB_MERCATOR_LAT
-      west, east = [extent[0], extent[2]].map { |x| central_meridian + degrees(x / EARTH_RADIUS) }
+      west, east = [extent[0], extent[2]].map { |x| central_meridian + degrees(x / EARTH_RADIUS).clamp(-180, 180) }
       south, north = [extent[1], extent[3]].map { |y| degrees(Math.atan(Math.sinh(y / EARTH_RADIUS))).clamp(-limit, limit) }
       return [[-180, south, 180, north]] if east - west >= 360
 
