@@ -68,6 +68,19 @@ RSpec.describe GisRobotSuite::NaturalEarthBasemap do
     end
   end
 
+  # Land from "past" 180° reprojects to the far side of the world, off the canvas.
+  # On GDAL 3.11 this can result in NaN coordinates (druid:vd060my1693) unless clipped
+  context 'with a canvas past 180°, in an unflipped Mercator' do
+    let(:extent) { around(175, 65, half_side: 3_000_000) }
+
+    it 'cuts Natural Earth to the world, not to the canvas past its edge' do
+      render
+
+      expect(output_dir.glob('basemap_1_*')).to be_empty
+      expect(output_dir.glob('basemap_0_land.fgb')).not_to be_empty
+    end
+  end
+
   context 'with a canvas round the south pole, in polar stereographic' do
     let(:crs) { 'EPSG:3031' }
     let(:extent) { [-50_000, -50_000, 50_000, 50_000] }
