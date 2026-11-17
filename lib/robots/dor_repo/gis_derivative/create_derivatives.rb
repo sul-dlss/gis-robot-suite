@@ -87,13 +87,9 @@ module Robots
           return if updater.has_file?(use: 'thumbnail', file_set:, mimetype: JP2_MIME_TYPE)
 
           jp2 = jp2_filename(cocina_file.filename)
-          create_preview_jp2(preview_source(cocina_file), jp2, preview_generator_for(cocina_file))
+          create_preview_jp2(cocina_file, jp2)
           store_derivative(filename: jp2, use: 'thumbnail', mimetype: JP2_MIME_TYPE, file_set:,
                            presentation: jp2_presentation(workspace_path(jp2)))
-        end
-
-        def preview_generator_for(cocina_file)
-          raster?(cocina_file) ? GisRobotSuite::RasterPreviewGenerator : GisRobotSuite::VectorPreviewGenerator
         end
 
         # We render the thumbnail from the derivative where there is one: the FlatGeoBuf for vectors,
@@ -140,7 +136,14 @@ module Robots
         def create_cog(filename)
           GisRobotSuite::CogGenerator.generate(input_path: workspace_path(filename),
                                                output_path: workspace_path(cog_filename(filename)),
-                                               unit: vertical_crs&.unit_label, logger: logger)
+                                               unit: vertical_crs&.unit_label, fallback_crs:, logger: logger)
+        end
+
+        # Legacy data was frequently accessioned without a projection of its own -- shapefiles without
+        # a .prj, GeoTIFFs georeferenced by nothing but a .tfw world file -- leaving it with nothing to
+        # reproject from; the one the descriptive metadata records stands in.
+        def fallback_crs
+          GisRobotSuite.map_projection(cocina_object)
         end
 
         # Generate vertical CRS info from the ESRI XML metadata, if present
@@ -153,17 +156,21 @@ module Robots
           @vertical_crs = nil
         end
 
-        def create_preview_jp2(input_path, jp2, klass)
-          klass.generate(input_path:, output_path: workspace_path(jp2), logger: logger)
+        def create_preview_jp2(cocina_file, jp2)
+          input_path = preview_source(cocina_file)
+          output_path = workspace_path(jp2)
+          if raster?(cocina_file)
+            GisRobotSuite::RasterPreviewGenerator.generate(input_path:, output_path:, fallback_crs:, logger:)
+          else
+            GisRobotSuite::VectorPreviewGenerator.generate(input_path:, output_path:, logger:)
+          end
         end
 
         def generate_vector_derivatives(filename)
-          # Legacy ESRI shapefiles were frequently accessioned without a .prj, leaving the data with
-          # no projection to reproject from; the one the descriptive metadata records stands in.
           GisRobotSuite::VectorDerivativeGenerator.generate(input_path: workspace_path(filename),
                                                             fgb_path: workspace_path(fgb_filename(filename)),
                                                             pmtiles_path: workspace_path(pmtiles_filename(filename)),
-                                                            fallback_crs: GisRobotSuite.map_projection(cocina_object), logger: logger)
+                                                            fallback_crs:, logger: logger)
         end
 
         def jp2_presentation(path)

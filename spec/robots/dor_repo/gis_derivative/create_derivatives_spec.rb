@@ -153,6 +153,42 @@ RSpec.describe Robots::DorRepo::GisDerivative::CreateDerivatives do
       end
     end
 
+    # Georeferenced by nothing but a .tfw world file, in UTM metres, so GDAL finds no CRS: without
+    # one, the COG conversion would take the metres for Web Mercator's and put the data in Algeria.
+    context 'with a GeoTIFF that declares no CRS of its own' do
+      let(:druid) { 'druid:ws123tf4567' }
+      let(:layer_name) { 'sidescan' }
+      let(:cocina_object) do
+        build(:dro, id: druid).new(structural: structural, access: { view: 'world' }, description: description)
+      end
+      let(:description) do
+        {
+          title: [{ value: 'Sidescan sonar' }],
+          form: [{ value: 'EPSG::26910', type: 'map projection' }],
+          purl: "https://purl.stanford.edu/#{bare_druid}"
+        }
+      end
+
+      it 'creates a COG where the projection cocina recorded puts it' do
+        info = JSON.parse(GisRobotSuite.run_system_command("gdalinfo -json #{Shellwords.escape(cog_file_path.to_s)}", logger:)[:stdout_str])
+        west, south = info.dig('wgs84Extent', 'coordinates').first.transpose.map(&:min)
+        expect(west).to be_within(0.01).of(-121.991)
+        expect(south).to be_within(0.01).of(36.817)
+      end
+
+      it 'creates a JP2 thumbnail' do
+        expect(jp2_file_path).to exist
+      end
+
+      # The CRS is assigned on a VRT, which must not be left for accessioning to pick up, and not on
+      # the master, whose checksums cocina recorded during assembly
+      it 'leaves no working files behind, and no CRS on the master' do
+        expect(workspace_path.children.map { |child| child.basename.to_s } - ['sidescan.jp2.aux.xml'])
+          .to contain_exactly('sidescan.tif', 'sidescan.tfw', 'sidescan_cog.tif', 'sidescan.jp2')
+        expect(workspace_path / 'sidescan.tif.aux.xml').not_to exist
+      end
+    end
+
     context 'when the COG already exists in cocina' do
       let(:files) { [master_file, derivative_file] }
       let(:derivative_file) do
