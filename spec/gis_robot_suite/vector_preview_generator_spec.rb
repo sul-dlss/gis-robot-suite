@@ -99,6 +99,18 @@ RSpec.describe GisRobotSuite::VectorPreviewGenerator do
     end
   end
 
+  context 'with a polygon that GEOS fails to simplify, like one with a hole of a single point' do
+    let(:degenerate_hole) { { type: 'Polygon', coordinates: [*square(0.5, 0.5, 0.9, 0.9)[:coordinates], [[0.7, 0.7]]] } }
+
+    before { write_geojson(square(-1, -1, 1, 1), degenerate_hole) }
+
+    it 'still draws the rest of the layer' do
+      generate
+
+      expect(center).to be_colored(fill)
+    end
+  end
+
   context 'with a line' do
     before { write_geojson({ type: 'LineString', coordinates: [[-1, 0], [1, 0]] }) }
 

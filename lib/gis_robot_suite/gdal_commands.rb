@@ -18,9 +18,14 @@ module GisRobotSuite
     # the path of the finished output file. We use FlatGeoBuf in between because
     # GeoJSON can't record a CRS that has no EPSG code, and the flipped Mercator
     # we sometimes use would come back from it as WGS 84.
+    #
+    # Written without FlatGeoBuf's spatial index, which nothing here reads but which refuses NULL
+    # geometries. A step that GEOS fails on (simplify or buffer, say) leaves that feature with a NULL
+    # geometry, so without the index the feature is written without one rather than failing the
+    # whole step; every later step skips it, as rasterize does and as our geometry-type filters do.
     def pipeline(source, name, *steps)
       dest = path(name)
-      gdal 'vector', 'pipeline', 'read', source, *steps.flat_map { |step| ['!', *step] }, '!', 'write', dest
+      gdal 'vector', 'pipeline', 'read', source, *steps.flat_map { |step| ['!', *step] }, '!', 'write', '--lco', 'SPATIAL_INDEX=NO', dest
       dest
     end
 
