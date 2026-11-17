@@ -12,6 +12,7 @@ module GisRobotSuite
   class RasterPreviewGenerator
     include GdalCommands
     include PreviewMercator
+    include RasterSourceCrs
 
     SIZE = 512 # pixels along each side of the thumbnail
     SUPERSAMPLE = 2
@@ -22,17 +23,21 @@ module GisRobotSuite
     VIRIDIS = [[68, 1, 84], [71, 44, 122], [59, 81, 139], [44, 113, 142], [33, 144, 141],
                [39, 173, 129], [92, 200, 99], [170, 220, 50], [253, 231, 37]].freeze
 
-    def self.generate(input_path:, output_path:, logger: nil)
-      new(input_path: input_path, output_path: output_path, logger: logger).generate
+    def self.generate(input_path:, output_path:, fallback_crs: nil, logger: nil)
+      new(input_path: input_path, output_path: output_path, fallback_crs: fallback_crs, logger: logger).generate
     end
 
-    def initialize(input_path:, output_path:, logger: nil)
+    # @param [String] fallback_crs the CRS to assign the raster if it declares no usable one of its
+    #   own, e.g. "EPSG:26904" (see RasterSourceCrs)
+    def initialize(input_path:, output_path:, fallback_crs: nil, logger: nil)
       @input_path = input_path
       @output_path = output_path
+      @fallback_crs = fallback_crs
       @logger = logger
     end
 
     def generate
+      crs_to_assign # fail before doing any work if there's nothing to reproject from
       Dir.mktmpdir("#{File.basename(output_path, '.jp2')}_preview", output_path.parent) do |dir|
         @work = Pathname(dir)
         trace_outline
@@ -45,15 +50,25 @@ module GisRobotSuite
 
     private
 
-    attr_reader :input_path, :output_path, :logger, :work
+    attr_reader :input_path, :output_path, :fallback_crs, :logger, :work
 
     def wgs84_path = path('outline.fgb')
+
+    # What gets drawn: the raster itself, or a VRT of it in the working directory when it needs a
+    # CRS assigned (see RasterSourceCrs)
+    def source
+      @source ||= if crs_to_assign
+                    path('source.vrt').tap { |vrt| write_source_vrt(vrt) }
+                  else
+                    input_path
+                  end
+    end
 
     # Where the raster has data, outlined in EPSG:4326. Only uses the first band
     # as bytes; GDAL only takes an alpha band as a mask when it's bytes, and the
     # alpha is all the outline needs.
     def trace_outline
-      run 'gdalwarp', '-q', '-overwrite', '-t_srs', 'EPSG:4326', '-ts', 256, 0, '-r', 'near', '-srcband', 1, '-ot', 'Byte', '-dstalpha', input_path, path('coarse.tif')
+      run 'gdalwarp', '-q', '-overwrite', '-t_srs', 'EPSG:4326', '-ts', 256, 0, '-r', 'near', '-srcband', 1, '-ot', 'Byte', '-dstalpha', source, path('coarse.tif')
       gdal 'raster', 'footprint', '--overwrite', '--band', 1, path('coarse.tif'), wgs84_path
       return if feature_count(wgs84_path).positive?
 
@@ -94,7 +109,7 @@ module GisRobotSuite
     # which would draw it fully opaque.
     def warp(*source_bands, resampling:)
       run 'gdalwarp', '-q', '-overwrite', '-t_srs', mercator, '-te', *extent, '-ts', pixels, pixels, '-r', resampling,
-          *source_bands.flat_map { |band| ['-srcband', band] }, '-dstalpha', '-wo', 'DST_ALPHA_MAX=255', input_path, path('warped.tif')
+          *source_bands.flat_map { |band| ['-srcband', band] }, '-dstalpha', '-wo', 'DST_ALPHA_MAX=255', source, path('warped.tif')
       path('warped.tif')
     end
 
@@ -133,12 +148,12 @@ module GisRobotSuite
 
     # Each band's [min, max] (without leaving a .aux.xml of them beside the source)
     def stats
-      @stats ||= JSON.parse(gdal('raster', 'info', '-f', 'json', '--approx-stats', '--config', 'GDAL_PAM_ENABLED=NO', input_path))['bands']
+      @stats ||= JSON.parse(gdal('raster', 'info', '-f', 'json', '--approx-stats', '--config', 'GDAL_PAM_ENABLED=NO', source))['bands']
                      .map { |band| [band['minimum'], band['maximum']] }
     end
 
     # Band info from GDAL
-    def bands = @bands ||= JSON.parse(gdal('raster', 'info', '-f', 'json', input_path))['bands']
+    def bands = @bands ||= JSON.parse(gdal('raster', 'info', '-f', 'json', source))['bands']
 
     # Dimensions of a square canvas centred on the outline, with padding, in
     # Web Mercator meters
