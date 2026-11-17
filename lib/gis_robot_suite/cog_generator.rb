@@ -3,40 +3,45 @@
 module GisRobotSuite
   # Generates Cloud Optimized GeoTIFF (COG) derivatives.
   class CogGenerator
-    def self.generate(input_path:, output_path:, unit: nil, logger: nil)
-      new(input_path: input_path, output_path: output_path, unit: unit, logger: logger).generate
+    include RasterSourceCrs
+
+    def self.generate(input_path:, output_path:, unit: nil, fallback_crs: nil, logger: nil)
+      new(input_path: input_path, output_path: output_path, unit: unit, fallback_crs: fallback_crs, logger: logger).generate
     end
 
     # @param [String] unit the unit the band values are in, e.g. "m". GDAL records it as the
     #   band's unit type, which is the only place a COG can say what its values measure.
-    def initialize(input_path:, output_path:, unit: nil, logger: nil)
+    # @param [String] fallback_crs the CRS to assign the raster if it declares no usable one of its
+    #   own, e.g. "EPSG:26904" (see RasterSourceCrs)
+    def initialize(input_path:, output_path:, unit: nil, fallback_crs: nil, logger: nil)
       @input_path = input_path
       @output_path = output_path
       @unit = unit
+      @fallback_crs = fallback_crs
       @logger = logger
     end
 
     def generate
-      return convert_to_cog(input_path) if unit.blank?
+      return convert_to_cog(input_path) if unit.blank? && crs_to_assign.nil?
 
-      convert_with_unit
+      convert_via_vrt
     end
 
     private
 
-    attr_reader :input_path, :output_path, :unit, :logger
+    attr_reader :input_path, :output_path, :unit, :fallback_crs, :logger
 
-    # `gdal raster convert` takes no band metadata options, and a COG cannot be edited in
-    # place afterwards without losing the layout that makes it a COG, so the unit has to be
-    # set on the conversion's input. A VRT carries it without copying any raster data and
-    # leaves the master alone -- editing the master would invalidate the checksums cocina
-    # recorded for it during assembly.
-    def convert_with_unit
+    # `gdal raster convert` takes no band metadata or CRS options, and a COG cannot be edited in
+    # place afterwards without losing the layout that makes it a COG, so the unit and any CRS the
+    # raster lacks have to be set on the conversion's input. A VRT carries them without copying
+    # any raster data and leaves the master alone -- editing the master would invalidate the
+    # checksums cocina recorded for it during assembly.
+    def convert_via_vrt
       vrt_path = output_path.parent / "#{File.basename(output_path.to_s, '.tif')}.vrt"
 
       begin
-        convert_to_vrt(vrt_path)
-        declare_unit(vrt_path)
+        write_source_vrt(vrt_path)
+        declare_unit(vrt_path) if unit.present?
         convert_to_cog(vrt_path)
       ensure
         FileUtils.rm_f(vrt_path)
@@ -55,11 +60,6 @@ module GisRobotSuite
         band.prepend_child(unit_type)
       end
       vrt_path.write(vrt.to_xml)
-    end
-
-    def convert_to_vrt(vrt_path)
-      command = "gdal raster convert --overwrite --format=VRT #{Shellwords.escape(input_path.to_s)} #{Shellwords.escape(vrt_path.to_s)}"
-      GisRobotSuite.run_system_command(command, logger: logger)
     end
 
     def convert_to_cog(path)

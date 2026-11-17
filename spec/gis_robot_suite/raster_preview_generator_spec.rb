@@ -4,9 +4,10 @@ require 'spec_helper'
 require 'tmpdir'
 
 RSpec.describe GisRobotSuite::RasterPreviewGenerator do
-  subject(:generate) { described_class.generate(input_path:, output_path:, logger:) }
+  subject(:generate) { described_class.generate(input_path:, output_path:, fallback_crs:, logger:) }
 
   let(:logger) { instance_double(Logger, info: nil, warn: nil, debug: nil, error: nil) }
+  let(:fallback_crs) { nil }
   let(:input_dir) { Pathname(Dir.mktmpdir) }
   let(:input_path) { input_dir / 'input.tif' }
   let(:output_dir) { Pathname(Dir.mktmpdir) }
@@ -73,6 +74,20 @@ RSpec.describe GisRobotSuite::RasterPreviewGenerator do
       generate
 
       expect(output_dir.children.map { |child| child.basename.to_s }).to all(start_with('preview.jp2'))
+    end
+
+    context 'with a fallback CRS' do
+      let(:fallback_crs) { 'EPSG:26910' }
+
+      before { allow(GisRobotSuite).to receive(:run_system_command).and_call_original }
+
+      it 'draws it from its own CRS, ignoring the fallback' do
+        generate
+
+        expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('gdal raster edit'), logger:)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdalwarp', input_path.to_s), logger:).twice
+        expect(center).to be_colored(over_water([255, 0, 0]))
+      end
     end
   end
 
@@ -167,6 +182,50 @@ RSpec.describe GisRobotSuite::RasterPreviewGenerator do
       generate
 
       expect(center).to be_colored(over_water(viridis_start))
+    end
+  end
+
+  # Georeferenced by nothing but a .tfw world file, as many legacy GeoTIFFs are, so GDAL finds no
+  # CRS to reproject from
+  context 'with a raster that declares no CRS of its own' do
+    before do
+      rasterize({ [-1, -1, 1, 1] => 40 }, extent: [-1, -1, 1, 1], size: [20, 20], type: 'Byte', nodata: 0, to: input_dir / 'georeferenced.tif')
+      run "gdal_translate -q --config GDAL_PAM_ENABLED NO -co PROFILE=BASELINE -co TFW=YES #{input_dir / 'georeferenced.tif'} #{input_path}"
+      FileUtils.rm_f([input_dir / 'georeferenced.tif', input_dir / 'boxes.geojson'])
+      allow(GisRobotSuite).to receive(:run_system_command).and_call_original
+    end
+
+    it 'has no CRS to begin with' do
+      expect(JSON.parse(run("gdal raster info -f json #{input_path}")).dig('stac', 'proj:projjson')).to be_nil
+      expect(input_dir / 'input.tfw').to exist
+    end
+
+    context 'with a fallback CRS' do
+      let(:fallback_crs) { 'EPSG:4326' }
+
+      it 'draws it where the fallback CRS puts it' do
+        generate
+
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdal raster edit --crs EPSG:4326'), logger:)
+        expect(GisRobotSuite).to have_received(:run_system_command).with(a_string_including('gdalwarp', 'source.vrt'), logger:).twice
+        expect(center).to be_colored(over_water([40, 40, 40]))
+      end
+
+      it 'leaves no working files behind, and the master as it was' do
+        generate
+
+        expect(output_dir.children.map { |child| child.basename.to_s }).to all(start_with('preview.jp2'))
+        expect(input_dir.children.map { |child| child.basename.to_s }).to contain_exactly('input.tif', 'input.tfw')
+      end
+    end
+
+    context 'without a fallback CRS' do
+      it 'raises, naming the file' do
+        expect { generate }.to raise_error(GisRobotSuite::RasterSourceCrs::MissingSourceCrs,
+                                           "#{input_path} has no usable spatial reference system " \
+                                           'and no map projection was supplied to fall back on')
+        expect(output_path).not_to exist
+      end
     end
   end
 end
