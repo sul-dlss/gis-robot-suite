@@ -30,6 +30,44 @@ RSpec.describe GisRobotSuite::DescriptiveMetadataBuilder do
     end
   end
 
+  describe '.title' do
+    let(:builder) { described_class.new(cocina_model:, bare_druid:, iso19139_ng:, logger:) }
+    let(:title) { 'Example Title' }
+    let(:alternate_titles) { [] }
+
+    before do
+      alternates = alternate_titles.map { |alternate| "<alternateTitle><gco:CharacterString>#{alternate}</gco:CharacterString></alternateTitle>" }
+      xml = <<~XML
+        <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+          <identificationInfo>
+            <MD_DataIdentification>
+              <citation><CI_Citation>
+                <title><gco:CharacterString>#{title}</gco:CharacterString></title>
+                #{alternates.join}
+              </CI_Citation></citation>
+            </MD_DataIdentification>
+          </identificationInfo>
+        </MD_Metadata>
+      XML
+      data_id_node = Nokogiri::XML(xml).xpath('//gmd:MD_DataIdentification',
+                                              'gmd' => 'http://www.isotc211.org/2005/gmd')
+      allow(builder).to receive(:data_id_node).and_return(data_id_node)
+    end
+
+    context 'when the title and alternate titles have surrounding whitespace' do
+      let(:title) { "\n  Land Use, California, 2000 \t" }
+      let(:alternate_titles) { [' Land Use 2000', "California Land Use\n"] }
+
+      it 'strips the whitespace from each value' do
+        expect(builder.send(:title)).to eq [
+          { value: 'Land Use, California, 2000' },
+          { value: 'Land Use 2000', type: 'alternative', displayLabel: 'Alternative title' },
+          { value: 'California Land Use', type: 'alternative', displayLabel: 'Alternative title' }
+        ]
+      end
+    end
+  end
+
   context 'when data is missing' do
     let(:bare_druid) { 'bb333cc4444' }
 

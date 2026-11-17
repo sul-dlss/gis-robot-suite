@@ -62,20 +62,18 @@ module GisRobotSuite
 
     def title
       title_node = data_id_node.xpath('gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', NS)
-      raise "Title is missing for #{bare_druid}." unless title_node.any?
+      title_value = title_node.text.strip
+      raise "Title is missing for #{bare_druid}." if title_value.empty?
 
-      title = { value: title_node.text }
-
-      [title, alternate_titles].flatten.compact
+      [{ value: title_value }, alternate_titles].flatten.compact
     end
 
     def alternate_titles
       alternate_nodes = data_id_node.xpath('gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', NS)
-      return unless alternate_nodes.any?
+      values = alternate_nodes.map { |node| node.text.strip }.reject(&:empty?)
+      return if values.empty?
 
-      [].tap do |alternates|
-        alternates << alternate_nodes.map { |node| { value: node.text, type: 'alternative', displayLabel: 'Alternative title' } }
-      end.flatten
+      values.map { |value| { value:, type: 'alternative', displayLabel: 'Alternative title' } }
     end
 
     def event
