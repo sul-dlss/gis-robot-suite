@@ -4,6 +4,7 @@ module GisRobotSuite
   # Generates Cloud Optimized GeoTIFF (COG) derivatives.
   class CogGenerator
     include RasterSourceCrs
+    include RasterEightBitValues
 
     def self.generate(input_path:, output_path:, unit: nil, fallback_crs: nil, logger: nil)
       new(input_path: input_path, output_path: output_path, unit: unit, fallback_crs: fallback_crs, logger: logger).generate
@@ -22,7 +23,7 @@ module GisRobotSuite
     end
 
     def generate
-      return convert_to_cog(input_path) if unit.blank? && crs_to_assign.nil?
+      return convert_to_cog(input_path) if unit.blank? && crs_to_assign.nil? && !eight_bit_values?
 
       convert_via_vrt
     end
@@ -31,20 +32,27 @@ module GisRobotSuite
 
     attr_reader :input_path, :output_path, :unit, :fallback_crs, :logger
 
-    # `gdal raster convert` takes no band metadata or CRS options, and a COG cannot be edited in
-    # place afterwards without losing the layout that makes it a COG, so the unit and any CRS the
-    # raster lacks have to be set on the conversion's input. A VRT carries them without copying
-    # any raster data and leaves the master alone -- editing the master would invalidate the
-    # checksums cocina recorded for it during assembly.
+    # `gdal raster convert` takes no band metadata, CRS or data type options, and a COG cannot be
+    # edited in place afterwards without losing the layout that makes it a COG, so the unit, any CRS
+    # the raster lacks, and a conversion to Byte (see RasterEightBitValues) have to be set on the
+    # conversion's input. VRTs carry them without copying any raster data and leave the master
+    # alone -- editing the master would invalidate the checksums cocina recorded for it during assembly.
     def convert_via_vrt
-      vrt_path = output_path.parent / "#{File.basename(output_path.to_s, '.tif')}.vrt"
+      basename = File.basename(output_path.to_s, '.tif')
+      vrt_path = output_path.parent / "#{basename}.vrt"
+      byte_vrt_path = output_path.parent / "#{basename}_byte.vrt"
 
       begin
         write_source_vrt(vrt_path)
-        declare_unit(vrt_path) if unit.present?
-        convert_to_cog(vrt_path)
+        source = vrt_path
+        if eight_bit_values?
+          write_byte_vrt(vrt_path, byte_vrt_path)
+          source = byte_vrt_path
+        end
+        declare_unit(source) if unit.present?
+        convert_to_cog(source)
       ensure
-        FileUtils.rm_f(vrt_path)
+        FileUtils.rm_f([vrt_path, byte_vrt_path])
       end
     end
 
