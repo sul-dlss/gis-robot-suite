@@ -14,9 +14,6 @@ geohydra:
   stage: "/stage"
   assembly: "/dor/assembly"
   workspace: "/workspace"
-  tmpdir: "/tmp"
-  opengeometadata:
-    dir: "/opengeometadata"
 
 purl:
   url: "http://localhost/purl"
