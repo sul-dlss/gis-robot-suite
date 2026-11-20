@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "name": "pacific_islands",
+  "features": [
+    { "type": "Feature", "properties": { "name": "west of the antimeridian" },
+      "geometry": { "type": "Polygon", "coordinates": [[[178.0, -1.0], [179.0, -1.0], [179.0, 0.0], [178.0, 0.0], [178.0, -1.0]]] } },
+    { "type": "Feature", "properties": { "name": "east of the antimeridian" },
+      "geometry": { "type": "Polygon", "coordinates": [[[-179.0, 0.0], [-178.0, 0.0], [-178.0, 1.0], [-179.0, 1.0], [-179.0, 0.0]]] } }
+  ]
+}

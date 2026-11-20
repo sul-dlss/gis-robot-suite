@@ -297,7 +297,7 @@ module GisRobotSuite
         form << data_type
         form << geometry
       end.compact
-      { form: forms }
+      { form: forms, subject: [bounding_box_subject] }
     end
 
     def media_type
@@ -500,77 +500,27 @@ module GisRobotSuite
       Date.parse(value).strftime('%Y')
     end
 
+    # The extent extract-iso19139-metadata computed from the data and wrote into the ISO 19139, as
+    # MARC 255 coordinates. The structured bounding box subject states the same extent.
     def coordinates_subjects
-      # use coordinates in native projection only, no longer reproject
-      bounding_box = geographic_bounding_box
-      coords_val = if bounding_box
-                     coordinates(bounding_box)
-                   else
-                     file = vector_filepath || raster_filepath
-                     if file
-                       gdal_coords = coordinates_from_gdal(file)
-                       to_coordinates_ddmmss(gdal_coords) if gdal_coords
-                     end
-                   end
-
-      return unless coords_val
-
-      { value: coords_val,
-        type: 'map coordinates' } # also add field with the reference system
+      { value: to_coordinates_ddmmss([bounding_box.west, bounding_box.east, bounding_box.north, bounding_box.south]),
+        type: 'map coordinates' }
     end
 
-    def coordinates_from_gdal(file)
-      cmd = "#{Settings.gdal_path}gdal info '#{file}' -f json"
-      result = GisRobotSuite.run_system_command(cmd, logger:)
-      json = JSON.parse(result[:stdout_str])
-
-      bbox = json.dig('stac', 'proj:projjson', 'bbox') ||
-             json.dig('layers', 0, 'geometryFields', 0, 'coordinateSystem', 'projjson', 'bbox') ||
-             json.dig('coordinateSystem', 'projjson', 'bbox')
-
-      return unless bbox
-
-      west = bbox['west_longitude']
-      east = bbox['east_longitude']
-      north = bbox['north_latitude']
-      south = bbox['south_latitude']
-
-      return if [west, east, north, south].any?(&:nil?)
-
-      [west, east, north, south].map(&:to_f)
-    rescue StandardError => e
-      logger.error("Failed to obtain bounding box info using gdal info for #{bare_druid}: #{e.message}")
-      nil
+    def bounding_box_subject
+      { structuredValue: [
+          { value: bounding_box.west.to_s, type: 'west' },
+          { value: bounding_box.south.to_s, type: 'south' },
+          { value: bounding_box.east.to_s, type: 'east' },
+          { value: bounding_box.north.to_s, type: 'north' }
+        ],
+        type: 'bounding box coordinates',
+        encoding: { value: 'decimal' },
+        standard: { code: 'EPSG:4326' } }
     end
 
-    # Returns the one EX_GeographicBoundingBox to read coordinates from, or nil when
-    # the record states none.
-    #
-    # A record may carry several: the extent authored in the original record, and the
-    # extent ArcGIS computed from the geometry, which it flags with an extentTypeCode.
-    # The computed one is preferred, because for a subset such as PAD-US Guam the
-    # authored extent is inherited from the parent dataset and spans the whole world.
-    # Where more than one carries the flag, ESRI's stylesheet emits the synced extent
-    # last.
-    #
-    # Reading them together would concatenate their values, since NodeSet#text joins
-    # every match: boxes stating 50 and 49.38562 yielded "5049.38562", which then
-    # failed the range check in to_coordinates_ddmmss.
-    def geographic_bounding_box
-      boxes = data_id_node.xpath('gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', NS)
-      return if boxes.empty?
-
-      boxes.select { |box| box.xpath('gmd:extentTypeCode', NS).any? }.last || boxes.last
-    end
-
-    def coordinates(bounding_box)
-      west = bounding_box.xpath('gmd:westBoundLongitude/gco:Decimal', NS).text
-      east = bounding_box.xpath('gmd:eastBoundLongitude/gco:Decimal', NS).text
-      north = bounding_box.xpath('gmd:northBoundLatitude/gco:Decimal', NS).text
-      south = bounding_box.xpath('gmd:southBoundLatitude/gco:Decimal', NS).text
-
-      values = [west, east, north, south].map(&:to_f)
-      to_coordinates_ddmmss(values)
+    def bounding_box
+      @bounding_box ||= GisRobotSuite::Iso19139BoundingBox.read(iso19139_ng)
     end
 
     def identifier
@@ -800,6 +750,7 @@ module GisRobotSuite
     # Convert to MARC 255 DD into DDMMSS
     # westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude
     # e.g., -109.758319 -- -88.990844/48.999336 -- 29.423028
+    # The westernmost longitude is the greater of the two when the extent crosses the antimeridian.
     def to_coordinates_ddmmss(native_values)
       west, east, north, south = native_values
       raise ArgumentError, "Out of bounds latitude: #{north} #{south}" unless north.between?(-90, 90) && south.between?(-90, 90)

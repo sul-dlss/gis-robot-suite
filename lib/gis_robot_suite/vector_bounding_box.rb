@@ -7,25 +7,33 @@ module GisRobotSuite
   # reprojected copy of the data is written anywhere. Aggregating over every geometry gives the
   # true extent: transforming only the corners of the native envelope would understate it, because
   # straight edges in a projected CRS curve once they are expressed in longitude and latitude.
+  #
+  # Longitudes are aggregated twice, once as they are and once shifted into [0, 360], and the
+  # narrower result kept, so that data either side of the antimeridian gets the extent it has
+  # rather than one spanning the world. See Antimeridian.
   class VectorBoundingBox
     TARGET_SRID = 4326
 
-    def initialize(cocina_object:, logger:, rootdir:)
-      @cocina_object = cocina_object
-      @logger = logger
+    # @param rootdir [String] the druid's staging directory, holding content/
+    # @param esri_ng [Nokogiri::XML::Document] the ArcGIS metadata, for a projection to fall back on
+    def initialize(rootdir:, esri_ng:, logger:, bare_druid:)
       @rootdir = rootdir
+      @esri_ng = esri_ng
+      @logger = logger
+      @bare_druid = bare_druid
     end
 
-    # @return [Array<Float>] ulx, uly, lrx, lry (west, north, east, south) in EPSG:4326
+    # @return [BoundingBox]
     def bounding_box
-      envelope = transformed_envelope
+      envelope = transformed_envelope.transform_values(&:to_f)
+      west, east = Antimeridian.longitudes(envelope.values_at('w', 'e'), envelope.values_at('shifted_w', 'shifted_e'))
 
-      [envelope['w'].to_f, envelope['n'].to_f, envelope['e'].to_f, envelope['s'].to_f]
+      BoundingBox.new(west:, east:, north: envelope['n'], south: envelope['s'])
     end
 
     private
 
-    attr_reader :cocina_object, :logger, :rootdir
+    attr_reader :rootdir, :esri_ng, :logger, :bare_druid
 
     def transformed_envelope
       result = GisRobotSuite.run_system_command(
@@ -37,22 +45,26 @@ module GisRobotSuite
 
       return envelope if envelope.present? && envelope.values.none?(&:nil?)
 
-      raise "extract-boundingbox: #{bare_druid} #{layer_name} has no geometry to derive a bounding box from"
+      raise "bounding box: #{bare_druid} #{layer_name} has no geometry to derive a bounding box from"
     end
 
     # Aggregating the per-geometry envelope rather than calling ST_Extent, which GDAL's built-in
     # SQLite dialect does not provide. Quotes are required around the layer name because
     # identifiers starting with a number are rejected by SQLite unless quoted.
+    #
+    # ST_Shift_Longitude moves each negative longitude east by 360°, vertex by vertex, so it also
+    # mends a ring that crosses the antimeridian, which ST_Transform returns jumping from 180 to -180.
     def envelope_sql
-      transformed = "ST_Transform(geometry, #{TARGET_SRID})"
+      shifted = 'ST_Shift_Longitude(g)'
 
-      "select min(ST_MinX(#{transformed})) as w, min(ST_MinY(#{transformed})) as s, " \
-        "max(ST_MaxX(#{transformed})) as e, max(ST_MaxY(#{transformed})) as n " \
-        "from \"#{layer_name}\" where geometry is not null"
+      'select min(ST_MinX(g)) as w, min(ST_MinY(g)) as s, max(ST_MaxX(g)) as e, max(ST_MaxY(g)) as n, ' \
+        "min(ST_MinX(#{shifted})) as shifted_w, max(ST_MaxX(#{shifted})) as shifted_e " \
+        "from (select ST_Transform(geometry, #{TARGET_SRID}) as g " \
+        "from \"#{layer_name}\" where geometry is not null)"
     end
 
     # ST_Transform needs a source CRS, so when the data declares none, name the projection the
-    # descriptive metadata records. An OGR VRT attaches it without rewriting the data, and GDAL
+    # ArcGIS metadata records. An OGR VRT attaches it without rewriting the data, and GDAL
     # accepts the VRT document itself in place of a filename, so nothing is written to disk.
     # Legacy ESRI datasets were frequently accessioned without a .prj.
     def dataset
@@ -69,13 +81,11 @@ module GisRobotSuite
       VRT
     end
 
-    # The projection recorded in the descriptive metadata, used when the data file declares none.
-    # generate-descriptive runs earlier in gisAssemblyWF and raises when it cannot determine one,
-    # so this is only missing for a projection GDAL has no code for.
+    # The projection the ArcGIS metadata records, used when the data file declares none.
     def fallback_crs
-      GisRobotSuite.map_projection(cocina_object) ||
-        raise("extract-boundingbox: #{bare_druid} #{layer_name} has no spatial reference system " \
-              'and cocina records no map projection to fall back on')
+      EsriReferenceSystem.crs(esri_ng) ||
+        raise("bounding box: #{bare_druid} #{layer_name} has no spatial reference system " \
+              'and the ArcGIS metadata names none to fall back on')
     end
 
     # The coordinate system the data file itself declares, which for a shapefile means its .prj.
@@ -99,10 +109,6 @@ module GisRobotSuite
 
     def vector_filepath
       @vector_filepath ||= Dir.glob("#{rootdir}/content/*.{shp,geojson}").first
-    end
-
-    def bare_druid
-      @bare_druid ||= cocina_object.externalIdentifier.delete_prefix('druid:')
     end
   end
 end

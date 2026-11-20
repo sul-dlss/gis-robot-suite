@@ -121,7 +121,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                               identifier: [{ value: 'https://purl.stanford.edu/jf567jb0412' }] }],
           geographic: [{ form: [{ value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'GeoTIFF', type: 'data format' },
-                                { value: 'Dataset#Raster', type: 'type' }] }],
+                                { value: 'Dataset#Raster', type: 'type' }],
+                         subject: [{ structuredValue: [{ value: '-32.333876', type: 'west' }, { value: '36.000509', type: 'south' },
+                                                       { value: '-23.833706', type: 'east' }, { value: '40.500427', type: 'north' }],
+                                     type: 'bounding box coordinates', encoding: { value: 'decimal' }, standard: { code: 'EPSG:4326' } }] }],
           access: { accessContact: [{ value: 'nick@landinfo.com', type: 'email', displayLabel: 'Contact' }] },
           identifier: [{ displayLabel: 'DOI',
                          value: 'https://doi.org/10.25740/bh432xr2264',
@@ -213,7 +216,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                                      date: [{ value: '2024-01-16', encoding: { code: 'w3cdtf' } }] }] },
           geographic: [{ form: [{ value: 'application/vnd.shp', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'Shapefile', type: 'data format' },
-                                { value: 'Dataset#Polygon', type: 'type' }] }] }
+                                { value: 'Dataset#Polygon', type: 'type' }],
+                         subject: [{ structuredValue: [{ value: '-117.612825', type: 'west' }, { value: '33.472658', type: 'south' },
+                                                       { value: '-117.065506', type: 'east' }, { value: '34.03759', type: 'north' }],
+                                     type: 'bounding box coordinates', encoding: { value: 'decimal' }, standard: { code: 'EPSG:4326' } }] }] }
       end
 
       it 'generates cocina descriptive metadata' do
@@ -266,7 +272,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::GenerateDescriptive do
                            identifier: [{ value: 'edu.stanford.purl:vx813cc5549' }] },
           geographic: [{ form: [{ value: 'application/geo+json', type: 'media type', source: { value: 'IANA media type terms' } },
                                 { value: 'GeoJSON', type: 'data format' },
-                                { value: 'Dataset#Point', type: 'type' }] }] }
+                                { value: 'Dataset#Point', type: 'type' }],
+                         subject: [{ structuredValue: [{ value: '-158.017379', type: 'west' }, { value: '18.001995', type: 'south' },
+                                                       { value: '-65.594769', type: 'east' }, { value: '64.85437', type: 'north' }],
+                                     type: 'bounding box coordinates', encoding: { value: 'decimal' }, standard: { code: 'EPSG:4326' } }] }] }
       end
 
       it 'generates cocina descriptive metadata' do

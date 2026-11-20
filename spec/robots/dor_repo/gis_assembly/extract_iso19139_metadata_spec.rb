@@ -64,9 +64,18 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
     }
   end
 
+  # Most of these fixtures stage the ArcGIS metadata without the data it describes, so the box is
+  # stubbed unless a context has data to measure.
+  let(:bounding_box) { GisRobotSuite::BoundingBox.new(west: 169.5, east: -143.1, north: 4.7, south: -17.9) }
+  let(:measure_data) { false }
+
   # Get rid of any generated XML files
   def cleanup
     Dir.glob("#{staging_dir}/*-iso*.xml").each { |f| File.delete(f) }
+  end
+
+  def iso19139(layer_name)
+    Nokogiri::XML(File.read(File.join(staging_dir, "#{layer_name}-iso19139.xml")))
   end
 
   def band_units(layer_name)
@@ -78,6 +87,7 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
     cleanup
     allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_client)
     allow(workflow_client).to receive(:process).with('extract-iso19139-metadata').and_return(process_client)
+    allow(GisRobotSuite::BoundingBox).to receive(:from_data).and_return(bounding_box) unless measure_data
     perform
   end
 
@@ -93,6 +103,10 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
         file = args[:params].structural.contains.first.structural.contains.last
         expect(file.filename).to eq 'WATER_BODY-iso19139.xml'
       end
+    end
+
+    it 'states the bounding box computed from the data, in place of the one ArcGIS recorded' do
+      expect(GisRobotSuite::Iso19139BoundingBox.read(iso19139('WATER_BODY'))).to eq bounding_box
     end
   end
 
@@ -134,6 +148,14 @@ RSpec.describe Robots::DorRepo::GisAssembly::ExtractIso19139Metadata do
   context 'with ESRI metadata for geoJSON' do
     let(:druid) { 'druid:vx813cc5549' }
     let(:esri_filename) { 'CLOWNS_OF_AMERICA.geojson.xml' }
+    let(:measure_data) { true }
+
+    it 'measures the bounding box from the GeoJSON staged with it' do
+      box = GisRobotSuite::Iso19139BoundingBox.read(iso19139('CLOWNS_OF_AMERICA'))
+
+      expect(box).to have_attributes(west: be_within(0.0001).of(-158.017379), east: be_within(0.0001).of(-65.594769),
+                                     north: be_within(0.0001).of(64.854370), south: be_within(0.0001).of(18.001995))
+    end
 
     it 'generates an ISO 19139 XML document' do
       expect(File).to exist(File.join(staging_dir, 'CLOWNS_OF_AMERICA-iso19139.xml'))

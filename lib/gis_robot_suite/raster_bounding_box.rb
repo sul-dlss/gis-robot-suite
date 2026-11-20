@@ -12,35 +12,53 @@ module GisRobotSuite
   # The raster's own `wgs84Extent` would be cheaper still, but it reports only the four transformed
   # corners, so it understates the extent of anything whose edges curve appreciably in longitude
   # and latitude.
+  #
+  # gdalwarp puts the output's longitudes in [-180, 180], so a raster straddling the antimeridian
+  # comes out spanning the world. When it comes out wider than a hemisphere, warp again with
+  # longitudes centred on 180° instead, and keep the narrower. See Antimeridian.
   class RasterBoundingBox
     TARGET_CRS = 'EPSG:4326'
+    ANTIMERIDIAN = 180
 
-    def initialize(cocina_object:, logger:, rootdir:)
-      @cocina_object = cocina_object
-      @logger = logger
+    # @param rootdir [String] the druid's staging directory, holding content/
+    # @param esri_ng [Nokogiri::XML::Document] the ArcGIS metadata, for a projection to fall back on
+    def initialize(rootdir:, esri_ng:, logger:, bare_druid:)
       @rootdir = rootdir
+      @esri_ng = esri_ng
+      @logger = logger
+      @bare_druid = bare_druid
     end
 
-    # @return [Array<Float>] ulx, uly, lrx, lry (west, north, east, south) in EPSG:4326
+    # @return [BoundingBox]
     def bounding_box
-      raise "extract-boundingbox: #{bare_druid} cannot locate data type" unless data_format
-      raise "extract-boundingbox: #{bare_druid} has unsupported Raster data type: #{data_format}" unless geotiff?
+      ulx, uly, lrx, lry = warped_extent
+      measurements = [[ulx, lrx]]
+      measurements << warped_extent(center_longitude: ANTIMERIDIAN).values_at(0, 2) if lrx - ulx > 180
+      west, east = Antimeridian.longitudes(*measurements)
 
-      corners = warped_corner_coordinates
+      BoundingBox.new(west:, east:, north: uly, south: lry)
+    end
+
+    private
+
+    attr_reader :rootdir, :esri_ng, :logger, :bare_druid
+
+    # @return [Array<Float>] ulx, uly, lrx, lry of the raster warped to EPSG:4326
+    def warped_extent(center_longitude: nil)
+      corners = warped_corner_coordinates(center_longitude:)
       ulx, uly = corners['upperLeft']
       lrx, lry = corners['lowerRight']
 
       [ulx, uly, lrx, lry].map { |coordinate| coordinate.to_s.strip.to_f }
     end
 
-    private
+    # CENTER_LONG has PROJ wrap the output longitudes to within 180° of it, rather than of 0°.
+    def warped_corner_coordinates(center_longitude: nil)
+      center_long_option = center_longitude ? "--config CENTER_LONG #{center_longitude} " : ''
 
-    attr_reader :cocina_object, :logger, :rootdir
-
-    def warped_corner_coordinates
       Tempfile.create(['boundingbox', '.vrt']) do |vrt|
         GisRobotSuite.run_system_command(
-          "#{Settings.gdal_path}gdalwarp -of VRT #{source_crs_option}-t_srs #{TARGET_CRS} " \
+          "#{Settings.gdal_path}gdalwarp -of VRT #{center_long_option}#{source_crs_option}-t_srs #{TARGET_CRS} " \
           "#{Shellwords.escape(input_filepath)} #{Shellwords.escape(vrt.path)}",
           logger:
         )
@@ -65,13 +83,12 @@ module GisRobotSuite
       projjson.present? && projjson['type'] != 'EngineeringCRS'
     end
 
-    # The projection recorded in the descriptive metadata, used when the data file declares none
-    # that PROJ can work with. generate-descriptive runs earlier in gisAssemblyWF and raises when
-    # it cannot determine one, so this is only missing for a projection GDAL has no code for.
+    # The projection the ArcGIS metadata records, used when the data file declares none that PROJ
+    # can work with.
     def fallback_crs
-      GisRobotSuite.map_projection(cocina_object) ||
-        raise("extract-boundingbox: #{bare_druid} #{geo_object_name} has no usable spatial reference " \
-              'system and cocina records no map projection to fall back on')
+      EsriReferenceSystem.crs(esri_ng) ||
+        raise("bounding box: #{bare_druid} #{geo_object_name} has no usable spatial reference " \
+              'system and the ArcGIS metadata names none to fall back on')
     end
 
     def raster_info(path)
@@ -83,14 +100,6 @@ module GisRobotSuite
       )
     end
 
-    def data_format
-      @data_format ||= GisRobotSuite.data_format(cocina_object)
-    end
-
-    def geotiff?
-      data_format == 'GeoTIFF'
-    end
-
     def input_filepath
       @input_filepath ||= "#{content_dir}/#{geo_object_name}.tif"
     end
@@ -100,10 +109,6 @@ module GisRobotSuite
         filepath = Dir.glob("#{content_dir}/*.tif.xml").first
         filepath ? File.basename(filepath, '.tif.xml') : nil
       end
-    end
-
-    def bare_druid
-      @bare_druid ||= cocina_object.externalIdentifier.delete_prefix('druid:')
     end
 
     def content_dir

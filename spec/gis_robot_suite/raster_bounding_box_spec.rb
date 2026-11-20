@@ -3,10 +3,10 @@
 require 'spec_helper'
 
 RSpec.describe GisRobotSuite::RasterBoundingBox do
-  subject(:bounding_box) { described_class.new(cocina_object:, logger:, rootdir:).bounding_box }
+  subject(:bounding_box) { described_class.new(rootdir:, esri_ng:, logger:, bare_druid:).bounding_box }
 
-  let(:druid) { "druid:#{bare_druid}" }
-  let(:cocina_object) { build(:dro, id: druid).new(description:) }
+  # The ArcGIS metadata staged alongside the raster
+  let(:esri_ng) { Nokogiri::XML(File.read(Dir.glob("#{rootdir}/content/*.tif.xml").first)) }
   let(:logger) { instance_double(Logger, debug: nil, info: nil) }
   let(:rootdir) { GisRobotSuite.locate_druid_path bare_druid, type: :workspace }
 
@@ -16,24 +16,9 @@ RSpec.describe GisRobotSuite::RasterBoundingBox do
 
   context 'when a GeoTIFF already in EPSG:4326' do
     let(:bare_druid) { 'bb021mm7809' }
-    let(:description) do
-      {
-        title: [{ value: 'Mobile Coverage Explorer, 2014' }],
-        form: [{ value: 'EPSG::4326', type: 'map projection' }],
-        geographic: [
-          {
-            form: [
-              { value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
-              { value: 'GeoTIFF', type: 'data format' }
-            ]
-          }
-        ],
-        purl: "https://purl.stanford.edu/#{bare_druid}"
-      }
-    end
 
     it 'describes the reprojection in a VRT rather than materializing the pixels' do
-      expect(bounding_box).to all(be_a(Float))
+      expect(bounding_box.to_h.values).to all(be_a(Float))
 
       expect(GisRobotSuite).to have_received(:run_system_command).with(
         a_string_including('gdalwarp -of VRT', '-t_srs EPSG:4326'), logger:
@@ -49,10 +34,37 @@ RSpec.describe GisRobotSuite::RasterBoundingBox do
     end
 
     it 'derives a plausible bounding box' do
-      ulx, uly, lrx, lry = bounding_box
+      ulx, uly, lrx, lry = bounding_box.to_h.values_at(:west, :north, :east, :south)
 
       expect(ulx).to be < lrx
       expect(uly).to be > lry
+    end
+
+    it 'warps only once, because the extent is narrower than a hemisphere' do
+      bounding_box
+
+      expect(GisRobotSuite).not_to have_received(:run_system_command).with(a_string_including('CENTER_LONG'), logger:)
+    end
+  end
+
+  context 'when a GeoTIFF straddles the antimeridian' do
+    let(:bare_druid) { 'kr180pm0002' }
+
+    it 'warps again centred on 180°, because the first warp spans the world' do
+      bounding_box
+
+      expect(GisRobotSuite).to have_received(:run_system_command).with(
+        a_string_including('gdalwarp -of VRT', '--config CENTER_LONG 180', '-t_srs EPSG:4326'), logger:
+      )
+    end
+
+    it 'spans the antimeridian rather than the world, west greater than east' do
+      ulx, uly, lrx, lry = bounding_box.to_h.values_at(:west, :north, :east, :south)
+
+      expect(ulx).to be_within(0.01).of(176.10)
+      expect(uly).to be_within(0.01).of(4.52)
+      expect(lrx).to be_within(0.01).of(-178.50)
+      expect(lry).to be_within(0.05).of(0.0)
     end
   end
 
@@ -60,52 +72,31 @@ RSpec.describe GisRobotSuite::RasterBoundingBox do
   # a known CRS, so it produced ENGCRS["MOLLWEIDE"] and gdal_translate baked that into the tif.
   context 'when a GeoTIFF whose projection is an engineering CRS' do
     let(:bare_druid) { 'mk892hd7761' }
-    let(:description) do
-      {
-        title: [{ value: 'Artisanal Fishing, 2007-2008' }],
-        form: [{ value: 'ESRI::54009', type: 'map projection' }],
-        geographic: [
-          {
-            form: [
-              { value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
-              { value: 'GeoTIFF', type: 'data format' }
-            ]
-          }
-        ],
-        purl: "https://purl.stanford.edu/#{bare_druid}"
-      }
-    end
 
-    it 'names the projection cocina recorded, because PROJ cannot use the one in the file' do
-      expect(bounding_box).to all(be_a(Float))
+    it 'names the projection the ArcGIS metadata records, because PROJ cannot use the one in the file' do
+      expect(bounding_box.to_h.values).to all(be_a(Float))
 
+      # Twice, since the data spans the world: once as is and once centred on 180°.
       expect(GisRobotSuite).to have_received(:run_system_command).with(
         a_string_including('gdalwarp -of VRT', '-s_srs ESRI:54009', '-t_srs EPSG:4326'), logger:
-      )
+      ).twice
+    end
+
+    it 'still spans the world, as measured either way' do
+      ulx, lrx = bounding_box.to_h.values_at(:west, :east)
+
+      expect([ulx, lrx]).to eq [-180.0, 180.0]
     end
   end
 
-  context 'when the data format is not a GeoTIFF' do
+  context 'when a GeoTIFF declares no usable projection and the ArcGIS metadata names none' do
     let(:bare_druid) { 'mk892hd7761' }
-    let(:description) do
-      {
-        title: [{ value: 'Artisanal Fishing, 2007-2008' }],
-        form: [{ value: 'ESRI::54009', type: 'map projection' }],
-        geographic: [
-          {
-            form: [
-              { value: 'image/tiff', type: 'media type', source: { value: 'IANA media type terms' } },
-              { value: 'ArcGRID', type: 'data format' }
-            ]
-          }
-        ],
-        purl: "https://purl.stanford.edu/#{bare_druid}"
-      }
-    end
+    let(:esri_ng) { Nokogiri::XML('<metadata/>') }
 
     it 'raises' do
       expect { bounding_box }.to raise_error(
-        'extract-boundingbox: mk892hd7761 has unsupported Raster data type: ArcGRID'
+        'bounding box: mk892hd7761 artisanal has no usable spatial reference system ' \
+        'and the ArcGIS metadata names none to fall back on'
       )
     end
   end
