@@ -14,6 +14,7 @@ module Robots
           return missing_metadata_return_state unless arcgis_transformer.metadata?
 
           output_file = arcgis_transformer.transform
+          GisRobotSuite::FgdcBoundingBox.apply(output_file, bounding_box:, logger:)
           object_client.update(params: updated_cocina_with(output_file))
         end
 
@@ -23,13 +24,25 @@ module Robots
           @arcgis_transformer ||= GisRobotSuite::ArcgisMetadataTransformer.new(bare_druid, 'ArcGIS2FGDC.xsl', 'fgdc.xml', logger)
         end
 
+        def bounding_box
+          GisRobotSuite::Iso19139BoundingBox.read(Nokogiri::XML(File.read(iso19139_file)))
+        end
+
+        def iso19139_file
+          Dir.glob("#{staging_dir}/content/**/*-iso19139.xml").first ||
+            raise("extract-fgdc: #{bare_druid} has no ISO 19139 in staging to read the bounding box from")
+        end
+
+        def staging_dir
+          @staging_dir ||= GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
+        end
+
         def updated_cocina_with(output_file)
           updater = GisRobotSuite::StructuralUpdator.new(cocina_object)
           updater.add_file(filename: output_file, use: 'derivative', file_set:, mimetype: 'application/xml')
         end
 
         def file_set
-          staging_dir = GisRobotSuite::StagedContent.find!(bare_druid).pathname.to_s
           esri_metadata_path = GisRobotSuite.locate_esri_metadata(File.join(staging_dir, 'content'))
           esri_metadata_filename = File.basename(esri_metadata_path)
 
