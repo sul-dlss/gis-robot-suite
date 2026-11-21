@@ -21,7 +21,7 @@ RSpec.describe GisRobotSuite::VectorDerivativeGenerator do
     let(:vector_info) do
       {
         stdout_str: {
-          layers: [{ geometryFields: [{ coordinateSystem: { projjson: { id: { authority: 'EPSG', code: 26_910 } } } }] }]
+          layers: [{ name: 'layer', geometryFields: [{ coordinateSystem: { projjson: { id: { authority: 'EPSG', code: 26_910 } } } }] }]
         }.to_json
       }
     end
@@ -159,6 +159,17 @@ RSpec.describe GisRobotSuite::VectorDerivativeGenerator do
       generate
 
       expect(fgb_layer_names).to eq ['sanluisobispo1996']
+    end
+
+    context 'with a GeoJSON whose layer is named differently from its file' do
+      # The file is wf887zc4874-index_map.geojson, but its "name" member makes the layer "index_map"
+      let(:input_path) { Pathname.new('spec/fixtures/wf887zc4874-index_map.geojson') }
+
+      it 'selects from the layer the data names, and names the output after the file' do
+        generate
+
+        expect(fgb_layer_names).to eq ['wf887zc4874-index_map']
+      end
     end
   end
 end
