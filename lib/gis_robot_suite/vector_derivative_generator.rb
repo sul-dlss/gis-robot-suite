@@ -66,10 +66,15 @@ module GisRobotSuite
         '--drop-densest-as-needed --extend-zooms-if-still-dropping --force'
     end
 
-    # Filename minus extension is assumed to be layer name in the data, also
-    # used as basename for all files
-    def layer_name
-      File.basename(input_path, '.*')
+    # Read the layer name from the data, since we already have it from GDAL.
+    def source_layer_name
+      vector_info.dig('layers', 0, 'name')
+    end
+
+    # The SQLite table the source layer is exposed as. Quoted because identifiers starting with
+    # numbers are rejected by SQLite unless quoted, with any quotes in the name itself doubled.
+    def source_table
+      %("#{source_layer_name.gsub('"', '""')}")
     end
 
     # PMTiles can only be created from data in EPSG:4326, so we reproject
@@ -117,19 +122,18 @@ module GisRobotSuite
     # MaxY) rather than ST_X/ST_Y so the check works for all geometry types, not
     # just points. 1e9 keeps every real-world coordinate (degrees, meters, feet)
     # while excluding the DBL_MAX sentinel.
-    # Quotes are required for the layer name because identifiers starting with
-    # numbers will be rejected by SQLite unless quoted.
     def select_valid_geometry
-      sql = "select * from \"#{layer_name}\" where geometry is not null " \
+      sql = "select * from #{source_table} where geometry is not null " \
             'and ST_MinX(geometry) between -1e9 and 1e9 and ST_MaxX(geometry) between -1e9 and 1e9 ' \
             'and ST_MinY(geometry) between -1e9 and 1e9 and ST_MaxY(geometry) between -1e9 and 1e9'
-      "-dialect sqlite -sql '#{sql}'"
+      "-dialect sqlite -sql #{Shellwords.escape(sql)}"
     end
 
     # Without -nln, ogr2ogr names the output layer after the -sql statement ("SELECT")
-    # rather than the layer it reads from.
+    # rather than the layer it reads from. Named after the file, like the derivative files
+    # themselves, rather than after the source layer.
     def output_layer_name
-      "-nln #{Shellwords.escape(layer_name)}"
+      "-nln #{Shellwords.escape(File.basename(input_path, '.*'))}"
     end
 
     # Promote mixed geometry to multi
