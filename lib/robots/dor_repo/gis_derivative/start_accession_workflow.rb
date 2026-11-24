@@ -10,7 +10,7 @@ module Robots
 
         def perform_work
           logger.debug "start-accession-workflow working on #{bare_druid}"
-          object_client.version.close
+          close_version
         end
       end
     end

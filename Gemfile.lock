@@ -164,7 +164,7 @@ GEM
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
-    lyber-core (9.1.0)
+    lyber-core (9.1.1)
       activesupport
       benchmark
       config
