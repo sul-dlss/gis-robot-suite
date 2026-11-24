@@ -1,18 +1,3 @@
-GIT
-  remote: https://github.com/sul-dlss/lyber-core.git
-  revision: a409be4d1ecdd6ac97e8d73296ba53bd271f2313
-  branch: robot-close-version
-  specs:
-    lyber-core (9.1.0)
-      activesupport
-      benchmark
-      config
-      dor-services-client
-      druid-tools
-      honeybadger
-      sidekiq
-      zeitwerk
-
 GEM
   remote: https://gems.contribsys.com/
   specs:
@@ -179,6 +164,15 @@ GEM
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
+    lyber-core (9.1.1)
+      activesupport
+      benchmark
+      config
+      dor-services-client
+      druid-tools
+      honeybadger
+      sidekiq
+      zeitwerk
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
@@ -357,7 +351,7 @@ DEPENDENCIES
   dor-services-client
   druid-tools
   honeybadger
-  lyber-core!
+  lyber-core (>= 9.1.1)
   preservation-client
   rake
   rspec

@@ -7,8 +7,7 @@ gem 'assembly-objectfile'
 gem 'cocina-models'
 gem 'dor-services-client'
 gem 'druid-tools'
-# TODO: Use the released lyber-core with LyberCore::Robot#close_version (sul-dlss/lyber-core#322).
-gem 'lyber-core', github: 'sul-dlss/lyber-core', branch: 'robot-close-version' # For robots
+gem 'lyber-core', '>= 9.1.1' # For robots
 gem 'preservation-client'
 
 gem 'config'
